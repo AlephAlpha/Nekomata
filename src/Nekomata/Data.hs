@@ -4,9 +4,9 @@ module Nekomata.Data where
 
 import Nekomata.NonDet
 
--- | A non-deterministic list
 data ListTry a = Nil | Cons a (TryList a) deriving (Show)
 
+-- | A non-deterministic list
 type TryList a = Try (ListTry a)
 
 instance Functor ListTry where
@@ -22,20 +22,26 @@ instance NonDet a => NonDet (ListTry a) where
 
 -- | Nekomata's data type (deterministic)
 data Data
-    = DInt Int
+    = DInt Integer
     | DChar Char
     | DString String
     | DList [Data]
-    deriving (Eq, Show)
+    deriving (Eq)
 
--- | Nekomata's data type (non-deterministic)
+instance Show Data where
+    show (DInt x) = show x
+    show (DChar x) = show x
+    show (DString x) = show x
+    show (DList x) = show x
+
 data DataTry
-    = DIntT (Try (Det Int))
+    = DIntT (Try (Det Integer))
     | DCharT (Try (Det Char))
     | DStringT (TryList (Det Char))
     | DListT (TryList TryData)
     deriving (Show)
 
+-- | Nekomata's data type (non-deterministic)
 type TryData = Try DataTry
 
 instance NonDet DataTry where

@@ -3,9 +3,9 @@
 module Nekomata.NonDet where
 
 import Control.Applicative (Alternative (empty, (<|>)))
-import Control.Monad (MonadPlus (mplus, mzero))
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
+import Data.Maybe (isJust)
 
 -- | Id for non-deterministic choice
 newtype Id = Id Integer deriving (Eq, Ord, Show)
@@ -20,7 +20,11 @@ rightId :: Id -> Id
 rightId (Id i) = Id (2 * i + 1)
 
 -- | A non-deterministic value
-data Try a = Val a | Choice Id (Try a) (Try a) | Fail deriving (Show)
+data Try a
+    = Val a
+    | Choice Id (Try a) (Try a)
+    | Fail
+    deriving (Show)
 
 instance Functor Try where
     fmap f (Val x) = Val (f x)
@@ -38,36 +42,8 @@ instance Monad Try where
     Choice i t1 t2 >>= f = Choice i (t1 >>= f) (t2 >>= f)
     Fail >>= _ = Fail
 
--- | A newtype wrapper for functions from @Id@ to @Try@
-newtype TryF a = TryF {runTryF :: Id -> Try a}
-
-instance Functor TryF where
-    fmap f (TryF g) = TryF (fmap f . g)
-
-{- | This @Applicative@ instance does not strictly follow the laws.
-It only satisfies the laws up to 1-to-1 correspondence between @Id@s.
--}
-instance Applicative TryF where
-    pure x = TryF (\_ -> Val x)
-
-    TryF f <*> TryF g = TryF (\i -> f (leftId i) <*> g (rightId i))
-
-{- | This @Monad@ instance does not strictly follow the laws.
-It only satisfies the laws up to 1-to-1 correspondence between @Id@s.
--}
-instance Monad TryF where
-    TryF f >>= g = TryF (\i -> f (leftId i) >>= \x -> runTryF (g x) (rightId i))
-
-instance Alternative TryF where
-    empty = TryF (\_ -> Fail)
-    TryF f <|> TryF g = TryF (\i -> Choice i (f (leftId i)) (g (rightId i)))
-
-instance MonadPlus TryF where
-    mzero = empty
-    mplus = (<|>)
-
--- | A wrapper for deterministic values
-newtype Det a = Det a deriving (Eq, Show)
+-- | A wrapper for deterministic tryValues
+newtype Det a = Det {fromDet :: a} deriving (Eq, Show)
 
 instance Functor Det where
     fmap f (Det x) = Det (f x)
@@ -95,32 +71,58 @@ instance NonDet a => NonDet (Try a) where
     fromValue = Val . fromValue
     toTry t = t >>= toTry
 
+-- | A decision for non-deterministic choice
 data Decision = ChooseLeft | ChooseRight deriving (Eq, Show)
 
+-- | A map from @Id@s to decisions
 newtype Decisions = Decisions (Map Id Decision) deriving (Show)
 
+-- | Get the decision for the given @Id@
 getChoice :: Id -> Decisions -> Maybe Decision
 getChoice i (Decisions m) = Map.lookup i m
 
+-- | Set the decision for the given @Id@
 setChoice :: Id -> Decision -> Decisions -> Decisions
 setChoice i d (Decisions m) = Decisions (Map.insert i d m)
 
+-- | Clear the decision for the given @Id@
 clearChoice :: Id -> Decisions -> Decisions
 clearChoice i (Decisions m) = Decisions (Map.delete i m)
 
+-- | Initialize the map with no decisions
 initDecisions :: Decisions
 initDecisions = Decisions Map.empty
 
-values :: Alternative m => Decisions -> Try a -> m a
-values _ (Val x) = pure x
-values ds (Choice i t1 t2) = case getChoice i ds of
-    Just ChooseLeft -> values ds t1
-    Just ChooseRight -> values ds t2
-    Nothing -> values (setChoice i ChooseLeft ds) t1 <|> values (setChoice i ChooseRight ds) t2
-values _ Fail = empty
+-- | Find all values of a @Try@ via backtracking
+tryValues :: Alternative m => Decisions -> Try a -> m a
+tryValues _ (Val x) = pure x
+tryValues ds (Choice i t1 t2) = case getChoice i ds of
+    Just ChooseLeft -> tryValues ds t1
+    Just ChooseRight -> tryValues ds t2
+    Nothing ->
+        tryValues (setChoice i ChooseLeft ds) t1
+            <|> tryValues (setChoice i ChooseRight ds) t2
+tryValues _ Fail = empty
 
-allValues :: Decisions -> Try a -> [a]
-allValues = values
+-- | Find all values of a @NonDet@ via backtracking
+values :: (NonDet a, Alternative m) => Decisions -> a -> m (Value a)
+values ds = tryValues ds . toTry
 
-oneValue :: Decisions -> Try a -> Maybe a
-oneValue = values
+-- | Count all values of a @Try@
+countTryValues :: Decisions -> Try a -> Integer
+countTryValues _ (Val _) = 1
+countTryValues ds (Choice i t1 t2) = case getChoice i ds of
+    Just ChooseLeft -> countTryValues ds t1
+    Just ChooseRight -> countTryValues ds t2
+    Nothing ->
+        countTryValues (setChoice i ChooseLeft ds) t1
+            + countTryValues (setChoice i ChooseRight ds) t2
+countTryValues _ Fail = 0
+
+-- | Count all values of a @NonDet@
+countValues :: (NonDet a) => Decisions -> a -> Integer
+countValues ds = countTryValues ds . toTry
+
+-- | Check if a @NonDet@ has a value
+hasValue :: (NonDet a) => Decisions -> a -> Bool
+hasValue ds = isJust . values ds

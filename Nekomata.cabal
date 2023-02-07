@@ -61,7 +61,9 @@ library
 
   -- Modules exported by the library.
   exposed-modules:
+    Nekomata.Builtin
     Nekomata.Data
+    Nekomata.Function
     Nekomata.NonDet
 
   -- Modules included in this library but not exported.
