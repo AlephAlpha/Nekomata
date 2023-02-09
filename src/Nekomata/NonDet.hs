@@ -83,11 +83,11 @@ getChoice i (Decisions m) = Map.lookup i m
 
 -- | Set the decision for the given @Id@
 setChoice :: Id -> Decision -> Decisions -> Decisions
-setChoice i d (Decisions m) = Decisions (Map.insert i d m)
+setChoice i d (Decisions m) = Decisions $ Map.insert i d m
 
 -- | Clear the decision for the given @Id@
 clearChoice :: Id -> Decisions -> Decisions
-clearChoice i (Decisions m) = Decisions (Map.delete i m)
+clearChoice i (Decisions m) = Decisions $ Map.delete i m
 
 -- | Initialize the map with no decisions
 initDecisions :: Decisions
