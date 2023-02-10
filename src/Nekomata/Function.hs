@@ -3,7 +3,6 @@ module Nekomata.Function where
 import Control.Monad (liftM2)
 import Nekomata.Data
 import Nekomata.NonDet
-import Nekomata.Utils
 
 {- | The stack of Nekomata
 
@@ -15,7 +14,21 @@ infixr 5 :+
 
 -- | Initialize the stack with a cycled list of values
 initStack :: [TryData] -> Stack
-initStack = foldr (:+) undefined . cycle
+initStack [] = foldr (:+) undefined $ repeat Fail
+initStack xs = foldr (:+) undefined $ cycle xs
+
+-- | The top value of the stack
+top :: Stack -> TryData
+top (x :+ _) = x
+
+-- | Take the top @n@ values of the stack
+takeStack :: Int -> Stack -> [TryData]
+takeStack 0 _ = []
+takeStack n (x :+ s) = x : takeStack (n - 1) s
+
+-- | Prepend a list of values to the stack
+prepend :: [TryData] -> Stack -> Stack
+prepend xs s = foldr (:+) s xs
 
 -- | The arity of a function
 data Arity = Arity
@@ -24,7 +37,10 @@ data Arity = Arity
     , outArity :: Int
     -- ^ The number of results
     }
-    deriving (Eq, Show)
+    deriving (Eq)
+
+instance Show Arity where
+    show (Arity in' out') = show in' ++ " -> " ++ show out'
 
 -- | Compose two arities
 composeArity :: Arity -> Arity -> Arity
@@ -38,6 +54,10 @@ data Function = Function
     { arity :: Arity
     , apply :: Id -> Stack -> Stack
     }
+
+-- | The identity function
+identity :: Function
+identity = Function (Arity 0 0) $ \_ s -> s
 
 -- | Compose two functions
 compose :: Function -> Function -> Function
@@ -74,18 +94,25 @@ binary2 f =
              in (z >>= fst) :+ (z >>= snd) :+ s
 
 -- | Convert a predicate to a Nekomata function
-predicate :: (DataTry -> Try Bool) -> Function
-predicate f = unary $ \_ x -> f x >>= \b -> if b then Val x else Fail
+predicate :: (Id -> DataTry -> Try Bool) -> Function
+predicate f = unary $ \i x -> f i x >>= \b -> if b then Val x else Fail
+
+{- | Convert a binary predicate to a Nekomata function
+
+When the predicate returns 'True', the second argument is returned.
+-}
+predicate2 :: (Id -> DataTry -> DataTry -> Try Bool) -> Function
+predicate2 f = binary $ \i x y -> f i x y >>= \b -> if b then Val y else Fail
 
 -- | Convert a constant to a Nekomata function
-constant :: Data -> Function
-constant = nullary . const . fromValue
+constant :: ToTryData a => a -> Function
+constant = nullary . const . toTryData
 
 -- | Convert and vectorize a unary function
 unaryVec :: (Id -> DataTry -> TryData) -> Function
 unaryVec f = unary f'
   where
-    f' i (DListT xs) = Val . DListT $ fmap2 (>>= f' i) xs
+    f' i (DListT xs) = liftList (fmap (>>= f' i)) xs
     f' i x = f i x
 
 -- | Convert and vectorize a binary function with padding
@@ -93,9 +120,9 @@ binaryVecPad :: (Id -> DataTry -> DataTry -> TryData) -> Function
 binaryVecPad f = binary f'
   where
     f' i (DListT xs) (DListT ys) =
-        Val . DListT $ liftM2 (zipWithPad . liftJoinM2 $ f' i) xs ys
-    f' i (DListT xs) y = Val . DListT $ fmap2 (>>= f' i y) xs
-    f' i x (DListT ys) = Val . DListT $ fmap2 (>>= flip (f' i) x) ys
+        liftList2 (zipWithPad . liftJoinM2 $ f' i) xs ys
+    f' i (DListT xs) y = liftList (fmap (>>= f' i y)) xs
+    f' i x (DListT ys) = liftList (fmap (>>= flip (f' i) x)) ys
     f' i x y = f i x y
 
 -- | Convert and vectorize a binary function with fail
@@ -103,7 +130,7 @@ binaryVecFail :: (Id -> DataTry -> DataTry -> TryData) -> Function
 binaryVecFail f = binary f'
   where
     f' i (DListT xs) (DListT ys) =
-        Val . DListT $ liftJoinM2 (zipWithFail . liftJoinM2 $ f' i) xs ys
-    f' i (DListT xs) y = Val . DListT $ fmap2 (>>= f' i y) xs
-    f' i x (DListT ys) = Val . DListT $ fmap2 (>>= flip (f' i) x) ys
+        liftList2 (zipWithFail . liftJoinM2 $ f' i) xs ys
+    f' i (DListT xs) y = liftList (fmap (>>= f' i y)) xs
+    f' i x (DListT ys) = liftList (fmap (>>= flip (f' i) x)) ys
     f' i x y = f i x y

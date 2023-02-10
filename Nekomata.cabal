@@ -65,9 +65,12 @@ library
     Nekomata.Data
     Nekomata.Function
     Nekomata.NonDet
+    Nekomata.Parser
+    Nekomata.Particle
+    Nekomata.Program
 
   -- Modules included in this library but not exported.
-  other-modules:    Nekomata.Utils
+  -- other-modules:
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:
@@ -76,6 +79,7 @@ library
   build-depends:
     , base        ^>=4.17.0.0
     , containers  ^>=0.6.7
+    , parsec      ^>=3.1.16
 
   -- Directories containing source files.
   hs-source-dirs:   src
