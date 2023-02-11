@@ -63,7 +63,7 @@ identity = Function (Arity 0 0) $ \_ s -> s
 compose :: Function -> Function -> Function
 compose f g =
     Function (composeArity (arity f) (arity g)) $
-        \i -> apply f (leftId i) . apply g (rightId i)
+        \i -> apply g (leftId i) . apply f (rightId i)
 
 -- | Convert a nullary function to a Nekomata function
 nullary :: (Id -> TryData) -> Function
@@ -77,21 +77,21 @@ unary f = Function (Arity 1 1) $ \i (x :+ s) -> (x >>= f i) :+ s
 binary :: (Id -> DataTry -> DataTry -> TryData) -> Function
 binary f =
     Function (Arity 2 1) $
-        \i (x :+ y :+ s) -> liftJoinM2 (f i) x y :+ s
+        \i (x :+ y :+ s) -> liftJoinM2 (f i) y x :+ s
 
 -- | Convert a unary function that returns two values to a Nekomata function
 unary2 :: (Id -> DataTry -> (TryData, TryData)) -> Function
 unary2 f =
     Function (Arity 1 2) $
-        \i (x :+ s) -> let z = f i <$> x in (z >>= fst) :+ (z >>= snd) :+ s
+        \i (x :+ s) -> let z = f i <$> x in (z >>= snd) :+ (z >>= fst) :+ s
 
 -- | Convert a binary function that returns two values to a Nekomata function
 binary2 :: (Id -> DataTry -> DataTry -> (TryData, TryData)) -> Function
 binary2 f =
     Function (Arity 2 2) $
         \i (x :+ y :+ s) ->
-            let z = liftM2 (f i) x y
-             in (z >>= fst) :+ (z >>= snd) :+ s
+            let z = liftM2 (f i) y x
+             in (z >>= snd) :+ (z >>= fst) :+ s
 
 -- | Convert a predicate to a Nekomata function
 predicate :: (Id -> DataTry -> Try Bool) -> Function

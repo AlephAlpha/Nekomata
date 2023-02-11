@@ -1,5 +1,6 @@
 module Nekomata.Eval where
 
+import Control.Arrow (left)
 import Control.Monad ((>=>))
 import Nekomata.CodePage (CodePageError, checkCodePage)
 import Nekomata.Data
@@ -24,9 +25,9 @@ instance Show NekomataError where
 -- | Compile a Nekomata program string into a function
 compile :: String -> Either NekomataError Function
 compile =
-    either (Left . CodePageError) Right . checkCodePage
-        >=> either (Left . ParseError) Right . parse parseProgram ""
-        >=> either (Left . ParticleArityError) Right . compileProgram
+    left CodePageError . checkCodePage
+        >=> left ParseError . parse parseProgram ""
+        >=> left ParticleArityError . compileProgram
 
 -- | Nekomata's runtime state
 data Runtime = Runtime {choiceId :: Id, stack :: Stack}
@@ -34,6 +35,9 @@ data Runtime = Runtime {choiceId :: Id, stack :: Stack}
 -- | Initialize Nekomata's runtime state with a list of input values
 initRuntime :: [Data] -> Runtime
 initRuntime = Runtime initId . initStack . map fromValue
+
+readInput :: String -> Either NekomataError [Data]
+readInput = left ParseError . parse parseInput ""
 
 -- | Run a Nekomata function with the given runtime state
 runFunction :: Function -> Runtime -> (Runtime, TryData)
@@ -51,3 +55,10 @@ showResult AllValues = unlines . map show . values initDecisions
 showResult FirstValue = maybe "" show . values initDecisions
 showResult CountValues = show . countValues initDecisions
 showResult CheckExistence = show . hasValue initDecisions
+
+-- | Evaluate a Nekomata program string according to the mode
+eval :: Mode -> String -> String -> Either NekomataError String
+eval mode input code = do
+    f <- compile code
+    inputData <- readInput input
+    return . showResult mode . snd $ runFunction f (initRuntime inputData)

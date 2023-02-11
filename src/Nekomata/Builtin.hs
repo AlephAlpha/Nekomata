@@ -50,9 +50,9 @@ builtins =
         '!'
         fail'
         "Push a value that always fails."
-    , Builtin "drop" 'd' drop' "Drop the top value of the stack."
-    , Builtin "dup" 'D' dup "Duplicate the top value of the stack."
-    , Builtin "swap" 'S' swap "Swap the top two values of the stack."
+    , Builtin "drop" '^' drop' "Drop the top value of the stack."
+    , Builtin "dup" ':' dup "Duplicate the top value of the stack."
+    , Builtin "swap" '$' swap "Swap the top two values of the stack."
     , Builtin
         "eq"
         '='
@@ -135,14 +135,14 @@ data BuiltinNotFoundError = BuiltinNotFound String | BuiltinShortNotFound Char
 
 instance Show BuiltinNotFoundError where
     show (BuiltinNotFound name') =
-        "Cannot find builtin function with full name \"\\" ++ name' ++ "\"."
+        "cannot find builtin function with full name \"\\" ++ name' ++ "\""
     show (BuiltinShortNotFound short') =
-        "Cannot find builtin function with short name '" ++ [short'] ++ "'."
+        "cannot find builtin function with short name '" ++ [short'] ++ "'"
 
 -- Basic functions
 
 choice :: Function
-choice = Function (Arity 2 1) $ \i (x :+ y :+ s) -> Choice i x y :+ s
+choice = Function (Arity 2 1) $ \i (x :+ y :+ s) -> Choice i y x :+ s
 
 fail' :: Function
 fail' = constant (Fail :: TryData)

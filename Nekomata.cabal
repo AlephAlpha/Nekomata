@@ -79,9 +79,9 @@ library
 
   -- Other library packages from which modules are imported.
   build-depends:
-    , base        ^>=4.17.0.0
-    , containers  ^>=0.6.7
-    , parsec      ^>=3.1.16
+    , base        >=4.9 && <5
+    , containers  ^>=0.6
+    , parsec      ^>=3.1
 
   -- Directories containing source files.
   hs-source-dirs:   src
@@ -104,8 +104,9 @@ executable Nekomata
 
   -- Other library packages from which modules are imported.
   build-depends:
-    , base      ^>=4.17.0.0
+    , base                  >=4.9  && <5
     , Nekomata
+    , optparse-applicative  ^>=0.17
 
   -- Directories containing source files.
   hs-source-dirs:   app
@@ -137,5 +138,6 @@ test-suite Nekomata-test
 
   -- Test dependencies.
   build-depends:
-    , base      ^>=4.17.0.0
+    , base      >=4.9  && <5
+    , hspec     ^>=2.10
     , Nekomata

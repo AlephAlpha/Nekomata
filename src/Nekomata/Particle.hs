@@ -86,9 +86,9 @@ data ParticleNotFoundError
 
 instance Show ParticleNotFoundError where
     show (ParticleNotFound name') =
-        "Cannot find particle with full name \"\\" ++ name' ++ "\"."
+        "cannot find particle with full name \"\\" ++ name' ++ "\""
     show (ParticleShortNotFound short') =
-        "Cannot find particle with short name '" ++ [short'] ++ "'."
+        "cannot find particle with short name '" ++ [short'] ++ "'"
 
 {- | An error that occurs when applying a particle to a function
 with the wrong arity
