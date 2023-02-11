@@ -69,7 +69,7 @@ instance NonDet (Det a) where
 instance NonDet a => NonDet (Try a) where
     type Value (Try a) = Value a
     fromValue = Val . fromValue
-    toTry t = t >>= toTry
+    toTry = (>>= toTry)
 
 -- | A decision for non-deterministic choice
 data Decision = ChooseLeft | ChooseRight deriving (Eq, Show)

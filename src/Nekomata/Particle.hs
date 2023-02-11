@@ -1,8 +1,19 @@
-module Nekomata.Particle where
+module Nekomata.Particle (
+    Particle (..),
+    BuiltinParticle (..),
+    builtinParticles,
+    builtinParticleMap,
+    builtinParticleShortMap,
+    ParticleNotFoundError (..),
+    ParticleArityError (..),
+    applyParticle,
+    info,
+) where
 
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
-import Nekomata.Function
+import Nekomata.Function hiding (arity)
+import qualified Nekomata.Function as Function
 
 {- | A particle is a higher-order function that modifies a function
 
@@ -14,41 +25,108 @@ newtype Particle = Particle {runParticle :: Function -> Maybe Function}
 -- | A builtin particle in Nekomata
 data BuiltinParticle = BuiltinParticle
     { name :: String
+    , short :: Char
     , particle :: Particle
+    , arity :: String
     , help :: String
     }
+
+instance Show BuiltinParticle where
+    show b = "\\" ++ name b
+
+-- | Get the info string for a builtin particle
+info :: BuiltinParticle -> String
+info b =
+    show b
+        ++ " ('"
+        ++ [short b]
+        ++ "', "
+        ++ arity b
+        ++ "): "
+        ++ help b
 
 -- | The list of all builtin particles
 builtinParticles :: [BuiltinParticle]
 builtinParticles =
     [ BuiltinParticle
         "apply2"
+        'ᵃ'
         apply2
-        "(1 -> n) -> (2 -> 2 * n): Apply a function to two values."
+        "(1 -> n) -> (2 -> 2 * n)"
+        "Apply a function to two values."
     , BuiltinParticle
         "nonPop"
+        'ᵖ'
         nonPop
-        "(m -> n) -> (0 -> n): Apply a function without popping the stack."
+        "(m -> n) -> (0 -> n)"
+        "Apply a function without popping the stack."
     , BuiltinParticle
         "dip"
+        'ᵈ'
         dip
-        "(m -> n) -> (m + 1 -> n + 1): \
-        \Pop the top value of the stack, apply a function to the rest, \
+        "(m -> n) -> (m + 1 -> n + 1)"
+        "Pop the top value of the stack, apply a function to the rest, \
         \and push the popped value back."
     ]
 
--- | The map of all builtin particles
+-- | The map of from names to builtin particles
 builtinParticleMap :: Map String BuiltinParticle
 builtinParticleMap = Map.fromList $ map (\b -> (name b, b)) builtinParticles
 
-applyParticle :: BuiltinParticle -> Function -> Either String Function
+-- | The map of from short names to builtin particles
+builtinParticleShortMap :: Map Char BuiltinParticle
+builtinParticleShortMap =
+    Map.fromList $ map (\b -> (short b, b)) builtinParticles
+
+-- | An error that occurs when a builtin particle is not found
+data ParticleNotFoundError
+    = ParticleNotFound String
+    | ParticleShortNotFound Char
+    deriving (Eq)
+
+instance Show ParticleNotFoundError where
+    show (ParticleNotFound name') =
+        "Cannot find particle with full name \"\\" ++ name' ++ "\"."
+    show (ParticleShortNotFound short') =
+        "Cannot find particle with short name '" ++ [short'] ++ "'."
+
+{- | An error that occurs when applying a particle to a function
+with the wrong arity
+-}
+data ParticleArityError = ParticleArityError
+    { particleName :: String
+    , particleShort :: Char
+    , particleArity :: String
+    , functionArity :: String
+    }
+    deriving (Eq)
+
+instance Show ParticleArityError where
+    show (ParticleArityError name' short' arity1 arity2) =
+        "Cannot apply particle "
+            ++ name'
+            ++ " ('"
+            ++ [short']
+            ++ "') with arity "
+            ++ arity1
+            ++ " to function with arity "
+            ++ arity2
+            ++ "."
+
+-- | Apply a builtin particle to a function
+applyParticle ::
+    BuiltinParticle ->
+    Function ->
+    Either ParticleArityError Function
 applyParticle p f = maybe (Left message) Right $ runParticle (particle p) f
   where
     message =
-        "Cannot apply particle "
-            ++ name p
-            ++ " to function with arity "
-            ++ show (arity f)
+        ParticleArityError
+            { particleName = show p
+            , particleShort = short p
+            , particleArity = arity p
+            , functionArity = show $ Function.arity f
+            }
 
 apply2 :: Particle
 apply2 = Particle apply2'

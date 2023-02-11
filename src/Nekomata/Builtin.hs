@@ -1,7 +1,9 @@
 module Nekomata.Builtin (
     Builtin (..),
+    BuiltinNotFoundError (..),
     builtins,
     builtinMap,
+    builtinShortMap,
     info,
 ) where
 
@@ -15,60 +17,80 @@ import Nekomata.NonDet
 -- | A builtin function in Nekomata
 data Builtin = Builtin
     { name :: String
+    , short :: Char
     , func :: Function
     , help :: String
     }
 
+instance Show Builtin where
+    show b = "\\" ++ name b
+
 -- | Get the info string for a builtin function
 info :: Builtin -> String
-info b = name b ++ " (" ++ show (arity (func b)) ++ "): " ++ help b
+info b =
+    show b
+        ++ " ('"
+        ++ [short b]
+        ++ "', "
+        ++ show (arity (func b))
+        ++ "): "
+        ++ help b
 
 -- | The list of all builtin functions
 builtins :: [Builtin]
 builtins =
     [ Builtin
         "choice"
+        '?'
         choice
         "Choose between two values. \
         \This function is non-deterministic."
     , Builtin
         "fail"
+        '!'
         fail'
         "Push a value that always fails."
-    , Builtin "drop" drop' "Drop the top value of the stack."
-    , Builtin "dup" dup "Duplicate the top value of the stack."
-    , Builtin "swap" swap "Swap the top two values of the stack."
+    , Builtin "drop" 'd' drop' "Drop the top value of the stack."
+    , Builtin "dup" 'D' dup "Duplicate the top value of the stack."
+    , Builtin "swap" 'S' swap "Swap the top two values of the stack."
     , Builtin
         "eq"
+        '='
         eq
         "Check if two values are equal."
     , Builtin
         "ne"
+        '≠'
         ne
         "Check if two values are not equal."
     , Builtin
         "neg"
+        '_'
         neg
         "Negate an integer. \
         \This function is automatically vectorized."
     , Builtin
         "add"
+        '+'
         add
         "Add two integers. \
         \This function is automatically vectorized with padding zeros."
     , Builtin
         "sub"
+        '-'
         sub
         "Subtract two integers. \
         \This function is automatically vectorized with padding zeros."
     , Builtin
         "mul"
+        '*'
         mul
         "Multiply two integers. \
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
         "div"
+        '÷'
         div'
         "Integer division of two integers. \
         \Result is rounded towards negative infinity. \
@@ -77,6 +99,7 @@ builtins =
         \and fails when the two lists are of different lengths."
     , Builtin
         "mod"
+        '%'
         mod'
         "Modulo two integers. \
         \Fails when the divisor is zero. \
@@ -84,6 +107,7 @@ builtins =
         \and fails when the two lists are of different lengths."
     , Builtin
         "divExact"
+        '∣'
         divExact
         "Divide two integers. \
         \Fails when the divisor is zero or \
@@ -92,14 +116,28 @@ builtins =
         \and fails when the two lists are of different lengths."
     , Builtin
         "anyOf"
+        'A'
         anyOf'
         "Choose an element from a list or a character from a string. \
         \This function is non-deterministic."
     ]
 
--- | The map of all builtin functions
+-- | The map from names to builtin functions
 builtinMap :: Map String Builtin
 builtinMap = Map.fromList [(name b, b) | b <- builtins]
+
+-- | The map from short names to builtin functions
+builtinShortMap :: Map Char Builtin
+builtinShortMap = Map.fromList [(short b, b) | b <- builtins]
+
+-- | An error that occurs when a builtin function is not found
+data BuiltinNotFoundError = BuiltinNotFound String | BuiltinShortNotFound Char
+
+instance Show BuiltinNotFoundError where
+    show (BuiltinNotFound name') =
+        "Cannot find builtin function with full name \"\\" ++ name' ++ "\"."
+    show (BuiltinShortNotFound short') =
+        "Cannot find builtin function with short name '" ++ [short'] ++ "'."
 
 -- Basic functions
 

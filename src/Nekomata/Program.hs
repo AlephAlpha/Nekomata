@@ -3,35 +3,34 @@ module Nekomata.Program where
 import Nekomata.Builtin
 import Nekomata.Data
 import Nekomata.Function
-import Nekomata.Particle hiding (name)
-import qualified Nekomata.Particle as Particle
+import Nekomata.Particle
 
 -- | A term in a Nekomata program
 data Term
-    = ELit Data
-    | EFunc Builtin
-    | EPart BuiltinParticle Term
-    | EBlock Program
+    = TLit Data
+    | TFunc Builtin
+    | TPart BuiltinParticle Term
+    | TBlock Program
 
 instance Show Term where
-    show (ELit d) = show d
-    show (EFunc f) = '\\' : name f
-    show (EPart p t) = show t ++ " " ++ '\\' : Particle.name p
-    show (EBlock ts) = show ts
+    show (TLit d) = show d
+    show (TFunc f) = show f
+    show (TPart p t) = show p ++ " " ++ show t
+    show (TBlock ts) = show ts
 
 -- | A Nekomata program consists of a list of terms
 newtype Program = Program {unProgram :: [Term]}
 
 instance Show Program where
-    show (Program ts) = "{" ++ unwords (map show ts) ++ "}"
+    show (Program ts) = "{ " ++ unwords (map show ts) ++ " }"
 
 -- | Compile a term into a function
-compileTerm :: Term -> Either String Function
-compileTerm (ELit d) = Right $ constant d
-compileTerm (EFunc f) = Right $ func f
-compileTerm (EPart p t) = compileTerm t >>= applyParticle p
-compileTerm (EBlock ts) = compileProgram ts
+compileTerm :: Term -> Either ParticleArityError Function
+compileTerm (TLit d) = Right $ constant d
+compileTerm (TFunc f) = Right $ func f
+compileTerm (TPart p t) = compileTerm t >>= applyParticle p
+compileTerm (TBlock ts) = compileProgram ts
 
 -- | Compile a program into a function
-compileProgram :: Program -> Either String Function
+compileProgram :: Program -> Either ParticleArityError Function
 compileProgram (Program ts) = foldl compose identity <$> mapM compileTerm ts

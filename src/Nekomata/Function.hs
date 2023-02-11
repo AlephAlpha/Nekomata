@@ -37,7 +37,7 @@ data Arity = Arity
     , outArity :: Int
     -- ^ The number of results
     }
-    deriving (Eq)
+    deriving (Eq, Ord)
 
 instance Show Arity where
     show (Arity in' out') = show in' ++ " -> " ++ show out'
