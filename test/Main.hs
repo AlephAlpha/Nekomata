@@ -32,7 +32,7 @@ main = hspec $ do
 
         it "should have short names that are in the code page" $ do
             let shortNames = map short builtins
-            let codePage' = filter (`notElem` " \\\"\n[]0123456789�") codePage
+            let codePage' = filter (`notElem` " \\\"\n[]{}0123456789�") codePage
             all (`elem` codePage') shortNames `shouldBe` True
 
     describe "Particle" $ do
@@ -46,7 +46,7 @@ main = hspec $ do
 
         it "should have short names that are in the code page" $ do
             let shortNames = map Particle.short builtinParticles
-            let codePage' = filter (`notElem` " \\\"\n[]0123456789�") codePage
+            let codePage' = filter (`notElem` " \\\"\n[]{}0123456789�") codePage
             all (`elem` codePage') shortNames `shouldBe` True
 
         it "should have different names than builtin functions" $ do

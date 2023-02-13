@@ -12,8 +12,10 @@ module Nekomata.Particle (
 
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
+import Nekomata.Data
 import Nekomata.Function hiding (arity)
 import qualified Nekomata.Function as Function
+import Nekomata.NonDet
 
 {- | A particle is a higher-order function that modifies a function
 
@@ -42,7 +44,7 @@ info b =
         ++ [short b]
         ++ "', "
         ++ arity b
-        ++ "): "
+        ++ "):\n"
         ++ help b
 
 -- | The list of all builtin particles
@@ -52,8 +54,8 @@ builtinParticles =
         "apply2"
         'ᵃ'
         apply2
-        "(1 -> n) -> (2 -> 2 * n)"
-        "Apply a function to two values."
+        "(m -> n) -> (m + 1 -> 2 * n)"
+        "Apply a function to the top two values of the stack."
     , BuiltinParticle
         "nonPop"
         'ᵖ'
@@ -67,6 +69,14 @@ builtinParticles =
         "(m -> n) -> (m + 1 -> n + 1)"
         "Pop the top value of the stack, apply a function to the rest, \
         \and push the popped value back."
+    , BuiltinParticle
+        "map"
+        'ᵐ'
+        map'
+        "(m -> 1) -> (m -> 1)"
+        "Apply a function to each value in a list, \
+        \or to each character in a string, \
+        \or to each integer from 1 to an integer."
     ]
 
 -- | The map of from names to builtin particles
@@ -131,11 +141,10 @@ applyParticle p f = maybe (Left message) Right $ runParticle (particle p) f
 apply2 :: Particle
 apply2 = Particle apply2'
   where
-    apply2' (Function (Arity 1 n) f) =
-        Just . Function (Arity 2 (2 * n)) $
+    apply2' (Function (Arity m n) f) =
+        Just . Function (Arity (m + 1) (2 * n)) $
             \i (x :+ y :+ s) ->
                 prepend (takeStack n $ f i (x :+ s)) $ f i (y :+ s)
-    apply2' _ = Nothing
 
 nonPop :: Particle
 nonPop = Particle nonPop'
@@ -150,3 +159,17 @@ dip = Particle dip'
     dip' (Function (Arity m n) f) =
         Just . Function (Arity (m + 1) (n + 1)) $
             \i (x :+ s) -> x :+ f i s
+
+map' :: Particle
+map' = Particle map''
+  where
+    map'' (Function (Arity m 1) f) =
+        Just . Function (Arity m 1) $
+            \i (x :+ s) ->
+                let f' i' x' = top $ f i' (pure x' :+ s)
+                 in (x >>= liftList (tryMap f' i) . toDListT)
+                        :+ dropStack (m - 1) s
+    map'' _ = Nothing
+    toDListT (DListT xs) = xs
+    toDListT (DIntT x) = fromList . map toTryData . enumFromTo 1 <$> toTry x
+    toDListT (DStringT xs) = fmap (Val . DStringT . Val . singleton) <$> xs

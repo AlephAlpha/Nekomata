@@ -9,12 +9,12 @@ import Data.Word (Word8)
 -}
 codePage :: String
 codePage =
-    "��������\n�������"
-        ++ "÷∣≠�������������"
+    "�÷×∣≠∀∃←→\n↔⧺����"
+        ++ "����������������"
         ++ " !\"#$%&'()*+,-./"
         ++ "0123456789:;<=>?"
-        ++ "@ABCDEFGHIJKLMN"
-        ++ "OPQRSTUVWXYZ[\\]^_"
+        ++ "@ABCDEFGHIJKLMNO"
+        ++ "PQRSTUVWXYZ[\\]^_"
         ++ "`abcdefghijklmno"
         ++ "pqrstuvwxyz{|}~�"
         ++ "�ᵃᵇᶜᵈᵉᶠᵍʰⁱʲᵏˡᵐⁿᵒ"

@@ -8,6 +8,7 @@ module Nekomata.Builtin (
 ) where
 
 import Control.Monad (join)
+import Data.Functor ((<&>))
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Nekomata.Data
@@ -33,7 +34,7 @@ info b =
         ++ [short b]
         ++ "', "
         ++ show (arity (func b))
-        ++ "): "
+        ++ "):\n"
         ++ help b
 
 -- | The list of all builtin functions
@@ -43,13 +44,29 @@ builtins =
         "choice"
         '?'
         choice
-        "Choose between two values. \
+        "Choose between two values.\n\
         \This function is non-deterministic."
     , Builtin
         "fail"
         '!'
         fail'
         "Push a value that always fails."
+    , Builtin
+        "allValues"
+        '∀'
+        allValues
+        "Get a list of all possible values for a non-deterministic object."
+    , Builtin
+        "oneValue"
+        '∃'
+        oneValue
+        "Get a single value from a non-deterministic object. \n\
+        \Fails if the object has no values."
+    , Builtin
+        "countValues"
+        'n'
+        countValues'
+        "Count the number of values in a non-deterministic object."
     , Builtin "drop" '^' drop' "Drop the top value of the stack."
     , Builtin "dup" ':' dup "Duplicate the top value of the stack."
     , Builtin "swap" '$' swap "Swap the top two values of the stack."
@@ -57,35 +74,55 @@ builtins =
         "eq"
         '='
         eq
-        "Check if two values are equal."
+        "Check if two values are equal. \n\
+        \If they are, push the first value, otherwise fail."
     , Builtin
         "ne"
         '≠'
         ne
-        "Check if two values are not equal."
+        "Check if two values are not equal. \n\
+        \If they are not, push the first value, otherwise fail."
     , Builtin
         "neg"
         '_'
         neg
-        "Negate an integer. \
+        "Negate an integer. \n\
+        \This function is automatically vectorized."
+    , Builtin
+        "abs"
+        'A'
+        abs'
+        "Absolute value of an integer. \n\
+        \This function is automatically vectorized."
+    , Builtin
+        "increment"
+        '→'
+        increment
+        "Increment an integer. \n\
+        \This function is automatically vectorized."
+    , Builtin
+        "decrement"
+        '←'
+        decrement
+        "Decrement an integer. \n\
         \This function is automatically vectorized."
     , Builtin
         "add"
         '+'
         add
-        "Add two integers. \
+        "Add two integers. \n\
         \This function is automatically vectorized with padding zeros."
     , Builtin
         "sub"
         '-'
         sub
-        "Subtract two integers. \
+        "Subtract two integers. \n\
         \This function is automatically vectorized with padding zeros."
     , Builtin
         "mul"
         '*'
         mul
-        "Multiply two integers. \
+        "Multiply two integers. \n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
@@ -93,33 +130,86 @@ builtins =
         '÷'
         div'
         "Integer division of two integers. \
-        \Result is rounded towards negative infinity. \
-        \Fails when the divisor is zero. \
+        \Result is rounded towards negative infinity. \n\
+        \Fails when the divisor is zero. \n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
         "mod"
         '%'
         mod'
-        "Modulo two integers. \
-        \Fails when the divisor is zero. \
+        "Modulo two integers. \n\
+        \Fails when the divisor is zero. \n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
         "divExact"
         '∣'
         divExact
-        "Divide two integers. \
+        "Divide two integers. \n\
         \Fails when the divisor is zero or \
-        \the result is not an exact integer. \
+        \the result is not an exact integer. \n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
+        "min"
+        'm'
+        min'
+        "Get the minimum of two integers. \n\
+        \This function is automatically vectorized with padding."
+    , Builtin
+        "max"
+        'M'
+        max'
+        "Get the maximum of two integers. \n\
+        \This function is automatically vectorized with padding."
+    , Builtin
+        "range0"
+        'r'
+        range0
+        "Create a list of integers from 0 to n-1. \n\
+        \This function is automatically vectorized."
+    , Builtin
+        "range1"
+        'R'
+        range1
+        "Create a list of integers from 1 to n. \n\
+        \This function is automatically vectorized."
+    , Builtin
         "anyOf"
-        'A'
+        '~'
         anyOf'
-        "Choose an element from a list or a character from a string. \
+        "Choose an element from a list or a character from a string. \n\
         \This function is non-deterministic."
+    , Builtin
+        "length"
+        '#'
+        length'
+        "Get the length of a list or a string."
+    , Builtin
+        "reverse"
+        '↔'
+        reverse'
+        "Reverse a list or a string."
+    , Builtin
+        "prefix"
+        'p'
+        prefix
+        "Get a prefix of a list or a string. \n\
+        \This function is non-deterministic."
+    , Builtin
+        "suffix"
+        's'
+        suffix
+        "Get a suffix of a list or a string. \n\
+        \This function is non-deterministic."
+    , Builtin
+        "join"
+        '⧺'
+        join'
+        "Concatenate two lists or two strings.\n\
+        \If one of the arguments is a string, \
+        \the other argument is converted to a string as well."
     ]
 
 -- | The map from names to builtin functions
@@ -147,6 +237,18 @@ choice = Function (Arity 2 1) $ \i (x :+ y :+ s) -> Choice i y x :+ s
 fail' :: Function
 fail' = constant (Fail :: TryData)
 
+allValues :: Function
+allValues = Function (Arity 1 1) $
+    \_ (x :+ s) -> Cut (\ds -> toTryData . fromList $ values ds x) :+ s
+
+oneValue :: Function
+oneValue = Function (Arity 1 1) $
+    \_ (x :+ s) -> Cut (\ds -> toTryData . maybe Fail Val $ values ds x) :+ s
+
+countValues' :: Function
+countValues' = Function (Arity 1 1) $
+    \_ (x :+ s) -> Cut (\ds -> toTryData $ countValues ds x) :+ s
+
 -- Stack manipulation
 
 drop' :: Function
@@ -171,35 +273,48 @@ ne = predicate2 $ \_ x y -> tryNe x y
 neg :: Function
 neg = unaryVec neg'
   where
-    neg' :: Id -> DataTry -> TryData
     neg' _ (DIntT x) = liftInt negate x
     neg' _ _ = Fail
+
+abs' :: Function
+abs' = unaryVec abs''
+  where
+    abs'' _ (DIntT x) = liftInt abs x
+    abs'' _ _ = Fail
+
+increment :: Function
+increment = unaryVec increment'
+  where
+    increment' _ (DIntT x) = liftInt (+ 1) x
+    increment' _ _ = Fail
+
+decrement :: Function
+decrement = unaryVec decrement'
+  where
+    decrement' _ (DIntT x) = liftInt (subtract 1) x
+    decrement' _ _ = Fail
 
 add :: Function
 add = binaryVecPad add'
   where
-    add' :: Id -> DataTry -> DataTry -> TryData
     add' _ (DIntT x) (DIntT y) = liftInt2 (+) x y
     add' _ _ _ = Fail
 
 sub :: Function
 sub = binaryVecPad sub'
   where
-    sub' :: Id -> DataTry -> DataTry -> TryData
     sub' _ (DIntT x) (DIntT y) = liftInt2 (-) x y
     sub' _ _ _ = Fail
 
 mul :: Function
 mul = binaryVecFail mul'
   where
-    mul' :: Id -> DataTry -> DataTry -> TryData
     mul' _ (DIntT x) (DIntT y) = liftInt2 (*) x y
     mul' _ _ _ = Fail
 
 div' :: Function
 div' = binaryVecFail div''
   where
-    div'' :: Id -> DataTry -> DataTry -> TryData
     div'' _ (DIntT x) (DIntT y) = liftInt2 div_ x y
     div'' _ _ _ = Fail
     div_ _ 0 = Fail
@@ -208,7 +323,6 @@ div' = binaryVecFail div''
 mod' :: Function
 mod' = binaryVecFail mod''
   where
-    mod'' :: Id -> DataTry -> DataTry -> TryData
     mod'' _ (DIntT x) (DIntT y) = liftInt2 mod_ x y
     mod'' _ _ _ = Fail
     mod_ _ 0 = Fail
@@ -217,17 +331,96 @@ mod' = binaryVecFail mod''
 divExact :: Function
 divExact = binaryVecFail divExact'
   where
-    divExact' :: Id -> DataTry -> DataTry -> TryData
     divExact' _ (DIntT x) (DIntT y) = liftInt2 divExact_ x y
     divExact' _ _ _ = Fail
     divExact_ x y = if y /= 0 && x `mod` y == 0 then Val $ x `div` y else Fail
+
+min' :: Function
+min' = binaryVecPad min''
+  where
+    min'' _ (DIntT x) (DIntT y) = liftInt2 min x y
+    min'' _ _ _ = Fail
+
+max' :: Function
+max' = binaryVecPad max''
+  where
+    max'' _ (DIntT x) (DIntT y) = liftInt2 max x y
+    max'' _ _ _ = Fail
+
+range0 :: Function
+range0 = unaryVec range0'
+  where
+    range0' _ (DIntT x) = liftInt (enumFromTo 0 . subtract 1) x
+    range0' _ _ = Fail
+
+range1 :: Function
+range1 = unaryVec range1'
+  where
+    range1' _ (DIntT x) = liftInt (enumFromTo 1) x
+    range1' _ _ = Fail
 
 -- List functions
 
 anyOf' :: Function
 anyOf' = unary anyOf''
   where
-    anyOf'' :: Id -> DataTry -> TryData
     anyOf'' i (DStringT xs) = Val . DStringT $ xs >>= anyOf i . singleton
     anyOf'' i (DListT xs) = join (xs >>= anyOf i)
     anyOf'' _ _ = Fail
+
+length' :: Function
+length' = unary length''
+  where
+    length'' _ (DStringT xs) = liftString length_ xs
+    length'' _ (DListT xs) = liftList length_ xs
+    length'' _ _ = toTryData (1 :: Integer)
+    length_ :: ListTry a -> Try Integer
+    length_ Nil = Val 0
+    length_ (Cons _ xs) = xs >>= length_ <&> (+ 1)
+
+reverse' :: Function
+reverse' = unary reverse''
+  where
+    reverse'' _ (DStringT xs) = liftString (fmap AsDString . reverse_ Nil) xs
+    reverse'' _ (DListT xs) = liftList (reverse_ Nil) xs
+    reverse'' _ _ = Fail
+    reverse_ :: ListTry a -> ListTry a -> Try (ListTry a)
+    reverse_ ys Nil = Val ys
+    reverse_ ys (Cons x xs) = xs >>= reverse_ (Cons x (Val ys))
+
+prefix :: Function
+prefix = unary prefix'
+  where
+    prefix' i (DStringT xs) = liftString (fmap AsDString . prefix_ i) xs
+    prefix' i (DListT xs) = liftList (prefix_ i) xs
+    prefix' _ _ = Fail
+    prefix_ :: Id -> ListTry a -> Try (ListTry a)
+    prefix_ _ Nil = Val Nil
+    prefix_ i (Cons x xs) =
+        Choice (leftId i) (Val Nil) (Val . Cons x $ xs >>= prefix_ (rightId i))
+
+suffix :: Function
+suffix = unary suffix'
+  where
+    suffix' i (DStringT xs) = liftString (fmap AsDString . suffix_ i) xs
+    suffix' i (DListT xs) = liftList (suffix_ i) xs
+    suffix' _ _ = Fail
+    suffix_ :: Id -> ListTry a -> Try (ListTry a)
+    suffix_ _ Nil = Val Nil
+    suffix_ i s@(Cons _ xs) =
+        Choice (leftId i) (Val s) (xs >>= suffix_ (rightId i))
+
+join' :: Function
+join' = binary join''
+  where
+    join'' _ (DStringT xs) (DStringT ys) =
+        liftString2 (\x y -> AsDString <$> join_ x y) xs ys
+    join'' i x@(DStringT _) y =
+        join'' i x (DStringT (fromList . map Det . show <$> toTry y))
+    join'' i x y@(DStringT _) =
+        join'' i (DStringT (fromList . map Det . show <$> toTry x)) y
+    join'' _ (DListT xs) (DListT ys) = liftList2 join_ xs ys
+    join'' _ _ _ = Fail
+    join_ :: ListTry a -> ListTry a -> Try (ListTry a)
+    join_ Nil ys = Val ys
+    join_ (Cons x xs) ys = Val . Cons x $ liftJoinM2 join_ xs (Val ys)

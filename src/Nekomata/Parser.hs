@@ -6,6 +6,7 @@ module Nekomata.Parser (
     parseProgram,
 ) where
 
+import Control.Monad (void)
 import qualified Data.Map.Strict as Map
 import Nekomata.Builtin
 import Nekomata.Data
@@ -118,7 +119,7 @@ parseTerm =
         , TBlock
             <$> between
                 (char '{' >> spaces)
-                (spaces >> char '}')
+                (spaces >> (void (char '}') <|> eof))
                 parseBlock
         ]
         <?> "Nekomata term"

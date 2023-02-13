@@ -2,6 +2,7 @@ module Main where
 
 import Nekomata.Eval
 import Options.Applicative
+import System.Exit (die)
 
 data Code = CodeArg String | CodeFile FilePath
 
@@ -88,5 +89,5 @@ main = do
     InputStdin -> getContents
     InputNone -> return ""
   case eval (mode opts') input' code' of
-    Left err -> putStrLn $ "Error: " ++ show err
+    Left err -> die $ "Error: " ++ show err
     Right result -> putStrLn result

@@ -3,6 +3,7 @@
 module Nekomata.NonDet where
 
 import Control.Applicative (Alternative (empty, (<|>)))
+import Control.Monad ((>=>))
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (isJust)
@@ -24,23 +25,26 @@ data Try a
     = Val a
     | Choice Id (Try a) (Try a)
     | Fail
-    deriving (Show)
+    | Cut (Decisions -> Try a)
 
 instance Functor Try where
     fmap f (Val x) = Val (f x)
     fmap f (Choice i t1 t2) = Choice i (fmap f t1) (fmap f t2)
     fmap _ Fail = Fail
+    fmap f (Cut g) = Cut (fmap f . g)
 
 instance Applicative Try where
     pure = Val
     Val f <*> t = fmap f t
     Choice i t1 t2 <*> t = Choice i (t1 <*> t) (t2 <*> t)
     Fail <*> _ = Fail
+    Cut g <*> t = Cut (\d -> g d <*> t)
 
 instance Monad Try where
     Val x >>= f = f x
     Choice i t1 t2 >>= f = Choice i (t1 >>= f) (t2 >>= f)
     Fail >>= _ = Fail
+    Cut g >>= f = Cut (g >=> f)
 
 -- | A wrapper for deterministic tryValues
 newtype Det a = Det {fromDet :: a} deriving (Eq, Show)
@@ -103,6 +107,7 @@ tryValues ds (Choice i t1 t2) = case getChoice i ds of
         tryValues (setChoice i ChooseLeft ds) t1
             <|> tryValues (setChoice i ChooseRight ds) t2
 tryValues _ Fail = empty
+tryValues ds (Cut g) = tryValues ds (g ds)
 
 -- | Find all values of a @NonDet@ via backtracking
 values :: (NonDet a, Alternative m) => Decisions -> a -> m (Value a)
@@ -118,6 +123,7 @@ countTryValues ds (Choice i t1 t2) = case getChoice i ds of
         countTryValues (setChoice i ChooseLeft ds) t1
             + countTryValues (setChoice i ChooseRight ds) t2
 countTryValues _ Fail = 0
+countTryValues ds (Cut g) = countTryValues ds (g ds)
 
 -- | Count all values of a @NonDet@
 countValues :: (NonDet a) => Decisions -> a -> Integer

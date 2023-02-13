@@ -25,7 +25,7 @@ cabal build
 To run a Nekomata program, you can use the following command:
 
 ```bash
-cabal run nekomata -- -f <path to program> -i <input string>
+cabal run Nekomata -- -f <path to program> -i <input string>
 ```
 
 You can also take input from stdin by using the `-s` flag instead of `-i`, or read the program as command line arguments by using the `-c` flag instead of `-f`. You can also use the `-h` flag to see a list of all available options.
