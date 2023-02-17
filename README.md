@@ -6,7 +6,7 @@ The implementation of non-determinism is based on the paper [*KiCS2: A New Compi
 
 The language is currently in a very early stage of development. It has very few built-ins, and it doesn't support any numeric types other than integers. The syntax is also likely to change in the future.
 
-I'll start writing a documentation once it has enough features to write a useful program.
+I'll start writing a documentation once it has enough features to write a useful program. For now, you can read the code for [built-in functions](src/Nekomata/Builtin.hs) and [built-in particles](src/Nekomata/Particle.hs), which includes help messages for each function.
 
 ## Name
 
@@ -29,3 +29,14 @@ cabal run Nekomata -- -f <path to program> -i <input string>
 ```
 
 You can also take input from stdin by using the `-s` flag instead of `-i`, or read the program as command line arguments by using the `-c` flag instead of `-f`. You can also use the `-h` flag to see a list of all available options.
+
+## Examples
+
+### Hello world
+
+```
+"Hello, World!"
+```
+
+Currently, Nekomata doesn't support string compression, so you have to write the full string.
+

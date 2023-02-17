@@ -186,6 +186,15 @@ liftList2 ::
     (TryList TryData -> TryList TryData -> TryData)
 liftList2 f x y = toTryData $ liftM2 f x y
 
+-- | Lift a unary list function that returns two values to @TryData@
+liftList12 ::
+    (ToTryData a, ToTryData b) =>
+    (ListTry TryData -> Try (a, b)) ->
+    (TryList TryData -> (TryData, TryData))
+liftList12 f x =
+    let y = x >>= f
+     in (toTryData $ fst <$> y, toTryData $ snd <$> y)
+
 -- | A helper class for checking for equality
 class TryEq a where
     tryEq :: a -> a -> Try Bool

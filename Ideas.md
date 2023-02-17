@@ -101,10 +101,10 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 ## [Smallest groups in an array](https://codegolf.stackexchange.com/q/79037/9288)
 
 ```
-\splitIntoRuns \dup \map \length \minimumBy
+\splitRuns \dup \map \length \minimumBy
 ```
 
-- [ ] `\splitIntoRuns`：将一个列表从相邻元素不相等的地方拆开，得到一个列表的列表。比如输入 `[1, 2, 2, 3, 3, 3, 4, 5, 5, 5, 5, 6]`，输出 `[[1], [2, 2], [3, 3, 3], [4], [5, 5, 5, 5], [6]]`。
+- [ ] `\splitRuns`：将一个列表从相邻元素不相等的地方拆开，得到一个列表的列表。比如输入 `[1, 2, 2, 3, 3, 3, 4, 5, 5, 5, 5, 6]`，输出 `[[1], [2, 2], [3, 3, 3], [4], [5, 5, 5, 5], [6]]`。
 - [x] `\map`：助词，将一个一元函数应用到一个列表的每个元素上。
 - [x] `\length`：求一个列表的长度。
 - [ ] `\minimumBy`：输入两个列表，其长度必须一致。根据第一个列表中最小的元素的索引，返回第二个列表中对应的元素。由于最小的元素可能不止一个，所以这个函数是 non-deterministic 的。
@@ -112,24 +112,19 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 和前面的 `\groupBy` 一样，`\minimumBy` 也是一个普通的函数而不是助词。但如果改成助词的话，解答会更短一些：
 
 ```
-\splitIntoRuns \minimumBy \length
+\splitRuns \minimumBy \length
 ```
 
 看来是用普通函数还是助词还需要斟酌。可能两种都要支持，不过名字怎样区分是个问题。
 
 ## [Count repetitions of an array](https://codegolf.stackexchange.com/q/180302/9288)
 
-想到一种比较特别的解法：
-
 ```
-\suffix \uncons \elem
+\uniquify \setMinus \uniquify \length
 ```
 
-加上 `-c` flag，表示输出可能的结果的个数。
-
-- [x] `\suffix`：求一个列表的一个后缀。这个函数是 non-deterministic 的。这个函数不一定常用，不过能很好地体现 Nekomata 的特色，所以还是实现一下吧。
-- [ ] `\uncons`：输入一个列表，输出一个二元组，第一个元素是列表的第一个元素，第二个元素是列表的剩余部分。如果列表为空，返回 `Fail`。
-- [ ] `\elem`：判断一个元素是否在一个列表中。
+- [ ] `\uniquify`：输入一个列表，将其中的重复元素去掉。比如输入 `[1, 2, 3, 2, 1]`，输出 `[1, 2, 3]`。不清楚要不要排序。这道题用不着排序，但其它题目可能会用到。
+- [ ] `\setMinus`：输入两个列表，返回第一个列表中不在第二个列表中的元素。比如输入 `[1, 2, 3, 4]` 和 `[2, 4]`，输出 `[1, 3]`。如果第二个列表中的元素在第一个列表中有重复，那么只删除一个。比如输入 `[1, 2, 2, 3, 4]` 和 `[2, 4]`，输出 `[1, 2, 3]`。
 
 ## [Running second maximum of a list](https://codegolf.stackexchange.com/q/138510/9288)
 
@@ -150,18 +145,18 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 有点麻烦，因为这需要一个 while 循环，循环里还有 if 判断。
 
 ```
-\repeatNonDet { \dup \decrement \2 \divExact \swap 3 \mul \increment \choice \firstValue \nonZero }
+\repeatNonDet { \dup \decrement 2 \divExact \swap 3 \mul \increment \choice \oneValue \nonZero } 0 \choice
 ```
 
-有 13 个字节了，和其它语言的解答相比还是有点长的。
+有 16 个字节了，和其它语言的解答相比输得比较惨。可能还需要找到一些更好地模拟 while 循环和 if 判断的办法。关键是常规的 while 和 if 作为高阶函数都应该输入两个或三个函数，但 Nekomata 的助词只能输入一个函数。
 
 - [ ] `\repeatNonDet`：助词。输入一个函数，重复执行这个函数 non-deterministic 次。这个函数是 non-deterministic 的。这个助词比较复杂，不确定要不要实现。
-- [ ] `\divExact`：输入两个整数，求它们的整除。如果不能整除，返回 `Fail`。
+- [x] `\divExact`：输入两个整数，求它们的整除。如果不能整除，返回 `Fail`。
 - [x] `\swap`：交换栈顶的两个元素。已实现。
 - [x] `\increment`：将一个数加 1。
 - [x] `\choice`：在栈顶的两个元素中选择一个。这个函数是 non-deterministic 的。
 - [x] `\oneValue`：求一个 non-deterministic 值的第一个可能取值。这个函数和 `\allValues` 一样，需要对现有的运算机制做一些修改。不清楚要不要把 `\choice` 和 `\oneValue` 合并成一个函数，这样可能可以更方便地模拟 if 判断。
-- [ ] `\nonZero`：判断一个数是否不为 0。如果不为 0，返回这个数本身；否则返回 `Fail`。
+- [x] `\nonZero`：判断一个数是否不为 0。如果不为 0，返回这个数本身；否则返回 `Fail`。
 
 ## [Reversed Iota's](https://codegolf.stackexchange.com/q/199290/9288)
 
@@ -179,7 +174,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 \range1 \prefix \nonEmpty \reverse
 ```
 
-- [ ] `\nonEmpty`：判断一个列表是否为空。如果不为空，返回这个列表本身；否则返回 `Fail`。
+- [x] `\nonEmpty`：判断一个列表是否为空。如果不为空，返回这个列表本身；否则返回 `Fail`。
 
 ## [Covering a Skyline with brush strokes](https://codegolf.stackexchange.com/q/179464/9288)
 
@@ -193,7 +188,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 0 \cons \delta 0 \max \sum
 ```
 
-- [ ] `\cons`：输入一个元素和一个列表，将这个元素插入到列表的开头。
+- [x] `\cons`：输入一个元素和一个列表，将这个元素插入到列表的开头。
 - [ ] `\delta`：输入一个列表，输出列表中相邻元素的差。比如输入 `[1, 2, 3, 4]`，输出 `[1, 1, 1]`。
 - [ ] `\filter`：助词。将函数应用到一个列表的每个元素上，过滤掉返回 `Fail` 的元素。
 - [ ] `\positive`：判断一个数是否大于 0。如果大于 0，返回这个数本身；否则返回 `Fail`。
@@ -237,3 +232,86 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 - [x] `\apply2`：助词，将一个一元函数应用到栈顶的两个元素上。目前已实现的版本仅支持一元函数，而这里的 `\binomial` 是二元函数，需要修改。
 - [ ] `\binomial`：输入两个整数，求它们的二项式系数。自动向量化。
 - [ ] `\fromBaseRev`：输入一个列表和一个基数，将这个列表看作一个以这个基数为底的数，求它的十进制表示。比如输入 `[1, 2, 3]` 和 `10`，输出 `321`。进制转换时的输入列表正着反着都挺常见，所以 `\fromBase` 和 `\fromBaseRev` 都要实现。
+
+## [Print all pandigital numbers](https://codegolf.stackexchange.com/q/257752/9288)
+
+参考 05AB1E 解答：
+
+
+```
+\natural \predicate { \mul \swap \toBase \uniquify \swap \lengthIs }
+```
+
+9 个字节，输给了好几个 8 字节的解答。
+
+- [x] `\natural`：non-deterministic 地输出任意一个自然数。
+- [x] `\predicate`：助词，将一个函数应用到栈顶的一个元素上，如果这个函数返回 `Fail`，则返回 `Fail`；否则将这个元素保留。即使这个函数是多元函数，计算时也只会弹出栈顶的一个元素，其他的元素只用于计算，不会被弹出。
+- [ ] `\toBase`：输入一个整数和一个基数，将这个整数转换成以这个基数为底的数。比如输入 `321` 和 `10`，输出 `[1, 2, 3]`。
+- [ ] `\uniquify`：输入一个列表，将其中的重复元素去掉。比如输入 `[1, 2, 3, 2, 1]`，输出 `[1, 2, 3]`。不清楚要不要排序。这道题用不着排序，但其它题目可能会用到。
+- [x] `\lengthIs`：判断一个列表的长度是否等于一个整数。如果相等，返回这个列表本身；否则返回 `Fail`。
+
+这里用了两次 `\swap`，感觉有点亏。不清楚要不要改变 `\toBase` 和 `\lengthIs` 的参数顺序。
+
+另一个问题是，助词如果修饰的不是单个内置函数，一定要加括号；能不能把括号就当作助词的一部分，不用写出来？不过那样在助词修饰单个内置函数时反而需要多加一个右括号，而且 parser 也有点难写。
+
+## [There's more than one way to skin a set](https://codegolf.stackexchange.com/q/247326/9288)
+
+```
+\subset \sum \allValues \dup \uniquify \setMinus \uniquify
+```
+
+参考了前面 [Count repetitions of an array](https://codegolf.stackexchange.com/q/180302/9288) 的解答。
+
+- [x] `\subset`：求一个列表的任意一个子集。这个函数是 non-deterministic 的。
+
+也许要给 Nekomata 加上一个输出时自动去重的选项。
+
+## [Make a Court Transcriber](https://codegolf.stackexchange.com/q/252927/9288)
+
+```
+\anyOf \predicate { \swap \map { \dip \subsequence \eq } }
+```
+
+- [x] `\anyOf`：non-deterministic 地输出任意一个列表中的元素。
+- [ ] `\subsequence`：求列表或字符串的任意一个连续的子序列。这个函数是 non-deterministic 的。
+- [x] `\eq`：判断两个元素是否相等。如果相等，返回这个元素本身；否则返回 `Fail`。
+
+
+## [Count edits accounting for grace period](https://codegolf.stackexchange.com/q/141949/9288)
+
+想到两种解法，勉强和 Jelly、05AB1E 打平，和 Husk 的解答还有较大差距：
+
+```
+\repeatNonDet { \uncons 4 \sub \sub \filter \positive } \countValues \decrement
+```
+
+- [ ] `\uncons`：输入一个列表，输出一个二元组，第二个元素是列表的第一个元素，第一个元素是列表的剩余部分。如果列表为空，返回 `Fail`。
+- [x] `\countValues`：求一个 non-deterministic 值的所有可能取值的个数。
+
+```
+\unconcat \map { \minMax \swap \sub 5 \less } \allValues \last \length
+```
+
+- [ ] `\unconcat`：将一个列表拆成多个子列表。比如输入 `[1, 2, 3, 4, 5, 6, 7, 8, 9]`，其中一个可能的输出是 `[[1, 2], [3, 4, 5, 6], [7, 8, 9]]`。这个函数是 non-deterministic 的。
+- [ ] `\minMax`：求一个列表的最小值和最大值。不清楚应该哪个在前，哪个在后；如果是最大值在前，后面的 `\swap` 就可以省略。
+- [ ] `\last`：求一个列表的最后一个元素。如果列表为空，返回 `Fail`。由于还没确定 `\unconcat` 中各种可能的取值按什么顺序排列，这里也有可能是 `\first`，此时可以和前面的 `\allValues` 合并成 `\oneValue`。
+
+## [Construct the Identity Matrix](https://codegolf.stackexchange.com/q/70365/9288)
+
+```
+\outer { \sub \logicalNot }
+```
+
+- [ ] `\outer`：助词，将一个二元函数作用到两个列表的所有元素上，返回一个列表的列表。比如输入 `[1, 2, 3]` 和 `[4, 5, 6]`，以及一个函数 `f`，输出 `[[f(1, 4), f(1, 5), f(1, 6)], [f(2, 4), f(2, 5), f(2, 6)], [f(3, 4), f(3, 5), f(3, 6)]]`。感觉这个助词实现起来有点复杂。
+
+## [Split some points](https://codegolf.stackexchange.com/q/257870/9288)
+
+参考现有的 Vyxal 解答：
+
+```
+\integer \allValues \subset 2 \lengthIs \predicate { 1 \neg \cons \swap \map { 1 \cons \reverse \dot \sign \nonZero } \sum 0 \eq }
+```
+
+- [x] `\integer`：non-deterministic 地输出任意一个整数，按 `0, 1, -1, 2, -2, 3, -3, ...` 的顺序。
+- [ ] `\dot`：求两个列表的点积。如果两个列表的长度不同，返回 `Fail`。
+- [x] `sign`：求一个整数的符号。如果是正数，返回 `1`；如果是负数，返回 `-1`；如果是零，返回 `0`。

@@ -83,6 +83,18 @@ builtins =
         "Check if two values are not equal. \n\
         \If they are not, push the first value, otherwise fail."
     , Builtin
+        "nonEmpty"
+        'N'
+        nonEmpty'
+        "Check if a list or string is non-empty. \n\
+        \If it is, push the list or string itself, otherwise fail."
+    , Builtin
+        "nonZero"
+        'Z'
+        nonZero
+        "Check if an integer is non-zero. \n\
+        \If it is, push the integer itself, otherwise fail."
+    , Builtin
         "neg"
         '_'
         neg
@@ -105,6 +117,19 @@ builtins =
         '←'
         decrement
         "Decrement an integer. \n\
+        \This function is automatically vectorized."
+    , Builtin
+        "logicalNot"
+        '¬'
+        logicalNot
+        "Returns 1 if the argument is 0, and 0 otherwise. \n\
+        \This function is automatically vectorized."
+    , Builtin
+        "sign"
+        '±'
+        sign
+        "Returns -1 if the argument is negative, 0 if it is zero, \
+        \and 1 if it is positive. \n\
         \This function is automatically vectorized."
     , Builtin
         "add"
@@ -176,6 +201,18 @@ builtins =
         "Create a list of integers from 1 to n. \n\
         \This function is automatically vectorized."
     , Builtin
+        "natural"
+        'ℕ'
+        natural
+        "Non-deterministically choose a natural number. \n\
+        \This function is non-deterministic."
+    , Builtin
+        "integer"
+        'ℤ'
+        integer
+        "Non-deterministically choose an integer. \n\
+        \This function is non-deterministic."
+    , Builtin
         "anyOf"
         '~'
         anyOf'
@@ -186,6 +223,33 @@ builtins =
         '#'
         length'
         "Get the length of a list or a string."
+    , Builtin
+        "lengthIs"
+        'L'
+        lengthIs
+        "Check if the length of a list or a string is equal to a given \
+        \integer. \n\
+        \If it is, push the list or string itself, otherwise fail."
+    , Builtin
+        "head"
+        'h'
+        head'
+        "Get the first element of a list or a string."
+    , Builtin
+        "tail"
+        't'
+        tail'
+        "Remove the first element of a list or a string."
+    , Builtin
+        "cons"
+        'c'
+        cons
+        "Prepend an element to a list."
+    , Builtin
+        "uncons"
+        'C'
+        uncons
+        "Get the first element of a list and the rest of the list."
     , Builtin
         "reverse"
         '↔'
@@ -202,6 +266,12 @@ builtins =
         's'
         suffix
         "Get a suffix of a list or a string. \n\
+        \This function is non-deterministic."
+    , Builtin
+        "subset"
+        'S'
+        subset
+        "Get a subset of a list or a string. \n\
         \This function is non-deterministic."
     , Builtin
         "join"
@@ -260,13 +330,29 @@ dup = Function (Arity 1 2) $ \_ (x :+ s) -> x :+ x :+ s
 swap :: Function
 swap = Function (Arity 2 2) $ \_ (x :+ y :+ s) -> y :+ x :+ s
 
--- Comparison functions
+-- Predicates
 
 eq :: Function
 eq = predicate2 $ \_ x y -> tryEq x y
 
 ne :: Function
 ne = predicate2 $ \_ x y -> tryNe x y
+
+nonEmpty' :: Function
+nonEmpty' = predicate nonEmpty''
+  where
+    nonEmpty'' _ (DListT x) = nonEmpty_ <$> x
+    nonEmpty'' _ (DStringT x) = nonEmpty_ <$> x
+    nonEmpty'' _ _ = Fail
+    nonEmpty_ :: ListTry a -> Bool
+    nonEmpty_ (Cons _ _) = True
+    nonEmpty_ Nil = False
+
+nonZero :: Function
+nonZero = predicate nonZero'
+  where
+    nonZero' _ (DIntT x) = (/= 0) . fromDet <$> x
+    nonZero' _ _ = Fail
 
 -- Math functions
 
@@ -293,6 +379,21 @@ decrement = unaryVec decrement'
   where
     decrement' _ (DIntT x) = liftInt (subtract 1) x
     decrement' _ _ = Fail
+
+logicalNot :: Function
+logicalNot = unaryVec logicalNot'
+  where
+    logicalNot' _ (DIntT x) = liftInt logicalNot_ x
+    logicalNot' _ _ = Fail
+    logicalNot_ :: Integer -> Integer
+    logicalNot_ 0 = 1
+    logicalNot_ _ = 0
+
+sign :: Function
+sign = unaryVec sign'
+  where
+    sign' _ (DIntT x) = liftInt signum x
+    sign' _ _ = Fail
 
 add :: Function
 add = binaryVecPad add'
@@ -359,6 +460,16 @@ range1 = unaryVec range1'
     range1' _ (DIntT x) = liftInt (enumFromTo 1) x
     range1' _ _ = Fail
 
+natural :: Function
+natural = nullary $
+    \i -> mapM toTryData [0 :: Integer ..] >>= anyOf i . fromList
+
+integer :: Function
+integer = nullary $
+    \i -> mapM toTryData integers >>= anyOf i . fromList
+  where
+    integers = (0 :: Integer) : [y | x <- [1 ..], y <- [x, -x]]
+
 -- List functions
 
 anyOf' :: Function
@@ -377,6 +488,56 @@ length' = unary length''
     length_ :: ListTry a -> Try Integer
     length_ Nil = Val 0
     length_ (Cons _ xs) = xs >>= length_ <&> (+ 1)
+
+lengthIs :: Function
+lengthIs = binary lengthIs'
+  where
+    lengthIs' _ (DStringT xs) (DIntT y) =
+        liftString (\x -> liftInt (fmap AsDString . (`lengthIs_` x)) y) xs
+    lengthIs' _ (DListT xs) (DIntT y) =
+        liftList (\x -> liftInt (`lengthIs_` x) y) xs
+    lengthIs' _ _ _ = Fail
+    lengthIs_ :: Integer -> ListTry a -> Try (ListTry a)
+    lengthIs_ 0 Nil = Val Nil
+    lengthIs_ _ Nil = Fail
+    lengthIs_ n _ | n <= 0 = Fail
+    lengthIs_ n (Cons x xs) = Cons x . lengthIs_ (n - 1) <$> xs
+
+head' :: Function
+head' = unary head''
+  where
+    head'' _ (DStringT xs) =
+        liftString (fmap (AsDString . singleton) . head_) xs
+    head'' _ (DListT xs) = liftList head_ xs
+    head'' _ _ = Fail
+    head_ :: ListTry a -> Try a
+    head_ Nil = Fail
+    head_ (Cons x _) = Val x
+
+tail' :: Function
+tail' = unary tail''
+  where
+    tail'' _ (DStringT xs) = liftString (fmap AsDString . tail_) xs
+    tail'' _ (DListT xs) = liftList tail_ xs
+    tail'' _ _ = Fail
+    tail_ :: ListTry a -> Try (ListTry a)
+    tail_ Nil = Fail
+    tail_ (Cons _ xs) = xs
+
+cons :: Function
+cons = binary cons'
+  where
+    cons' _ (DListT xs) y = liftList (Cons (Val y) . Val) xs
+    cons' _ x y = liftList (Cons (Val y) . Val) (Val . singleton $ Val x)
+
+uncons :: Function
+uncons = unary2 uncons'
+  where
+    uncons' _ (DListT xs) = liftList12 uncons_ xs
+    uncons' _ _ = (Fail, Fail)
+    uncons_ :: ListTry a -> Try (a, TryList a)
+    uncons_ Nil = Fail
+    uncons_ (Cons x xs) = Val (x, xs)
 
 reverse' :: Function
 reverse' = unary reverse''
@@ -409,6 +570,21 @@ suffix = unary suffix'
     suffix_ _ Nil = Val Nil
     suffix_ i s@(Cons _ xs) =
         Choice (leftId i) (Val s) (xs >>= suffix_ (rightId i))
+
+subset :: Function
+subset = unary subset'
+  where
+    subset' i (DStringT xs) =
+        liftString (fmap AsDString . subset_ i) xs
+    subset' i (DListT xs) = liftList (subset_ i) xs
+    subset' _ _ = Fail
+    subset_ :: Id -> ListTry a -> Try (ListTry a)
+    subset_ _ Nil = Val Nil
+    subset_ i (Cons x xs) =
+        Choice
+            i
+            (Val . Cons x $ xs >>= subset_ (rightId i))
+            (xs >>= subset_ (rightId i))
 
 join' :: Function
 join' = binary join''

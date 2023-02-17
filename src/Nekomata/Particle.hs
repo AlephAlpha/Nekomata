@@ -58,7 +58,7 @@ builtinParticles =
         "Apply a function to the top two values of the stack."
     , BuiltinParticle
         "nonPop"
-        'ᵖ'
+        'ᵒ'
         nonPop
         "(m -> n) -> (0 -> n)"
         "Apply a function without popping the stack."
@@ -77,6 +77,13 @@ builtinParticles =
         "Apply a function to each value in a list, \
         \or to each character in a string, \
         \or to each integer from 1 to an integer."
+    , BuiltinParticle
+        "predicate"
+        'ᵖ'
+        predicate'
+        "(m -> n) -> (1 -> 1)"
+        "Apply a function without pushing or popping the stack, \
+        \but replace the top value with Fail if the function fails."
     ]
 
 -- | The map of from names to builtin particles
@@ -173,3 +180,13 @@ map' = Particle map''
     toDListT (DListT xs) = xs
     toDListT (DIntT x) = fromList . map toTryData . enumFromTo 1 <$> toTry x
     toDListT (DStringT xs) = fmap (Val . DStringT . Val . singleton) <$> xs
+
+predicate' :: Particle
+predicate' = Particle predicate''
+  where
+    predicate'' (Function (Arity _ _) f) =
+        Just . Function (Arity 1 1) $
+            \i (x :+ s) ->
+                let (x' :+ _) = f i (x :+ s)
+                    x'' = Cut $ \ds -> toTryData . maybe Fail Val $ values ds x'
+                 in (x'' >> x) :+ s
