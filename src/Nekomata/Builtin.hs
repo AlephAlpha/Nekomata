@@ -95,6 +95,12 @@ builtins =
         "Check if an integer is non-zero. \n\
         \If it is, push the integer itself, otherwise fail."
     , Builtin
+        "positive"
+        'P'
+        positive
+        "Check if an integer is positive. \n\
+        \If it is, push the integer itself, otherwise fail."
+    , Builtin
         "neg"
         '_'
         neg
@@ -354,6 +360,12 @@ nonZero = predicate nonZero'
     nonZero' _ (DIntT x) = (/= 0) . fromDet <$> x
     nonZero' _ _ = Fail
 
+positive :: Function
+positive = predicate positive'
+  where
+    positive' _ (DIntT x) = (> 0) . fromDet <$> x
+    positive' _ _ = Fail
+
 -- Math functions
 
 neg :: Function
@@ -475,7 +487,7 @@ integer = nullary $
 anyOf' :: Function
 anyOf' = unary anyOf''
   where
-    anyOf'' i (DStringT xs) = Val . DStringT $ xs >>= anyOf i . singleton
+    anyOf'' i (DStringT xs) = Val . DStringT $ xs >>= fmap singleton . anyOf i
     anyOf'' i (DListT xs) = join (xs >>= anyOf i)
     anyOf'' _ _ = Fail
 
@@ -535,9 +547,9 @@ uncons = unary2 uncons'
   where
     uncons' _ (DListT xs) = liftList12 uncons_ xs
     uncons' _ _ = (Fail, Fail)
-    uncons_ :: ListTry a -> Try (a, TryList a)
+    uncons_ :: ListTry a -> Try (TryList a, a)
     uncons_ Nil = Fail
-    uncons_ (Cons x xs) = Val (x, xs)
+    uncons_ (Cons x xs) = Val (xs, x)
 
 reverse' :: Function
 reverse' = unary reverse''

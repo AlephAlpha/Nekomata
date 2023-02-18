@@ -1,4 +1,4 @@
-module Main where
+module Main (main) where
 
 import Nekomata.Eval
 import Options.Applicative
@@ -88,6 +88,6 @@ main = do
     InputArg input' -> return input'
     InputStdin -> getContents
     InputNone -> return ""
-  case eval (mode opts') input' code' of
+  case eval (mode opts') code' input' of
     Left err -> die $ "Error: " ++ show err
     Right result -> putStrLn result

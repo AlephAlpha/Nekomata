@@ -79,7 +79,7 @@ library
 
   -- Other library packages from which modules are imported.
   build-depends:
-    , base        >=4.9 && <5
+    , base        >=4.16 && <5
     , containers  ^>=0.6
     , parsec      ^>=3.1
 
@@ -104,7 +104,7 @@ executable Nekomata
 
   -- Other library packages from which modules are imported.
   build-depends:
-    , base                  >=4.9  && <5
+    , base                  >=4.16 && <5
     , Nekomata
     , optparse-applicative  ^>=0.17
 
@@ -122,7 +122,7 @@ test-suite Nekomata-test
   default-language: Haskell2010
 
   -- Modules included in this executable, other than Main.
-  -- other-modules:
+  other-modules:    Eval
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:
@@ -138,6 +138,6 @@ test-suite Nekomata-test
 
   -- Test dependencies.
   build-depends:
-    , base      >=4.9  && <5
+    , base      >=4.16 && <5
     , hspec     ^>=2.10
     , Nekomata

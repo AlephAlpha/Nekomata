@@ -1,14 +1,15 @@
 module Main (main) where
 
 import Data.List
+import Eval
 import Nekomata.Builtin
 import Nekomata.CodePage
 import Nekomata.Particle hiding (name, short)
 import qualified Nekomata.Particle as Particle
 import Test.Hspec
 
-main :: IO ()
-main = hspec $ do
+testNames :: Spec
+testNames = do
     describe "CodePage" $ do
         it "should be of length 256" $ do
             length codePage `shouldBe` 256
@@ -58,3 +59,8 @@ main = hspec $ do
             let shortNames = map Particle.short builtinParticles
             let builtins' = map short builtins
             all (`notElem` builtins') shortNames `shouldBe` True
+
+main :: IO ()
+main = hspec $ do
+    testNames
+    testEval

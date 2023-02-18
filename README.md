@@ -6,7 +6,7 @@ The implementation of non-determinism is based on the paper [*KiCS2: A New Compi
 
 The language is currently in a very early stage of development. It has very few built-ins, and it doesn't support any numeric types other than integers. The syntax is also likely to change in the future.
 
-I'll start writing a documentation once it has enough features to write a useful program. For now, you can read the code for [built-in functions](src/Nekomata/Builtin.hs) and [built-in particles](src/Nekomata/Particle.hs), which includes help messages for each function.
+I'll start writing a documentation once it has enough features to write a useful program. For now, you can read the code for [built-in functions](src/Nekomata/Builtin.hs) and [built-in particles](src/Nekomata/Particle.hs), which includes help messages for each function. There are also some [examples in tests](test/Eval.hs).
 
 ## Name
 
@@ -15,6 +15,8 @@ I'll start writing a documentation once it has enough features to write a useful
 ## Building and running
 
 Nekomata is written in [Haskell](https://www.haskell.org/). You need [Cabal](https://www.haskell.org/cabal/) and [GHC](https://www.haskell.org/ghc/) to build it. The easiest way to install these tools is through [GHCup](https://www.haskell.org/ghcup/).
+
+You need to use GHC 9.2.1 or later to build Nekomata, because older versions of GHC don't support the Unicode character [`𐞥` (U+107A5, MODIFIER LETTER SMALL Q)](https://util.unicode.org/UnicodeJsps/character.jsp?a=107A5). This character was added to the Unicode standard in version 14.0.0, which was released in 2021.
 
 Once you have Cabal and GHC installed, you can build Nekomata by running the following command in the project's root directory:
 

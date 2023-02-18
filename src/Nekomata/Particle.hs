@@ -70,6 +70,13 @@ builtinParticles =
         "Pop the top value of the stack, apply a function to the rest, \
         \and push the popped value back."
     , BuiltinParticle
+        "dupDip"
+        'ᵉ'
+        dupDip
+        "(m -> n) -> (m -> n + 1)"
+        "Duplicate the top value of the stack, pop the top value, \
+        \apply a function to the rest, and push the popped value back."
+    , BuiltinParticle
         "map"
         'ᵐ'
         map'
@@ -84,6 +91,13 @@ builtinParticles =
         "(m -> n) -> (1 -> 1)"
         "Apply a function without pushing or popping the stack, \
         \but replace the top value with Fail if the function fails."
+    , BuiltinParticle
+        "repeatNonDet"
+        'ʳ'
+        repeatNonDet
+        "(1 -> 1) -> (1 -> 1)"
+        "Apply a function to the top value of the stack zero or more times. \
+        \The function must take a single argument and return a single value."
     ]
 
 -- | The map of from names to builtin particles
@@ -167,6 +181,13 @@ dip = Particle dip'
         Just . Function (Arity (m + 1) (n + 1)) $
             \i (x :+ s) -> x :+ f i s
 
+dupDip :: Particle
+dupDip = Particle dupDip'
+  where
+    dupDip' (Function (Arity m n) f) =
+        Just . Function (Arity m (n + 1)) $
+            \i (x :+ s) -> x :+ f i (x :+ s)
+
 map' :: Particle
 map' = Particle map''
   where
@@ -190,3 +211,20 @@ predicate' = Particle predicate''
                 let (x' :+ _) = f i (x :+ s)
                     x'' = Cut $ \ds -> toTryData . maybe Fail Val $ values ds x'
                  in (x'' >> x) :+ s
+
+repeatNonDet :: Particle
+repeatNonDet = Particle repeatNonDet'
+  where
+    repeatNonDet' (Function (Arity 1 1) f) =
+        Just . Function (Arity 1 1) $
+            \i (x :+ s) ->
+                (x >>= repeatNonDet'' i (\i' x' -> top $ f i' (Val x' :+ s)))
+                    :+ s
+    repeatNonDet' _ = Nothing
+    repeatNonDet'' i f x =
+        Choice
+            (leftId i)
+            (Val x)
+            ( f (leftId (rightId i)) x
+                >>= repeatNonDet'' (rightId (rightId i)) f
+            )

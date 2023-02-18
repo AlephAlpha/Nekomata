@@ -16,6 +16,7 @@ data NekomataError
     = ParseError ParseError
     | CodePageError CodePageError
     | ParticleArityError ParticleArityError
+    deriving (Eq)
 
 instance Show NekomataError where
     show (ParseError e) = show e
@@ -56,9 +57,13 @@ showResult FirstValue = maybe "" show . values initDecisions
 showResult CountValues = show . countValues initDecisions
 showResult CheckExistence = show . hasValue initDecisions
 
+-- | Get all results of a Nekomata evaluation as a list of strings
+allResults :: TryData -> [String]
+allResults = map show . values initDecisions
+
 -- | Evaluate a Nekomata program string according to the mode
 eval :: Mode -> String -> String -> Either NekomataError String
-eval mode input code = do
+eval mode code input = do
     f <- compile code
     inputData <- readInput input
     return . showResult mode . snd $ runFunction f (initRuntime inputData)

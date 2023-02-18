@@ -140,25 +140,25 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 
 不清楚要不要加上一个 `\nth-from-end` 函数，这样就可以写成 `\prefix \sort 2 \nth-from-end`。
 
-## [The inverse Collatz Conjecture](https://codegolf.stackexchange.com/q/175248/9288)
+## [x] [The inverse Collatz Conjecture](https://codegolf.stackexchange.com/q/175248/9288)
 
 有点麻烦，因为这需要一个 while 循环，循环里还有 if 判断。
 
 ```
-\repeatNonDet { \dup \decrement 2 \divExact \swap 3 \mul \increment \choice \oneValue \nonZero } 0 \choice
+\repeatNonDet { \nonZero \dup \decrement 2 \divExact \swap 3 \mul \increment \choice \oneValue }
 ```
 
-有 16 个字节了，和其它语言的解答相比输得比较惨。可能还需要找到一些更好地模拟 while 循环和 if 判断的办法。关键是常规的 while 和 if 作为高阶函数都应该输入两个或三个函数，但 Nekomata 的助词只能输入一个函数。
+有 13 个字节了，和其它语言的解答相比输得比较惨。可能还需要找到一些更好地模拟 while 循环和 if 判断的办法。关键是常规的 while 和 if 作为高阶函数都应该输入两个或三个函数，但 Nekomata 的助词只能输入一个函数。
 
-- [ ] `\repeatNonDet`：助词。输入一个函数，重复执行这个函数 non-deterministic 次。这个函数是 non-deterministic 的。这个助词比较复杂，不确定要不要实现。
+- [x] `\repeatNonDet`：助词。输入一个函数，重复执行这个函数 non-deterministic 次。这个函数是 non-deterministic 的。这个助词比较复杂，目前只实现了要求输入的函数是 1 -> 1 的情况，暂时还不知道怎样推广到 n -> n 的情况。
+- [x] `\nonZero`：判断一个数是否不为 0。如果不为 0，返回这个数本身；否则返回 `Fail`。
 - [x] `\divExact`：输入两个整数，求它们的整除。如果不能整除，返回 `Fail`。
 - [x] `\swap`：交换栈顶的两个元素。已实现。
 - [x] `\increment`：将一个数加 1。
 - [x] `\choice`：在栈顶的两个元素中选择一个。这个函数是 non-deterministic 的。
 - [x] `\oneValue`：求一个 non-deterministic 值的第一个可能取值。这个函数和 `\allValues` 一样，需要对现有的运算机制做一些修改。不清楚要不要把 `\choice` 和 `\oneValue` 合并成一个函数，这样可能可以更方便地模拟 if 判断。
-- [x] `\nonZero`：判断一个数是否不为 0。如果不为 0，返回这个数本身；否则返回 `Fail`。
 
-## [Reversed Iota's](https://codegolf.stackexchange.com/q/199290/9288)
+## [x] [Reversed Iota's](https://codegolf.stackexchange.com/q/199290/9288)
 
 ```
 \range1 \range1 \map \reverse
@@ -282,10 +282,10 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 想到两种解法，勉强和 Jelly、05AB1E 打平，和 Husk 的解答还有较大差距：
 
 ```
-\repeatNonDet { \uncons 4 \sub \sub \filter \positive } \countValues \decrement
+\repeatNonDet { \uncons 4 \add \sub \filter \positive } \countValues \decrement
 ```
 
-- [ ] `\uncons`：输入一个列表，输出一个二元组，第二个元素是列表的第一个元素，第一个元素是列表的剩余部分。如果列表为空，返回 `Fail`。
+- [x] `\uncons`：输入一个列表，输出一个二元组，第二个元素是列表的第一个元素，第一个元素是列表的剩余部分。如果列表为空，返回 `Fail`。
 - [x] `\countValues`：求一个 non-deterministic 值的所有可能取值的个数。
 
 ```
@@ -315,3 +315,31 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 - [x] `\integer`：non-deterministic 地输出任意一个整数，按 `0, 1, -1, 2, -2, 3, -3, ...` 的顺序。
 - [ ] `\dot`：求两个列表的点积。如果两个列表的长度不同，返回 `Fail`。
 - [x] `sign`：求一个整数的符号。如果是正数，返回 `1`；如果是负数，返回 `-1`；如果是零，返回 `0`。
+
+## Fibonacci function or sequence(https://codegolf.stackexchange.com/q/85/9288)
+
+参考 Brachylog 解答：
+
+```
+2 \range0 \repeatNonDet { \dupDip \last \sum \pair } \head
+```
+
+- [ ] `\pair`：将两个元素组成一个二元组。比如输入 `1` 和 `2`，输出 `[1, 2]`。
+
+如果 `\repeatNonDet` 能支持 `2 -> 2` 的函数，就可以写成：
+
+```
+1 0 \repeatNonDet { \swap \dupDip \add ｝
+```
+
+注意这是 8 个字节，因为 1 和 0 之间的空格不能省略。
+
+另一种解答：
+
+```
+\while { \positive \decrement \dup \decrement \choice }
+```
+
+1-indexed 地输出数列 `0,1,1,2,3,5,...`。需要用 `-n` flag 来输出结果的可能取值数目，而非结果本身。
+
+- [ ] `\while`：助词。输入一个函数，重复执行这个函数，直到 fail 为止。
