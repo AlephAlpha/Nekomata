@@ -11,4 +11,5 @@ jobs:
       - uses: haskell/actions/setup@v2
         with:
           ghc-version: ${{ matrix.ghc }}
+      - run: cabal build
       - run: cabal run Nekomata-test

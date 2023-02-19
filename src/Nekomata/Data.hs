@@ -69,9 +69,22 @@ anyOf i (Cons x xs) = Choice (leftId i) (Val x) (xs >>= anyOf (rightId i))
 singleton :: a -> ListTry a
 singleton x = Cons x (Val Nil)
 
+-- | Map a non-deterministic function over a @TryList@
 tryMap :: (Id -> a -> Try b) -> Id -> ListTry (Try a) -> ListTry (Try b)
 tryMap _ _ Nil = Nil
 tryMap f i (Cons x xs) = Cons (x >>= f (leftId i)) (tryMap f (rightId i) <$> xs)
+
+-- | Fold a non-deterministic function over a @TryList@ from right to left
+tryFoldr :: (Id -> a -> b -> Try b) -> Id -> b -> ListTry (Try a) -> Try b
+tryFoldr _ _ b Nil = Val b
+tryFoldr f i b (Cons x xs) =
+    liftJoinM2 (f (leftId i)) x (xs >>= tryFoldr f (rightId i) b)
+
+-- | Fold a non-deterministic function over a @TryList@ from left to right
+tryFoldl :: (Id -> b -> a -> Try b) -> Id -> b -> ListTry (Try a) -> Try b
+tryFoldl _ _ b Nil = Val b
+tryFoldl f i b (Cons x xs) =
+    liftJoinM2 (tryFoldl f (leftId i)) (x >>= f (rightId i) b) xs
 
 instance NonDet a => NonDet (ListTry a) where
     type Value (ListTry a) = [Value a]
@@ -107,6 +120,10 @@ instance NonDet DataTry where
     toTry (DIntT t) = DInt <$> toTry t
     toTry (DStringT t) = DString <$> toTry t
     toTry (DListT t) = DList <$> toTry t
+
+-- | Get the first possible value of a @TryData@
+firstValue :: TryData -> TryData
+firstValue x = Cut (\ds -> toTryData . maybe Fail Val $ values ds x)
 
 -- | A helper class for lifting functions to @TryData@
 class ToTryData a where
@@ -172,6 +189,15 @@ liftString2 f x y =
     toTryData $
         liftM2 f (fmap fromDet <$> x) (fmap fromDet <$> y)
 
+-- | Lift a unary string function that returns two values to @TryData@
+liftString12 ::
+    (ToTryData a, ToTryData b) =>
+    (ListTry Char -> Try (a, b)) ->
+    (TryList (Det Char) -> (TryData, TryData))
+liftString12 f x =
+    let y = x >>= f . fmap fromDet
+     in (toTryData $ fst <$> y, toTryData $ snd <$> y)
+
 -- | Lift a unary list function to @TryData@
 liftList ::
     ToTryData a =>
@@ -192,8 +218,36 @@ liftList12 ::
     (ListTry TryData -> Try (a, b)) ->
     (TryList TryData -> (TryData, TryData))
 liftList12 f x =
-    let y = x >>= f
-     in (toTryData $ fst <$> y, toTryData $ snd <$> y)
+    let y = x >>= f in (toTryData $ fst <$> y, toTryData $ snd <$> y)
+
+-- | Vectorize a unary function
+vec1 :: (Id -> DataTry -> TryData) -> Id -> DataTry -> TryData
+vec1 f i (DListT xs) = liftList (tryMap f i) xs
+vec1 f i x = f i x
+
+-- | Vectorize a binary function with padding
+vec2Pad ::
+    (Id -> DataTry -> DataTry -> TryData) ->
+    Id ->
+    DataTry ->
+    DataTry ->
+    TryData
+vec2Pad f i (DListT xs) (DListT ys) = liftList2 (zipWithPad f i) xs ys
+vec2Pad f i (DListT xs) y = liftList (tryMap (\i' x -> f i' x y) i) xs
+vec2Pad f i x (DListT ys) = liftList (tryMap (`f` x) i) ys
+vec2Pad f i x y = f i x y
+
+-- | Vectorize a binary function with failure on mismatched lengths
+vec2Fail ::
+    (Id -> DataTry -> DataTry -> TryData) ->
+    Id ->
+    DataTry ->
+    DataTry ->
+    TryData
+vec2Fail f i (DListT xs) (DListT ys) = liftList2 (zipWithFail f i) xs ys
+vec2Fail f i (DListT xs) y = liftList (tryMap (\i' x -> f i' x y) i) xs
+vec2Fail f i x (DListT ys) = liftList (tryMap (`f` x) i) ys
+vec2Fail f i x y = f i x y
 
 -- | A helper class for checking for equality
 class TryEq a where

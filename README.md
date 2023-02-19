@@ -41,14 +41,3 @@ To see a list of all available options, use:
 ```bash
 cabal run Nekomata -- -h
 ```
-
-## Examples
-
-### Hello world
-
-```
-"Hello, World!"
-```
-
-Currently, Nekomata doesn't support string compression, so you have to write the full string.
-

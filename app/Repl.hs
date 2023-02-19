@@ -2,9 +2,9 @@ module Repl (runRepl) where
 
 import Control.Applicative ((<|>))
 import Data.List (isPrefixOf)
-import Data.Map.Strict (keys, (!))
+import Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
-import Nekomata.Builtin
+import Nekomata.Builtin (Builtin (short), builtinMap, infoByName)
 import Nekomata.Eval
 import qualified Nekomata.Particle as Particle
 import System.Console.Haskeline
@@ -75,6 +75,10 @@ helpString =
         , "  \\Mode exists   Show whether there are any results"
         , "  \\Input <data>  Reset the stack with the given input"
         , "  \\Info <name>   Show information about a builtin"
+        , ""
+        , "Press TAB to complete commands and builtins."
+        , "Add a space after the full name of a builtin and press TAB \
+          \to convert it to its short form."
         ]
 
 builtinInfo :: String -> Maybe String
@@ -123,27 +127,31 @@ replCommandCompletion :: String -> [Completion]
 replCommandCompletion prefix =
     [simpleCompletion s | s <- replCommandStrings, prefix `isPrefixOf` s]
 
-builtinCompletion :: String -> [Completion]
-builtinCompletion prefix = functionCompletions ++ particleCompletions
+completionFromMap :: Map String a -> (a -> Char) -> String -> [Completion]
+completionFromMap m f prefix = completing ++ completed
   where
-    functionCompletions =
-        [ completion prefix name' short'
-        | name' <- Map.keys builtinMap
+    completing =
+        [ completing' name' short'
+        | name' <- Map.keys m
         , tail prefix `isPrefixOf` name'
-        , let short' = [short $ builtinMap ! name']
+        , let short' = [f $ m ! name']
         ]
-    particleCompletions =
-        [ completion prefix name' short'
-        | name' <- keys Particle.builtinParticleMap
-        , tail prefix `isPrefixOf` name'
-        , let short' = [Particle.short $ Particle.builtinParticleMap ! name']
-        ]
-    completion prefix' name' short' =
+    completed =
+        if not (null prefix) && last prefix == ' '
+            then case Map.lookup (tail $ init prefix) m of
+                Nothing -> []
+                Just b -> [completed' [f b]]
+            else []
+    completing' name' short' =
         let name'' = '\\' : name'
             info' = name'' ++ " ('" ++ short' ++ "')"
-         in if name'' == prefix'
-                then Completion short' info' False
-                else Completion name'' info' False
+         in Completion name'' info' True
+    completed' short' = Completion short' short' False
+
+builtinCompletion :: String -> [Completion]
+builtinCompletion prefix =
+    completionFromMap builtinMap short prefix
+        ++ completionFromMap Particle.builtinParticleMap Particle.short prefix
 
 replCompletion :: Monad m => CompletionFunc m
 replCompletion (s, _) = do

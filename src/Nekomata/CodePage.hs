@@ -10,7 +10,7 @@ import Data.Word (Word8)
 codePage :: String
 codePage =
     "�÷×∣≠∀∃←→\n↔⧺⋀⋁⊥⊤"
-        ++ "¬±ℕℤ������������"
+        ++ "¬±ℕℤ∑∏����������"
         ++ " !\"#$%&'()*+,-./"
         ++ "0123456789:;<=>?"
         ++ "@ABCDEFGHIJKLMNO"

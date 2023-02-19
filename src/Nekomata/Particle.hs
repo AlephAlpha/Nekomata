@@ -217,9 +217,7 @@ predicate' = Particle predicate''
     predicate'' (Function (Arity _ _) f) =
         Just . Function (Arity 1 1) $
             \i (x :+ s) ->
-                let (x' :+ _) = f i (x :+ s)
-                    x'' = Cut $ \ds -> toTryData . maybe Fail Val $ values ds x'
-                 in (x'' >> x) :+ s
+                let (x' :+ _) = f i (x :+ s) in (firstValue x' >> x) :+ s
 
 repeatNonDet :: Particle
 repeatNonDet = Particle repeatNonDet'

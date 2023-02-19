@@ -8,7 +8,7 @@ module Nekomata.Builtin (
     infoByName,
 ) where
 
-import Control.Monad (join)
+import Control.Monad (join, (>=>))
 import Data.Functor ((<&>))
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
@@ -264,7 +264,7 @@ builtins =
         "uncons"
         'C'
         uncons
-        "Get the first element of a list and the rest of the list."
+        "Get the first element list and the rest of a list or a string."
     , Builtin
         "reverse"
         '↔'
@@ -295,6 +295,19 @@ builtins =
         "Concatenate two lists or two strings.\n\
         \If one of the arguments is a string, \
         \the other argument is converted to a string as well."
+    , Builtin
+        "sum"
+        '∑'
+        sum'
+        "Take the sum of a list of integers. \n\
+        \The addition is automatically vectorized with padding zeros."
+    , Builtin
+        "product"
+        '∏'
+        product'
+        "Take the product of a list of integers. \n\
+        \The multiplication is automatically vectorized \
+        \and fails when the two lists are of different lengths."
     ]
 
 -- | The map from names to builtin functions
@@ -328,8 +341,7 @@ allValues = Function (Arity 1 1) $
     \_ (x :+ s) -> Cut (\ds -> toTryData . fromList $ values ds x) :+ s
 
 oneValue :: Function
-oneValue = Function (Arity 1 1) $
-    \_ (x :+ s) -> Cut (\ds -> toTryData . maybe Fail Val $ values ds x) :+ s
+oneValue = Function (Arity 1 1) $ \_ (x :+ s) -> firstValue x :+ s
 
 countValues' :: Function
 countValues' = Function (Arity 1 1) $
@@ -484,11 +496,11 @@ range1 = unaryVec range1'
 
 natural :: Function
 natural = nullary $
-    \i -> mapM toTryData [0 :: Integer ..] >>= anyOf i . fromList
+    \i -> toTryData <$> anyOf i $ fromList [0 :: Integer ..]
 
 integer :: Function
 integer = nullary $
-    \i -> mapM toTryData integers >>= anyOf i . fromList
+    \i -> toTryData <$> anyOf i $ fromList integers
   where
     integers = (0 :: Integer) : [y | x <- [1 ..], y <- [x, -x]]
 
@@ -555,6 +567,10 @@ cons = binary cons'
 uncons :: Function
 uncons = unary2 uncons'
   where
+    uncons' _ (DStringT xs) =
+        liftString12
+            (uncons_ >=> \(ys, y) -> Val (AsDString <$> ys, AsDString [y]))
+            xs
     uncons' _ (DListT xs) = liftList12 uncons_ xs
     uncons' _ _ = (Fail, Fail)
     uncons_ :: ListTry a -> Try (TryList a, a)
@@ -601,12 +617,12 @@ subset = unary subset'
     subset' i (DListT xs) = liftList (subset_ i) xs
     subset' _ _ = Fail
     subset_ :: Id -> ListTry a -> Try (ListTry a)
-    subset_ _ Nil = Val Nil
-    subset_ i (Cons x xs) =
-        Choice
-            i
-            (Val . Cons x $ xs >>= subset_ (rightId i))
-            (xs >>= subset_ (rightId i))
+    subset_ i xs = Choice (leftId i) (Val Nil) (nonEmptySubset (rightId i) xs)
+    nonEmptySubset _ Nil = Fail
+    nonEmptySubset i (Cons x xs) =
+        Choice (leftId i) (Val $ singleton x) $
+            xs >>= nonEmptySubset (leftId (rightId i)) >>= \ys ->
+                Choice (rightId (rightId i)) (Val ys) (Val . Cons x $ Val ys)
 
 join' :: Function
 join' = binary join''
@@ -622,3 +638,25 @@ join' = binary join''
     join_ :: ListTry a -> ListTry a -> Try (ListTry a)
     join_ Nil ys = Val ys
     join_ (Cons x xs) ys = Val . Cons x $ liftJoinM2 join_ xs (Val ys)
+
+sum' :: Function
+sum' = unary sum''
+  where
+    sum'' i (DListT xs) =
+        liftList
+            (tryFoldl (vec2Pad add') i . DIntT . Val $ Det 0)
+            xs
+    sum'' _ _ = Fail
+    add' _ (DIntT x) (DIntT y) = liftInt2 (+) x y
+    add' _ _ _ = Fail
+
+product' :: Function
+product' = unary product''
+  where
+    product'' i (DListT xs) =
+        liftList
+            (tryFoldl (vec2Fail mul') i . DIntT . Val $ Det 1)
+            xs
+    product'' _ _ = Fail
+    mul' _ (DIntT x) (DIntT y) = liftInt2 (*) x y
+    mul' _ _ _ = Fail

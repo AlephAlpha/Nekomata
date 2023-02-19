@@ -115,25 +115,12 @@ constant = nullary . const . toTryData
 
 -- | Convert and vectorize a unary function
 unaryVec :: (Id -> DataTry -> TryData) -> Function
-unaryVec f = unary f'
-  where
-    f' i (DListT xs) = liftList (tryMap f' i) xs
-    f' i x = f i x
+unaryVec = unary . vec1
 
 -- | Convert and vectorize a binary function with padding
 binaryVecPad :: (Id -> DataTry -> DataTry -> TryData) -> Function
-binaryVecPad f = binary f'
-  where
-    f' i (DListT xs) (DListT ys) = liftList2 (zipWithPad f' i) xs ys
-    f' i (DListT xs) y = liftList (tryMap (\i' x -> f' i' x y) i) xs
-    f' i x (DListT ys) = liftList (tryMap (`f'` x) i) ys
-    f' i x y = f i x y
+binaryVecPad = binary . vec2Pad
 
 -- | Convert and vectorize a binary function with fail
 binaryVecFail :: (Id -> DataTry -> DataTry -> TryData) -> Function
-binaryVecFail f = binary f'
-  where
-    f' i (DListT xs) (DListT ys) = liftList2 (zipWithFail f' i) xs ys
-    f' i (DListT xs) y = liftList (tryMap (\i' x -> f' i' x y) i) xs
-    f' i x (DListT ys) = liftList (tryMap (`f'` x) i) ys
-    f' i x y = f i x y
+binaryVecFail = binary . vec2Fail

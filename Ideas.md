@@ -51,7 +51,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 
 - [ ] `\reciprocal`：求一个数的倒数。不支持有理数的话，这个函数就毫无意义。
 - [ ] `\complement`：求 `1 - x`。感觉不一定常用，可以考虑拆成 `\decrement` 和 `\neg` 两个函数。`\neg` 已经有了。
-- [ ] `\product`：求一个列表的乘积。这个函数应该是比较常用的。
+- [ ] `\product`：求一个列表的乘积。这个函数应该是比较常用的。已实现整数版本，待添加有理数支持。
 - [ ] `\div`：求两个数的商。目前已经有了这个函数，但是只支持整数，不支持有理数。加上有理数之后，可能需要三种版本的 `\div`：`\div`、`\divInt` 和 `\divExact`。`\div` 就是普通的除法；`\divInt` 是先除再取整；`\divExact` 是整除，如果结果不是整数就返回 `Fail`。
 
 或者抄现有的 05AB1E 解答：
@@ -67,10 +67,10 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 如果不支持有理数，这道题也不是不能解答，只是解答会比较长：
 
 ```
-\dupDip { \product \mul } \decrement \product \div
+\product \mul \swap \decrement \product \div
 ```
 
-- [ ] `\dupDip`：这是个助词，不知道叫什么名字好。其作用是调用完函数之后把原来的栈顶元素再压回去。其它语言里没见过这个东西，但好像挺有用的。
+- [x] `\dupDip`：这是个助词，不知道叫什么名字好。其作用是调用完函数之后把原来的栈顶元素再压回去。其它语言里没见过这个东西，但好像挺有用的。
 
 ## [Time to shortest transposition](https://codegolf.stackexchange.com/q/257631/9288)
 
@@ -191,9 +191,9 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 - [x] `\cons`：输入一个元素和一个列表，将这个元素插入到列表的开头。
 - [ ] `\delta`：输入一个列表，输出列表中相邻元素的差。比如输入 `[1, 2, 3, 4]`，输出 `[1, 1, 1]`。
 - [ ] `\filter`：助词。将函数应用到一个列表的每个元素上，过滤掉返回 `Fail` 的元素。
-- [ ] `\positive`：判断一个数是否大于 0。如果大于 0，返回这个数本身；否则返回 `Fail`。
+- [x] `\positive`：判断一个数是否大于 0。如果大于 0，返回这个数本身；否则返回 `Fail`。
 - [x] `\max`：求两个数中的最大值。自动向量化。
-- [ ] `\sum`：求一个列表的和。
+- [x] `\sum`：求一个列表的和。
 
 两个想法：
 
@@ -296,6 +296,8 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 - [ ] `\minMax`：求一个列表的最小值和最大值。不清楚应该哪个在前，哪个在后；如果是最大值在前，后面的 `\swap` 就可以省略。
 - [ ] `\last`：求一个列表的最后一个元素。如果列表为空，返回 `Fail`。由于还没确定 `\unconcat` 中各种可能的取值按什么顺序排列，这里也有可能是 `\first`，此时可以和前面的 `\allValues` 合并成 `\oneValue`。
 
+如果能支持递归就好了。但是递归会让函数的 arity 无法确定。
+
 ## [Construct the Identity Matrix](https://codegolf.stackexchange.com/q/70365/9288)
 
 ```
@@ -309,10 +311,11 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 参考现有的 Vyxal 解答：
 
 ```
-\integer \allValues \subset 2 \lengthIs \predicate { 1 \neg \cons \swap \map { 1 \cons \reverse \dot \sign \nonZero } \sum 0 \eq }
+\integer \allValues \dup \anyPair \lengthIs \predicate { 1 \neg \cons \swap \map { 1 \cons \reverse \dot \sign \nonZero } \sum 0 \eq }
 ```
 
 - [x] `\integer`：non-deterministic 地输出任意一个整数，按 `0, 1, -1, 2, -2, 3, -3, ...` 的顺序。
+- [ ] `\anyPair`：输入两个列表，输出一个二元组，第一个元素是第一个列表的任意一个元素，第二个元素是第二个列表的任意一个元素。这个函数是 non-deterministic 的。实现时要注意两个列表的长度都可能是无穷的。
 - [ ] `\dot`：求两个列表的点积。如果两个列表的长度不同，返回 `Fail`。
 - [x] `sign`：求一个整数的符号。如果是正数，返回 `1`；如果是负数，返回 `-1`；如果是零，返回 `0`。
 
@@ -324,6 +327,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 2 \range0 \repeatNonDet { \dupDip \last \sum \pair } \head
 ```
 
+- [x] `\dupDip`：这是个助词，不知道叫什么名字好。其作用是调用完函数之后把原来的栈顶元素再压回去。其它语言里没见过这个东西，但好像挺有用的。
 - [ ] `\pair`：将两个元素组成一个二元组。比如输入 `1` 和 `2`，输出 `[1, 2]`。
 
 如果 `\repeatNonDet` 能支持 `2 -> 2` 的函数，就可以写成：
