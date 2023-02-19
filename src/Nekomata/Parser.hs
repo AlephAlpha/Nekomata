@@ -119,14 +119,14 @@ parseTerm =
         , TBlock
             <$> between
                 (char '{' >> spaces)
-                (spaces >> (void (char '}') <|> eof))
+                (void (char '}') <|> eof)
                 parseBlock
         ]
         <?> "Nekomata term"
 
 -- | Parse a Nekomata program
 parseBlock :: Parser Program
-parseBlock = Program <$> parseTerm `sepBy` spaces <?> "Nekomata block"
+parseBlock = Program <$> parseTerm `endBy` spaces <?> "Nekomata block"
 
 -- | Parse a Nekomata program
 parseProgram :: Parser Program
@@ -135,6 +135,6 @@ parseProgram = spaces >> parseBlock <* spaces <* eof <?> "Nekomata program"
 parseInput :: Parser [Data]
 parseInput =
     parseData
-        `sepBy` (try (spaces >> char ',' >> spaces) <|> spaces)
+        `endBy` (try (spaces >> char ',' >> spaces) <|> try spaces)
         <* eof
         <?> "Nekomata input"
