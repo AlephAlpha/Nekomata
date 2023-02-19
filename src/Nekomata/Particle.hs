@@ -8,6 +8,7 @@ module Nekomata.Particle (
     ParticleArityError (..),
     applyParticle,
     info,
+    infoByName,
 ) where
 
 import Data.Map.Strict (Map)
@@ -46,6 +47,14 @@ info b =
         ++ arity b
         ++ "):\n"
         ++ help b
+
+-- | Get the info string for a builtin particle by name
+infoByName :: String -> Maybe String
+infoByName name' =
+    info <$> case name' of
+        [short'] -> Map.lookup short' builtinParticleShortMap
+        '\\' : name'' -> Map.lookup name'' builtinParticleMap
+        _ -> Map.lookup name' builtinParticleMap
 
 -- | The list of all builtin particles
 builtinParticles :: [BuiltinParticle]

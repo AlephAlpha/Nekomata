@@ -24,13 +24,23 @@ Once you have Cabal and GHC installed, you can build Nekomata by running the fol
 cabal build
 ```
 
-To run a Nekomata program, you can use the following command:
+To run the Nekomata REPL, use:
+
+```bash
+cabal run Nekomata -- -r
+```
+
+To run a Nekomata program from a file with a given input string, use:
 
 ```bash
 cabal run Nekomata -- -f <path to program> -i <input string>
 ```
 
-You can also take input from stdin by using the `-s` flag instead of `-i`, or read the program as command line arguments by using the `-c` flag instead of `-f`. You can also use the `-h` flag to see a list of all available options.
+To see a list of all available options, use:
+
+```bash
+cabal run Nekomata -- -h
+```
 
 ## Examples
 

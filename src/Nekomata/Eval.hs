@@ -1,13 +1,15 @@
 module Nekomata.Eval where
 
 import Control.Arrow (left)
-import Control.Monad ((>=>))
+import Control.Monad (mplus, (>=>))
+import Nekomata.Builtin (infoByName)
 import Nekomata.CodePage (CodePageError, checkCodePage)
-import Nekomata.Data
+import Nekomata.Data (Data, TryData)
 import Nekomata.Function
 import Nekomata.NonDet
 import Nekomata.Parser
 import Nekomata.Particle (ParticleArityError)
+import qualified Nekomata.Particle as Particle (infoByName)
 import Nekomata.Program
 import Text.Parsec
 
@@ -67,3 +69,7 @@ eval mode code input = do
     f <- compile code
     inputData <- readInput input
     return . showResult mode . snd $ runFunction f (initRuntime inputData)
+
+-- | Get the information of a built-in function or particle
+builtinInfo :: String -> Maybe String
+builtinInfo name = infoByName name `mplus` Particle.infoByName name

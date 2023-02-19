@@ -5,6 +5,7 @@ module Nekomata.Builtin (
     builtinMap,
     builtinShortMap,
     info,
+    infoByName,
 ) where
 
 import Control.Monad (join)
@@ -36,6 +37,14 @@ info b =
         ++ show (arity (func b))
         ++ "):\n"
         ++ help b
+
+-- | Get the info string for a builtin function by name
+infoByName :: String -> Maybe String
+infoByName name' =
+    info <$> case name' of
+        [short'] -> Map.lookup short' builtinShortMap
+        '\\' : name'' -> Map.lookup name'' builtinMap
+        _ -> Map.lookup name' builtinMap
 
 -- | The list of all builtin functions
 builtins :: [Builtin]
@@ -298,6 +307,7 @@ builtinShortMap = Map.fromList [(short b, b) | b <- builtins]
 
 -- | An error that occurs when a builtin function is not found
 data BuiltinNotFoundError = BuiltinNotFound String | BuiltinShortNotFound Char
+    deriving (Eq)
 
 instance Show BuiltinNotFoundError where
     show (BuiltinNotFound name') =

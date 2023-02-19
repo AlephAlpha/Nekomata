@@ -2,6 +2,7 @@ module Main (main) where
 
 import Nekomata.Eval
 import Options.Applicative
+import Repl
 import System.Exit (die)
 
 data Code = CodeArg String | CodeFile FilePath
@@ -64,10 +65,17 @@ optMode =
       )
     <|> pure AllValues
 
-data Opts = Opts {code :: Code, input :: Input, mode :: Mode}
+data RunOnce = RunOnce {code :: Code, input :: Input, mode :: Mode}
+
+optRunOnce :: Parser RunOnce
+optRunOnce = RunOnce <$> optCode <*> optInput <*> optMode
+
+data Opts = Opts RunOnce | Repl
 
 opts :: Parser Opts
-opts = Opts <$> optCode <*> optInput <*> optMode
+opts =
+  Opts <$> optRunOnce
+    <|> flag' Repl (long "repl" <> short 'r' <> help "Run the REPL")
 
 optsInfo :: ParserInfo Opts
 optsInfo =
@@ -81,13 +89,16 @@ optsInfo =
 main :: IO ()
 main = do
   opts' <- execParser optsInfo
-  code' <- case code opts' of
-    CodeArg code' -> return code'
-    CodeFile file -> readFile file
-  input' <- case input opts' of
-    InputArg input' -> return input'
-    InputStdin -> getContents
-    InputNone -> return ""
-  case eval (mode opts') code' input' of
-    Left err -> die $ "Error: " ++ show err
-    Right result -> putStrLn result
+  case opts' of
+    Opts runOnce -> do
+      code' <- case code runOnce of
+        CodeArg code' -> return code'
+        CodeFile file -> readFile file
+      input' <- case input runOnce of
+        InputArg input' -> return input'
+        InputStdin -> getContents
+        InputNone -> return ""
+      case eval (mode runOnce) code' input' of
+        Left err -> die $ "Error: " ++ show err
+        Right result -> putStrLn result
+    Repl -> runRepl
