@@ -102,11 +102,22 @@ builtinParticles =
         \but replace the top value with Fail if the function fails."
     , BuiltinParticle
         "repeatNonDet"
-        'ʳ'
+        'ⁿ'
         repeatNonDet
-        "(1 -> 1) -> (1 -> 1)"
-        "Apply a function to the top value of the stack zero or more times. \
-        \The function must take a single argument and return a single value."
+        "(n -> n) -> (n -> n)"
+        "Apply a function zero or more times non-deterministically, \
+        \until the top value of the stack is Fail.\n\
+        \This is different from `while` in that it returns \
+        \the intermediate results."
+    , BuiltinParticle
+        "while"
+        'ʷ'
+        while
+        "(n -> n) -> (n -> n)"
+        "Apply a function zero or more times, \
+        \until the top value of the stack is Fail.\n\
+        \This is different from `repeatNonDet` in that it does not \
+        \return the intermediate results."
     ]
 
 -- | The map of from names to builtin particles
@@ -217,21 +228,45 @@ predicate' = Particle predicate''
     predicate'' (Function (Arity _ _) f) =
         Just . Function (Arity 1 1) $
             \i (x :+ s) ->
-                let (x' :+ _) = f i (x :+ s) in (firstValue x' >> x) :+ s
+                ( normalForm x
+                    >>= predicate_ (\x' -> top (f i (Val x' :+ s)))
+                )
+                    :+ s
+    predicate_ f x = Cut $ \ds -> if hasValue ds (f x) then Val x else Fail
 
 repeatNonDet :: Particle
 repeatNonDet = Particle repeatNonDet'
   where
-    repeatNonDet' (Function (Arity 1 1) f) =
-        Just . Function (Arity 1 1) $
-            \i (x :+ s) ->
-                (x >>= repeatNonDet'' i (\i' x' -> top $ f i' (Val x' :+ s)))
-                    :+ s
+    repeatNonDet' (Function (Arity m n) f) | m == n =
+        Just . Function (Arity m n) $
+            \i s ->
+                prepend
+                    (takeStack n . tryStack $ repeatNonDet'' i f s)
+                    (dropStack m s)
     repeatNonDet' _ = Nothing
-    repeatNonDet'' i f x =
+    repeatNonDet'' i f s =
         Choice
             (leftId i)
-            (Val x)
-            ( f (leftId (rightId i)) x
+            (Val s)
+            ( Val (f (leftId (rightId i)) s)
+                >>= (\s' -> top s' >> Val s')
                 >>= repeatNonDet'' (rightId (rightId i)) f
             )
+
+while :: Particle
+while = Particle while'
+  where
+    while' (Function (Arity m n) f) | m == n =
+        Just . Function (Arity m n) $
+            \i s ->
+                prepend
+                    (takeStack n . tryStack $ while'' i f s)
+                    (dropStack m s)
+    while' _ = Nothing
+    while'' :: Id -> (Id -> Stack -> Stack) -> Stack -> Try Stack
+    while'' i f s =
+        Cut $ \ds ->
+            let s' = f (leftId i) s
+             in if hasValue ds (top s')
+                    then normalForm (top s') >> Val s' >>= while'' (rightId i) f
+                    else Val s

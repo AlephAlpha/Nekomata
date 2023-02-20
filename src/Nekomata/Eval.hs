@@ -3,7 +3,7 @@ module Nekomata.Eval where
 import Control.Arrow (left)
 import Control.Monad ((>=>))
 import Nekomata.CodePage (CodePageError, checkCodePage)
-import Nekomata.Data (Data, TryData)
+import Nekomata.Data (Data (..), TryData)
 import Nekomata.Function
 import Nekomata.NonDet
 import Nekomata.Parser
@@ -50,16 +50,21 @@ runFunction f (Runtime id' s) =
 data Mode = AllValues | FirstValue | CountValues | CheckExistence
     deriving (Eq, Ord, Show)
 
+-- | Show a Nekomata value
+showData :: Data -> String
+showData (DString s) = s
+showData x = show x
+
 -- | Show the result of a Nekomata evaluation according to the mode
 showResult :: Mode -> TryData -> String
-showResult AllValues = unlines . map show . values initDecisions
-showResult FirstValue = maybe "" show . values initDecisions
+showResult AllValues = unlines . map showData . values initDecisions
+showResult FirstValue = maybe "" showData . values initDecisions
 showResult CountValues = show . countValues initDecisions
 showResult CheckExistence = show . hasValue initDecisions
 
 -- | Get all results of a Nekomata evaluation as a list of strings
 allResults :: TryData -> [String]
-allResults = map show . values initDecisions
+allResults = map showData . values initDecisions
 
 -- | Evaluate a Nekomata program string according to the mode
 eval :: Mode -> String -> String -> Either NekomataError String

@@ -8,20 +8,23 @@ import Nekomata.Builtin (Builtin (short), builtinMap, infoByName)
 import Nekomata.Eval
 import qualified Nekomata.Particle as Particle
 import System.Console.Haskeline
+import Text.Read (readMaybe)
 
 data ReplState = ReplState
     { mode :: Mode
     , runtime :: Runtime
+    , limit :: Int
     }
 
 initReplState :: ReplState
-initReplState = ReplState AllValues (initRuntime [])
+initReplState = ReplState AllValues (initRuntime []) 1024
 
 data ReplCommand
     = ReplQuit
     | ReplHelp
     | ReplShowMode
     | ReplMode Mode
+    | ReplLimit String
     | ReplInput String
     | ReplInfo String
     | ReplEval String
@@ -39,6 +42,7 @@ parseReplCommand input =
         ("\\Mode" : "count" : _) -> ReplMode CountValues
         ("\\Mode" : "exists" : _) -> ReplMode CheckExistence
         ("\\Mode" : _) -> ReplShowMode
+        ("\\Limit" : rest) -> ReplLimit (unwords rest)
         ("\\Input" : rest) -> ReplInput (unwords rest)
         ("\\Info" : rest) -> ReplInfo (unwords rest)
         _ -> ReplEval input
@@ -54,6 +58,7 @@ replCommandStrings =
     , "\\Mode first"
     , "\\Mode count"
     , "\\Mode exists"
+    , "\\Limit"
     , "\\Input"
     , "\\Info"
     ]
@@ -68,11 +73,12 @@ helpString =
         , "  \\Quit          Quit"
         , "  \\H             Show this help"
         , "  \\Help          Show this help"
-        , "  \\Mode          Show current mode"
+        , "  \\Mode          Show current mode (default: all)"
         , "  \\Mode all      Show all results"
         , "  \\Mode first    Show first result"
         , "  \\Mode count    Show number of results"
         , "  \\Mode exists   Show whether there are any results"
+        , "  \\Limit <n>     Set the max output size (default: 1024 bytes)"
         , "  \\Input <data>  Reset the stack with the given input"
         , "  \\Info <name>   Show information about a builtin"
         , ""
@@ -84,8 +90,13 @@ helpString =
 builtinInfo :: String -> Maybe String
 builtinInfo name' = infoByName name' <|> Particle.infoByName name'
 
+showWithLimit :: Int -> String -> String
+showWithLimit n s =
+    let (h, t) = splitAt n s
+     in h ++ if null t then "" else "..."
+
 repl :: ReplState -> InputT IO ReplState
-repl state = do
+repl state = handleInterrupt (outputStrLn "Cancelled." >> repl state) $ do
     input <- getInputLine ">>> "
     case parseReplCommand <$> input of
         Nothing -> return state
@@ -99,6 +110,15 @@ repl state = do
         Just (ReplMode mode') -> do
             outputStrLn $ "Current mode: " ++ show mode'
             repl state{mode = mode'}
+        Just (ReplLimit xs) -> do
+            case readMaybe xs of
+                Nothing -> do
+                    outputStrLn $ "Invalid limit: " ++ xs
+                    outputStrLn $ "Current limit: " ++ show (limit state)
+                    repl state
+                Just limit' -> do
+                    outputStrLn $ "Current limit: " ++ show limit'
+                    repl state{limit = limit'}
         Just (ReplInput xs) -> do
             case readInput xs of
                 Left e -> do
@@ -120,7 +140,8 @@ repl state = do
                     repl state
                 Right function' -> do
                     let (rt, result) = runFunction function' (runtime state)
-                    outputStrLn $ showResult (mode state) result
+                    outputStrLn . showWithLimit (limit state) $
+                        showResult (mode state) result
                     repl state{runtime = rt}
 
 replCommandCompletion :: String -> [Completion]
@@ -173,5 +194,5 @@ replSettings = Settings replCompletion Nothing True
 runRepl :: IO ()
 runRepl = do
     putStrLn "Nekomata REPL - type \\H for help"
-    _ <- runInputT replSettings (repl initReplState)
+    _ <- runInputT replSettings . withInterrupt $ repl initReplState
     return ()

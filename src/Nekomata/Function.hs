@@ -21,6 +21,10 @@ initStack xs = foldr (:+) undefined $ cycle xs
 top :: Stack -> TryData
 top (x :+ _) = x
 
+-- | Pop the top value of the stack
+pop :: Stack -> Stack
+pop (_ :+ s) = s
+
 -- | Take the top @n@ values of the stack
 takeStack :: Int -> Stack -> [TryData]
 takeStack 0 _ = []
@@ -34,6 +38,10 @@ dropStack n (_ :+ s) = dropStack (n - 1) s
 -- | Prepend a list of values to the stack
 prepend :: [TryData] -> Stack -> Stack
 prepend xs s = foldr (:+) s xs
+
+-- | Convert a @Try Stack@ to a @Stack@
+tryStack :: Try Stack -> Stack
+tryStack s = (s >>= top) :+ tryStack (pop <$> s)
 
 -- | The arity of a function
 data Arity = Arity
@@ -124,3 +132,33 @@ binaryVecPad = binary . vec2Pad
 -- | Convert and vectorize a binary function with fail
 binaryVecFail :: (Id -> DataTry -> DataTry -> TryData) -> Function
 binaryVecFail = binary . vec2Fail
+
+{- | Convert a binary function to a Nekomata function
+and vectorize the first argument
+-}
+binaryVecArg1 :: (Id -> DataTry -> DataTry -> TryData) -> Function
+binaryVecArg1 = binary . vec2Arg1
+
+{- | Convert a binary function to a Nekomata function
+and vectorize the second argument
+-}
+binaryVecArg2 :: (Id -> DataTry -> DataTry -> TryData) -> Function
+binaryVecArg2 = binary . vec2Arg2
+
+-- | Convert and vectorize a predicate to a Nekomata function
+predicateVec :: (Id -> DataTry -> Try Bool) -> Function
+predicateVec f = unary f'
+  where
+    f' i (DListT xs) = liftList (filterTry . tryMap f' i) xs
+    f' i x = f i x >>= \b -> if b then Val x else Fail
+
+{- | Convert a binary predicate to a Nekomata function
+and vectorize the first argument
+
+When the predicate returns 'True', the first argument is returned.
+-}
+predicateVec2 :: (Id -> DataTry -> DataTry -> Try Bool) -> Function
+predicateVec2 f = binary f'
+  where
+    f' i (DListT xs) y = liftList (filterTry . tryMap (\i' x -> f' i' x y) i) xs
+    f' i x y = f i x y >>= \b -> if b then Val x else Fail

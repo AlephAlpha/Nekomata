@@ -91,7 +91,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 - [ ] `\chunks`：输入一个列表和一个整数，将列表分成若干个长度为该整数的子列表。
 - [ ] `\bytes`：输入一个字符串，输出一个列表，列表的每个元素是字符串中的一个字符的编码。
 - [ ] `\zipWith`：助词，将一个二元函数应用到两个列表的对应元素上。
-- [ ] `\less`：比较两个数的大小。如果第一个数小于第二个数，返回第一个数；否则返回 `Fail` 。
+- [x] `\less`：比较两个数的大小。如果第一个数小于第二个数，返回第一个数；否则返回 `Fail` 。
 - [ ] `\fromBase`：输入一个列表和一个整数，将列表中的元素看作是某个进制的数的各位，输出这个数的十进制表示。比如输入 `[1, 2, 3]` 和 `10`，输出 `123`。
 - [x] `\sub`：求两个数的差。已实现。
 - [x] `\neg`：求一个数的相反数。已实现。不清楚要不要加一个合并 `\neg` 和 `\sub` 的函数。
@@ -136,29 +136,29 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 
 - [x] `\prefix`：求一个列表的一个前缀。这个函数是 non-deterministic 的。
 - [x] `\reverse`：倒转一个列表。
-- [ ] `\nth`：输入一个列表和一个整数，返回列表中第 n 个元素。如果列表长度小于 n，返回 `Fail`。
+- [x] `\nth`：输入一个列表和一个整数，返回列表中第 n 个元素。如果列表长度小于 n，返回 `Fail`。
 
 不清楚要不要加上一个 `\nth-from-end` 函数，这样就可以写成 `\prefix \sort 2 \nth-from-end`。
 
-## [x] [The inverse Collatz Conjecture](https://codegolf.stackexchange.com/q/175248/9288)
+## [The inverse Collatz Conjecture](https://codegolf.stackexchange.com/q/175248/9288)
 
 有点麻烦，因为这需要一个 while 循环，循环里还有 if 判断。
 
 ```
-\repeatNonDet { \nonZero \dup \decrement 2 \divExact \swap 3 \mul \increment \choice \oneValue }
+\repeatNonDet { \nonzero \dup \decrement 2 \divExact \swap 3 \mul \increment \choice \oneValue }
 ```
 
 有 13 个字节了，和其它语言的解答相比输得比较惨。可能还需要找到一些更好地模拟 while 循环和 if 判断的办法。关键是常规的 while 和 if 作为高阶函数都应该输入两个或三个函数，但 Nekomata 的助词只能输入一个函数。
 
-- [x] `\repeatNonDet`：助词。输入一个函数，重复执行这个函数 non-deterministic 次。这个函数是 non-deterministic 的。这个助词比较复杂，目前只实现了要求输入的函数是 1 -> 1 的情况，暂时还不知道怎样推广到 n -> n 的情况。
-- [x] `\nonZero`：判断一个数是否不为 0。如果不为 0，返回这个数本身；否则返回 `Fail`。
+- [x] `\repeatNonDet`：助词。输入一个函数，重复执行这个函数 non-deterministic 次。这个函数是 non-deterministic 的。
+- [x] `\nonzero`：判断一个数是否不为 0。如果不为 0，返回这个数本身；否则返回 `Fail`。
 - [x] `\divExact`：输入两个整数，求它们的整除。如果不能整除，返回 `Fail`。
 - [x] `\swap`：交换栈顶的两个元素。已实现。
 - [x] `\increment`：将一个数加 1。
 - [x] `\choice`：在栈顶的两个元素中选择一个。这个函数是 non-deterministic 的。
 - [x] `\oneValue`：求一个 non-deterministic 值的第一个可能取值。这个函数和 `\allValues` 一样，需要对现有的运算机制做一些修改。不清楚要不要把 `\choice` 和 `\oneValue` 合并成一个函数，这样可能可以更方便地模拟 if 判断。
 
-## [x] [Reversed Iota's](https://codegolf.stackexchange.com/q/199290/9288)
+## [Reversed Iota's](https://codegolf.stackexchange.com/q/199290/9288)
 
 ```
 \range1 \range1 \map \reverse
@@ -171,10 +171,10 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 以上的解答输出的是列表的列表。也可以输出一个 non-deterministic 的列表：
 
 ```
-\range1 \prefix \nonEmpty \reverse
+\range1 \prefix \nonempty \reverse
 ```
 
-- [x] `\nonEmpty`：判断一个列表是否为空。如果不为空，返回这个列表本身；否则返回 `Fail`。
+- [x] `\nonempty`：判断一个列表是否为空。如果不为空，返回这个列表本身；否则返回 `Fail`。
 
 ## [Covering a Skyline with brush strokes](https://codegolf.stackexchange.com/q/179464/9288)
 
@@ -197,9 +197,14 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 
 两个想法：
 
-1. 要不要把 `0 \cons \delta` 这种组合写成一个函数。不过感觉不是很常用。
-2. 要不要让 `\positive` 这种作用于单个元素的谓词作用于列表时自动 filter。这样就不用写 `\filter` 了。
+1. 要不要把 `0 \cons \delta` 这种组合写成一个函数。不过感觉不是很常用。这道题里甚至可以用 `0 \cons \sub` 来代替。
+2. 要不要让 `\positive` 这种作用于单个元素的谓词作用于列表时自动 filter。这样就不用写 `\filter` 了。已实现。
 
+目前可以写成：
+
+```
+0 \cons \sub \positive \sum
+```
 
 ## [Consolidate an Array](https://codegolf.stackexchange.com/q/70779/9288)
 
@@ -218,7 +223,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 ```
 
 - [ ] `\sortBy`：输入两个列表，其长度必须一致。将第一个列表中的元素按照第二个列表中的元素的大小进行排序。这要求排序算法是稳定的。
-- [ ] `\logicalNot`：逻辑非。如果输入的数为 0，返回 1；如果输入的数不为 0，返回 0。不过给一个根本没有布尔值的语言加上逻辑运算符有点奇怪。就当它是一个数学函数好了。
+- [x] `\logicalNot`：逻辑非。如果输入的数为 0，返回 1；如果输入的数不为 0，返回 0。不过给一个根本没有布尔值的语言加上逻辑运算符有点奇怪。就当它是一个数学函数好了。
 
 ## [Delannoy numbers](https://codegolf.stackexchange.com/q/225203/9288)
 
@@ -247,7 +252,6 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 - [x] `\natural`：non-deterministic 地输出任意一个自然数。
 - [x] `\predicate`：助词，将一个函数应用到栈顶的一个元素上，如果这个函数返回 `Fail`，则返回 `Fail`；否则将这个元素保留。即使这个函数是多元函数，计算时也只会弹出栈顶的一个元素，其他的元素只用于计算，不会被弹出。
 - [ ] `\toBase`：输入一个整数和一个基数，将这个整数转换成以这个基数为底的数。比如输入 `321` 和 `10`，输出 `[1, 2, 3]`。
-- [ ] `\uniquify`：输入一个列表，将其中的重复元素去掉。比如输入 `[1, 2, 3, 2, 1]`，输出 `[1, 2, 3]`。不清楚要不要排序。这道题用不着排序，但其它题目可能会用到。
 - [x] `\lengthIs`：判断一个列表的长度是否等于一个整数。如果相等，返回这个列表本身；否则返回 `Fail`。
 
 这里用了两次 `\swap`，感觉有点亏。不清楚要不要改变 `\toBase` 和 `\lengthIs` 的参数顺序。
@@ -269,30 +273,34 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 ## [Make a Court Transcriber](https://codegolf.stackexchange.com/q/252927/9288)
 
 ```
-\anyOf \predicate { \swap \map { \dip \subsequence \eq } }
+\anyOf \predicate { \unconcat \subset \eq }
 ```
 
 - [x] `\anyOf`：non-deterministic 地输出任意一个列表中的元素。
-- [ ] `\subsequence`：求列表或字符串的任意一个连续的子序列。这个函数是 non-deterministic 的。
+- [ ] `\unconcat`：将一个列表拆成多个非空子列表。比如输入 `[1, 2, 3, 4, 5, 6, 7, 8, 9]`，其中一个可能的输出是 `[[1, 2], [3, 4, 5, 6], [7, 8, 9]]`。这个函数是 non-deterministic 的。
 - [x] `\eq`：判断两个元素是否相等。如果相等，返回这个元素本身；否则返回 `Fail`。
 
 
 ## [Count edits accounting for grace period](https://codegolf.stackexchange.com/q/141949/9288)
 
-想到两种解法，勉强和 Jelly、05AB1E 打平，和 Husk 的解答还有较大差距：
+想到两种解法，其中第一种解法胜过了 Jelly、05AB1E，仅输给于 Husk：
 
 ```
-\repeatNonDet { \uncons 4 \add \sub \filter \positive } \countValues \decrement
+\repeatNonDet { \uncons 4 \add \greater \nonempty }
 ```
 
 - [x] `\uncons`：输入一个列表，输出一个二元组，第二个元素是列表的第一个元素，第一个元素是列表的剩余部分。如果列表为空，返回 `Fail`。
+- [x] `\greater`：判断一个整数是否大于另一个整数。如果大于，返回这个整数本身；否则返回 `Fail`。这个函数会对第一个参数自动向量化且自动 filter 掉 `Fail`。
 - [x] `\countValues`：求一个 non-deterministic 值的所有可能取值的个数。
+
+需要用 `-n` flag 来输出结果的可能取值数目，而非结果本身。
+
+另一种解法则比较长：
 
 ```
 \unconcat \map { \minMax \swap \sub 5 \less } \allValues \last \length
 ```
 
-- [ ] `\unconcat`：将一个列表拆成多个子列表。比如输入 `[1, 2, 3, 4, 5, 6, 7, 8, 9]`，其中一个可能的输出是 `[[1, 2], [3, 4, 5, 6], [7, 8, 9]]`。这个函数是 non-deterministic 的。
 - [ ] `\minMax`：求一个列表的最小值和最大值。不清楚应该哪个在前，哪个在后；如果是最大值在前，后面的 `\swap` 就可以省略。
 - [ ] `\last`：求一个列表的最后一个元素。如果列表为空，返回 `Fail`。由于还没确定 `\unconcat` 中各种可能的取值按什么顺序排列，这里也有可能是 `\first`，此时可以和前面的 `\allValues` 合并成 `\oneValue`。
 
@@ -311,39 +319,66 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 参考现有的 Vyxal 解答：
 
 ```
-\integer \allValues \dup \anyPair \lengthIs \predicate { 1 \neg \cons \swap \map { 1 \cons \reverse \dot \sign \nonZero } \sum 0 \eq }
+\integer \allValues \dup \anyPair \lengthIs \predicate { 1 \neg \cons \swap \map { 1 \cons \reverse \dot \sign \nonzero } \sum 0 \eq }
 ```
 
 - [x] `\integer`：non-deterministic 地输出任意一个整数，按 `0, 1, -1, 2, -2, 3, -3, ...` 的顺序。
 - [ ] `\anyPair`：输入两个列表，输出一个二元组，第一个元素是第一个列表的任意一个元素，第二个元素是第二个列表的任意一个元素。这个函数是 non-deterministic 的。实现时要注意两个列表的长度都可能是无穷的。
-- [ ] `\dot`：求两个列表的点积。如果两个列表的长度不同，返回 `Fail`。
+- [x] `\dot`：求两个列表的点积。如果两个列表的长度不同，返回 `Fail`。
 - [x] `sign`：求一个整数的符号。如果是正数，返回 `1`；如果是负数，返回 `-1`；如果是零，返回 `0`。
 
-## Fibonacci function or sequence(https://codegolf.stackexchange.com/q/85/9288)
+## [Fibonacci function or sequence](https://codegolf.stackexchange.com/q/85/9288)
 
 参考 Brachylog 解答：
 
 ```
-2 \range0 \repeatNonDet { \dupDip \last \sum \pair } \head
+1 \dup \repeatNonDet { \swap \dupDip \add ｝
 ```
 
-- [x] `\dupDip`：这是个助词，不知道叫什么名字好。其作用是调用完函数之后把原来的栈顶元素再压回去。其它语言里没见过这个东西，但好像挺有用的。
-- [ ] `\pair`：将两个元素组成一个二元组。比如输入 `1` 和 `2`，输出 `[1, 2]`。
-
-如果 `\repeatNonDet` 能支持 `2 -> 2` 的函数，就可以写成：
-
-```
-1 0 \repeatNonDet { \swap \dupDip \add ｝
-```
-
-注意这是 8 个字节，因为 1 和 0 之间的空格不能省略。
+没有输入，输出一个 non-deterministic 的值，其可能取值是 `1, 1, 2, 3, 5, ...`。
 
 另一种解答：
 
 ```
-\while { \positive \decrement \dup \decrement \choice }
+\while { \decrement \positive \dup \decrement \choice }
 ```
 
-1-indexed 地输出数列 `0,1,1,2,3,5,...`。需要用 `-n` flag 来输出结果的可能取值数目，而非结果本身。
+1-indexed 地输出数列 `1,1,2,3,5,...`。需要用 `-n` flag 来输出结果的可能取值数目，而非结果本身。
 
-- [ ] `\while`：助词。输入一个函数，重复执行这个函数，直到 fail 为止。
+- [x] `\while`：助词。输入一个函数，重复执行这个函数，直到 fail 为止。
+
+## [Chunk + Enumerate a list of digits](https://codegolf.stackexchange.com/q/189932/9288)
+
+参考 Jonathan Allan 的 Jelly 解答：
+
+```
+\prefix \nonempty \splitRuns \length
+```
+
+几次用到 `\prefix` 都只需要用到非空的前缀。可以考虑让它只输出非空的前缀，省去 `\nonempty`。但如果碰上确实需要空前缀的情况，需要补上的字节数会更多。`\suffix` 和 `\subsequence` 也有类似的问题。
+
+## [Recognize a counting tree](https://codegolf.stackexchange.com/q/257998/9288)
+
+参考最高赞的 Vyxal 解答：
+
+```
+\increment \range0 \swap \uncons \lengthIs \length \increment \range0 \add \dup \outer { \nonPop \setIntersect \dip \choice \swap \emptyList \choice \eq }
+```
+
+20 个字节，比 Vyxal 长了不少。
+
+- [x] `\nonPop`：助词。在不从栈中弹出元素的情况下应用一个函数。
+- [x] `\dip`：助词。在应用一个函数之前，先将弹出栈顶元素，函数执行完之后，再将原来的栈顶元素压回栈中。
+- [ ] `\setIntersect`：求两个集合的交集。
+- [x] `\emptyList`：输出一个空列表。
+
+或者参考 Charcoal 的解答：
+
+```
+\uncons \dupDup \lengthIs \cons \suffix \nonempty \allValues \map { \uncons \take \dup \length \range0 \reverse \zipWith \lessEq }
+```
+
+17 个字节，但不知道对不对。
+
+- [ ] `\take`：取一个列表的前 `n` 个元素。如果 `n` 大于列表的长度，返回 `Fail`。
+- [x] `\lessEq`：比较两个数的大小。如果第一个数小于或等于第二个数，返回第一个数；否则返回 `Fail` 。

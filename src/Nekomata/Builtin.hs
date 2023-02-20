@@ -92,23 +92,53 @@ builtins =
         "Check if two values are not equal. \n\
         \If they are not, push the first value, otherwise fail."
     , Builtin
-        "nonEmpty"
+        "nonempty"
         'N'
-        nonEmpty'
+        nonempty'
         "Check if a list or string is non-empty. \n\
         \If it is, push the list or string itself, otherwise fail."
     , Builtin
-        "nonZero"
+        "nonzero"
         'Z'
-        nonZero
+        nonzero
         "Check if an integer is non-zero. \n\
-        \If it is, push the integer itself, otherwise fail."
+        \If it is, push the integer itself, otherwise fail.\n\
+        \This function is automatically vectorized with filtering."
     , Builtin
         "positive"
         'P'
         positive
         "Check if an integer is positive. \n\
-        \If it is, push the integer itself, otherwise fail."
+        \If it is, push the integer itself, otherwise fail.\n\
+        \This function is automatically vectorized with filtering."
+    , Builtin
+        "less"
+        '<'
+        less
+        "Check if the first integer is less than the second. \n\
+        \If it is, push the first integer, otherwise fail.\n\
+        \This function is automatically vectorized with filtering."
+    , Builtin
+        "lessEq"
+        '≤'
+        lessEq
+        "Check if the first integer is less than or equal to the second. \n\
+        \If it is, push the first integer, otherwise fail.\n\
+        \This function is automatically vectorized with filtering."
+    , Builtin
+        "greater"
+        '>'
+        greater
+        "Check if the first integer is greater than the second. \n\
+        \If it is, push the first integer, otherwise fail.\n\
+        \This function is automatically vectorized with filtering."
+    , Builtin
+        "greaterEq"
+        '≥'
+        greaterEq
+        "Check if the first integer is greater than or equal to the second. \n\
+        \If it is, push the first integer, otherwise fail.\n\
+        \This function is automatically vectorized with filtering."
     , Builtin
         "neg"
         '_'
@@ -234,6 +264,11 @@ builtins =
         "Choose an element from a list or a character from a string. \n\
         \This function is non-deterministic."
     , Builtin
+        "emptyList"
+        '∅'
+        emptyList
+        "Push an empty list."
+    , Builtin
         "length"
         '#'
         length'
@@ -245,6 +280,12 @@ builtins =
         "Check if the length of a list or a string is equal to a given \
         \integer. \n\
         \If it is, push the list or string itself, otherwise fail."
+    , Builtin
+        "nth"
+        '@'
+        nth
+        "Get the nth element of a list or a string. \n\
+        \This function is automatically vectorized on the second argument."
     , Builtin
         "head"
         'h'
@@ -286,7 +327,13 @@ builtins =
         "subset"
         'S'
         subset
-        "Get a subset of a list or a string. \n\
+        "Get a finite subset of a list or a string. \n\
+        \This function is non-deterministic."
+    , Builtin
+        "subsequence"
+        'q'
+        subsequence
+        "Get a finite contiguous subsequence of a list or a string. \n\
         \This function is non-deterministic."
     , Builtin
         "join"
@@ -308,6 +355,19 @@ builtins =
         "Take the product of a list of integers. \n\
         \The multiplication is automatically vectorized \
         \and fails when the two lists are of different lengths."
+    , Builtin
+        "dot"
+        '∙'
+        dot
+        "Take the dot product of two lists of integers. \n\
+        \This is the same as `\\mul \\sum`."
+    , Builtin
+        "concat"
+        '∐'
+        concat'
+        "Concatenate a list of lists or a list of strings. \n\
+        \If one item in the list is a string, \
+        \the other items are converted to strings as well."
     ]
 
 -- | The map from names to builtin functions
@@ -353,7 +413,7 @@ drop' :: Function
 drop' = Function (Arity 1 0) $ \_ (_ :+ s) -> s
 
 dup :: Function
-dup = Function (Arity 1 2) $ \_ (x :+ s) -> x :+ x :+ s
+dup = Function (Arity 0 1) $ \_ (x :+ s) -> x :+ x :+ s
 
 swap :: Function
 swap = Function (Arity 2 2) $ \_ (x :+ y :+ s) -> y :+ x :+ s
@@ -366,27 +426,55 @@ eq = predicate2 $ \_ x y -> tryEq x y
 ne :: Function
 ne = predicate2 $ \_ x y -> tryNe x y
 
-nonEmpty' :: Function
-nonEmpty' = predicate nonEmpty''
+nonempty' :: Function
+nonempty' = predicate nonempty''
   where
-    nonEmpty'' _ (DListT x) = nonEmpty_ <$> x
-    nonEmpty'' _ (DStringT x) = nonEmpty_ <$> x
-    nonEmpty'' _ _ = Fail
-    nonEmpty_ :: ListTry a -> Bool
-    nonEmpty_ (Cons _ _) = True
-    nonEmpty_ Nil = False
+    nonempty'' _ (DListT x) = nonempty_ <$> x
+    nonempty'' _ (DStringT x) = nonempty_ <$> x
+    nonempty'' _ _ = Fail
+    nonempty_ :: ListTry a -> Bool
+    nonempty_ (Cons _ _) = True
+    nonempty_ Nil = False
 
-nonZero :: Function
-nonZero = predicate nonZero'
+nonzero :: Function
+nonzero = predicateVec nonzero'
   where
-    nonZero' _ (DIntT x) = (/= 0) . fromDet <$> x
-    nonZero' _ _ = Fail
+    nonzero' _ (DIntT x) = (/= 0) . fromDet <$> x
+    nonzero' _ _ = Fail
 
 positive :: Function
-positive = predicate positive'
+positive = predicateVec positive'
   where
     positive' _ (DIntT x) = (> 0) . fromDet <$> x
     positive' _ _ = Fail
+
+less :: Function
+less = predicateVec2 less'
+  where
+    less' _ (DIntT x) (DIntT y) = (<) <$> toTry x <*> toTry y
+    less' _ (DStringT x) (DStringT y) = (<) <$> toTry x <*> toTry y
+    less' _ _ _ = Fail
+
+lessEq :: Function
+lessEq = predicateVec2 lessEq'
+  where
+    lessEq' _ (DIntT x) (DIntT y) = (<=) <$> toTry x <*> toTry y
+    lessEq' _ (DStringT x) (DStringT y) = (<=) <$> toTry x <*> toTry y
+    lessEq' _ _ _ = Fail
+
+greater :: Function
+greater = predicateVec2 greater'
+  where
+    greater' _ (DIntT x) (DIntT y) = (>) <$> toTry x <*> toTry y
+    greater' _ (DStringT x) (DStringT y) = (>) <$> toTry x <*> toTry y
+    greater' _ _ _ = Fail
+
+greaterEq :: Function
+greaterEq = predicateVec2 greaterEq'
+  where
+    greaterEq' _ (DIntT x) (DIntT y) = (>=) <$> toTry x <*> toTry y
+    greaterEq' _ (DStringT x) (DStringT y) = (>=) <$> toTry x <*> toTry y
+    greaterEq' _ _ _ = Fail
 
 -- Math functions
 
@@ -436,10 +524,7 @@ add = binaryVecPad add'
     add' _ _ _ = Fail
 
 sub :: Function
-sub = binaryVecPad sub'
-  where
-    sub' _ (DIntT x) (DIntT y) = liftInt2 (-) x y
-    sub' _ _ _ = Fail
+sub = compose neg add
 
 mul :: Function
 mul = binaryVecFail mul'
@@ -513,6 +598,9 @@ anyOf' = unary anyOf''
     anyOf'' i (DListT xs) = join (xs >>= anyOf i)
     anyOf'' _ _ = Fail
 
+emptyList :: Function
+emptyList = constant . Val . DListT $ Val Nil
+
 length' :: Function
 length' = unary length''
   where
@@ -536,6 +624,21 @@ lengthIs = binary lengthIs'
     lengthIs_ _ Nil = Fail
     lengthIs_ n _ | n <= 0 = Fail
     lengthIs_ n (Cons x xs) = Cons x . lengthIs_ (n - 1) <$> xs
+
+nth :: Function
+nth = binaryVecArg2 nth'
+  where
+    nth' _ (DStringT xs) (DIntT y) =
+        liftString
+            (\x -> liftInt (fmap (AsDString . singleton) . (`nth_` x)) y)
+            xs
+    nth' _ (DListT xs) (DIntT y) =
+        liftList (\x -> liftInt (`nth_` x) y) xs
+    nth' _ _ _ = Fail
+    nth_ :: Integer -> ListTry a -> Try a
+    nth_ 0 (Cons x _) = Val x
+    nth_ n (Cons _ xs) = xs >>= nth_ (n - 1)
+    nth_ _ Nil = Fail
 
 head' :: Function
 head' = unary head''
@@ -617,12 +720,32 @@ subset = unary subset'
     subset' i (DListT xs) = liftList (subset_ i) xs
     subset' _ _ = Fail
     subset_ :: Id -> ListTry a -> Try (ListTry a)
-    subset_ i xs = Choice (leftId i) (Val Nil) (nonEmptySubset (rightId i) xs)
-    nonEmptySubset _ Nil = Fail
-    nonEmptySubset i (Cons x xs) =
+    subset_ i xs = Choice (leftId i) (Val Nil) (nonemptySubset (rightId i) xs)
+    nonemptySubset _ Nil = Fail
+    nonemptySubset i (Cons x xs) =
         Choice (leftId i) (Val $ singleton x) $
-            xs >>= nonEmptySubset (leftId (rightId i)) >>= \ys ->
+            xs >>= nonemptySubset (leftId (rightId i)) >>= \ys ->
                 Choice (rightId (rightId i)) (Val ys) (Val . Cons x $ Val ys)
+
+subsequence :: Function
+subsequence = unary subsequence'
+  where
+    subsequence' i (DStringT xs) =
+        liftString (fmap AsDString . subsequence_ i) xs
+    subsequence' i (DListT xs) = liftList (subsequence_ i) xs
+    subsequence' _ _ = Fail
+    subsequence_ :: Id -> ListTry a -> Try (ListTry a)
+    subsequence_ i xs =
+        Choice
+            (leftId i)
+            (Val Nil)
+            (prefix' (leftId (rightId i)) xs >>= suffix' (rightId (rightId i)))
+    prefix' _ Nil = Val Nil
+    prefix' i (Cons x xs) =
+        Choice (leftId i) (Val Nil) (Val . Cons x $ xs >>= prefix' (rightId i))
+    suffix' _ Nil = Fail
+    suffix' i s@(Cons _ xs) =
+        Choice (leftId i) (Val s) (xs >>= suffix' (rightId i))
 
 join' :: Function
 join' = binary join''
@@ -660,3 +783,24 @@ product' = unary product''
     product'' _ _ = Fail
     mul' _ (DIntT x) (DIntT y) = liftInt2 (*) x y
     mul' _ _ _ = Fail
+
+dot :: Function
+dot = compose mul sum'
+
+concat' :: Function
+concat' = unary concat''
+  where
+    concat'' i (DListT xs) = xs >>= concat_ i
+    concat'' _ _ = Fail
+    concat_ _ Nil = Val . DListT $ Val Nil
+    concat_ i (Cons x xs) = liftJoinM2 (tryFoldl join'' i) x xs
+    join'' _ (DStringT xs) (DStringT ys) =
+        liftString2 (\x y -> AsDString <$> join_ x y) xs ys
+    join'' i x@(DStringT _) y =
+        join'' i x (DStringT (fromList . map Det . show <$> toTry y))
+    join'' i x y@(DStringT _) =
+        join'' i (DStringT (fromList . map Det . show <$> toTry x)) y
+    join'' _ (DListT x) (DListT y) = liftList2 join_ x y
+    join'' _ _ _ = Fail
+    join_ Nil ys = Val ys
+    join_ (Cons x xs) ys = Val . Cons x $ liftJoinM2 join_ xs (Val ys)
