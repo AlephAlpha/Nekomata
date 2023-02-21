@@ -147,18 +147,12 @@ binaryVecArg2 = binary . vec2Arg2
 
 -- | Convert and vectorize a predicate to a Nekomata function
 predicateVec :: (Id -> DataTry -> Try Bool) -> Function
-predicateVec f = unary f'
-  where
-    f' i (DListT xs) = liftList (filterTry . tryMap f' i) xs
-    f' i x = f i x >>= \b -> if b then Val x else Fail
+predicateVec f = unaryVec $ \i x -> f i x >>= \b -> if b then Val x else Fail
 
-{- | Convert a binary predicate to a Nekomata function
-and vectorize the first argument
+{- | Convert and vectorize a binary predicate to a Nekomata function
 
 When the predicate returns 'True', the first argument is returned.
 -}
 predicateVec2 :: (Id -> DataTry -> DataTry -> Try Bool) -> Function
-predicateVec2 f = binary f'
-  where
-    f' i (DListT xs) y = liftList (filterTry . tryMap (\i' x -> f' i' x y) i) xs
-    f' i x y = f i x y >>= \b -> if b then Val x else Fail
+predicateVec2 f = binaryVecFail $
+    \i x y -> f i x y >>= \b -> if b then Val x else Fail

@@ -86,6 +86,14 @@ tryFoldl _ _ b Nil = Val b
 tryFoldl f i b (Cons x xs) =
     liftJoinM2 (tryFoldl f (leftId i)) (x >>= f (rightId i) b) xs
 
+tryOuter ::
+    (Id -> a -> b -> Try c) ->
+    Id ->
+    ListTry (Try a) ->
+    ListTry (Try b) ->
+    ListTry (TryList (Try c))
+tryOuter f i xs = tryMap (\i' y -> Val $ tryMap (\i'' x -> f i'' x y) i' xs) i
+
 -- | Remove failed elements from a @TryList@
 filterTry :: NonDet a => ListTry (Try a) -> TryList (Try a)
 filterTry Nil = Val Nil
@@ -132,6 +140,17 @@ instance NonDet DataTry where
 -- | Get the first possible value of a @TryData@
 firstValue :: TryData -> TryData
 firstValue x = Cut (\ds -> toTryData . maybe Fail Val $ values ds x)
+
+{- | Convert any @DataTry@ to a @TryList TryData@
+
+For integers, it generates a list of integers from 0 to input minus 1.
+For strings, it generates a list of strings with one character.
+-}
+toTryList :: DataTry -> TryList TryData
+toTryList (DListT xs) = xs
+toTryList (DIntT x) =
+    fromList . map toTryData . enumFromTo 0 . subtract 1 <$> toTry x
+toTryList (DStringT xs) = fmap (Val . DStringT . Val . singleton) <$> xs
 
 -- | A helper class for lifting functions to @TryData@
 class ToTryData a where

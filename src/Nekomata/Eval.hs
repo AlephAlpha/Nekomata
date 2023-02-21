@@ -2,6 +2,7 @@ module Nekomata.Eval where
 
 import Control.Arrow (left)
 import Control.Monad ((>=>))
+import Data.Maybe (fromMaybe)
 import Nekomata.CodePage (CodePageError, checkCodePage)
 import Nekomata.Data (Data (..), TryData)
 import Nekomata.Function
@@ -55,16 +56,28 @@ showData :: Data -> String
 showData (DString s) = s
 showData x = show x
 
--- | Show the result of a Nekomata evaluation according to the mode
-showResult :: Mode -> TryData -> String
-showResult AllValues = unlines . map showData . values initDecisions
-showResult FirstValue = maybe "" showData . values initDecisions
-showResult CountValues = show . countValues initDecisions
-showResult CheckExistence = show . hasValue initDecisions
-
 -- | Get all results of a Nekomata evaluation as a list of strings
 allResults :: TryData -> [String]
 allResults = map showData . values initDecisions
+
+-- | Get the first result of a Nekomata evaluation as a string
+firstResult :: TryData -> Maybe String
+firstResult = fmap showData . values initDecisions
+
+-- | Count the number of results of a Nekomata evaluation
+countResults :: TryData -> Integer
+countResults = countValues initDecisions
+
+-- | Check if a Nekomata evaluation has any results
+checkResult :: TryData -> Bool
+checkResult = hasValue initDecisions
+
+-- | Show the result of a Nekomata evaluation according to the mode
+showResult :: Mode -> TryData -> String
+showResult AllValues = unlines . allResults
+showResult FirstValue = fromMaybe "" . firstResult
+showResult CountValues = show . countResults
+showResult CheckExistence = show . checkResult
 
 -- | Evaluate a Nekomata program string according to the mode
 eval :: Mode -> String -> String -> Either NekomataError String

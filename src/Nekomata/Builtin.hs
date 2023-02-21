@@ -258,6 +258,14 @@ builtins =
         "Non-deterministically choose an integer. \n\
         \This function is non-deterministic."
     , Builtin
+        "fromBase"
+        'B'
+        fromBase
+        "Convert a list of digits to an integer. \n\
+        \The first argument is the list of digits, \
+        \the second argument is the base. \n\
+        \This function is automatically vectorized over the base."
+    , Builtin
         "anyOf"
         '~'
         anyOf'
@@ -268,6 +276,21 @@ builtins =
         '∅'
         emptyList
         "Push an empty list."
+    , Builtin
+        "singleton"
+        'u'
+        singleton'
+        "Create a list with a single element."
+    , Builtin
+        "pair"
+        'd'
+        pair
+        "Create a list with two elements."
+    , Builtin
+        "removeFail"
+        'F'
+        removeFail
+        "Remove failed items from a list."
     , Builtin
         "length"
         '#'
@@ -360,7 +383,8 @@ builtins =
         '∙'
         dot
         "Take the dot product of two lists of integers. \n\
-        \This is the same as `\\mul \\sum`."
+        \The current implementation is simply a composition of \
+        \mul and sum."
     , Builtin
         "concat"
         '∐'
@@ -519,18 +543,20 @@ sign = unaryVec sign'
 
 add :: Function
 add = binaryVecPad add'
-  where
-    add' _ (DIntT x) (DIntT y) = liftInt2 (+) x y
-    add' _ _ _ = Fail
+
+add' :: Id -> DataTry -> DataTry -> TryData
+add' _ (DIntT x) (DIntT y) = liftInt2 (+) x y
+add' _ _ _ = Fail
 
 sub :: Function
 sub = compose neg add
 
 mul :: Function
 mul = binaryVecFail mul'
-  where
-    mul' _ (DIntT x) (DIntT y) = liftInt2 (*) x y
-    mul' _ _ _ = Fail
+
+mul' :: Id -> DataTry -> DataTry -> TryData
+mul' _ (DIntT x) (DIntT y) = liftInt2 (*) x y
+mul' _ _ _ = Fail
 
 div' :: Function
 div' = binaryVecFail div''
@@ -589,6 +615,16 @@ integer = nullary $
   where
     integers = (0 :: Integer) : [y | x <- [1 ..], y <- [x, -x]]
 
+fromBase :: Function
+fromBase = binaryVecArg2 fromBase'
+  where
+    fromBase' i (DListT xs) (DIntT b) =
+        liftList (\x -> liftInt (\b' -> fromBase_ i b' x) b) xs
+    fromBase' _ _ _ = Fail
+    fromBase_ i b = tryFoldl (mulAdd b) i (DIntT . Val $ Det 0)
+    mulAdd b i x y =
+        toTryData b >>= vec2Pad mul' i x >>= vec2Pad add' (leftId i) y
+
 -- List functions
 
 anyOf' :: Function
@@ -600,6 +636,20 @@ anyOf' = unary anyOf''
 
 emptyList :: Function
 emptyList = constant . Val . DListT $ Val Nil
+
+singleton' :: Function
+singleton' = unary . const $ toTryData . singleton
+
+pair :: Function
+pair = binary pair'
+  where
+    pair' _ x y = toTryData [x, y]
+
+removeFail :: Function
+removeFail = unary removeFail'
+  where
+    removeFail' _ (DListT xs) = Val . DListT $ xs >>= filterTry
+    removeFail' _ x = Val x
 
 length' :: Function
 length' = unary length''
@@ -740,27 +790,31 @@ subsequence = unary subsequence'
             (leftId i)
             (Val Nil)
             (prefix' (leftId (rightId i)) xs >>= suffix' (rightId (rightId i)))
-    prefix' _ Nil = Val Nil
+    prefix' _ Nil = Fail
     prefix' i (Cons x xs) =
-        Choice (leftId i) (Val Nil) (Val . Cons x $ xs >>= prefix' (rightId i))
+        Choice
+            (leftId i)
+            (Val $ singleton x)
+            (Val . Cons x $ xs >>= prefix' (rightId i))
     suffix' _ Nil = Fail
     suffix' i s@(Cons _ xs) =
         Choice (leftId i) (Val s) (xs >>= suffix' (rightId i))
 
 join' :: Function
 join' = binary join''
-  where
-    join'' _ (DStringT xs) (DStringT ys) =
-        liftString2 (\x y -> AsDString <$> join_ x y) xs ys
-    join'' i x@(DStringT _) y =
-        join'' i x (DStringT (fromList . map Det . show <$> toTry y))
-    join'' i x y@(DStringT _) =
-        join'' i (DStringT (fromList . map Det . show <$> toTry x)) y
-    join'' _ (DListT xs) (DListT ys) = liftList2 join_ xs ys
-    join'' _ _ _ = Fail
-    join_ :: ListTry a -> ListTry a -> Try (ListTry a)
-    join_ Nil ys = Val ys
-    join_ (Cons x xs) ys = Val . Cons x $ liftJoinM2 join_ xs (Val ys)
+
+join'' :: Id -> DataTry -> DataTry -> TryData
+join'' _ (DStringT xs) (DStringT ys) =
+    liftString2 (\x y -> AsDString <$> join_ x y) xs ys
+join'' i x@(DStringT _) y =
+    join'' i x (DStringT (fromList . map Det . show <$> toTry y))
+join'' i x y@(DStringT _) =
+    join'' i (DStringT (fromList . map Det . show <$> toTry x)) y
+join'' _ (DListT xs) (DListT ys) = liftList2 join_ xs ys
+join'' _ _ _ = Fail
+join_ :: ListTry a -> ListTry a -> Try (ListTry a)
+join_ Nil ys = Val ys
+join_ (Cons x xs) ys = Val . Cons x $ liftJoinM2 join_ xs (Val ys)
 
 sum' :: Function
 sum' = unary sum''
@@ -770,8 +824,6 @@ sum' = unary sum''
             (tryFoldl (vec2Pad add') i . DIntT . Val $ Det 0)
             xs
     sum'' _ _ = Fail
-    add' _ (DIntT x) (DIntT y) = liftInt2 (+) x y
-    add' _ _ _ = Fail
 
 product' :: Function
 product' = unary product''
@@ -781,8 +833,6 @@ product' = unary product''
             (tryFoldl (vec2Fail mul') i . DIntT . Val $ Det 1)
             xs
     product'' _ _ = Fail
-    mul' _ (DIntT x) (DIntT y) = liftInt2 (*) x y
-    mul' _ _ _ = Fail
 
 dot :: Function
 dot = compose mul sum'
@@ -794,13 +844,3 @@ concat' = unary concat''
     concat'' _ _ = Fail
     concat_ _ Nil = Val . DListT $ Val Nil
     concat_ i (Cons x xs) = liftJoinM2 (tryFoldl join'' i) x xs
-    join'' _ (DStringT xs) (DStringT ys) =
-        liftString2 (\x y -> AsDString <$> join_ x y) xs ys
-    join'' i x@(DStringT _) y =
-        join'' i x (DStringT (fromList . map Det . show <$> toTry y))
-    join'' i x y@(DStringT _) =
-        join'' i (DStringT (fromList . map Det . show <$> toTry x)) y
-    join'' _ (DListT x) (DListT y) = liftList2 join_ x y
-    join'' _ _ _ = Fail
-    join_ Nil ys = Val ys
-    join_ (Cons x xs) ys = Val . Cons x $ liftJoinM2 join_ xs (Val ys)

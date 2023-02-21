@@ -66,9 +66,9 @@ builtinParticles =
         "(m -> n) -> (m + 1 -> 2 * n)"
         "Apply a function to the top two values of the stack."
     , BuiltinParticle
-        "nonPop"
-        'ᵒ'
-        nonPop
+        "noPop"
+        'ˣ'
+        noPop
         "(m -> n) -> (0 -> n)"
         "Apply a function without popping the stack."
     , BuiltinParticle
@@ -89,10 +89,32 @@ builtinParticles =
         "map"
         'ᵐ'
         map'
-        "(m -> 1) -> (m -> 1)"
-        "Apply a function to each value in a list, \
-        \or to each character in a string, \
-        \or to each integer from 1 to an integer."
+        "(m -> 1) -> (m -> 1) where m > 0"
+        "Apply a function to each value in a list.\n\
+        \If the input is a string, apply the function to each character.\n\
+        \If the input is an integer, apply the function to each integer \
+        \from 0 to the input minus 1."
+    , BuiltinParticle
+        "zipWith"
+        'ᶻ'
+        zipWith'
+        "(m -> 1) -> (m -> 1) where m > 1"
+        "Zip two lists and apply a function to each pair of values.\n\
+        \If one of the input is a string, apply the function to each \
+        \character.\n\
+        \If one of the input is an integer, apply the function to each \
+        \integer from 0 to the input minus 1."
+    , BuiltinParticle
+        "outer"
+        'ᵒ'
+        outer
+        "(m -> 1) -> (m -> 1) where m > 1"
+        "Apply a function to every possible pair of values in two lists \
+        \and return a list of lists.\n\
+        \If one of the input is a string, apply the function to each \
+        \character.\n\
+        \If one of the input is an integer, apply the function to each \
+        \integer from 0 to the input minus 1."
     , BuiltinParticle
         "predicate"
         'ᵖ'
@@ -185,12 +207,14 @@ apply2 = Particle apply2'
     apply2' (Function (Arity m n) f) =
         Just . Function (Arity (m + 1) (2 * n)) $
             \i (x :+ y :+ s) ->
-                prepend (takeStack n $ f i (x :+ s)) $ f i (y :+ s)
+                prepend
+                    (takeStack n $ f (leftId i) (x :+ s))
+                    (f (rightId i) (y :+ s))
 
-nonPop :: Particle
-nonPop = Particle nonPop'
+noPop :: Particle
+noPop = Particle noPop'
   where
-    nonPop' (Function (Arity _ n) f) =
+    noPop' (Function (Arity _ n) f) =
         Just . Function (Arity 0 n) $
             \i s -> prepend (takeStack n $ f i s) s
 
@@ -211,16 +235,43 @@ dupDip = Particle dupDip'
 map' :: Particle
 map' = Particle map''
   where
-    map'' (Function (Arity m 1) f) =
+    map'' (Function (Arity m 1) f) | m > 0 =
         Just . Function (Arity m 1) $
             \i (x :+ s) ->
-                let f' i' x' = top $ f i' (pure x' :+ s)
-                 in (x >>= liftList (tryMap f' i) . toDListT)
+                let f' i' x' = top $ f i' (Val x' :+ s)
+                 in (x >>= liftList (tryMap f' i) . toTryList)
                         :+ dropStack (m - 1) s
     map'' _ = Nothing
-    toDListT (DListT xs) = xs
-    toDListT (DIntT x) = fromList . map toTryData . enumFromTo 1 <$> toTry x
-    toDListT (DStringT xs) = fmap (Val . DStringT . Val . singleton) <$> xs
+
+zipWith' :: Particle
+zipWith' = Particle zipWith''
+  where
+    zipWith'' (Function (Arity m 1) f) | m > 1 =
+        Just . Function (Arity m 1) $
+            \i (x :+ y :+ s) ->
+                let f' i' x' y' = top $ f i' (Val x' :+ Val y' :+ s)
+                    f'' x' y' =
+                        liftList2
+                            (zipWithFail f' i)
+                            (toTryList x')
+                            (toTryList y')
+                 in liftJoinM2 f'' x y :+ dropStack (m - 2) s
+    zipWith'' _ = Nothing
+
+outer :: Particle
+outer = Particle outer'
+  where
+    outer' (Function (Arity m 1) f) | m > 1 =
+        Just . Function (Arity m 1) $
+            \i (x :+ y :+ s) ->
+                let f' i' x' y' = top $ f i' (Val x' :+ Val y' :+ s)
+                    f'' x' y' =
+                        liftList2
+                            (tryOuter f' i)
+                            (toTryList x')
+                            (toTryList y')
+                 in liftJoinM2 f'' x y :+ dropStack (m - 2) s
+    outer' _ = Nothing
 
 predicate' :: Particle
 predicate' = Particle predicate''

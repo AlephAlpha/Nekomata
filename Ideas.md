@@ -90,9 +90,9 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 - [x] `\apply2`：助词，将一个一元函数应用到栈顶的两个元素上。已实现。
 - [ ] `\chunks`：输入一个列表和一个整数，将列表分成若干个长度为该整数的子列表。
 - [ ] `\bytes`：输入一个字符串，输出一个列表，列表的每个元素是字符串中的一个字符的编码。
-- [ ] `\zipWith`：助词，将一个二元函数应用到两个列表的对应元素上。
+- [x] `\zipWith`：助词，将一个二元函数应用到两个列表的对应元素上。
 - [x] `\less`：比较两个数的大小。如果第一个数小于第二个数，返回第一个数；否则返回 `Fail` 。
-- [ ] `\fromBase`：输入一个列表和一个整数，将列表中的元素看作是某个进制的数的各位，输出这个数的十进制表示。比如输入 `[1, 2, 3]` 和 `10`，输出 `123`。
+- [x] `\fromBase`：输入一个列表和一个整数，将列表中的元素看作是某个进制的数的各位，输出这个数的十进制表示。比如输入 `[1, 2, 3]` 和 `10`，输出 `123`。
 - [x] `\sub`：求两个数的差。已实现。
 - [x] `\neg`：求一个数的相反数。已实现。不清楚要不要加一个合并 `\neg` 和 `\sub` 的函数。
 - [x] `\allValues`：求一个 non-deterministic 值的所有可能取值，返回一个列表。为了实现这个函数，需要对现有的运算机制做一些修改。
@@ -120,10 +120,10 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 ## [Count repetitions of an array](https://codegolf.stackexchange.com/q/180302/9288)
 
 ```
-\uniquify \setMinus \uniquify \length
+\nub \setMinus \nub \length
 ```
 
-- [ ] `\uniquify`：输入一个列表，将其中的重复元素去掉。比如输入 `[1, 2, 3, 2, 1]`，输出 `[1, 2, 3]`。不清楚要不要排序。这道题用不着排序，但其它题目可能会用到。
+- [ ] `\nub`：输入一个列表，将其中的重复元素去掉。比如输入 `[1, 2, 3, 2, 1]`，输出 `[1, 2, 3]`。不清楚要不要排序。这道题用不着排序，但其它题目可能会用到。
 - [ ] `\setMinus`：输入两个列表，返回第一个列表中不在第二个列表中的元素。比如输入 `[1, 2, 3, 4]` 和 `[2, 4]`，输出 `[1, 3]`。如果第二个列表中的元素在第一个列表中有重复，那么只删除一个。比如输入 `[1, 2, 2, 3, 4]` 和 `[2, 4]`，输出 `[1, 2, 3]`。
 
 ## [Running second maximum of a list](https://codegolf.stackexchange.com/q/138510/9288)
@@ -198,12 +198,20 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 两个想法：
 
 1. 要不要把 `0 \cons \delta` 这种组合写成一个函数。不过感觉不是很常用。这道题里甚至可以用 `0 \cons \sub` 来代替。
-2. 要不要让 `\positive` 这种作用于单个元素的谓词作用于列表时自动 filter。这样就不用写 `\filter` 了。已实现。
+2. 要不要让 `\positive` 这种作用于单个元素的谓词作用于列表时自动 filter。这样就不用写 `\filter` 了。实现后又后悔了，改回来了。
+
+想了一下还是不要自动 filter；自动 filter 只对单层的列表有用，对多层嵌套的列表没什么意义；但自动向量化什么时候都用得上。而且这种涉及到 Cut 的东西我自己都弄得不太清楚，容易出 bug。
 
 目前可以写成：
 
 ```
-0 \cons \sub \positive \sum
+0 \cons \sub \positive \removeFail \sum
+```
+
+如果实现了 `\absDiff`，可以写成：
+
+```
+0 \cons \max \absDiff \sum
 ```
 
 ## [Consolidate an Array](https://codegolf.stackexchange.com/q/70779/9288)
@@ -244,7 +252,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 
 
 ```
-\natural \predicate { \mul \swap \toBase \uniquify \swap \lengthIs }
+\natural \predicate { \mul \swap \toBase \nub \swap \lengthIs }
 ```
 
 9 个字节，输给了好几个 8 字节的解答。
@@ -261,7 +269,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 ## [There's more than one way to skin a set](https://codegolf.stackexchange.com/q/247326/9288)
 
 ```
-\subset \sum \allValues \dup \uniquify \setMinus \uniquify
+\subset \sum \allValues \dup \nub \setMinus \nub
 ```
 
 参考了前面 [Count repetitions of an array](https://codegolf.stackexchange.com/q/180302/9288) 的解答。
@@ -286,11 +294,11 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 想到两种解法，其中第一种解法胜过了 Jelly、05AB1E，仅输给于 Husk：
 
 ```
-\repeatNonDet { \uncons 4 \add \greater \nonempty }
+\repeatNonDet { \uncons 4 \add \greater \removeFail \nonempty }
 ```
 
 - [x] `\uncons`：输入一个列表，输出一个二元组，第二个元素是列表的第一个元素，第一个元素是列表的剩余部分。如果列表为空，返回 `Fail`。
-- [x] `\greater`：判断一个整数是否大于另一个整数。如果大于，返回这个整数本身；否则返回 `Fail`。这个函数会对第一个参数自动向量化且自动 filter 掉 `Fail`。
+- [x] `\greater`：判断一个整数是否大于另一个整数。如果大于，返回这个整数本身；否则返回 `Fail`。
 - [x] `\countValues`：求一个 non-deterministic 值的所有可能取值的个数。
 
 需要用 `-n` flag 来输出结果的可能取值数目，而非结果本身。
@@ -309,10 +317,10 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 ## [Construct the Identity Matrix](https://codegolf.stackexchange.com/q/70365/9288)
 
 ```
-\outer { \sub \logicalNot }
+\outer \sub \logicalNot
 ```
 
-- [ ] `\outer`：助词，将一个二元函数作用到两个列表的所有元素上，返回一个列表的列表。比如输入 `[1, 2, 3]` 和 `[4, 5, 6]`，以及一个函数 `f`，输出 `[[f(1, 4), f(1, 5), f(1, 6)], [f(2, 4), f(2, 5), f(2, 6)], [f(3, 4), f(3, 5), f(3, 6)]]`。感觉这个助词实现起来有点复杂。
+- [x] `\outer`：助词，将一个二元函数作用到两个列表的所有元素上，返回一个列表的列表。比如输入 `[1, 2, 3]` 和 `[4, 5, 6]`，以及一个函数 `f`，输出 `[[f(1, 4), f(1, 5), f(1, 6)], [f(2, 4), f(2, 5), f(2, 6)], [f(3, 4), f(3, 5), f(3, 6)]]`。感觉这个助词实现起来有点复杂。
 
 ## [Split some points](https://codegolf.stackexchange.com/q/257870/9288)
 
@@ -359,26 +367,144 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 
 ## [Recognize a counting tree](https://codegolf.stackexchange.com/q/257998/9288)
 
-参考最高赞的 Vyxal 解答：
+参考 Charcoal 的解答：
 
 ```
-\increment \range0 \swap \uncons \lengthIs \length \increment \range0 \add \dup \outer { \nonPop \setIntersect \dip \choice \swap \emptyList \choice \eq }
+\subsequence \uncons \dupDip \lengthIs \range1 \reverse \swap \sub \map \positive \allValues \mul \swap \head \increment \lengthIs
 ```
 
-20 个字节，比 Vyxal 长了不少。
+16 个字节，而且只用到已实现的函数。于是这成了 Nekomata 在 code golf 上的[第一个解答](https://codegolf.stackexchange.com/a/258071/9288)。
 
-- [x] `\nonPop`：助词。在不从栈中弹出元素的情况下应用一个函数。
-- [x] `\dip`：助词。在应用一个函数之前，先将弹出栈顶元素，函数执行完之后，再将原来的栈顶元素压回栈中。
-- [ ] `\setIntersect`：求两个集合的交集。
-- [x] `\emptyList`：输出一个空列表。
+- [x] `\subsequence`：求一个列表的任意一个连续的子序列。这个函数是 non-deterministic 的。
+- [x] `\head`：求一个列表的第一个元素。如果列表为空，返回 `Fail`。
 
-或者参考 Charcoal 的解答：
+把 `\less` 向量化后还可以省三个字节：
 
 ```
-\uncons \dupDup \lengthIs \cons \suffix \nonempty \allValues \map { \uncons \take \dup \length \range0 \reverse \zipWith \lessEq }
+\subsequence \uncons \dupDip \lengthIs \range1 \reverse \less \allValues \mul \swap \head \increment \lengthIs
 ```
 
-17 个字节，但不知道对不对。
+## [Approximate a root of an odd degree polynomial](https://codegolf.stackexchange.com/q/258021/9288)
 
-- [ ] `\take`：取一个列表的前 `n` 个元素。如果 `n` 大于列表的长度，返回 `Fail`。
-- [x] `\lessEq`：比较两个数的大小。如果第一个数小于或等于第二个数，返回第一个数；否则返回 `Fail` 。
+由于 Nekomata 目前仅支持整数，暂时还没办法解决这个问题。
+
+假设 Nekomata 支持有理数，可以参考 Charcoal 的解答：
+
+```
+\abs \sum \dup \repeatNonDet { \dupDip { \dip \dup \sub \choice \predicate { \fromBase 0 \greaterEq } \oneValue } 2 \div } \swap
+```
+
+23 个字节，而且不知道对不对。也许还有改进的空间。
+
+## [Mode (most common element) of a list](https://codegolf.stackexchange.com/q/42529/9288)
+
+```
+\map \count \maximumBy
+```
+
+需要 `-1` flag 来仅输出第一个结果。
+
+- [ ] `\count`：求一个元素在一个列表中出现的次数。
+- [ ] `\maximumBy`：输入两个列表，其长度必须一致。根据第一个列表中最大的元素的索引，返回第二个列表中对应的元素。由于最大的元素可能不止一个，所以这个函数是 non-deterministic 的。
+
+## [Determine if an Array contains something other than 2](https://codegolf.stackexchange.com/q/120350/9288)
+
+```
+2 \sub \logicalNot \div
+```
+
+还是无法避免除以 0 这种 hack。
+
+
+## [String rotation - output string repeatedly moving first character to the end](https://codegolf.stackexchange.com/q/177221/9288)
+
+目前只用已实现的函数已经可以解答，但特别长：
+
+```
+\suffix \allValues \swap \prefix \allValues \zipWith \join \tail
+```
+
+看来还需要一些新的函数。
+
+```
+\length \iterate { \uncons \swap \join }
+```
+
+- [ ] `\iterate`：助词。将一个函数作用 n 次，n 为输入的整数。如果 n 为负数，返回 `Fail`。
+
+或者干脆：
+
+```
+\unjoin \nonempty \swap \join
+```
+
+- [ ] `\unjoin`：non-deterministic 地将一个列表拆成两个列表
+
+甚至干脆加一个 `\rotate` 函数：
+
+```
+\length \range0 \rotate
+```
+
+- [ ] `\rotate`：输入一个整数和一个列表，将列表的前 n 个元素移动到列表的末尾，n 为输入的整数。如果 n 为负数或者大于列表的长度，将其对列表的长度取模。
+
+甚至干脆搞一个 Non-deterministic 的 `\rotation` 函数：
+
+```
+\rotation
+```
+
+- [ ] `\rotation`：non-deterministic 地求一个列表的所有可能的旋转。比如说，`[1, 2, 3]` 的所有可能的旋转是 `[1, 2, 3]`, `[2, 3, 1]`, `[3, 1, 2]`。
+
+但这里的几个新函数未必常用。先看看其它的问题。
+
+## [Smallest Bit Rotation](https://codegolf.stackexchange.com/q/257372/9288)
+
+前面刚说未必常用的 `\rotation` 函数，这里就用上了：
+
+```
+2 \toBase \rotation 2 \fromBase \allValues \minimum
+```
+
+进制转换的最常见的基数是 2。可以考虑加上 `\toBase2` 和 `\fromBase2` 函数：
+
+```
+\toBase2 \rotation \fromBase2 \allValues \minimum
+```
+
+- [ ] `\toBase2`：将一个整数转换成二进制表示的列表。
+- [ ] `\fromBase2`：将一个二进制表示的列表转换成整数。
+
+另外，像 `\minimum` 这样的函数，有两种可能的比较方法：一是仅仅在整数和整数、字符串和字符串之间比较，对于列表则自动向量化；二是在任意类型之间比较，不自动向量化。目前的 `\min` 函数用的是第一种方法，`\minimum` 不知该用哪种方法。
+
+另一个问题是 `\toBase` 如何向量化。如果输入是一个列表和一个整数，对列表向量化就行。如果输入是两个列表，用 `\zipWith` 来向量化不一定是最佳的选择，也许可以用 `\outer` 来向量化。不过目前还没遇到过这种情况。
+
+## [Generate All 8 Knight's Moves](https://codegolf.stackexchange.com/q/247676/9288)
+
+目前想到的最短的是 10 个字节，参考的是 Brachylog 的解答：
+
+```
+2 \range1 \dup \reverse \choice \map { \dup \neg \choice }
+```
+
+可能需要加一个相当于 `\dup f \choice` 的助词，这样 10 个字节的解答可以减少到 8 个字节。如果实现了 `\permutation` 函数，用于替代 `\dup \reverse \choice`，还可以少一个字节。
+
+另一种方案是 15 个字节：
+
+```
+apply2 { 5 \range0 2 \sub \anyOf } \pair \predicate { \abs \sum 3 \eq }
+```
+
+如果实现了前面说过的 `\anyPair` 函数，15 个字节的解答可以减少到 11 个字节：
+
+```
+5 \range0 2 \sub \anyPair \predicate { \abs \sum 3 \eq }
+```
+
+## [Simplify a Cycle](https://codegolf.stackexchange.com/q/256920/9288)
+
+目前能想到的最短的是 13 个字节：
+
+```
+\repeatNonDet { \uncons \swap \suffix \map { \swap \ne } \oneValue } \head
+```
