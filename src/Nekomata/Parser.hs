@@ -114,7 +114,7 @@ parseTerm :: Parser Term
 parseTerm =
     choice
         [ try $ TFunc <$> parseBuiltin
-        , try $ TPart <$> parseParticle <*> parseTerm
+        , try $ TPart <$> parseParticle <* spaces <*> parseTerm
         , TLit <$> parseData
         , TBlock
             <$> between

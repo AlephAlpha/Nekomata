@@ -123,9 +123,22 @@ builtinParticles =
         "Apply a function without pushing or popping the stack, \
         \but replace the top value with Fail if the function fails."
     , BuiltinParticle
-        "repeatNonDet"
+        "predicateNot"
+        '𐞥'
+        predicateNot'
+        "(m -> n) -> (1 -> 1)"
+        "Apply a function without pushing or popping the stack, \
+        \but replace the top value with Fail if the function succeeds."
+    , BuiltinParticle
+        "orApply"
+        'ᶜ'
+        orApply
+        "(n -> n) -> (n -> n)"
+        "Apply a function zero or one time non-deterministically."
+    , BuiltinParticle
+        "iterate"
         'ⁿ'
-        repeatNonDet
+        iterate'
         "(n -> n) -> (n -> n)"
         "Apply a function zero or more times non-deterministically, \
         \until the top value of the stack is Fail.\n\
@@ -138,7 +151,7 @@ builtinParticles =
         "(n -> n) -> (n -> n)"
         "Apply a function zero or more times, \
         \until the top value of the stack is Fail.\n\
-        \This is different from `repeatNonDet` in that it does not \
+        \This is different from `iterate` in that it does not \
         \return the intermediate results."
     ]
 
@@ -285,23 +298,47 @@ predicate' = Particle predicate''
                     :+ s
     predicate_ f x = Cut $ \ds -> if hasValue ds (f x) then Val x else Fail
 
-repeatNonDet :: Particle
-repeatNonDet = Particle repeatNonDet'
+predicateNot' :: Particle
+predicateNot' = Particle predicateNot''
   where
-    repeatNonDet' (Function (Arity m n) f) | m == n =
+    predicateNot'' (Function (Arity _ _) f) =
+        Just . Function (Arity 1 1) $
+            \i (x :+ s) ->
+                ( normalForm x
+                    >>= predicateNot_ (\x' -> top (f i (Val x' :+ s)))
+                )
+                    :+ s
+    predicateNot_ f x = Cut $ \ds -> if hasValue ds (f x) then Fail else Val x
+
+orApply :: Particle
+orApply = Particle orApply'
+  where
+    orApply' (Function (Arity m n) f) | m == n =
         Just . Function (Arity m n) $
             \i s ->
                 prepend
-                    (takeStack n . tryStack $ repeatNonDet'' i f s)
+                    (takeStack n . tryStack $ orApply_ i f s)
                     (dropStack m s)
-    repeatNonDet' _ = Nothing
-    repeatNonDet'' i f s =
+    orApply' _ = Nothing
+    orApply_ i f s = Choice (leftId i) (Val s) (Val (f (rightId i) s))
+
+iterate' :: Particle
+iterate' = Particle iterate''
+  where
+    iterate'' (Function (Arity m n) f) | m == n =
+        Just . Function (Arity m n) $
+            \i s ->
+                prepend
+                    (takeStack n . tryStack $ iterate_ i f s)
+                    (dropStack m s)
+    iterate'' _ = Nothing
+    iterate_ i f s =
         Choice
             (leftId i)
             (Val s)
             ( Val (f (leftId (rightId i)) s)
                 >>= (\s' -> top s' >> Val s')
-                >>= repeatNonDet'' (rightId (rightId i)) f
+                >>= iterate_ (rightId (rightId i)) f
             )
 
 while :: Particle

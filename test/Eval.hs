@@ -50,7 +50,7 @@ testEval = describe "Evaluation" $ do
             "1:ⁿ{$ᵉ+"
             [("", Truncated ["1", "1", "2", "3", "5", "8", "13", "21", "34", "55"])]
         specEval
-            "ʷ{←P:←?"
+            "ʷ{←Pᶜ←"
             [ ("0", Count 1)
             , ("1", Count 1)
             , ("2", Count 2)
@@ -86,6 +86,13 @@ testEval = describe "Evaluation" $ do
             , ("[22]", Check False)
             , ("[2,2,2,1]", Check False)
             , ("[[1,2],2]", Check False)
+            ]
+    describe "q138510: Running second maximum of a list" $ do
+        specEval
+            "po↔1@"
+            [ ("[1,5,2,3,5,9,5,8]", All ["1", "2", "3", "5", "5", "5", "8"])
+            , ("[1,1,2,2,3,3,4]", All ["1", "1", "2", "2", "3", "3"])
+            , ("[2,1,0,-1,0,1,2]", All ["1", "1", "1", "1", "1", "2"])
             ]
     describe "q141949: Count edits accounting for grace period" $ do
         specEval
@@ -141,6 +148,16 @@ testEval = describe "Evaluation" $ do
         specEval
             "RpN↔"
             [("4", All ["[1]", "[2,1]", "[3,2,1]", "[4,3,2,1]"])]
+    describe "q247676: Generate All 8 Knight's Moves" $ do
+        specEval
+            "2Rᶜ↔ᵐᶜ_"
+            [("", All ["[1,2]", "[1,-2]", "[-1,2]", "[-1,-2]", "[2,1]", "[2,-1]", "[-2,1]", "[-2,-1]"])]
+    describe "q252927: Make a Court Transcriber" $ do
+        specEval
+            "~ᵖ{JS="
+            [ ("[\"dictionary\",\"transcriber\"] [\"dic\",\"ion\",\"ary\"]", First $ Just "dictionary")
+            , ("[\"dictionary\",\"transcriber\"] [\"tra\",\"scr\",\"ber\"]", First $ Just "transcriber")
+            ]
     describe "q257649: Arbitrary Apple Dilemma" $ do
         specEval
             "∏*$←∏÷"

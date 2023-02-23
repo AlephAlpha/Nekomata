@@ -10,8 +10,10 @@ module Nekomata.Builtin (
 
 import Control.Monad (join, (>=>))
 import Data.Functor ((<&>))
+import Data.List (elemIndex)
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
+import Nekomata.CodePage
 import Nekomata.Data
 import Nekomata.Function
 import Nekomata.NonDet
@@ -225,13 +227,13 @@ builtins =
         "min"
         'm'
         min'
-        "Get the minimum of two integers. \n\
+        "Get the minimum of two integers or two strings. \n\
         \This function is automatically vectorized with padding."
     , Builtin
         "max"
         'M'
         max'
-        "Get the maximum of two integers. \n\
+        "Get the maximum of two integers or two strings. \n\
         \This function is automatically vectorized with padding."
     , Builtin
         "range0"
@@ -265,6 +267,13 @@ builtins =
         \The first argument is the list of digits, \
         \the second argument is the base. \n\
         \This function is automatically vectorized over the base."
+    , Builtin
+        "bytes"
+        'e'
+        bytes
+        "Convert a string to a list of integers according to Nekomata's \
+        \custom encoding. \n\
+        \This function is automatically vectorized."
     , Builtin
         "anyOf"
         '~'
@@ -386,12 +395,44 @@ builtins =
         \The current implementation is simply a composition of \
         \mul and sum."
     , Builtin
+        "minimum"
+        '⊥'
+        minimum'
+        "Get the minimum of a list. \n\
+        \This order used in this function is different from the one \
+        \used in min and max. It can compare two arbitrary values, \
+        \not just integers or strings."
+    , Builtin
+        "maximum"
+        '⊤'
+        maximum'
+        "Get the maximum of a list. \n\
+        \This order used in this function is different from the one \
+        \used in min and max. It can compare two arbitrary values, \
+        \not just integers or strings."
+    , Builtin
         "concat"
-        '∐'
+        'j'
         concat'
         "Concatenate a list of lists or a list of strings. \n\
         \If one item in the list is a string, \
         \the other items are converted to strings as well."
+    , Builtin
+        "unconcat"
+        'J'
+        unconcat
+        "Split a list or a string into a list of lists or a list of strings. \n\
+        \This function is non-deterministic."
+    , Builtin
+        "nub"
+        'U'
+        nub
+        "Remove duplicate elements from a list or a string."
+    , Builtin
+        "sort"
+        'o'
+        sort
+        "Sort a list or a string."
     ]
 
 -- | The map from names to builtin functions
@@ -475,29 +516,29 @@ positive = predicateVec positive'
 less :: Function
 less = predicateVec2 less'
   where
-    less' _ (DIntT x) (DIntT y) = (<) <$> toTry x <*> toTry y
-    less' _ (DStringT x) (DStringT y) = (<) <$> toTry x <*> toTry y
+    less' _ (DIntT x) (DIntT y) = tryLt x y
+    less' _ (DStringT x) (DStringT y) = tryLt x y
     less' _ _ _ = Fail
 
 lessEq :: Function
 lessEq = predicateVec2 lessEq'
   where
-    lessEq' _ (DIntT x) (DIntT y) = (<=) <$> toTry x <*> toTry y
-    lessEq' _ (DStringT x) (DStringT y) = (<=) <$> toTry x <*> toTry y
+    lessEq' _ (DIntT x) (DIntT y) = tryLe x y
+    lessEq' _ (DStringT x) (DStringT y) = tryLe x y
     lessEq' _ _ _ = Fail
 
 greater :: Function
 greater = predicateVec2 greater'
   where
-    greater' _ (DIntT x) (DIntT y) = (>) <$> toTry x <*> toTry y
-    greater' _ (DStringT x) (DStringT y) = (>) <$> toTry x <*> toTry y
+    greater' _ (DIntT x) (DIntT y) = tryGt x y
+    greater' _ (DStringT x) (DStringT y) = tryGt x y
     greater' _ _ _ = Fail
 
 greaterEq :: Function
 greaterEq = predicateVec2 greaterEq'
   where
-    greaterEq' _ (DIntT x) (DIntT y) = (>=) <$> toTry x <*> toTry y
-    greaterEq' _ (DStringT x) (DStringT y) = (>=) <$> toTry x <*> toTry y
+    greaterEq' _ (DIntT x) (DIntT y) = tryGe x y
+    greaterEq' _ (DStringT x) (DStringT y) = tryGe x y
     greaterEq' _ _ _ = Fail
 
 -- Math functions
@@ -584,13 +625,15 @@ divExact = binaryVecFail divExact'
 min' :: Function
 min' = binaryVecPad min''
   where
-    min'' _ (DIntT x) (DIntT y) = liftInt2 min x y
+    min'' _ (DIntT x) (DIntT y) = liftInt2 tryMin x y
+    min'' _ (DStringT x) (DStringT y) = liftString2 (AsString .: tryMin) x y
     min'' _ _ _ = Fail
 
 max' :: Function
 max' = binaryVecPad max''
   where
-    max'' _ (DIntT x) (DIntT y) = liftInt2 max x y
+    max'' _ (DIntT x) (DIntT y) = liftInt2 tryMax x y
+    max'' _ (DStringT x) (DStringT y) = liftString2 (AsString .: tryMax) x y
     max'' _ _ _ = Fail
 
 range0 :: Function
@@ -624,6 +667,15 @@ fromBase = binaryVecArg2 fromBase'
     fromBase_ i b = tryFoldl (mulAdd b) i (DIntT . Val $ Det 0)
     mulAdd b i x y =
         toTryData b >>= vec2Pad mul' i x >>= vec2Pad add' (leftId i) y
+
+-- String functions
+
+bytes :: Function
+bytes = unaryVec bytes'
+  where
+    bytes' _ (DStringT x) =
+        liftString (fmap (fmap toInteger . flip elemIndex codePage)) x
+    bytes' _ _ = Fail
 
 -- List functions
 
@@ -665,11 +717,11 @@ lengthIs :: Function
 lengthIs = binary lengthIs'
   where
     lengthIs' _ (DStringT xs) (DIntT y) =
-        liftString (\x -> liftInt (fmap AsDString . (`lengthIs_` x)) y) xs
+        liftString (\x -> liftInt (AsString . (`lengthIs_` x)) y) xs
     lengthIs' _ (DListT xs) (DIntT y) =
         liftList (\x -> liftInt (`lengthIs_` x) y) xs
     lengthIs' _ _ _ = Fail
-    lengthIs_ :: Integer -> ListTry a -> Try (ListTry a)
+    lengthIs_ :: Integer -> ListTry a -> TryList a
     lengthIs_ 0 Nil = Val Nil
     lengthIs_ _ Nil = Fail
     lengthIs_ n _ | n <= 0 = Fail
@@ -680,7 +732,7 @@ nth = binaryVecArg2 nth'
   where
     nth' _ (DStringT xs) (DIntT y) =
         liftString
-            (\x -> liftInt (fmap (AsDString . singleton) . (`nth_` x)) y)
+            (\x -> liftInt (AsString . fmap singleton . (`nth_` x)) y)
             xs
     nth' _ (DListT xs) (DIntT y) =
         liftList (\x -> liftInt (`nth_` x) y) xs
@@ -693,8 +745,7 @@ nth = binaryVecArg2 nth'
 head' :: Function
 head' = unary head''
   where
-    head'' _ (DStringT xs) =
-        liftString (fmap (AsDString . singleton) . head_) xs
+    head'' _ (DStringT xs) = liftString (AsString . fmap singleton . head_) xs
     head'' _ (DListT xs) = liftList head_ xs
     head'' _ _ = Fail
     head_ :: ListTry a -> Try a
@@ -704,10 +755,10 @@ head' = unary head''
 tail' :: Function
 tail' = unary tail''
   where
-    tail'' _ (DStringT xs) = liftString (fmap AsDString . tail_) xs
+    tail'' _ (DStringT xs) = liftString (AsString . tail_) xs
     tail'' _ (DListT xs) = liftList tail_ xs
     tail'' _ _ = Fail
-    tail_ :: ListTry a -> Try (ListTry a)
+    tail_ :: ListTry a -> TryList a
     tail_ Nil = Fail
     tail_ (Cons _ xs) = xs
 
@@ -722,7 +773,7 @@ uncons = unary2 uncons'
   where
     uncons' _ (DStringT xs) =
         liftString12
-            (uncons_ >=> \(ys, y) -> Val (AsDString <$> ys, AsDString [y]))
+            (uncons_ >=> \(ys, y) -> Val (AsString <$> ys, AsString [y]))
             xs
     uncons' _ (DListT xs) = liftList12 uncons_ xs
     uncons' _ _ = (Fail, Fail)
@@ -733,20 +784,20 @@ uncons = unary2 uncons'
 reverse' :: Function
 reverse' = unary reverse''
   where
-    reverse'' _ (DStringT xs) = liftString (fmap AsDString . reverse_ Nil) xs
+    reverse'' _ (DStringT xs) = liftString (AsString . reverse_ Nil) xs
     reverse'' _ (DListT xs) = liftList (reverse_ Nil) xs
     reverse'' _ _ = Fail
-    reverse_ :: ListTry a -> ListTry a -> Try (ListTry a)
+    reverse_ :: ListTry a -> ListTry a -> TryList a
     reverse_ ys Nil = Val ys
     reverse_ ys (Cons x xs) = xs >>= reverse_ (Cons x (Val ys))
 
 prefix :: Function
 prefix = unary prefix'
   where
-    prefix' i (DStringT xs) = liftString (fmap AsDString . prefix_ i) xs
+    prefix' i (DStringT xs) = liftString (AsString . prefix_ i) xs
     prefix' i (DListT xs) = liftList (prefix_ i) xs
     prefix' _ _ = Fail
-    prefix_ :: Id -> ListTry a -> Try (ListTry a)
+    prefix_ :: Id -> ListTry a -> TryList a
     prefix_ _ Nil = Val Nil
     prefix_ i (Cons x xs) =
         Choice (leftId i) (Val Nil) (Val . Cons x $ xs >>= prefix_ (rightId i))
@@ -754,10 +805,10 @@ prefix = unary prefix'
 suffix :: Function
 suffix = unary suffix'
   where
-    suffix' i (DStringT xs) = liftString (fmap AsDString . suffix_ i) xs
+    suffix' i (DStringT xs) = liftString (AsString . suffix_ i) xs
     suffix' i (DListT xs) = liftList (suffix_ i) xs
     suffix' _ _ = Fail
-    suffix_ :: Id -> ListTry a -> Try (ListTry a)
+    suffix_ :: Id -> ListTry a -> TryList a
     suffix_ _ Nil = Val Nil
     suffix_ i s@(Cons _ xs) =
         Choice (leftId i) (Val s) (xs >>= suffix_ (rightId i))
@@ -766,10 +817,10 @@ subset :: Function
 subset = unary subset'
   where
     subset' i (DStringT xs) =
-        liftString (fmap AsDString . subset_ i) xs
+        liftString (AsString . subset_ i) xs
     subset' i (DListT xs) = liftList (subset_ i) xs
     subset' _ _ = Fail
-    subset_ :: Id -> ListTry a -> Try (ListTry a)
+    subset_ :: Id -> ListTry a -> TryList a
     subset_ i xs = Choice (leftId i) (Val Nil) (nonemptySubset (rightId i) xs)
     nonemptySubset _ Nil = Fail
     nonemptySubset i (Cons x xs) =
@@ -780,11 +831,10 @@ subset = unary subset'
 subsequence :: Function
 subsequence = unary subsequence'
   where
-    subsequence' i (DStringT xs) =
-        liftString (fmap AsDString . subsequence_ i) xs
+    subsequence' i (DStringT xs) = liftString (AsString . subsequence_ i) xs
     subsequence' i (DListT xs) = liftList (subsequence_ i) xs
     subsequence' _ _ = Fail
-    subsequence_ :: Id -> ListTry a -> Try (ListTry a)
+    subsequence_ :: Id -> ListTry a -> TryList a
     subsequence_ i xs =
         Choice
             (leftId i)
@@ -804,15 +854,14 @@ join' :: Function
 join' = binary join''
 
 join'' :: Id -> DataTry -> DataTry -> TryData
-join'' _ (DStringT xs) (DStringT ys) =
-    liftString2 (\x y -> AsDString <$> join_ x y) xs ys
+join'' _ (DStringT xs) (DStringT ys) = liftString2 (AsString .: join_) xs ys
 join'' i x@(DStringT _) y =
     join'' i x (DStringT (fromList . map Det . show <$> toTry y))
 join'' i x y@(DStringT _) =
     join'' i (DStringT (fromList . map Det . show <$> toTry x)) y
 join'' _ (DListT xs) (DListT ys) = liftList2 join_ xs ys
 join'' _ _ _ = Fail
-join_ :: ListTry a -> ListTry a -> Try (ListTry a)
+join_ :: ListTry a -> ListTry a -> TryList a
 join_ Nil ys = Val ys
 join_ (Cons x xs) ys = Val . Cons x $ liftJoinM2 join_ xs (Val ys)
 
@@ -837,6 +886,18 @@ product' = unary product''
 dot :: Function
 dot = compose mul sum'
 
+minimum' :: Function
+minimum' = unary minimum''
+  where
+    minimum'' i (DListT xs) = liftList (tryFoldl1 (\_ x y -> tryMin x y) i) xs
+    minimum'' _ _ = Fail
+
+maximum' :: Function
+maximum' = unary maximum''
+  where
+    maximum'' i (DListT xs) = liftList (tryFoldl1 (\_ x y -> tryMax x y) i) xs
+    maximum'' _ _ = Fail
+
 concat' :: Function
 concat' = unary concat''
   where
@@ -844,3 +905,63 @@ concat' = unary concat''
     concat'' _ _ = Fail
     concat_ _ Nil = Val . DListT $ Val Nil
     concat_ i (Cons x xs) = liftJoinM2 (tryFoldl join'' i) x xs
+
+unconcat :: Function
+unconcat = unary unconcat'
+  where
+    unconcat' i (DStringT xs) =
+        liftString (fmap (fmap AsString) . unconcat_ i) xs
+    unconcat' i (DListT xs) = liftList (unconcat_ i) xs
+    unconcat' _ _ = Fail
+    unconcat_ :: Id -> ListTry a -> TryList (TryList a)
+    unconcat_ _ Nil = Val Nil
+    unconcat_ i (Cons x xs) =
+        Choice
+            (leftId i)
+            (Val $ Cons (Val $ singleton x) (xs >>= unconcat_ (rightId i)))
+            (xs >>= unconcat_ (rightId i) >>= prependToFirst x)
+    prependToFirst _ Nil = Fail
+    prependToFirst x (Cons y ys) = Val $ Cons (Val $ Cons x y) ys
+
+nub :: Function
+nub = unary nub'
+  where
+    nub' i (DStringT xs) = liftString (AsString . nub_ i) xs
+    nub' i (DListT xs) = liftList (nub_ i) xs
+    nub' _ _ = Fail
+    nub_ :: TryEq a => Id -> ListTry a -> ListTry a
+    nub_ _ Nil = Nil
+    nub_ i (Cons x xs) =
+        Cons x $
+            xs
+                >>= tryFilter (const $ tryNe x) (leftId i)
+                <&> nub_ (rightId i)
+
+sort :: Function
+sort = unary sort'
+  where
+    sort' i (DStringT xs) = liftString (AsString . sort_ i) xs
+    sort' i (DListT xs) = liftList (sort_ i) xs
+    sort' _ _ = Fail
+    sort_ :: TryOrd a => Id -> ListTry a -> TryList a
+    sort_ _ xs = mergeLists (Val . singleton <$> xs)
+    mergeLists :: TryOrd a => ListTry (TryList a) -> TryList a
+    mergeLists Nil = Val Nil
+    mergeLists (Cons x xs) = xs >>= mergeLists' x
+    mergeLists' :: TryOrd a => TryList a -> ListTry (TryList a) -> TryList a
+    mergeLists' x Nil = x
+    mergeLists' x (Cons y ys) =
+        ys >>= mergePairs >>= mergeLists' (liftJoinM2 merge x y)
+    mergePairs :: TryOrd a => ListTry (TryList a) -> TryList (TryList a)
+    mergePairs Nil = Val Nil
+    mergePairs (Cons x xs) = mergePairs' x <$> xs
+    mergePairs' x Nil = singleton x
+    mergePairs' x (Cons y ys) = Cons (liftJoinM2 merge x y) (ys >>= mergePairs)
+    merge :: TryOrd a => ListTry a -> ListTry a -> TryList a
+    merge Nil ys = Val ys
+    merge xs Nil = Val xs
+    merge (Cons x xs) (Cons y ys) =
+        tryLe x y <&> \b ->
+            if b
+                then Cons x (liftJoinM2 merge xs (Val $ Cons y ys))
+                else Cons y (liftJoinM2 merge (Val $ Cons x xs) ys)

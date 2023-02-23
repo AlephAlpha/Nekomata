@@ -1,14 +1,20 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Nekomata.Data where
 
 import Control.Monad (join, liftM2)
+import Data.Functor ((<&>))
 import Nekomata.NonDet
 
 -- | A helper function to lift a binary function to a monad
 liftJoinM2 :: Monad m => (a -> b -> m c) -> m a -> m b -> m c
 liftJoinM2 f x y = join $ liftM2 f x y
+
+-- | A helper function to compose a unary function with a binary function
+(.:) :: (c -> d) -> (a -> b -> c) -> a -> b -> d
+(.:) = (.) . (.)
 
 data ListTry a = Nil | Cons a (TryList a)
 
@@ -80,12 +86,25 @@ tryFoldr _ _ b Nil = Val b
 tryFoldr f i b (Cons x xs) =
     liftJoinM2 (f (leftId i)) x (xs >>= tryFoldr f (rightId i) b)
 
+-- | Fold a non-deterministic function over a @TryList@ from right to left
+tryFoldr1 :: (Id -> a -> a -> Try a) -> Id -> ListTry (Try a) -> Try a
+tryFoldr1 _ _ Nil = Fail
+tryFoldr1 f i (Cons x xs) = liftJoinM2 (tryFoldr f i) x xs
+
 -- | Fold a non-deterministic function over a @TryList@ from left to right
 tryFoldl :: (Id -> b -> a -> Try b) -> Id -> b -> ListTry (Try a) -> Try b
 tryFoldl _ _ b Nil = Val b
 tryFoldl f i b (Cons x xs) =
     liftJoinM2 (tryFoldl f (leftId i)) (x >>= f (rightId i) b) xs
 
+-- | Fold a non-deterministic function over a @TryList@ from left to right
+tryFoldl1 :: (Id -> a -> a -> Try a) -> Id -> ListTry (Try a) -> Try a
+tryFoldl1 _ _ Nil = Fail
+tryFoldl1 f i (Cons x xs) = liftJoinM2 (tryFoldl f i) x xs
+
+{- | Map a binary non-deterministic function over two @TryList@s and
+return a @ListTry@ of @TryList@s
+-}
 tryOuter ::
     (Id -> a -> b -> Try c) ->
     Id ->
@@ -93,6 +112,15 @@ tryOuter ::
     ListTry (Try b) ->
     ListTry (TryList (Try c))
 tryOuter f i xs = tryMap (\i' y -> Val $ tryMap (\i'' x -> f i'' x y) i' xs) i
+
+-- | Filter a @TryList@
+tryFilter :: (Id -> a -> Try Bool) -> Id -> ListTry a -> TryList a
+tryFilter _ _ Nil = Val Nil
+tryFilter f i (Cons x xs) =
+    f (leftId i) x >>= \b ->
+        if b
+            then Val $ Cons x (xs >>= tryFilter f (rightId i))
+            else xs >>= tryFilter f (rightId i)
 
 -- | Remove failed elements from a @TryList@
 filterTry :: NonDet a => ListTry (Try a) -> TryList (Try a)
@@ -113,7 +141,7 @@ data Data
     = DInt Integer
     | DString String
     | DList [Data]
-    deriving (Eq)
+    deriving (Eq, Ord)
 
 instance Show Data where
     show (DInt x) = show x
@@ -157,7 +185,7 @@ class ToTryData a where
     toTryData :: a -> TryData
 
 -- | A wrapper to avoid overlapping instances
-newtype AsDString a = AsDString {fromDString :: a}
+newtype AsString a = AsString {fromAsString :: a}
 
 instance ToTryData a => ToTryData (Det a) where
     toTryData = toTryData . fromDet
@@ -171,11 +199,14 @@ instance ToTryData a => ToTryData (Maybe a) where
 instance ToTryData Integer where
     toTryData = Val . DIntT . Val . Det
 
-instance ToTryData (AsDString String) where
-    toTryData = Val . DStringT . fromValue . fromDString
+instance ToTryData (AsString String) where
+    toTryData = Val . DStringT . fromValue . fromAsString
 
-instance ToTryData (AsDString (ListTry Char)) where
-    toTryData = Val . DStringT . Val . fmap Det . fromDString
+instance ToTryData (AsString (ListTry Char)) where
+    toTryData = Val . DStringT . Val . fmap Det . fromAsString
+
+instance ToTryData (AsString a) => ToTryData (AsString (Try a)) where
+    toTryData = toTryData . fmap AsString . fromAsString
 
 instance ToTryData a => ToTryData [a] where
     toTryData = Val . DListT . Val . fromList . map toTryData
@@ -311,6 +342,12 @@ class TryEq a where
     tryNe :: a -> a -> Try Bool
     tryNe x y = not <$> tryEq x y
 
+instance TryEq Integer where
+    tryEq x y = Val $ x == y
+
+instance TryEq Char where
+    tryEq x y = Val $ x == y
+
 instance Eq a => TryEq (Det a) where
     tryEq (Det x) (Det y) = Val $ x == y
 
@@ -330,3 +367,47 @@ instance TryEq DataTry where
     tryEq (DStringT x) (DStringT y) = tryEq x y
     tryEq (DListT x) (DListT y) = tryEq x y
     tryEq _ _ = Val False
+
+-- | A helper class for checking for ordering
+class TryOrd a where
+    tryCmp :: a -> a -> Try Ordering
+    tryLe :: a -> a -> Try Bool
+    tryLe x y = (<= EQ) <$> tryCmp x y
+    tryLt :: a -> a -> Try Bool
+    tryLt x y = (< EQ) <$> tryCmp x y
+    tryGe :: a -> a -> Try Bool
+    tryGe x y = (>= EQ) <$> tryCmp x y
+    tryGt :: a -> a -> Try Bool
+    tryGt x y = (> EQ) <$> tryCmp x y
+    tryMin :: a -> a -> Try a
+    tryMin x y = tryCmp x y <&> \o -> if o == LT then x else y
+    tryMax :: a -> a -> Try a
+    tryMax x y = tryCmp x y <&> \o -> if o == GT then x else y
+
+instance TryOrd Integer where
+    tryCmp x y = Val $ compare x y
+
+instance TryOrd Char where
+    tryCmp x y = Val $ compare x y
+
+instance Ord a => TryOrd (Det a) where
+    tryCmp (Det x) (Det y) = Val $ compare x y
+
+instance TryOrd a => TryOrd (Try a) where
+    tryCmp = liftJoinM2 tryCmp
+
+instance TryOrd a => TryOrd (ListTry a) where
+    tryCmp Nil Nil = Val EQ
+    tryCmp Nil _ = Val LT
+    tryCmp _ Nil = Val GT
+    tryCmp (Cons x xs) (Cons y ys) =
+        tryCmp x y >>= \o -> if o == EQ then tryCmp xs ys else return o
+
+instance TryOrd DataTry where
+    tryCmp (DIntT x) (DIntT y) = tryCmp x y
+    tryCmp (DStringT x) (DStringT y) = tryCmp x y
+    tryCmp (DListT x) (DListT y) = tryCmp x y
+    tryCmp (DIntT _) _ = Val LT
+    tryCmp _ (DIntT _) = Val GT
+    tryCmp (DStringT _) _ = Val LT
+    tryCmp _ (DStringT _) = Val GT

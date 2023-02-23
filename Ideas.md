@@ -25,7 +25,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 ```
 
 - [ ] `\rangeLength1`：输入一个列表，输出一个从 1 开始到列表长度的列表。不清楚这个函数用得多不多，用得不多的话可以拆成 `\range1` 和 `\length` 两个更常用的函数。
-- [ ] `\sort`：把一个列表按照元素的大小排序。应该是一个比较常用的函数，但在 non-deterministic 语言可能不太好实现。
+- [x] `\sort`：把一个列表按照元素的大小排序。应该是一个比较常用的函数，但在 non-deterministic 语言可能不太好实现。
 - [ ] `\absDiff`：求两个数的绝对值差；自动向量化。同样，也可以考虑拆成 `\sub` 和 `\abs` 两个函数。
 - [ ] `\groupBy`：输入两个列表，其长度必须一致。根据第一个列表的元素，将第二个列表的元素分组。比如输入 `[1, 2, 1, 2]` 和 `[a, b, c, d]`，输出 `[[a, c], [b, d]]`。
 
@@ -89,14 +89,14 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 - [ ] `\permutation`：求一个列表的任意一个排列。这个函数是 non-deterministic 的。
 - [x] `\apply2`：助词，将一个一元函数应用到栈顶的两个元素上。已实现。
 - [ ] `\chunks`：输入一个列表和一个整数，将列表分成若干个长度为该整数的子列表。
-- [ ] `\bytes`：输入一个字符串，输出一个列表，列表的每个元素是字符串中的一个字符的编码。
+- [x] `\bytes`：输入一个字符串，输出一个列表，列表的每个元素是字符串中的一个字符的编码。
 - [x] `\zipWith`：助词，将一个二元函数应用到两个列表的对应元素上。
 - [x] `\less`：比较两个数的大小。如果第一个数小于第二个数，返回第一个数；否则返回 `Fail` 。
 - [x] `\fromBase`：输入一个列表和一个整数，将列表中的元素看作是某个进制的数的各位，输出这个数的十进制表示。比如输入 `[1, 2, 3]` 和 `10`，输出 `123`。
 - [x] `\sub`：求两个数的差。已实现。
 - [x] `\neg`：求一个数的相反数。已实现。不清楚要不要加一个合并 `\neg` 和 `\sub` 的函数。
 - [x] `\allValues`：求一个 non-deterministic 值的所有可能取值，返回一个列表。为了实现这个函数，需要对现有的运算机制做一些修改。
-- [ ] `\minimum`：求一个列表的最小值。
+- [x] `\minimum`：求一个列表的最小值。
 
 ## [Smallest groups in an array](https://codegolf.stackexchange.com/q/79037/9288)
 
@@ -123,7 +123,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 \nub \setMinus \nub \length
 ```
 
-- [ ] `\nub`：输入一个列表，将其中的重复元素去掉。比如输入 `[1, 2, 3, 2, 1]`，输出 `[1, 2, 3]`。不清楚要不要排序。这道题用不着排序，但其它题目可能会用到。
+- [x] `\nub`：输入一个列表，将其中的重复元素去掉。比如输入 `[1, 2, 3, 2, 1]`，输出 `[1, 2, 3]`。不清楚要不要排序。这道题用不着排序，但其它题目可能会用到。
 - [ ] `\setMinus`：输入两个列表，返回第一个列表中不在第二个列表中的元素。比如输入 `[1, 2, 3, 4]` 和 `[2, 4]`，输出 `[1, 3]`。如果第二个列表中的元素在第一个列表中有重复，那么只删除一个。比如输入 `[1, 2, 2, 3, 4]` 和 `[2, 4]`，输出 `[1, 2, 3]`。
 
 ## [Running second maximum of a list](https://codegolf.stackexchange.com/q/138510/9288)
@@ -131,7 +131,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 参考了现有的 Husk 解答：
 
 ```
-\prefix \sort \reverse 2 \nth
+\prefix \sort \reverse 1 \nth
 ```
 
 - [x] `\prefix`：求一个列表的一个前缀。这个函数是 non-deterministic 的。
@@ -145,12 +145,12 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 有点麻烦，因为这需要一个 while 循环，循环里还有 if 判断。
 
 ```
-\repeatNonDet { \nonzero \dup \decrement 2 \divExact \swap 3 \mul \increment \choice \oneValue }
+\iterate { \nonzero \dup \decrement 2 \divExact \swap 3 \mul \increment \choice \oneValue }
 ```
 
 有 13 个字节了，和其它语言的解答相比输得比较惨。可能还需要找到一些更好地模拟 while 循环和 if 判断的办法。关键是常规的 while 和 if 作为高阶函数都应该输入两个或三个函数，但 Nekomata 的助词只能输入一个函数。
 
-- [x] `\repeatNonDet`：助词。输入一个函数，重复执行这个函数 non-deterministic 次。这个函数是 non-deterministic 的。
+- [x] `\iterate`：助词。输入一个函数，重复执行这个函数 non-deterministic 次。这个函数是 non-deterministic 的。
 - [x] `\nonzero`：判断一个数是否不为 0。如果不为 0，返回这个数本身；否则返回 `Fail`。
 - [x] `\divExact`：输入两个整数，求它们的整除。如果不能整除，返回 `Fail`。
 - [x] `\swap`：交换栈顶的两个元素。已实现。
@@ -285,7 +285,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 ```
 
 - [x] `\anyOf`：non-deterministic 地输出任意一个列表中的元素。
-- [ ] `\unconcat`：将一个列表拆成多个非空子列表。比如输入 `[1, 2, 3, 4, 5, 6, 7, 8, 9]`，其中一个可能的输出是 `[[1, 2], [3, 4, 5, 6], [7, 8, 9]]`。这个函数是 non-deterministic 的。
+- [x] `\unconcat`：将一个列表拆成多个非空子列表。比如输入 `[1, 2, 3, 4, 5, 6, 7, 8, 9]`，其中一个可能的输出是 `[[1, 2], [3, 4, 5, 6], [7, 8, 9]]`。这个函数是 non-deterministic 的。
 - [x] `\eq`：判断两个元素是否相等。如果相等，返回这个元素本身；否则返回 `Fail`。
 
 
@@ -294,7 +294,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 想到两种解法，其中第一种解法胜过了 Jelly、05AB1E，仅输给于 Husk：
 
 ```
-\repeatNonDet { \uncons 4 \add \greater \removeFail \nonempty }
+\iterate { \uncons 4 \add \greater \removeFail \nonempty }
 ```
 
 - [x] `\uncons`：输入一个列表，输出一个二元组，第二个元素是列表的第一个元素，第一个元素是列表的剩余部分。如果列表为空，返回 `Fail`。
@@ -302,17 +302,6 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 - [x] `\countValues`：求一个 non-deterministic 值的所有可能取值的个数。
 
 需要用 `-n` flag 来输出结果的可能取值数目，而非结果本身。
-
-另一种解法则比较长：
-
-```
-\unconcat \map { \minMax \swap \sub 5 \less } \allValues \last \length
-```
-
-- [ ] `\minMax`：求一个列表的最小值和最大值。不清楚应该哪个在前，哪个在后；如果是最大值在前，后面的 `\swap` 就可以省略。
-- [ ] `\last`：求一个列表的最后一个元素。如果列表为空，返回 `Fail`。由于还没确定 `\unconcat` 中各种可能的取值按什么顺序排列，这里也有可能是 `\first`，此时可以和前面的 `\allValues` 合并成 `\oneValue`。
-
-如果能支持递归就好了。但是递归会让函数的 arity 无法确定。
 
 ## [Construct the Identity Matrix](https://codegolf.stackexchange.com/q/70365/9288)
 
@@ -340,7 +329,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 参考 Brachylog 解答：
 
 ```
-1 \dup \repeatNonDet { \swap \dupDip \add ｝
+1 \dup \iterate { \swap \dupDip \add ｝
 ```
 
 没有输入，输出一个 non-deterministic 的值，其可能取值是 `1, 1, 2, 3, 5, ...`。
@@ -391,7 +380,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 假设 Nekomata 支持有理数，可以参考 Charcoal 的解答：
 
 ```
-\abs \sum \dup \repeatNonDet { \dupDip { \dip \dup \sub \choice \predicate { \fromBase 0 \greaterEq } \oneValue } 2 \div } \swap
+\abs \sum \dup \iterate { \dupDip { \dip \dup \sub \choice \predicate { \fromBase 0 \greaterEq } \oneValue } 2 \div } \swap
 ```
 
 23 个字节，而且不知道对不对。也许还有改进的空间。
@@ -427,10 +416,10 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 看来还需要一些新的函数。
 
 ```
-\length \iterate { \uncons \swap \join }
+\length \nTimes { \uncons \swap \join }
 ```
 
-- [ ] `\iterate`：助词。将一个函数作用 n 次，n 为输入的整数。如果 n 为负数，返回 `Fail`。
+- [ ] `\nTimes`：助词。将一个函数作用 n 次，n 为输入的整数。如果 n 为负数，返回 `Fail`。
 
 或者干脆：
 
@@ -481,18 +470,20 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 
 ## [Generate All 8 Knight's Moves](https://codegolf.stackexchange.com/q/247676/9288)
 
-目前想到的最短的是 10 个字节，参考的是 Brachylog 的解答：
+目前想到的最短的是 7 个字节，参考的是 Brachylog 的解答：
 
 ```
-2 \range1 \dup \reverse \choice \map { \dup \neg \choice }
+2 \range1 \orApply \reverse \map \orApply \neg
 ```
 
-可能需要加一个相当于 `\dup f \choice` 的助词，这样 10 个字节的解答可以减少到 8 个字节。如果实现了 `\permutation` 函数，用于替代 `\dup \reverse \choice`，还可以少一个字节。
+- [x] `\opApply`：助词。将一个函数执行零或一次。
+
+如果实现了 `\permutation` 函数，用于替代 `\orApply \reverse`，还可以少一个字节。
 
 另一种方案是 15 个字节：
 
 ```
-apply2 { 5 \range0 2 \sub \anyOf } \pair \predicate { \abs \sum 3 \eq }
+\apply2 { 5 \range0 2 \sub \anyOf } \pair \predicate { \abs \sum 3 \eq }
 ```
 
 如果实现了前面说过的 `\anyPair` 函数，15 个字节的解答可以减少到 11 个字节：
@@ -503,8 +494,32 @@ apply2 { 5 \range0 2 \sub \anyOf } \pair \predicate { \abs \sum 3 \eq }
 
 ## [Simplify a Cycle](https://codegolf.stackexchange.com/q/256920/9288)
 
-目前能想到的最短的是 13 个字节：
+用已有的函数，目前能想到的最短的是 13 个字节：
 
 ```
-\repeatNonDet { \uncons \swap \suffix \map { \swap \ne } \oneValue } \head
+\iterate { \uncons \swap \suffix \map { \swap \ne } \oneValue } \head
 ```
+
+加上新函数的话，可以：
+
+```
+\iterate { \uncons \dip \suffix \map2 \ne \oneValue } \head
+```
+
+- [ ] `\map2`：助词。将一个二元函数应用到第一个参数（列表）的每个元素上。`f \map2` 等价于 `\swap \map { \swap f }`。
+
+甚至可以：
+
+```
+\iterate { \uncons \dip \suffix \free \oneValue } \head
+```
+
+- [ ] `\free`：检查一个列表是否不包含某个元素。如果包含，返回 `Fail`；否则返回列表本身。不清楚是不是还要一个 `\notElem` 函数，在不包含的时候返回的是元素而非列表。
+
+## [Linear integer function generator](https://codegolf.stackexchange.com/q/217303/9288)
+
+```
+\nTimes { \dip \dup \dupDip \dot \reverse \swap \cons \reverse \dip { 0 \cons } }
+```
+
+14 个字节。颠来倒去的，感觉应该有更好的方法。
