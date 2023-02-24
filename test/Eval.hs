@@ -47,7 +47,7 @@ testEval :: Spec
 testEval = describe "Evaluation" $ do
     describe "q85: Fibonacci function or sequence" $ do
         specEval
-            "1:ⁿ{$ᵉ+"
+            "1:ⁱ{$ᵉ+"
             [("", Truncated ["1", "1", "2", "3", "5", "8", "13", "21", "34", "55"])]
         specEval
             "ʷ{←Pᶜ←"
@@ -96,7 +96,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q141949: Count edits accounting for grace period" $ do
         specEval
-            "ⁿ{C4+>FN"
+            "ⁱ{C4+>FN"
             [ ("[0]", Count 1)
             , ("[0,3,5,7]", Count 2)
             , ("[0,3,4,7,9,10,11,12]", Count 3)
@@ -110,7 +110,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q175248: The inverse Collatz Conjecture" $ do
         specEval
-            "ⁿ{Z:←2∣$3*→?∃"
+            "ⁱ{Z:←2∣$3*→?∃"
             [ ("0", All ["0"])
             , ("1", All ["1", "0"])
             , ("2", All ["2", "7", "3", "1", "0"])
@@ -148,10 +148,29 @@ testEval = describe "Evaluation" $ do
         specEval
             "RpN↔"
             [("4", All ["[1]", "[2,1]", "[3,2,1]", "[4,3,2,1]"])]
+    describe "q225203: Delannoy numbers" $ do
+        specEval
+            "⊤→ᵒK∏2d"
+            [ ("[5,8]", All ["13073"])
+            , ("[5,7]", All ["7183"])
+            , ("[3,9]", All ["1159"])
+            , ("[8,6]", All ["40081"])
+            , ("[1,7]", All ["15"])
+            , ("[7,0]", All ["1"])
+            , ("[11,6]", All ["227305"])
+            , ("[0,4]", All ["1"])
+            ]
     describe "q247676: Generate All 8 Knight's Moves" $ do
         specEval
-            "2Rᶜ↔ᵐᶜ_"
+            "2R⇄ᵐᶜ_"
             [("", All ["[1,2]", "[1,-2]", "[-1,2]", "[-1,-2]", "[2,1]", "[2,-1]", "[-2,1]", "[-2,-1]"])]
+    describe "q252082: Reconstruct Matrix from its diagonals" $ do
+        specEval
+            "#2÷:→:ᵒ{ˣmᵈ{-+@}@"
+            [ ("[[5]]", All ["[[5]]"])
+            , ("[[0],[1,69],[13]]", All ["[[1,0],[13,69]]"])
+            , ("[[25],[0,1],[6,23,10],[420,9],[67]]", All ["[[6,0,25],[420,23,1],[67,9,10]]"])
+            ]
     describe "q252927: Make a Court Transcriber" $ do
         specEval
             "~ᵖ{JS="
@@ -167,6 +186,13 @@ testEval = describe "Evaluation" $ do
             , ("[4, 3], 20", All ["40"])
             , ("[5, 8, 7], 9", All ["15"])
             , ("[2, 9, 4, 8], 7", All ["24"])
+            ]
+    describe "q257752: Print all pandigital numbers" $ do
+        specEval
+            "ℕᵖ{*$Bu$L"
+            [ ("2", Truncated ["1", "2", "3", "4", "5", "6"])
+            , ("3", Truncated ["5", "7", "11", "14", "15", "16", "17", "19"])
+            , ("4", Truncated ["27", "30", "39", "45"])
             ]
     describe "q257998: Recognize a counting tree" $ do
         specEval

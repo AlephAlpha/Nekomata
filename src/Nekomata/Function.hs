@@ -129,9 +129,13 @@ unaryVec = unary . vec1
 binaryVecPad :: (Id -> DataTry -> DataTry -> TryData) -> Function
 binaryVecPad = binary . vec2Pad
 
--- | Convert and vectorize a binary function with fail
+-- | Convert and vectorize a binary function with failure on mismatched lengths
 binaryVecFail :: (Id -> DataTry -> DataTry -> TryData) -> Function
 binaryVecFail = binary . vec2Fail
+
+-- | Convert and vectorize a binary function with outer product
+binaryVecOuter :: (Id -> DataTry -> DataTry -> TryData) -> Function
+binaryVecOuter = binary . vec2Outer
 
 {- | Convert a binary function to a Nekomata function
 and vectorize the first argument

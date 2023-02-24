@@ -8,11 +8,13 @@ module Nekomata.Builtin (
     infoByName,
 ) where
 
+import Control.Arrow (second)
 import Control.Monad (join, (>=>))
 import Data.Functor ((<&>))
 import Data.List (elemIndex)
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
+import Data.Maybe (fromMaybe)
 import Nekomata.CodePage
 import Nekomata.Data
 import Nekomata.Function
@@ -260,13 +262,58 @@ builtins =
         "Non-deterministically choose an integer. \n\
         \This function is non-deterministic."
     , Builtin
+        "sum"
+        '∑'
+        sum'
+        "Take the sum of a list of integers. \n\
+        \The addition is automatically vectorized with padding zeros."
+    , Builtin
+        "product"
+        '∏'
+        product'
+        "Take the product of a list of integers. \n\
+        \The multiplication is automatically vectorized \
+        \and fails when the two lists are of different lengths."
+    , Builtin
+        "dot"
+        '∙'
+        dot
+        "Take the dot product of two lists of integers. \n\
+        \The current implementation is simply a composition of \
+        \mul and sum."
+    , Builtin
         "fromBase"
-        'B'
+        'b'
         fromBase
         "Convert a list of digits to an integer. \n\
         \The first argument is the list of digits, \
         \the second argument is the base. \n\
         \This function is automatically vectorized over the base."
+    , Builtin
+        "fromBaseRev"
+        'd'
+        fromBaseRev
+        "Convert a list of digits in reverse order to an integer. \n\
+        \The first argument is the list of digits, \
+        \the second argument is the base. \n\
+        \This function is automatically vectorized over the base."
+    , Builtin
+        "toBase"
+        'B'
+        toBase
+        "Convert an integer to a list of digits in reverse order. \n\
+        \The first argument is the integer, \
+        \the second argument is the base. \n\
+        \This function is automatically vectorized over both arguments. \
+        \If both arguments are lists, \
+        \the result is a list of lists of digits."
+    , Builtin
+        "binomial"
+        'K'
+        binomial
+        "Compute the binomial coefficient. \n\
+        \This function is automatically vectorized \
+        \and fails when the two lists are of different lengths."
     , Builtin
         "bytes"
         'e'
@@ -287,12 +334,12 @@ builtins =
         "Push an empty list."
     , Builtin
         "singleton"
-        'u'
+        'U'
         singleton'
         "Create a list with a single element."
     , Builtin
         "pair"
-        'd'
+        'D'
         pair
         "Create a list with two elements."
     , Builtin
@@ -339,6 +386,11 @@ builtins =
         uncons
         "Get the first element list and the rest of a list or a string."
     , Builtin
+        "last"
+        'l'
+        last'
+        "Get the last element of a list or a string."
+    , Builtin
         "reverse"
         '↔'
         reverse'
@@ -356,6 +408,12 @@ builtins =
         "Get a suffix of a list or a string. \n\
         \This function is non-deterministic."
     , Builtin
+        "take"
+        'T'
+        take'
+        "Get the first n elements of a list or a string. \n\
+        \This function is automatically vectorized on the second argument."
+    , Builtin
         "subset"
         'S'
         subset
@@ -369,31 +427,11 @@ builtins =
         \This function is non-deterministic."
     , Builtin
         "join"
-        '⧺'
+        ','
         join'
         "Concatenate two lists or two strings.\n\
         \If one of the arguments is a string, \
         \the other argument is converted to a string as well."
-    , Builtin
-        "sum"
-        '∑'
-        sum'
-        "Take the sum of a list of integers. \n\
-        \The addition is automatically vectorized with padding zeros."
-    , Builtin
-        "product"
-        '∏'
-        product'
-        "Take the product of a list of integers. \n\
-        \The multiplication is automatically vectorized \
-        \and fails when the two lists are of different lengths."
-    , Builtin
-        "dot"
-        '∙'
-        dot
-        "Take the dot product of two lists of integers. \n\
-        \The current implementation is simply a composition of \
-        \mul and sum."
     , Builtin
         "minimum"
         '⊥'
@@ -425,7 +463,7 @@ builtins =
         \This function is non-deterministic."
     , Builtin
         "nub"
-        'U'
+        'u'
         nub
         "Remove duplicate elements from a list or a string."
     , Builtin
@@ -433,6 +471,12 @@ builtins =
         'o'
         sort
         "Sort a list or a string."
+    , Builtin
+        "permutation"
+        '⇄'
+        permutation
+        "Get a permutation of a list or a string. \n\
+        \This function is non-deterministic."
     ]
 
 -- | The map from names to builtin functions
@@ -478,7 +522,7 @@ drop' :: Function
 drop' = Function (Arity 1 0) $ \_ (_ :+ s) -> s
 
 dup :: Function
-dup = Function (Arity 0 1) $ \_ (x :+ s) -> x :+ x :+ s
+dup = Function (Arity 1 2) $ \_ (x :+ s) -> x :+ x :+ s
 
 swap :: Function
 swap = Function (Arity 2 2) $ \_ (x :+ y :+ s) -> y :+ x :+ s
@@ -658,6 +702,27 @@ integer = nullary $
   where
     integers = (0 :: Integer) : [y | x <- [1 ..], y <- [x, -x]]
 
+sum' :: Function
+sum' = unary sum''
+  where
+    sum'' i (DListT xs) =
+        liftList
+            (tryFoldl (vec2Pad add') i . DIntT . Val $ Det 0)
+            xs
+    sum'' _ _ = Fail
+
+product' :: Function
+product' = unary product''
+  where
+    product'' i (DListT xs) =
+        liftList
+            (tryFoldl (vec2Fail mul') i . DIntT . Val $ Det 1)
+            xs
+    product'' _ _ = Fail
+
+dot :: Function
+dot = compose mul sum'
+
 fromBase :: Function
 fromBase = binaryVecArg2 fromBase'
   where
@@ -667,6 +732,33 @@ fromBase = binaryVecArg2 fromBase'
     fromBase_ i b = tryFoldl (mulAdd b) i (DIntT . Val $ Det 0)
     mulAdd b i x y =
         toTryData b >>= vec2Pad mul' i x >>= vec2Pad add' (leftId i) y
+
+fromBaseRev :: Function
+fromBaseRev = binaryVecArg2 fromBase'
+  where
+    fromBase' i (DListT xs) (DIntT b) =
+        liftList (\x -> liftInt (\b' -> fromBase_ i b' x) b) xs
+    fromBase' _ _ _ = Fail
+    fromBase_ i b = tryFoldr (mulAdd b) i (DIntT . Val $ Det 0)
+    mulAdd b i x y =
+        toTryData b >>= vec2Pad mul' i y >>= vec2Pad add' (leftId i) x
+
+toBase :: Function
+toBase = binaryVecOuter toBase'
+  where
+    toBase' _ (DIntT x) (DIntT b) = liftInt2 toBase_ x b
+    toBase' _ _ _ = Fail
+    toBase_ _ b | b < 2 = Fail
+    toBase_ x b | x < 0 = toBase_ (-x) b
+    toBase_ 0 _ = Val Nil
+    toBase_ x b = Val $ Cons (x `mod` b) (toBase_ (x `div` b) b)
+
+binomial :: Function
+binomial = binaryVecFail binomial'
+  where
+    binomial' _ (DIntT n) (DIntT k) = liftInt2 binomial_ n k
+    binomial' _ _ _ = Fail
+    binomial_ n k = product [n - k + 1 .. n] `div` product [1 .. k]
 
 -- String functions
 
@@ -731,21 +823,19 @@ nth :: Function
 nth = binaryVecArg2 nth'
   where
     nth' _ (DStringT xs) (DIntT y) =
-        liftString
-            (\x -> liftInt (AsString . fmap singleton . (`nth_` x)) y)
-            xs
+        liftString (\x -> liftInt (`nth_` x) y) xs
     nth' _ (DListT xs) (DIntT y) =
         liftList (\x -> liftInt (`nth_` x) y) xs
     nth' _ _ _ = Fail
     nth_ :: Integer -> ListTry a -> Try a
     nth_ 0 (Cons x _) = Val x
-    nth_ n (Cons _ xs) = xs >>= nth_ (n - 1)
-    nth_ _ Nil = Fail
+    nth_ n (Cons _ xs) | n > 0 = xs >>= nth_ (n - 1)
+    nth_ _ _ = Fail
 
 head' :: Function
 head' = unary head''
   where
-    head'' _ (DStringT xs) = liftString (AsString . fmap singleton . head_) xs
+    head'' _ (DStringT xs) = liftString head_ xs
     head'' _ (DListT xs) = liftList head_ xs
     head'' _ _ = Fail
     head_ :: ListTry a -> Try a
@@ -781,6 +871,16 @@ uncons = unary2 uncons'
     uncons_ Nil = Fail
     uncons_ (Cons x xs) = Val (xs, x)
 
+last' :: Function
+last' = unary last''
+  where
+    last'' _ (DStringT xs) = liftString last_ xs
+    last'' _ (DListT xs) = liftList last_ xs
+    last'' _ _ = Fail
+    last_ :: ListTry a -> Try (Maybe a)
+    last_ Nil = Val Nothing
+    last_ (Cons x xs) = xs >>= last_ >>= Val . Just . fromMaybe x
+
 reverse' :: Function
 reverse' = unary reverse''
   where
@@ -812,6 +912,19 @@ suffix = unary suffix'
     suffix_ _ Nil = Val Nil
     suffix_ i s@(Cons _ xs) =
         Choice (leftId i) (Val s) (xs >>= suffix_ (rightId i))
+
+take' :: Function
+take' = binaryVecArg2 take''
+  where
+    take'' _ (DStringT xs) (DIntT y) =
+        liftString (\x -> liftInt (AsString . (`take_` x)) y) xs
+    take'' _ (DListT xs) (DIntT y) =
+        liftList (\x -> liftInt (`take_` x) y) xs
+    take'' _ _ _ = Fail
+    take_ :: Integer -> ListTry a -> TryList a
+    take_ 0 _ = Val Nil
+    take_ n (Cons x xs) | n > 0 = Cons x . take_ (n - 1) <$> xs
+    take_ _ _ = Fail
 
 subset :: Function
 subset = unary subset'
@@ -864,27 +977,6 @@ join'' _ _ _ = Fail
 join_ :: ListTry a -> ListTry a -> TryList a
 join_ Nil ys = Val ys
 join_ (Cons x xs) ys = Val . Cons x $ liftJoinM2 join_ xs (Val ys)
-
-sum' :: Function
-sum' = unary sum''
-  where
-    sum'' i (DListT xs) =
-        liftList
-            (tryFoldl (vec2Pad add') i . DIntT . Val $ Det 0)
-            xs
-    sum'' _ _ = Fail
-
-product' :: Function
-product' = unary product''
-  where
-    product'' i (DListT xs) =
-        liftList
-            (tryFoldl (vec2Fail mul') i . DIntT . Val $ Det 1)
-            xs
-    product'' _ _ = Fail
-
-dot :: Function
-dot = compose mul sum'
 
 minimum' :: Function
 minimum' = unary minimum''
@@ -965,3 +1057,22 @@ sort = unary sort'
             if b
                 then Cons x (liftJoinM2 merge xs (Val $ Cons y ys))
                 else Cons y (liftJoinM2 merge (Val $ Cons x xs) ys)
+
+permutation :: Function
+permutation = unary permutation'
+  where
+    permutation' i (DStringT xs) = liftString (AsString . permutation_ i) xs
+    permutation' i (DListT xs) = liftList (permutation_ i) xs
+    permutation' _ _ = Fail
+    permutation_ :: Id -> ListTry a -> TryList a
+    permutation_ _ Nil = Val Nil
+    permutation_ i xs =
+        extract' (leftId i) xs
+            >>= \(x, xs') -> Val $ Cons x (xs' >>= permutation_ (rightId i))
+    extract' :: Id -> ListTry a -> Try (a, TryList a)
+    extract' _ Nil = Fail
+    extract' i (Cons x xs) =
+        Choice
+            (leftId i)
+            (Val (x, xs))
+            (xs >>= extract' (rightId i) <&> second (Val . Cons x))

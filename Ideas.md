@@ -86,7 +86,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 
 这里的 `"\24\60"` 表示字符串里两个字符的编码分别是 24 和 60。Nekomata 实际上尚未支持这种写法，而且其字符编码还没有对应 `24` 的字符。
 
-- [ ] `\permutation`：求一个列表的任意一个排列。这个函数是 non-deterministic 的。
+- [x] `\permutation`：求一个列表的任意一个排列。这个函数是 non-deterministic 的。
 - [x] `\apply2`：助词，将一个一元函数应用到栈顶的两个元素上。已实现。
 - [ ] `\chunks`：输入一个列表和一个整数，将列表分成若干个长度为该整数的子列表。
 - [x] `\bytes`：输入一个字符串，输出一个列表，列表的每个元素是字符串中的一个字符的编码。
@@ -238,13 +238,13 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 参考最高赞的 Jelly 解答：
 
 ```
-\increment \range0 \apply2 \binomial \mul 2 \fromBaseRev
+\maximum \increment \outer \binomial \product 2 \fromBaseRev
 ```
 
-- [x] `\range0`：输入一个整数，输出一个从 0 到这个整数减 1 的列表。比如输入 `3`，输出 `[0, 1, 2]`。区别于 `\range1`。
-- [x] `\apply2`：助词，将一个一元函数应用到栈顶的两个元素上。目前已实现的版本仅支持一元函数，而这里的 `\binomial` 是二元函数，需要修改。
-- [ ] `\binomial`：输入两个整数，求它们的二项式系数。自动向量化。
-- [ ] `\fromBaseRev`：输入一个列表和一个基数，将这个列表看作一个以这个基数为底的数，求它的十进制表示。比如输入 `[1, 2, 3]` 和 `10`，输出 `321`。进制转换时的输入列表正着反着都挺常见，所以 `\fromBase` 和 `\fromBaseRev` 都要实现。
+- [x] `\maximum`：求一个列表的最大值。
+- [x] `\outer`：助词，将一个二元函数作用到两个列表的所有元素上，返回一个列表的列表。比如输入 `[1, 2, 3]` 和 `[4, 5, 6]`，以及一个函数 `f`，输出 `[[f(1, 4), f(1, 5), f(1, 6)], [f(2, 4), f(2, 5), f(2, 6)], [f(3, 4), f(3, 5), f(3, 6)]]`。感觉这个助词实现起来有点复杂。
+- [x] `\binomial`：输入两个整数，求它们的二项式系数。自动向量化。
+- [x] `\fromBaseRev`：输入一个列表和一个基数，将这个列表看作一个以这个基数为底的数，求它的十进制表示。比如输入 `[1, 2, 3]` 和 `10`，输出 `321`。进制转换时的输入列表正着反着都挺常见，所以 `\fromBase` 和 `\fromBaseRev` 都要实现。
 
 ## [Print all pandigital numbers](https://codegolf.stackexchange.com/q/257752/9288)
 
@@ -259,7 +259,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 
 - [x] `\natural`：non-deterministic 地输出任意一个自然数。
 - [x] `\predicate`：助词，将一个函数应用到栈顶的一个元素上，如果这个函数返回 `Fail`，则返回 `Fail`；否则将这个元素保留。即使这个函数是多元函数，计算时也只会弹出栈顶的一个元素，其他的元素只用于计算，不会被弹出。
-- [ ] `\toBase`：输入一个整数和一个基数，将这个整数转换成以这个基数为底的数。比如输入 `321` 和 `10`，输出 `[1, 2, 3]`。
+- [x] `\toBase`：输入一个整数和一个基数，将这个整数转换成以这个基数为底的数。比如输入 `321` 和 `10`，输出 `[1, 2, 3]`。
 - [x] `\lengthIs`：判断一个列表的长度是否等于一个整数。如果相等，返回这个列表本身；否则返回 `Fail`。
 
 这里用了两次 `\swap`，感觉有点亏。不清楚要不要改变 `\toBase` 和 `\lengthIs` 的参数顺序。
@@ -308,8 +308,6 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 ```
 \outer \sub \logicalNot
 ```
-
-- [x] `\outer`：助词，将一个二元函数作用到两个列表的所有元素上，返回一个列表的列表。比如输入 `[1, 2, 3]` 和 `[4, 5, 6]`，以及一个函数 `f`，输出 `[[f(1, 4), f(1, 5), f(1, 6)], [f(2, 4), f(2, 5), f(2, 6)], [f(3, 4), f(3, 5), f(3, 6)]]`。感觉这个助词实现起来有点复杂。
 
 ## [Split some points](https://codegolf.stackexchange.com/q/257870/9288)
 
@@ -416,14 +414,6 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 看来还需要一些新的函数。
 
 ```
-\length \nTimes { \uncons \swap \join }
-```
-
-- [ ] `\nTimes`：助词。将一个函数作用 n 次，n 为输入的整数。如果 n 为负数，返回 `Fail`。
-
-或者干脆：
-
-```
 \unjoin \nonempty \swap \join
 ```
 
@@ -485,6 +475,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 ```
 \apply2 { 5 \range0 2 \sub \anyOf } \pair \predicate { \abs \sum 3 \eq }
 ```
+- [x] `\apply2`：助词，将一个一元函数应用到栈顶的两个元素上。
 
 如果实现了前面说过的 `\anyPair` 函数，15 个字节的解答可以减少到 11 个字节：
 
@@ -519,7 +510,76 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 ## [Linear integer function generator](https://codegolf.stackexchange.com/q/217303/9288)
 
 ```
-\nTimes { \dip \dup \dupDip \dot \reverse \swap \cons \reverse \dip { 0 \cons } }
+\dupDip \nTimes { \dip \dup \dupDip { \suffix \dot } \snoc } \take
 ```
 
-14 个字节。颠来倒去的，感觉应该有更好的方法。
+13 个字节。用了好多 `\dupDip`，感觉应该有更好的方法。
+
+- [x] `\nTimes`：助词。将一个函数作用 n 次，n 为输入的整数。如果 n 为负数，返回 `Fail`。
+- [ ] `\snoc`：将一个元素添加到列表的末尾。
+- [x] `\take`：取列表的前 n 个元素。
+
+或者：
+
+```
+\dupDip { \iterate { \noPop \dot \snoc \tail } \allValues } \take
+```
+
+以上的题目大多是列表操作。接下来要多考虑一下数学相关的问题，尤其是组合数学和数论。
+
+## [A Fine sequence with fine interpretations](https://codegolf.stackexchange.com/q/258110/9288)
+
+参考 Vyxal 或 Jelly
+
+```
+\apply2 \increment \dupDip \neg \range0 \dupDip \binomial \increment \reverse \dot \abs \swap \div
+```
+
+13 个字节，输得比较惨。如果学 Vyxal 加上 `\mean` 和 `\cumsum` 函数，可以缩减到 8 个字节：
+
+```
+\increment \dupDip \neg \range0 \binomial \cumsum \abs \mean
+```
+
+- [ ] `\mean`：求一个列表的平均值。不清楚它用得多不多。可能要在 Nekomata 支持有理数之后再加上。
+- [ ] `\cumsum`：求一个列表的累加和。
+
+## [Painting with Line Filler](https://codegolf.stackexchange.com/q/256978/9288)
+
+```
+\while { \orApply \transpose \extract \allEqual \delete } \isEmpty
+```
+
+10 个字节，还用了一堆未实现的函数。输的比较惨。
+
+- [ ] `\transpose`：转置一个二维列表。
+- [ ] `\extract`：从一个列表中任意取出一个元素，原来的列表中删去这个元素。这个函数是 non-deterministic 的。
+- [ ] `\allEqual`：检查一个列表中的所有元素是否相等。
+- [ ] `\delete`：从一个列表中删除所有等于某个元素的元素。
+- [ ] `\isEmpty`：检查一个列表是否为空。
+
+Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个在 non-deterministic 语言中不好弄，语义也不是很明确。
+
+## [Fold a List in Half](https://codegolf.stackexchange.com/q/136887/9288)
+
+```
+\unjoin \orApply { 0 \cons } \reverse \zipWith \add
+```
+
+- [ ] `\unjoin`：non-deterministic 地将一个列表拆成两部分。
+
+```
+\length \increment 2 \div \splitAt \reverse \add
+```
+
+- [ ] `\splitAt`：将一个列表从第 n 个元素处拆成两部分。
+
+
+## [Find the Prime Signature](https://codegolf.stackexchange.com/q/256147/9288)
+
+```
+\factor \tally \sort \reverse
+```
+
+- [ ] `\factor`：将一个整数分解成质因数。比如说 `12` 分解成 `[2, 2, 3]`。
+- [ ] `\tally`：统计一个列表中每个元素出现的次数。比如说 `[2, 2, 3]` 统计成 `[2, 3] [2, 1]`。

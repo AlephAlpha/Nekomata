@@ -80,6 +80,24 @@ tryMap :: (Id -> a -> Try b) -> Id -> ListTry (Try a) -> ListTry (Try b)
 tryMap _ _ Nil = Nil
 tryMap f i (Cons x xs) = Cons (x >>= f (leftId i)) (tryMap f (rightId i) <$> xs)
 
+-- | Map over the first argument of a binary function
+tryMap1 ::
+    (Id -> a -> b -> Try c) ->
+    Id ->
+    b ->
+    ListTry (Try a) ->
+    ListTry (Try c)
+tryMap1 f i y = tryMap (\i' x -> f i' x y) i
+
+-- | Map over the second argument of a binary function
+tryMap2 ::
+    (Id -> a -> b -> Try c) ->
+    Id ->
+    a ->
+    ListTry (Try b) ->
+    ListTry (Try c)
+tryMap2 f i x = tryMap (`f` x) i
+
 -- | Fold a non-deterministic function over a @TryList@ from right to left
 tryFoldr :: (Id -> a -> b -> Try b) -> Id -> b -> ListTry (Try a) -> Try b
 tryFoldr _ _ b Nil = Val b
@@ -199,6 +217,9 @@ instance ToTryData a => ToTryData (Maybe a) where
 instance ToTryData Integer where
     toTryData = Val . DIntT . Val . Det
 
+instance ToTryData Char where
+    toTryData = Val . DStringT . Val . singleton . Det
+
 instance ToTryData (AsString String) where
     toTryData = Val . DStringT . fromValue . fromAsString
 
@@ -299,8 +320,8 @@ vec2Pad ::
     DataTry ->
     TryData
 vec2Pad f i (DListT xs) (DListT ys) = liftList2 (zipWithPad (vec2Pad f) i) xs ys
-vec2Pad f i (DListT xs) y = liftList (tryMap (\i' x -> vec2Pad f i' x y) i) xs
-vec2Pad f i x (DListT ys) = liftList (tryMap (\i' y -> vec2Pad f i' x y) i) ys
+vec2Pad f i (DListT xs) y = liftList (tryMap1 (vec2Pad f) i y) xs
+vec2Pad f i x (DListT ys) = liftList (tryMap2 (vec2Pad f) i x) ys
 vec2Pad f i x y = f i x y
 
 -- | Vectorize a binary function with failure on mismatched lengths
@@ -312,9 +333,22 @@ vec2Fail ::
     TryData
 vec2Fail f i (DListT xs) (DListT ys) =
     liftList2 (zipWithFail (vec2Fail f) i) xs ys
-vec2Fail f i (DListT xs) y = liftList (tryMap (\i' x -> vec2Fail f i' x y) i) xs
-vec2Fail f i x (DListT ys) = liftList (tryMap (\i' y -> vec2Fail f i' x y) i) ys
+vec2Fail f i (DListT xs) y = liftList (tryMap1 (vec2Fail f) i y) xs
+vec2Fail f i x (DListT ys) = liftList (tryMap2 (vec2Fail f) i x) ys
 vec2Fail f i x y = f i x y
+
+-- | Vectorize a binary function with outer product
+vec2Outer ::
+    (Id -> DataTry -> DataTry -> TryData) ->
+    Id ->
+    DataTry ->
+    DataTry ->
+    TryData
+vec2Outer f i (DListT xs) (DListT ys) =
+    liftList2 (tryOuter (vec2Outer f) i) xs ys
+vec2Outer f i (DListT xs) y = liftList (tryMap1 (vec2Outer f) i y) xs
+vec2Outer f i x (DListT ys) = liftList (tryMap2 (vec2Outer f) i x) ys
+vec2Outer f i x y = f i x y
 
 -- | Vectorize the first argument of a binary function
 vec2Arg1 ::
@@ -323,7 +357,7 @@ vec2Arg1 ::
     DataTry ->
     DataTry ->
     TryData
-vec2Arg1 f i (DListT xs) y = liftList (tryMap (\i' x -> vec2Arg1 f i' x y) i) xs
+vec2Arg1 f i (DListT xs) y = liftList (tryMap1 (vec2Arg1 f) i y) xs
 vec2Arg1 f i x y = f i x y
 
 -- | Vectorize the second argument of a binary function
@@ -333,7 +367,7 @@ vec2Arg2 ::
     DataTry ->
     DataTry ->
     TryData
-vec2Arg2 f i x (DListT ys) = liftList (tryMap (\i' y -> vec2Arg2 f i' x y) i) ys
+vec2Arg2 f i x (DListT ys) = liftList (tryMap2 (vec2Arg2 f) i x) ys
 vec2Arg2 f i x y = f i x y
 
 -- | A helper class for checking for equality

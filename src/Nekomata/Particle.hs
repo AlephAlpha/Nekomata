@@ -63,8 +63,10 @@ builtinParticles =
         "apply2"
         'ᵃ'
         apply2
-        "(m -> n) -> (m + 1 -> 2 * n)"
-        "Apply a function to the top two values of the stack."
+        "(0 -> n) -> (0 -> 2 * n) \
+        \or (m -> n) -> (m + 1 -> 2 * n) where m > 0"
+        "Apply a function to the top two values of the stack.\n\
+        \If the function takes no argument, simply apply it twice."
     , BuiltinParticle
         "noPop"
         'ˣ'
@@ -137,7 +139,7 @@ builtinParticles =
         "Apply a function zero or one time non-deterministically."
     , BuiltinParticle
         "iterate"
-        'ⁿ'
+        'ⁱ'
         iterate'
         "(n -> n) -> (n -> n)"
         "Apply a function zero or more times non-deterministically, \
@@ -153,6 +155,13 @@ builtinParticles =
         \until the top value of the stack is Fail.\n\
         \This is different from `iterate` in that it does not \
         \return the intermediate results."
+    , BuiltinParticle
+        "nTimes"
+        'ⁿ'
+        nTimes
+        "(n -> n) -> (n + 1 -> n)"
+        "Take an integer from the top of the stack, \
+        \and apply a function that many times."
     ]
 
 -- | The map of from names to builtin particles
@@ -217,6 +226,12 @@ applyParticle p f = maybe (Left message) Right $ runParticle (particle p) f
 apply2 :: Particle
 apply2 = Particle apply2'
   where
+    apply2' (Function (Arity 0 n) f) =
+        Just . Function (Arity 0 (2 * n)) $
+            \i s ->
+                prepend
+                    (takeStack n $ f (leftId i) s)
+                    (f (rightId i) s)
     apply2' (Function (Arity m n) f) =
         Just . Function (Arity (m + 1) (2 * n)) $
             \i (x :+ y :+ s) ->
@@ -340,6 +355,22 @@ iterate' = Particle iterate''
                 >>= (\s' -> top s' >> Val s')
                 >>= iterate_ (rightId (rightId i)) f
             )
+
+nTimes :: Particle
+nTimes = Particle nTimes'
+  where
+    nTimes' (Function (Arity m n) f) | m == n =
+        Just . Function (Arity (m + 1) n) $
+            \i (x :+ s) ->
+                prepend
+                    (takeStack n . tryStack $ x >>= nTimes'' i f s)
+                    (dropStack m s)
+    nTimes' _ = Nothing
+    nTimes'' i f s (DIntT x) = toTry x >>= nTimes_ i f s
+    nTimes'' _ _ _ _ = Fail
+    nTimes_ _ _ s 0 = Val s
+    nTimes_ _ _ _ x | x < 0 = Fail
+    nTimes_ i f s x = f (leftId i) <$> nTimes_ (rightId i) f s (x - 1)
 
 while :: Particle
 while = Particle while'

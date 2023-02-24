@@ -1,11 +1,13 @@
 module Main (main) where
 
+import qualified Data.ByteString as ByteString
+import Nekomata.CodePage
 import Nekomata.Eval
 import Options.Applicative
 import Repl
 import System.Exit (die)
 
-data Code = CodeArg String | CodeFile FilePath
+data Code = CodeArg String | CodeFile FilePath | CodeFileUtf8 FilePath
 
 data Input = InputArg String | InputStdin | InputNone
 
@@ -23,7 +25,14 @@ optCode =
         ( long "file"
             <> short 'f'
             <> metavar "FILE"
-            <> help "File to run"
+            <> help "File to run (custom encoding)"
+        )
+    <|> CodeFileUtf8
+      <$> strOption
+        ( long "utf8"
+            <> short 'u'
+            <> metavar "FILE"
+            <> help "File to run (UTF-8)"
         )
 
 optInput :: Parser Input
@@ -93,7 +102,9 @@ main = do
     Opts runOnce -> do
       code' <- case code runOnce of
         CodeArg code' -> return code'
-        CodeFile file -> readFile file
+        CodeFile file ->
+          fromBytes . ByteString.unpack <$> ByteString.readFile file
+        CodeFileUtf8 file -> readFile file
       input' <- case input runOnce of
         InputArg input' -> return input'
         InputStdin -> getContents
