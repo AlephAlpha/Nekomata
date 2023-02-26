@@ -1,6 +1,7 @@
 module Main (main) where
 
 import qualified Data.ByteString as ByteString
+import Doc
 import Nekomata.CodePage
 import Nekomata.Eval
 import Options.Applicative
@@ -79,12 +80,18 @@ data RunOnce = RunOnce {code :: Code, input :: Input, mode :: Mode}
 optRunOnce :: Parser RunOnce
 optRunOnce = RunOnce <$> optCode <*> optInput <*> optMode
 
-data Opts = Opts RunOnce | Repl
+data Opts = Opts RunOnce | Repl | DocBuiltin | DocCodePage
 
 opts :: Parser Opts
 opts =
   Opts <$> optRunOnce
     <|> flag' Repl (long "repl" <> short 'r' <> help "Run the REPL")
+    <|> flag'
+      DocBuiltin
+      (long "doc" <> help "Generate documentation for builtins")
+    <|> flag'
+      DocCodePage
+      (long "codepage" <> help "Generate documentation for code page")
 
 optsInfo :: ParserInfo Opts
 optsInfo =
@@ -113,3 +120,5 @@ main = do
         Left err -> die $ "Error: " ++ show err
         Right result -> putStrLn result
     Repl -> runRepl
+    DocBuiltin -> putStrLn docBuiltins
+    DocCodePage -> putStrLn docCodePage

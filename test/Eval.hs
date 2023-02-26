@@ -66,6 +66,20 @@ testEval = describe "Evaluation" $ do
         specEval
             "\"Hello, World!\""
             [("", All ["Hello, World!"])]
+    describe "q66127: Catalan Numbers" $ do
+        specEval
+            "2*$K$→÷"
+            [ ("0", All ["1"])
+            , ("1", All ["1"])
+            , ("2", All ["2"])
+            , ("3", All ["5"])
+            , ("4", All ["14"])
+            , ("5", All ["42"])
+            , ("6", All ["132"])
+            , ("7", All ["429"])
+            , ("8", All ["1430"])
+            , ("9", All ["4862"])
+            ]
     describe "q70365: Construct the Identity Matrix" $ do
         specEval
             "ᵒ-¬"
@@ -159,6 +173,20 @@ testEval = describe "Evaluation" $ do
             , ("[7,0]", All ["1"])
             , ("[11,6]", All ["227305"])
             , ("[0,4]", All ["1"])
+            ]
+    describe "q247398: Alternating sums of multidimensional arrays" $ do
+        specEval
+            "ʷ{⨡d"
+            [ ("[1]", All ["1"])
+            , ("[-1]", All ["-1"])
+            , ("[1,2]", All ["-1"])
+            , ("[2,0,4]", All ["6"])
+            , ("[1,-2]", All ["3"])
+            , ("[[1]]", All ["1"])
+            , ("[[1,2],[4,8]]", All ["3"])
+            , ("[[-1,-1],[2,2]]", All ["0"])
+            , ("[[[[1],[2]],[[4],[8]]]]", All ["3"])
+            , ("[[[1,2],[2,4],[4,8]],[[-4,-4],[-1,1],[2,-2]]] ", All ["-9"])
             ]
     describe "q247676: Generate All 8 Knight's Moves" $ do
         specEval

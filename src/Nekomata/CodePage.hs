@@ -10,7 +10,7 @@ import Data.Word (Word8)
 codePage :: String
 codePage =
     "�÷×∣≠∀∃←→\n↔⇄≤≥⊥⊤"
-        ++ "¬±ℕℤ∑∏∙∅��������"
+        ++ "¬±ℕℤ∑∏∫∙∅∎⨡⑩����"
         ++ " !\"#$%&'()*+,-./"
         ++ "0123456789:;<=>?"
         ++ "@ABCDEFGHIJKLMNO"
@@ -25,6 +25,28 @@ codePage =
         ++ "����������������"
         ++ "����������������"
         ++ "����������������"
+
+-- A Markdown table of the code page
+codePageMarkdown :: String
+codePageMarkdown =
+    "| |"
+        ++ concat ["**_" ++ d : "**|" | d <- hexDigits]
+        ++ "\n|-|"
+        ++ concat ["-|" | _ <- hexDigits]
+        ++ "\n"
+        ++ unlines
+            [ "|**"
+                ++ d
+                : "_**|"
+                ++ concat
+                    [ '`' : (if c == '\n' then "\\n" else [c]) ++ "`|"
+                    | j <- [0 .. 15]
+                    , let c = codePage !! (i * 16 + j)
+                    ]
+            | (i, d) <- zip [0 ..] hexDigits
+            ]
+  where
+    hexDigits = "0123456789ABCDEF"
 
 -- | An error that occurs when a character is not in Nekomata's code page.
 data CodePageError = CodePageError {char :: Char, pos :: Int} deriving (Eq)

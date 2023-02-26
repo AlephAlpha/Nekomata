@@ -8,9 +8,11 @@ module Nekomata.Particle (
     ParticleArityError (..),
     applyParticle,
     info,
+    infoMarkdown,
     infoByName,
 ) where
 
+import Data.Functor (($>))
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Nekomata.Data
@@ -47,6 +49,18 @@ info b =
         ++ arity b
         ++ "):\n"
         ++ help b
+
+-- | Get the info string for a builtin particle in Markdown format
+infoMarkdown :: BuiltinParticle -> String
+infoMarkdown b =
+    "### `"
+        ++ name b
+        ++ "` (`"
+        ++ [short b]
+        ++ "`, `"
+        ++ arity b
+        ++ "`)\n\n"
+        ++ concatMap (++ "\n\n") (lines (help b))
 
 -- | Get the info string for a builtin particle by name
 infoByName :: String -> Maybe String
@@ -308,10 +322,9 @@ predicate' = Particle predicate''
         Just . Function (Arity 1 1) $
             \i (x :+ s) ->
                 ( normalForm x
-                    >>= predicate_ (\x' -> top (f i (Val x' :+ s)))
+                    >>= (\x' -> normalForm (top (f i (Val x' :+ s))) $> x')
                 )
                     :+ s
-    predicate_ f x = Cut $ \ds -> if hasValue ds (f x) then Val x else Fail
 
 predicateNot' :: Particle
 predicateNot' = Particle predicateNot''
@@ -323,7 +336,8 @@ predicateNot' = Particle predicateNot''
                     >>= predicateNot_ (\x' -> top (f i (Val x' :+ s)))
                 )
                     :+ s
-    predicateNot_ f x = Cut $ \ds -> if hasValue ds (f x) then Fail else Val x
+    predicateNot_ f x =
+        Cut $ \ds -> (ds, if hasValue ds (f x) then Fail else Val x)
 
 orApply :: Particle
 orApply = Particle orApply'
@@ -351,9 +365,8 @@ iterate' = Particle iterate''
         Choice
             (leftId i)
             (Val s)
-            ( Val (f (leftId (rightId i)) s)
-                >>= (\s' -> top s' >> Val s')
-                >>= iterate_ (rightId (rightId i)) f
+            ( let s' = f (leftId (rightId i)) s
+               in normalForm (top s') $> s' >>= iterate_ (rightId (rightId i)) f
             )
 
 nTimes :: Particle
@@ -385,7 +398,9 @@ while = Particle while'
     while'' :: Id -> (Id -> Stack -> Stack) -> Stack -> Try Stack
     while'' i f s =
         Cut $ \ds ->
-            let s' = f (leftId i) s
-             in if hasValue ds (top s')
-                    then normalForm (top s') >> Val s' >>= while'' (rightId i) f
+            ( ds
+            , let s' = f (leftId i) s
+               in if hasValue ds (top s')
+                    then normalForm (top s') $> s' >>= while'' (rightId i) f
                     else Val s
+            )

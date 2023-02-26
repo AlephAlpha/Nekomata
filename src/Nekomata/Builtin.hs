@@ -5,6 +5,7 @@ module Nekomata.Builtin (
     builtinMap,
     builtinShortMap,
     info,
+    infoMarkdown,
     infoByName,
 ) where
 
@@ -41,6 +42,18 @@ info b =
         ++ show (arity (func b))
         ++ "):\n"
         ++ help b
+
+-- | Get the info string for a builtin function in Markdown format
+infoMarkdown :: Builtin -> String
+infoMarkdown b =
+    "### `"
+        ++ name b
+        ++ "` (`"
+        ++ [short b]
+        ++ "`, `"
+        ++ show (arity (func b))
+        ++ "`)\n\n"
+        ++ concatMap (++ "\n\n") (lines (help b))
 
 -- | Get the info string for a builtin function by name
 infoByName :: String -> Maybe String
@@ -80,6 +93,14 @@ builtins =
         'n'
         countValues'
         "Count the number of values in a non-deterministic object."
+    , Builtin
+        "normalForm"
+        '∎'
+        normalForm'
+        "Convert a non-deterministic object to the normal form.\n\
+        \I haven't given a formal definition for the normal form. \
+        \This function basically lifts all the non-determinism \
+        \in lists and strings to the top level."
     , Builtin "drop" '^' drop' "Drop the top value of the stack."
     , Builtin "dup" ':' dup "Duplicate the top value of the stack."
     , Builtin "swap" '$' swap "Swap the top two values of the stack."
@@ -143,6 +164,16 @@ builtins =
         "Check if the first integer is greater than or equal to the second. \n\
         \If it is, push the first integer, otherwise fail.\n\
         \This function is automatically vectorized with filtering."
+    , Builtin
+        "neg1"
+        '⨡'
+        neg1
+        "The constant -1."
+    , Builtin
+        "ten"
+        '⑩'
+        ten
+        "The constant 10."
     , Builtin
         "neg"
         '_'
@@ -307,6 +338,12 @@ builtins =
         \This function is automatically vectorized over both arguments. \
         \If both arguments are lists, \
         \the result is a list of lists of digits."
+    , Builtin
+        "cumsum"
+        '∫'
+        cumsum
+        "Take the cumulative sum of a list of integers. \n\
+        \The addition is automatically vectorized with padding zeros."
     , Builtin
         "binomial"
         'K'
@@ -507,14 +544,19 @@ fail' = constant (Fail :: TryData)
 
 allValues :: Function
 allValues = Function (Arity 1 1) $
-    \_ (x :+ s) -> Cut (\ds -> toTryData . fromList $ values ds x) :+ s
+    \_ (x :+ s) -> Cut (\ds -> (ds, toTryData . fromList $ values ds x)) :+ s
 
 oneValue :: Function
-oneValue = Function (Arity 1 1) $ \_ (x :+ s) -> firstValue x :+ s
+oneValue = Function (Arity 1 1) $
+    \_ (x :+ s) ->
+        Cut (\ds -> maybe (ds, Fail) (second toTryData) $ firstValue ds x) :+ s
 
 countValues' :: Function
 countValues' = Function (Arity 1 1) $
-    \_ (x :+ s) -> Cut (\ds -> toTryData $ countValues ds x) :+ s
+    \_ (x :+ s) -> Cut (\ds -> (ds, toTryData $ countValues ds x)) :+ s
+
+normalForm' :: Function
+normalForm' = Function (Arity 1 1) $ \_ (x :+ s) -> normalForm x :+ s
 
 -- Stack manipulation
 
@@ -586,6 +628,12 @@ greaterEq = predicateVec2 greaterEq'
     greaterEq' _ _ _ = Fail
 
 -- Math functions
+
+neg1 :: Function
+neg1 = constant (-1 :: Integer)
+
+ten :: Function
+ten = constant (10 :: Integer)
 
 neg :: Function
 neg = unaryVec neg'
@@ -752,6 +800,12 @@ toBase = binaryVecOuter toBase'
     toBase_ x b | x < 0 = toBase_ (-x) b
     toBase_ 0 _ = Val Nil
     toBase_ x b = Val $ Cons (x `mod` b) (toBase_ (x `div` b) b)
+
+cumsum :: Function
+cumsum = unary cumsum'
+  where
+    cumsum' i (DListT xs) = liftList (tryScanl1 (vec2Pad add') i) xs
+    cumsum' _ _ = Fail
 
 binomial :: Function
 binomial = binaryVecFail binomial'

@@ -3,7 +3,7 @@
 module Nekomata.NonDet where
 
 import Control.Applicative (Alternative (empty, (<|>)))
-import Control.Monad ((>=>))
+import Control.Arrow (second)
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (isJust)
@@ -25,26 +25,26 @@ data Try a
     = Val a
     | Choice Id (Try a) (Try a)
     | Fail
-    | Cut (Decisions -> Try a)
+    | Cut (Decisions -> (Decisions, Try a))
 
 instance Functor Try where
     fmap f (Val x) = Val (f x)
     fmap f (Choice i t1 t2) = Choice i (fmap f t1) (fmap f t2)
     fmap _ Fail = Fail
-    fmap f (Cut g) = Cut (fmap f . g)
+    fmap f (Cut g) = Cut (second (fmap f) . g)
 
 instance Applicative Try where
     pure = Val
     Val f <*> t = fmap f t
     Choice i t1 t2 <*> t = Choice i (t1 <*> t) (t2 <*> t)
     Fail <*> _ = Fail
-    Cut g <*> t = Cut (\d -> g d <*> t)
+    Cut g <*> t = Cut (second (<*> t) . g)
 
 instance Monad Try where
     Val x >>= f = f x
     Choice i t1 t2 >>= f = Choice i (t1 >>= f) (t2 >>= f)
     Fail >>= _ = Fail
-    Cut g >>= f = Cut (g >=> f)
+    Cut g >>= f = Cut (second (>>= f) . g)
 
 -- | A wrapper for deterministic tryValues
 newtype Det a = Det {fromDet :: a} deriving (Eq, Ord, Show)
@@ -97,9 +97,9 @@ clearChoice i (Decisions m) = Decisions $ Map.delete i m
 initDecisions :: Decisions
 initDecisions = Decisions Map.empty
 
--- | Find all values of a @Try@ via backtracking
-tryValues :: Alternative m => Decisions -> Try a -> m a
-tryValues _ (Val x) = pure x
+-- | Find all values and the corresponding decisions of a of a @Try@
+tryValues :: Alternative m => Decisions -> Try a -> m (Decisions, a)
+tryValues ds (Val x) = pure (ds, x)
 tryValues ds (Choice i t1 t2) = case getChoice i ds of
     Just ChooseLeft -> tryValues ds t1
     Just ChooseRight -> tryValues ds t2
@@ -107,11 +107,15 @@ tryValues ds (Choice i t1 t2) = case getChoice i ds of
         tryValues (setChoice i ChooseLeft ds) t1
             <|> tryValues (setChoice i ChooseRight ds) t2
 tryValues _ Fail = empty
-tryValues ds (Cut g) = tryValues ds (g ds)
+tryValues ds (Cut g) = let (ds', t) = g ds in tryValues ds' t
 
--- | Find all values of a @NonDet@ via backtracking
+-- | Find all values of a @NonDet@
 values :: (NonDet a, Alternative m) => Decisions -> a -> m (Value a)
-values ds = tryValues ds . toTry
+values ds = fmap snd . tryValues ds . toTry
+
+-- | Find the first value and the corresponding decisions of a @NonDet@
+firstValue :: NonDet a => Decisions -> a -> Maybe (Decisions, Value a)
+firstValue ds = tryValues ds . toTry
 
 -- | Count all values of a @Try@
 countTryValues :: Decisions -> Try a -> Integer
@@ -123,7 +127,7 @@ countTryValues ds (Choice i t1 t2) = case getChoice i ds of
         countTryValues (setChoice i ChooseLeft ds) t1
             + countTryValues (setChoice i ChooseRight ds) t2
 countTryValues _ Fail = 0
-countTryValues ds (Cut g) = countTryValues ds (g ds)
+countTryValues ds (Cut g) = let (ds', t) = g ds in countTryValues ds' t
 
 -- | Count all values of a @NonDet@
 countValues :: (NonDet a) => Decisions -> a -> Integer

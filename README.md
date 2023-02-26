@@ -6,38 +6,20 @@ The implementation of non-determinism is based on the paper [*KiCS2: A New Compi
 
 The language is currently in an early stage of development. It has very few built-ins but lots of bugs. The custom code page is incomplete. The only supported numeric type is integer. I'm not even sure if it's Turing-complete yet (likely not).
 
-I'll start writing a documentation once it has enough features to write a useful program. For now, you can read the code for [built-in functions](src/Nekomata/Builtin.hs) and [built-in particles](src/Nekomata/Particle.hs), which includes help messages for each built-in. There are also some [examples in tests](test/Eval.hs).
-
 ## Name
 
 [***Nekomata***](https://en.wikipedia.org/wiki/Nekomata) (猫又) are a kind of cat monster in Japanese folklore that have forked tails. I think it's a good name for a con**cat**enative language that chooses between forking paths of computation.
 
-## Building and running
+## Documentation
 
-Nekomata is written in [Haskell](https://www.haskell.org/). You need [Cabal](https://www.haskell.org/cabal/) and [GHC](https://www.haskell.org/ghc/) to build it. The easiest way to install these tools is through [GHCup](https://www.haskell.org/ghcup/).
+Like the language itself, the documentation is also incomplete. You can find it in the [doc](doc) folder.
 
-You need to use GHC 9.2.1 or later to build Nekomata, because older versions of GHC don't support the Unicode character [`𐞥` (U+107A5, MODIFIER LETTER SMALL Q)](https://util.unicode.org/UnicodeJsps/character.jsp?a=107A5). This character was added to the Unicode standard in version 14.0.0, which was released in 2021.
+There are also some example programs in [`test/Eval.hs`](test/Eval.hs). These examples solve some challenges from [Code Golf StackExchange](https://codegolf.stackexchange.com/). But there aren't any explanations.
 
-Once you have Cabal and GHC installed, you can build Nekomata by running the following command in the project's root directory:
+## Influences
 
-```bash
-cabal build
-```
+Nekomata is influenced by the following languages:
 
-To run the Nekomata REPL, use:
-
-```bash
-cabal run Nekomata -- -r
-```
-
-To run a Nekomata program from a file with a given input string, use:
-
-```bash
-cabal run Nekomata -- -f <path to program> -i <input string>
-```
-
-To see a list of all available options, use:
-
-```bash
-cabal run Nekomata -- -h
-```
+- [**Curry**](https://curry.pages.ps.informatik.uni-kiel.de/curry-lang.org/). Curry is the first non-deterministic programming language I've heard of. Nekomata is lazy, purely functional, and non-deterministic like Curry. The implementation of non-determinism is also inspired by Curry's KiCS2 compiler.
+- [**Brachylog**](https://github.com/JCumin/Brachylog). This is a declarative logic golfing language based on Prolog. I think it's the first golfing language that uses non-determinism. Nekomata's syntax and choice of built-ins are heavily influenced by Brachylog. For example, Nekomata uses superscript letters for particles (called "Metapredicates" in Brachylog), though particles in Nekomata come before the arguments instead of after them.
+- [**Vyxal**](https://github.com/Vyxal/Vyxal), [**Jelly**](https://github.com/DennisMitchell/jellylanguage), [**05AB1E**](https://github.com/Adriandmen/05AB1E), [**Husk**](https://github.com/barbuz/Husk). These are all golfing languages that influence Nekomata's syntax and choice of built-ins. Vyxal and 05AB1E are both concatenative languages. When I don't know what built-in to add to Nekomata, I usually look at existing answers on [Code Golf StackExchange](https://codegolf.stackexchange.com/) in these languages.

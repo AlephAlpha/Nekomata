@@ -97,14 +97,16 @@ executable Nekomata
   main-is:          Main.hs
 
   -- Modules included in this executable, other than Main.
-  other-modules:    Repl
+  other-modules:
+    Doc
+    Repl
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:
 
   -- Other library packages from which modules are imported.
   build-depends:
-    , base                  >=4.16   && <5
+    , base                  >=4.16  && <5
     , bytestring            ^>=0.11
     , containers            ^>=0.6
     , haskeline             ^>=0.8.1
@@ -141,6 +143,6 @@ test-suite Nekomata-test
 
   -- Test dependencies.
   build-depends:
-    , base      >=4.16  && <5
+    , base      >=4.16 && <5
     , hspec     ^>=2.10
     , Nekomata

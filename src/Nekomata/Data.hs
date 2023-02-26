@@ -120,6 +120,17 @@ tryFoldl1 :: (Id -> a -> a -> Try a) -> Id -> ListTry (Try a) -> Try a
 tryFoldl1 _ _ Nil = Fail
 tryFoldl1 f i (Cons x xs) = liftJoinM2 (tryFoldl f i) x xs
 
+-- | Scan a non-deterministic function over a @TryList@ from left to right
+tryScanl :: (Id -> b -> a -> Try b) -> Id -> b -> ListTry (Try a) -> ListTry b
+tryScanl _ _ b Nil = singleton b
+tryScanl f i b (Cons x xs) =
+    Cons b (liftM2 (tryScanl f (leftId i)) (x >>= f (rightId i) b) xs)
+
+-- | Scan a non-deterministic function over a @TryList@ from left to right
+tryScanl1 :: (Id -> a -> a -> Try a) -> Id -> ListTry (Try a) -> TryList a
+tryScanl1 _ _ Nil = Val Nil
+tryScanl1 f i (Cons x xs) = liftM2 (tryScanl f i) x xs
+
 {- | Map a binary non-deterministic function over two @TryList@s and
 return a @ListTry@ of @TryList@s
 -}
@@ -144,9 +155,10 @@ tryFilter f i (Cons x xs) =
 filterTry :: NonDet a => ListTry (Try a) -> TryList (Try a)
 filterTry Nil = Val Nil
 filterTry (Cons x xs) = Cut $ \ds ->
-    if hasValue ds x
-        then Val $ Cons x (xs >>= filterTry)
-        else xs >>= filterTry
+    ( ds
+    , let xs' = xs >>= filterTry
+       in if hasValue ds x then x <&> \x' -> Cons (Val x') xs' else xs'
+    )
 
 instance NonDet a => NonDet (ListTry a) where
     type Value (ListTry a) = [Value a]
@@ -182,10 +194,6 @@ instance NonDet DataTry where
     toTry (DIntT t) = DInt <$> toTry t
     toTry (DStringT t) = DString <$> toTry t
     toTry (DListT t) = DList <$> toTry t
-
--- | Get the first possible value of a @TryData@
-firstValue :: TryData -> TryData
-firstValue x = Cut (\ds -> toTryData . maybe Fail Val $ values ds x)
 
 {- | Convert any @DataTry@ to a @TryList TryData@
 
@@ -244,7 +252,8 @@ instance ToTryData DataTry where
 {- | Convert a @TryData@ to the normal form
 
 I haven't defined what the normal form really is.
-This function basically expands all the non-deterministic in @ListTry@.
+This function basically lifts all the non-determinism in @ListTry@
+to the top level.
 -}
 normalForm :: TryData -> TryData
 normalForm = toTryData . toTry
