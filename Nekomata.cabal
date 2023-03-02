@@ -21,7 +21,7 @@ name:            Nekomata
 -- PVP summary:  +-+------- breaking API changes
 --               | | +----- non-breaking API additions
 --               | | | +--- code changes with no API change
-version:         0.1.0.0
+version:         0.1.1.0
 
 -- A short (one-line) description of the package.
 synopsis:        A small non-determinstic concatenative golfing language
@@ -79,7 +79,8 @@ library
 
   -- Other library packages from which modules are imported.
   build-depends:
-    , base        >=4.16 && <5
+    , arithmoi    ^>=0.12
+    , base        >=4.16  && <5
     , containers  ^>=0.6
     , parsec      ^>=3.1
 
@@ -106,7 +107,7 @@ executable Nekomata
 
   -- Other library packages from which modules are imported.
   build-depends:
-    , base                  >=4.16  && <5
+    , base                  >=4.16   && <5
     , bytestring            ^>=0.11
     , containers            ^>=0.6
     , haskeline             ^>=0.8.1
@@ -143,6 +144,6 @@ test-suite Nekomata-test
 
   -- Test dependencies.
   build-depends:
-    , base      >=4.16 && <5
+    , base      >=4.16  && <5
     , hspec     ^>=2.10
     , Nekomata

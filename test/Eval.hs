@@ -101,6 +101,14 @@ testEval = describe "Evaluation" $ do
             , ("[2,2,2,1]", Check False)
             , ("[[1,2],2]", Check False)
             ]
+    describe "q126699: Create a checkerboard matrix" $ do
+        specEval
+            "ᵒ+→2%"
+            [ ("1", All ["[[1]]"])
+            , ("2", All ["[[1,0],[0,1]]"])
+            , ("3", All ["[[1,0,1],[0,1,0],[1,0,1]]"])
+            , ("4", All ["[[1,0,1,0],[0,1,0,1],[1,0,1,0],[0,1,0,1]]"])
+            ]
     describe "q138510: Running second maximum of a list" $ do
         specEval
             "po↔1@"
@@ -238,4 +246,37 @@ testEval = describe "Evaluation" $ do
             , ("[6,2,1,0,0,0]", Check False)
             , ("[5,3,1,0,0,1]", Check False)
             , ("[5,2,3,0,0,0]", Check False)
+            ]
+    describe "q258299: Primes with Distinct Prime Digits" $ do
+        specEval
+            "ℙ⑩BQ:u=⑩d"
+            [("", Truncated ["2", "3", "5", "7", "23", "37", "53", "73", "257", "523", "2357", "2753", "3257", "3527", "5237", "5273", "7253", "7523"])]
+        specEval
+            "⑩rSQ⇄⑩bQ∀o"
+            [("", All ["[2,3,5,7,23,37,53,73,257,523,2357,2753,3257,3527,5237,5273,7253,7523]"])]
+    describe "q258335: Shortest Code to Find the Smallest Missing Positive Integer" $ do
+        specEval
+            "ℕPᵖ{-Z"
+            [ ("[1,2,3]", First (Just "4"))
+            , ("[3,4,-1,1]", First (Just "2"))
+            , ("[7,8,9,11,12]", First (Just "1"))
+            , ("[-5,-4,-3,-2,-1,0,1,2,3,5,7,10]", First (Just "4"))
+            , ("[]", First (Just "1"))
+            , ("[-1,-4,-7]", First (Just "1"))
+            ]
+    describe "q258432: Shortest code to generate all Pythagorean triples up to a given limit" $ do
+        specEval
+            "RS3Lᵖ{:*↔C$∑="
+            [ ("20", All ["[3,4,5]", "[6,8,10]", "[5,12,13]", "[9,12,15]", "[8,15,17]", "[12,16,20]"])
+            , ("5", All ["[3,4,5]"])
+            ]
+    describe "q258511: Shortest Valid Parentheses" $ do
+        specEval
+            "qe7%3%∫:l0?R≥∎#∀⊤"
+            [ ("\"(()())\"", All ["6"])
+            , ("\")()())\"", All ["4"])
+            , ("\"()(())\"", All ["6"])
+            , ("\"()(()\"", All ["2"])
+            , ("\"))\"", All ["0"])
+            , ("\"\"", All ["0"])
             ]

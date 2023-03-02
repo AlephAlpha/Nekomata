@@ -1,5 +1,10 @@
 # Revision history for Nekomata
 
+## 0.1.1.0 -- Unreleased
+
+* Fixed some errors in the documentation.
+* New built-in functions: `\allEqual`, `\isPrime`, `\pow`, `\prime`.
+
 ## 0.1.0.0 -- 2023-02-26
 
 * First version. Released on an unsuspecting world.

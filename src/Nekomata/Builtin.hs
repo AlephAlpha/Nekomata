@@ -15,7 +15,8 @@ import Data.Functor ((<&>))
 import Data.List (elemIndex)
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
-import Data.Maybe (fromMaybe)
+import Data.Maybe (fromMaybe, isJust)
+import Math.NumberTheory.Primes
 import Nekomata.CodePage
 import Nekomata.Data
 import Nekomata.Function
@@ -86,7 +87,7 @@ builtins =
         "oneValue"
         '∃'
         oneValue
-        "Get a single value from a non-deterministic object. \n\
+        "Get a single value from a non-deterministic object.\n\
         \Fails if the object has no values."
     , Builtin
         "countValues"
@@ -108,62 +109,62 @@ builtins =
         "eq"
         '='
         eq
-        "Check if two values are equal. \n\
+        "Check if two values are equal.\n\
         \If they are, push the first value, otherwise fail."
     , Builtin
         "ne"
         '≠'
         ne
-        "Check if two values are not equal. \n\
+        "Check if two values are not equal.\n\
         \If they are not, push the first value, otherwise fail."
     , Builtin
         "nonempty"
         'N'
         nonempty'
-        "Check if a list or string is non-empty. \n\
+        "Check if a list or string is non-empty.\n\
         \If it is, push the list or string itself, otherwise fail."
     , Builtin
         "nonzero"
         'Z'
         nonzero
-        "Check if an integer is non-zero. \n\
+        "Check if an integer is non-zero.\n\
         \If it is, push the integer itself, otherwise fail.\n\
-        \This function is automatically vectorized with filtering."
+        \This function is automatically vectorized."
     , Builtin
         "positive"
         'P'
         positive
-        "Check if an integer is positive. \n\
+        "Check if an integer is positive.\n\
         \If it is, push the integer itself, otherwise fail.\n\
-        \This function is automatically vectorized with filtering."
+        \This function is automatically vectorized."
     , Builtin
         "less"
         '<'
         less
-        "Check if the first integer is less than the second. \n\
+        "Check if the first integer is less than the second.\n\
         \If it is, push the first integer, otherwise fail.\n\
-        \This function is automatically vectorized with filtering."
+        \This function is automatically vectorized."
     , Builtin
         "lessEq"
         '≤'
         lessEq
-        "Check if the first integer is less than or equal to the second. \n\
+        "Check if the first integer is less than or equal to the second.\n\
         \If it is, push the first integer, otherwise fail.\n\
-        \This function is automatically vectorized with filtering."
+        \This function is automatically vectorized."
     , Builtin
         "greater"
         '>'
         greater
-        "Check if the first integer is greater than the second. \n\
+        "Check if the first integer is greater than the second.\n\
         \If it is, push the first integer, otherwise fail.\n\
-        \This function is automatically vectorized with filtering."
+        \This function is automatically vectorized."
     , Builtin
         "greaterEq"
         '≥'
         greaterEq
-        "Check if the first integer is greater than or equal to the second. \n\
+        "Check if the first integer is greater than or equal to the second.\n\
         \If it is, push the first integer, otherwise fail.\n\
-        \This function is automatically vectorized with filtering."
+        \This function is automatically vectorized."
     , Builtin
         "neg1"
         '⨡'
@@ -178,56 +179,56 @@ builtins =
         "neg"
         '_'
         neg
-        "Negate an integer. \n\
+        "Negate an integer.\n\
         \This function is automatically vectorized."
     , Builtin
         "abs"
         'A'
         abs'
-        "Absolute value of an integer. \n\
+        "Absolute value of an integer.\n\
         \This function is automatically vectorized."
     , Builtin
         "increment"
         '→'
         increment
-        "Increment an integer. \n\
+        "Increment an integer.\n\
         \This function is automatically vectorized."
     , Builtin
         "decrement"
         '←'
         decrement
-        "Decrement an integer. \n\
+        "Decrement an integer.\n\
         \This function is automatically vectorized."
     , Builtin
         "logicalNot"
         '¬'
         logicalNot
-        "Returns 1 if the argument is 0, and 0 otherwise. \n\
+        "Returns 1 if the argument is 0, and 0 otherwise.\n\
         \This function is automatically vectorized."
     , Builtin
         "sign"
         '±'
         sign
         "Returns -1 if the argument is negative, 0 if it is zero, \
-        \and 1 if it is positive. \n\
+        \and 1 if it is positive.\n\
         \This function is automatically vectorized."
     , Builtin
         "add"
         '+'
         add
-        "Add two integers. \n\
+        "Add two integers.\n\
         \This function is automatically vectorized with padding zeros."
     , Builtin
         "sub"
         '-'
         sub
-        "Subtract two integers. \n\
+        "Subtract two integers.\n\
         \This function is automatically vectorized with padding zeros."
     , Builtin
         "mul"
         '*'
         mul
-        "Multiply two integers. \n\
+        "Multiply two integers.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
@@ -235,106 +236,114 @@ builtins =
         '÷'
         div'
         "Integer division of two integers. \
-        \Result is rounded towards negative infinity. \n\
-        \Fails when the divisor is zero. \n\
+        \Result is rounded towards negative infinity.\n\
+        \Fails when the divisor is zero.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
         "mod"
         '%'
         mod'
-        "Modulo two integers. \n\
-        \Fails when the divisor is zero. \n\
+        "Modulo two integers.\n\
+        \Fails when the divisor is zero.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
         "divExact"
         '∣'
         divExact
-        "Divide two integers. \n\
+        "Divide two integers.\n\
         \Fails when the divisor is zero or \
-        \the result is not an exact integer. \n\
+        \the result is not an exact integer.\n\
+        \This function is automatically vectorized \
+        \and fails when the two lists are of different lengths."
+    , Builtin
+        "pow"
+        'E'
+        pow
+        "Raise an integer to a non-negative integer power.\n\
+        \Fails when the base is negative.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
         "min"
         'm'
         min'
-        "Get the minimum of two integers or two strings. \n\
+        "Get the minimum of two integers or two strings.\n\
         \This function is automatically vectorized with padding."
     , Builtin
         "max"
         'M'
         max'
-        "Get the maximum of two integers or two strings. \n\
+        "Get the maximum of two integers or two strings.\n\
         \This function is automatically vectorized with padding."
     , Builtin
         "range0"
         'r'
         range0
-        "Create a list of integers from 0 to n-1. \n\
+        "Create a list of integers from 0 to n-1.\n\
         \This function is automatically vectorized."
     , Builtin
         "range1"
         'R'
         range1
-        "Create a list of integers from 1 to n. \n\
+        "Create a list of integers from 1 to n.\n\
         \This function is automatically vectorized."
     , Builtin
         "natural"
         'ℕ'
         natural
-        "Non-deterministically choose a natural number. \n\
+        "Non-deterministically choose a natural number.\n\
         \This function is non-deterministic."
     , Builtin
         "integer"
         'ℤ'
         integer
-        "Non-deterministically choose an integer. \n\
+        "Non-deterministically choose an integer.\n\
         \This function is non-deterministic."
     , Builtin
         "sum"
         '∑'
         sum'
-        "Take the sum of a list of integers. \n\
+        "Take the sum of a list of integers.\n\
         \The addition is automatically vectorized with padding zeros."
     , Builtin
         "product"
         '∏'
         product'
-        "Take the product of a list of integers. \n\
+        "Take the product of a list of integers.\n\
         \The multiplication is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
         "dot"
         '∙'
         dot
-        "Take the dot product of two lists of integers. \n\
+        "Take the dot product of two lists of integers.\n\
         \The current implementation is simply a composition of \
         \mul and sum."
     , Builtin
         "fromBase"
         'b'
         fromBase
-        "Convert a list of digits to an integer. \n\
+        "Convert a list of digits to an integer.\n\
         \The first argument is the list of digits, \
-        \the second argument is the base. \n\
+        \the second argument is the base.\n\
         \This function is automatically vectorized over the base."
     , Builtin
         "fromBaseRev"
         'd'
         fromBaseRev
-        "Convert a list of digits in reverse order to an integer. \n\
+        "Convert a list of digits in reverse order to an integer.\n\
         \The first argument is the list of digits, \
-        \the second argument is the base. \n\
+        \the second argument is the base.\n\
         \This function is automatically vectorized over the base."
     , Builtin
         "toBase"
         'B'
         toBase
-        "Convert an integer to a list of digits in reverse order. \n\
+        "Convert an integer to a list of digits in reverse order.\n\
         \The first argument is the integer, \
-        \the second argument is the base. \n\
+        \the second argument is the base.\n\
         \This function is automatically vectorized over both arguments. \
         \If both arguments are lists, \
         \the result is a list of lists of digits."
@@ -342,27 +351,39 @@ builtins =
         "cumsum"
         '∫'
         cumsum
-        "Take the cumulative sum of a list of integers. \n\
+        "Take the cumulative sum of a list of integers.\n\
         \The addition is automatically vectorized with padding zeros."
     , Builtin
         "binomial"
         'K'
         binomial
-        "Compute the binomial coefficient. \n\
+        "Compute the binomial coefficient.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
+    , Builtin
+        "isPrime"
+        'Q'
+        isPrime'
+        "Check if an integer is prime.\n\
+        \This function is automatically vectorized."
+    , Builtin
+        "prime"
+        'ℙ'
+        prime
+        "Non-deterministically choose a prime number.\n\
+        \This function is non-deterministic."
     , Builtin
         "bytes"
         'e'
         bytes
         "Convert a string to a list of integers according to Nekomata's \
-        \custom encoding. \n\
+        \custom encoding.\n\
         \This function is automatically vectorized."
     , Builtin
         "anyOf"
         '~'
         anyOf'
-        "Choose an element from a list or a character from a string. \n\
+        "Choose an element from a list or a character from a string.\n\
         \This function is non-deterministic."
     , Builtin
         "emptyList"
@@ -394,13 +415,13 @@ builtins =
         'L'
         lengthIs
         "Check if the length of a list or a string is equal to a given \
-        \integer. \n\
+        \integer.\n\
         \If it is, push the list or string itself, otherwise fail."
     , Builtin
         "nth"
         '@'
         nth
-        "Get the nth element of a list or a string. \n\
+        "Get the nth element of a list or a string.\n\
         \This function is automatically vectorized on the second argument."
     , Builtin
         "head"
@@ -436,31 +457,31 @@ builtins =
         "prefix"
         'p'
         prefix
-        "Get a prefix of a list or a string. \n\
+        "Get a prefix of a list or a string.\n\
         \This function is non-deterministic."
     , Builtin
         "suffix"
         's'
         suffix
-        "Get a suffix of a list or a string. \n\
+        "Get a suffix of a list or a string.\n\
         \This function is non-deterministic."
     , Builtin
         "take"
         'T'
         take'
-        "Get the first n elements of a list or a string. \n\
+        "Get the first n elements of a list or a string.\n\
         \This function is automatically vectorized on the second argument."
     , Builtin
         "subset"
         'S'
         subset
-        "Get a finite subset of a list or a string. \n\
+        "Get a finite subset of a list or a string.\n\
         \This function is non-deterministic."
     , Builtin
         "subsequence"
         'q'
         subsequence
-        "Get a finite contiguous subsequence of a list or a string. \n\
+        "Get a finite contiguous subsequence of a list or a string.\n\
         \This function is non-deterministic."
     , Builtin
         "join"
@@ -473,7 +494,7 @@ builtins =
         "minimum"
         '⊥'
         minimum'
-        "Get the minimum of a list. \n\
+        "Get the minimum of a list.\n\
         \This order used in this function is different from the one \
         \used in min and max. It can compare two arbitrary values, \
         \not just integers or strings."
@@ -481,7 +502,7 @@ builtins =
         "maximum"
         '⊤'
         maximum'
-        "Get the maximum of a list. \n\
+        "Get the maximum of a list.\n\
         \This order used in this function is different from the one \
         \used in min and max. It can compare two arbitrary values, \
         \not just integers or strings."
@@ -489,14 +510,14 @@ builtins =
         "concat"
         'j'
         concat'
-        "Concatenate a list of lists or a list of strings. \n\
+        "Concatenate a list of lists or a list of strings.\n\
         \If one item in the list is a string, \
         \the other items are converted to strings as well."
     , Builtin
         "unconcat"
         'J'
         unconcat
-        "Split a list or a string into a list of lists or a list of strings. \n\
+        "Split a list or a string into a list of lists or a list of strings.\n\
         \This function is non-deterministic."
     , Builtin
         "nub"
@@ -512,8 +533,15 @@ builtins =
         "permutation"
         '⇄'
         permutation
-        "Get a permutation of a list or a string. \n\
+        "Get a permutation of a list or a string.\n\
         \This function is non-deterministic."
+    , Builtin
+        "allEqual"
+        '≡'
+        allEqual
+        "Check if all elements in a list are equal.\n\
+        \If it is, push the equal element, otherwise fail.\n\
+        \If the list is empty, this function fails."
     ]
 
 -- | The map from names to builtin functions
@@ -714,6 +742,13 @@ divExact = binaryVecFail divExact'
     divExact' _ _ _ = Fail
     divExact_ x y = if y /= 0 && x `mod` y == 0 then Val $ x `div` y else Fail
 
+pow :: Function
+pow = binaryVecFail pow'
+  where
+    pow' _ (DIntT x) (DIntT y) = liftInt2 pow_ x y
+    pow' _ _ _ = Fail
+    pow_ x y = if y >= 0 then Val $ x ^ y else Fail
+
 min' :: Function
 min' = binaryVecPad min''
   where
@@ -813,6 +848,19 @@ binomial = binaryVecFail binomial'
     binomial' _ (DIntT n) (DIntT k) = liftInt2 binomial_ n k
     binomial' _ _ _ = Fail
     binomial_ n k = product [n - k + 1 .. n] `div` product [1 .. k]
+
+isPrime' :: Function
+isPrime' = predicateVec isPrime''
+  where
+    isPrime'' _ (DIntT x) = isJust . isPrime . fromDet <$> x
+    isPrime'' _ _ = Fail
+
+prime :: Function
+prime = nullary $
+    \i ->
+        toTryData
+            <$> anyOf i . fromList
+            $ map unPrime [nextPrime (1 :: Integer) ..]
 
 -- String functions
 
@@ -1035,13 +1083,13 @@ join_ (Cons x xs) ys = Val . Cons x $ liftJoinM2 join_ xs (Val ys)
 minimum' :: Function
 minimum' = unary minimum''
   where
-    minimum'' i (DListT xs) = liftList (tryFoldl1 (\_ x y -> tryMin x y) i) xs
+    minimum'' i (DListT xs) = liftList (tryFoldl1 (const tryMin) i) xs
     minimum'' _ _ = Fail
 
 maximum' :: Function
 maximum' = unary maximum''
   where
-    maximum'' i (DListT xs) = liftList (tryFoldl1 (\_ x y -> tryMax x y) i) xs
+    maximum'' i (DListT xs) = liftList (tryFoldl1 (const tryMax) i) xs
     maximum'' _ _ = Fail
 
 concat' :: Function
@@ -1130,3 +1178,12 @@ permutation = unary permutation'
             (leftId i)
             (Val (x, xs))
             (xs >>= extract' (rightId i) <&> second (Val . Cons x))
+
+allEqual :: Function
+allEqual = unary allEqual'
+  where
+    allEqual' i (DStringT xs) = liftString (tryFoldl1 tryEq' i . fmap Val) xs
+    allEqual' i (DListT xs) = liftList (tryFoldl1 tryEq' i) xs
+    allEqual' _ _ = Fail
+    tryEq' :: TryEq a => Id -> a -> a -> Try a
+    tryEq' _ x y = tryEq x y <&> \b -> if b then x else y

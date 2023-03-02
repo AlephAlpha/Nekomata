@@ -70,7 +70,7 @@ Check if an integer is non-zero.
 
 If it is, push the integer itself, otherwise fail.
 
-This function is automatically vectorized with filtering.
+This function is automatically vectorized.
 
 ### `positive` (`P`, `1 -> 1`)
 
@@ -78,7 +78,7 @@ Check if an integer is positive.
 
 If it is, push the integer itself, otherwise fail.
 
-This function is automatically vectorized with filtering.
+This function is automatically vectorized.
 
 ### `less` (`<`, `2 -> 1`)
 
@@ -86,7 +86,7 @@ Check if the first integer is less than the second.
 
 If it is, push the first integer, otherwise fail.
 
-This function is automatically vectorized with filtering.
+This function is automatically vectorized.
 
 ### `lessEq` (`≤`, `2 -> 1`)
 
@@ -94,7 +94,7 @@ Check if the first integer is less than or equal to the second.
 
 If it is, push the first integer, otherwise fail.
 
-This function is automatically vectorized with filtering.
+This function is automatically vectorized.
 
 ### `greater` (`>`, `2 -> 1`)
 
@@ -102,7 +102,7 @@ Check if the first integer is greater than the second.
 
 If it is, push the first integer, otherwise fail.
 
-This function is automatically vectorized with filtering.
+This function is automatically vectorized.
 
 ### `greaterEq` (`≥`, `2 -> 1`)
 
@@ -110,7 +110,7 @@ Check if the first integer is greater than or equal to the second.
 
 If it is, push the first integer, otherwise fail.
 
-This function is automatically vectorized with filtering.
+This function is automatically vectorized.
 
 ### `neg1` (`⨡`, `0 -> 1`)
 
@@ -195,6 +195,14 @@ This function is automatically vectorized and fails when the two lists are of di
 Divide two integers.
 
 Fails when the divisor is zero or the result is not an exact integer.
+
+This function is automatically vectorized and fails when the two lists are of different lengths.
+
+### `pow` (`E`, `2 -> 1`)
+
+Raise an integer to a non-negative integer power.
+
+Fails when the base is negative.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
@@ -287,6 +295,18 @@ The addition is automatically vectorized with padding zeros.
 Compute the binomial coefficient.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
+
+### `isPrime` (`Q`, `1 -> 1`)
+
+Check if an integer is prime.
+
+This function is automatically vectorized.
+
+### `prime` (`ℙ`, `0 -> 1`)
+
+Non-deterministically choose a prime number.
+
+This function is non-deterministic.
 
 ### `bytes` (`e`, `1 -> 1`)
 
@@ -429,6 +449,14 @@ Sort a list or a string.
 Get a permutation of a list or a string.
 
 This function is non-deterministic.
+
+### `allEqual` (`≡`, `1 -> 1`)
+
+Check if all elements in a list are equal.
+
+If it is, push the equal element, otherwise fail.
+
+If the list is empty, this function fails.
 
 ## Particles
 
