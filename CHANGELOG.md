@@ -3,7 +3,7 @@
 ## 0.1.1.0 -- Unreleased
 
 * Fixed some errors in the documentation.
-* New built-in functions: `\allEqual`, `\isPrime`, `\pow`, `\prime`.
+* New built-in functions: `\allEqual`, `\init`, `\isPrime`, `\pow`, `\prime`, `\snoc`, `\unsnoc`.
 
 ## 0.1.0.0 -- 2023-02-26
 

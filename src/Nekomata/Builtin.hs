@@ -15,8 +15,9 @@ import Data.Functor ((<&>))
 import Data.List (elemIndex)
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
-import Data.Maybe (fromMaybe, isJust)
+import Data.Maybe (fromMaybe)
 import Math.NumberTheory.Primes
+import Math.NumberTheory.Primes.Testing (isCertifiedPrime)
 import Nekomata.CodePage
 import Nekomata.Data
 import Nekomata.Function
@@ -102,6 +103,11 @@ builtins =
         \I haven't given a formal definition for the normal form. \
         \This function basically lifts all the non-determinism \
         \in lists and strings to the top level."
+    , Builtin
+        "if"
+        'I'
+        if'
+        "Choose the first value that doesn't fail between two values."
     , Builtin "drop" '^' drop' "Drop the top value of the stack."
     , Builtin "dup" ':' dup "Duplicate the top value of the stack."
     , Builtin "swap" '$' swap "Swap the top two values of the stack."
@@ -449,6 +455,21 @@ builtins =
         last'
         "Get the last element of a list or a string."
     , Builtin
+        "init"
+        'i'
+        init'
+        "Remove the last element of a list or a string."
+    , Builtin
+        "snoc"
+        'ɔ'
+        snoc
+        "Append an element to a list."
+    , Builtin
+        "unsnoc"
+        'Ɔ'
+        unsnoc
+        "Get the last element list and the rest of a list or a string."
+    , Builtin
         "reverse"
         '↔'
         reverse'
@@ -585,6 +606,9 @@ countValues' = Function (Arity 1 1) $
 
 normalForm' :: Function
 normalForm' = Function (Arity 1 1) $ \_ (x :+ s) -> normalForm x :+ s
+
+if' :: Function
+if' = compose choice oneValue
 
 -- Stack manipulation
 
@@ -852,7 +876,7 @@ binomial = binaryVecFail binomial'
 isPrime' :: Function
 isPrime' = predicateVec isPrime''
   where
-    isPrime'' _ (DIntT x) = isJust . isPrime . fromDet <$> x
+    isPrime'' _ (DIntT x) = isCertifiedPrime . fromDet <$> x
     isPrime'' _ _ = Fail
 
 prime :: Function
@@ -964,9 +988,7 @@ uncons :: Function
 uncons = unary2 uncons'
   where
     uncons' _ (DStringT xs) =
-        liftString12
-            (uncons_ >=> \(ys, y) -> Val (AsString <$> ys, AsString [y]))
-            xs
+        liftString12 (uncons_ >=> \(ys, y) -> Val (AsString ys, y)) xs
     uncons' _ (DListT xs) = liftList12 uncons_ xs
     uncons' _ _ = (Fail, Fail)
     uncons_ :: ListTry a -> Try (TryList a, a)
@@ -982,6 +1004,39 @@ last' = unary last''
     last_ :: ListTry a -> Try (Maybe a)
     last_ Nil = Val Nothing
     last_ (Cons x xs) = xs >>= last_ >>= Val . Just . fromMaybe x
+
+init' :: Function
+init' = unary init''
+  where
+    init'' _ (DStringT xs) = liftString (AsString . init_) xs
+    init'' _ (DListT xs) = liftList init_ xs
+    init'' _ _ = Fail
+    init_ :: ListTry a -> Try (Maybe (ListTry a))
+    init_ Nil = Val Nothing
+    init_ (Cons x xs) = xs >>= init_ >>= Val . Just . maybe Nil (Cons x . Val)
+
+snoc :: Function
+snoc = compose singleton' join'
+
+unsnoc :: Function
+unsnoc = unary2 unsnoc'
+  where
+    unsnoc' _ (DStringT xs) =
+        liftString12 (unsnoc'' >=> \(ys, y) -> Val (AsString ys, y)) xs
+    unsnoc' _ (DListT xs) = liftList12 unsnoc'' xs
+    unsnoc' _ _ = (Fail, Fail)
+    unsnoc'' = fmap unzipMaybe . unsnoc_
+    unsnoc_ :: ListTry a -> Try (Maybe (ListTry a, a))
+    unsnoc_ Nil = Val Nothing
+    unsnoc_ (Cons x xs) =
+        xs
+            >>= unsnoc_
+            >>= Val
+                . Just
+                . maybe (Nil, x) (\(ys, y) -> (Cons x (Val ys), y))
+    unzipMaybe :: Maybe (a, b) -> (Maybe a, Maybe b)
+    unzipMaybe Nothing = (Nothing, Nothing)
+    unzipMaybe (Just (a, b)) = (Just a, Just b)
 
 reverse' :: Function
 reverse' = unary reverse''

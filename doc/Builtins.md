@@ -34,6 +34,10 @@ Convert a non-deterministic object to the normal form.
 
 I haven't given a formal definition for the normal form. This function basically lifts all the non-determinism in lists and strings to the top level.
 
+### `if` (`I`, `2 -> 1`)
+
+Choose the first value that doesn't fail between two values.
+
 ### `drop` (`^`, `1 -> 0`)
 
 Drop the top value of the stack.
@@ -371,6 +375,18 @@ Get the first element list and the rest of a list or a string.
 ### `last` (`l`, `1 -> 1`)
 
 Get the last element of a list or a string.
+
+### `init` (`i`, `1 -> 1`)
+
+Remove the last element of a list or a string.
+
+### `snoc` (`ɔ`, `2 -> 1`)
+
+Append an element to a list.
+
+### `unsnoc` (`Ɔ`, `1 -> 2`)
+
+Get the last element list and the rest of a list or a string.
 
 ### `reverse` (`↔`, `1 -> 1`)
 

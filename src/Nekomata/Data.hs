@@ -237,6 +237,9 @@ instance ToTryData (AsString (ListTry Char)) where
 instance ToTryData (AsString a) => ToTryData (AsString (Try a)) where
     toTryData = toTryData . fmap AsString . fromAsString
 
+instance ToTryData (AsString a) => ToTryData (AsString (Maybe a)) where
+    toTryData = toTryData . fmap AsString . fromAsString
+
 instance ToTryData a => ToTryData [a] where
     toTryData = Val . DListT . Val . fromList . map toTryData
 

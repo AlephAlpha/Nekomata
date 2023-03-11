@@ -111,7 +111,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q138510: Running second maximum of a list" $ do
         specEval
-            "po↔1@"
+            "poil"
             [ ("[1,5,2,3,5,9,5,8]", All ["1", "2", "3", "5", "5", "5", "8"])
             , ("[1,1,2,2,3,3,4]", All ["1", "1", "2", "2", "3", "3"])
             , ("[2,1,0,-1,0,1,2]", All ["1", "1", "1", "1", "1", "2"])
@@ -132,7 +132,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q175248: The inverse Collatz Conjecture" $ do
         specEval
-            "ⁱ{Z:←2∣$3*→?∃"
+            "ⁱ{Z:←2∣$3*→I"
             [ ("0", All ["0"])
             , ("1", All ["1", "0"])
             , ("2", All ["2", "7", "3", "1", "0"])
@@ -170,6 +170,15 @@ testEval = describe "Evaluation" $ do
         specEval
             "RpN↔"
             [("4", All ["[1]", "[2,1]", "[3,2,1]", "[4,3,2,1]"])]
+    describe "q217303: Linear integer function generator" $ do
+        specEval
+            "ᵉⁿ{ˣ{s∙}ɔ}T"
+            [ ("10 [0,1] [1,1]", All ["[0,1,1,2,3,5,8,13,21,34]"])
+            , ("20 [1,0,0] [1,1,0]", All ["[1,0,0,1,0,1,1,1,2,2,3,4,5,7,9,12,16,21,28,37]"])
+            , ("10 [3,0,2] [1,1,0]", All ["[3,0,2,3,2,5,5,7,10,12]"])
+            , ("5 [0,0] [1,1]", All ["[0,0,0,0,0]"])
+            , ("20 [0,-1,0,1] [0,1,0,-1]", All ["[0,-1,0,1,-2,2,-1,-1,3,-4,3,0,-4,7,-7,3,4,-11,14,-10]"])
+            ]
     describe "q225203: Delannoy numbers" $ do
         specEval
             "⊤→ᵒK∏2d"
@@ -212,6 +221,17 @@ testEval = describe "Evaluation" $ do
             "~ᵖ{JS="
             [ ("[\"dictionary\",\"transcriber\"] [\"dic\",\"ion\",\"ary\"]", First $ Just "dictionary")
             , ("[\"dictionary\",\"transcriber\"] [\"tra\",\"scr\",\"ber\"]", First $ Just "transcriber")
+            ]
+    describe "q257631: Time to shortest permutation" $ do
+        specEval
+            "⇄ᵃ{⑩b100B\"<∅\"e<60d}-_P∀⊥"
+            [ ("[1,1,4,3]", All ["91"])
+            , ("[0,1,0,1]", All ["9"])
+            , ("[1,7,3,8]", All ["59"])
+            , ("[1,4,2,1]", All ["413"])
+            , ("[1,3,2,0]", All ["413"])
+            , ("[2,3,4,1]", All [])
+            , ("[0,0,0,0]", All [])
             ]
     describe "q257649: Arbitrary Apple Dilemma" $ do
         specEval
@@ -266,7 +286,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q258432: Shortest code to generate all Pythagorean triples up to a given limit" $ do
         specEval
-            "RS3Lᵖ{:*↔C$∑="
+            "RS3Lᵖ{:*Ɔ$∑="
             [ ("20", All ["[3,4,5]", "[6,8,10]", "[5,12,13]", "[9,12,15]", "[8,15,17]", "[12,16,20]"])
             , ("5", All ["[3,4,5]"])
             ]
@@ -279,4 +299,13 @@ testEval = describe "Evaluation" $ do
             , ("\"()(()\"", All ["2"])
             , ("\"))\"", All ["0"])
             , ("\"\"", All ["0"])
+            ]
+    describe "q258951: \"Sort\" by element duplication" $ do
+        specEval
+            "ⁱ{:Ɔ≥$tI}⊥"
+            [ ("[4,3,1,2]", All ["1", "1", "1", "2"])
+            , ("[1,2,3,4]", All ["1", "2", "3", "4"])
+            , ("[3,2,1,0]", All ["0", "1", "2", "3"])
+            , ("[1,2,3,1]", All ["1", "1", "2", "3"])
+            , ("[101,103,101,105] ", All ["101", "101", "101", "105"])
             ]
