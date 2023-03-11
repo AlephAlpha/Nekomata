@@ -14,11 +14,11 @@ This function is non-deterministic.
 
 Push a value that always fails.
 
-### `allValues` (`∀`, `1 -> 1`)
+### `allValues` (`a`, `1 -> 1`)
 
 Get a list of all possible values for a non-deterministic object.
 
-### `oneValue` (`∃`, `1 -> 1`)
+### `oneValue` (`¡`, `1 -> 1`)
 
 Get a single value from a non-deterministic object.
 
@@ -28,7 +28,7 @@ Fails if the object has no values.
 
 Count the number of values in a non-deterministic object.
 
-### `normalForm` (`∎`, `1 -> 1`)
+### `normalForm` (`¤`, `1 -> 1`)
 
 Convert a non-deterministic object to the normal form.
 
@@ -116,11 +116,11 @@ If it is, push the first integer, otherwise fail.
 
 This function is automatically vectorized.
 
-### `neg1` (`⨡`, `0 -> 1`)
+### `neg1` (`£`, `0 -> 1`)
 
 The constant -1.
 
-### `ten` (`⑩`, `0 -> 1`)
+### `ten` (`¢`, `0 -> 1`)
 
 The constant 10.
 
@@ -194,7 +194,7 @@ Fails when the divisor is zero.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
-### `divExact` (`∣`, `2 -> 1`)
+### `divExact` (`¦`, `2 -> 1`)
 
 Divide two integers.
 
@@ -234,13 +234,13 @@ Create a list of integers from 1 to n.
 
 This function is automatically vectorized.
 
-### `natural` (`ℕ`, `0 -> 1`)
+### `natural` (`Ň`, `0 -> 1`)
 
 Non-deterministically choose a natural number.
 
 This function is non-deterministic.
 
-### `integer` (`ℤ`, `0 -> 1`)
+### `integer` (`Ž`, `0 -> 1`)
 
 Non-deterministically choose an integer.
 
@@ -280,7 +280,7 @@ The first argument is the list of digits, the second argument is the base.
 
 This function is automatically vectorized over the base.
 
-### `toBase` (`B`, `2 -> 1`)
+### `toBaseRev` (`B`, `2 -> 1`)
 
 Convert an integer to a list of digits in reverse order.
 
@@ -294,7 +294,7 @@ Take the cumulative sum of a list of integers.
 
 The addition is automatically vectorized with padding zeros.
 
-### `binomial` (`K`, `2 -> 1`)
+### `binomial` (`Ç`, `2 -> 1`)
 
 Compute the binomial coefficient.
 
@@ -306,7 +306,7 @@ Check if an integer is prime.
 
 This function is automatically vectorized.
 
-### `prime` (`ℙ`, `0 -> 1`)
+### `prime` (`Ƥ`, `0 -> 1`)
 
 Non-deterministically choose a prime number.
 
@@ -324,7 +324,7 @@ Choose an element from a list or a character from a string.
 
 This function is non-deterministic.
 
-### `emptyList` (`∅`, `0 -> 1`)
+### `emptyList` (`Ø`, `0 -> 1`)
 
 Push an empty list.
 
@@ -336,7 +336,7 @@ Create a list with a single element.
 
 Create a list with two elements.
 
-### `removeFail` (`F`, `1 -> 1`)
+### `removeFail` (`‼`, `1 -> 1`)
 
 Remove failed items from a list.
 
@@ -428,13 +428,13 @@ Concatenate two lists or two strings.
 
 If one of the arguments is a string, the other argument is converted to a string as well.
 
-### `minimum` (`⊥`, `1 -> 1`)
+### `minimum` (`ṁ`, `1 -> 1`)
 
 Get the minimum of a list.
 
 This order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just integers or strings.
 
-### `maximum` (`⊤`, `1 -> 1`)
+### `maximum` (`Ṁ`, `1 -> 1`)
 
 Get the maximum of a list.
 
@@ -460,7 +460,7 @@ Remove duplicate elements from a list or a string.
 
 Sort a list or a string.
 
-### `permutation` (`⇄`, `1 -> 1`)
+### `permutation` (`↕`, `1 -> 1`)
 
 Get a permutation of a list or a string.
 
@@ -522,7 +522,7 @@ If one of the input is an integer, apply the function to each integer from 0 to 
 
 Apply a function without pushing or popping the stack, but replace the top value with Fail if the function fails.
 
-### `predicateNot` (`𐞥`, `(m -> n) -> (1 -> 1)`)
+### `predicateNot` (`ᵗ`, `(m -> n) -> (1 -> 1)`)
 
 Apply a function without pushing or popping the stack, but replace the top value with Fail if the function succeeds.
 
@@ -530,7 +530,7 @@ Apply a function without pushing or popping the stack, but replace the top value
 
 Apply a function zero or one time non-deterministically.
 
-### `iterate` (`ⁱ`, `(n -> n) -> (n -> n)`)
+### `iterate` (`ᶦ`, `(n -> n) -> (n -> n)`)
 
 Apply a function zero or more times non-deterministically, until the top value of the stack is Fail.
 
@@ -542,7 +542,7 @@ Apply a function zero or more times, until the top value of the stack is Fail.
 
 This is different from `iterate` in that it does not return the intermediate results.
 
-### `nTimes` (`ⁿ`, `(n -> n) -> (n + 1 -> n)`)
+### `nTimes` (`ᵑ`, `(n -> n) -> (n + 1 -> n)`)
 
 Take an integer from the top of the stack, and apply a function that many times.
 

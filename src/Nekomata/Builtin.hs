@@ -81,12 +81,12 @@ builtins =
         "Push a value that always fails."
     , Builtin
         "allValues"
-        '∀'
+        'a'
         allValues
         "Get a list of all possible values for a non-deterministic object."
     , Builtin
         "oneValue"
-        '∃'
+        '¡'
         oneValue
         "Get a single value from a non-deterministic object.\n\
         \Fails if the object has no values."
@@ -97,7 +97,7 @@ builtins =
         "Count the number of values in a non-deterministic object."
     , Builtin
         "normalForm"
-        '∎'
+        '¤'
         normalForm'
         "Convert a non-deterministic object to the normal form.\n\
         \I haven't given a formal definition for the normal form. \
@@ -173,12 +173,12 @@ builtins =
         \This function is automatically vectorized."
     , Builtin
         "neg1"
-        '⨡'
+        '£'
         neg1
         "The constant -1."
     , Builtin
         "ten"
-        '⑩'
+        '¢'
         ten
         "The constant 10."
     , Builtin
@@ -256,7 +256,7 @@ builtins =
         \and fails when the two lists are of different lengths."
     , Builtin
         "divExact"
-        '∣'
+        '¦'
         divExact
         "Divide two integers.\n\
         \Fails when the divisor is zero or \
@@ -297,13 +297,13 @@ builtins =
         \This function is automatically vectorized."
     , Builtin
         "natural"
-        'ℕ'
+        'Ň'
         natural
         "Non-deterministically choose a natural number.\n\
         \This function is non-deterministic."
     , Builtin
         "integer"
-        'ℤ'
+        'Ž'
         integer
         "Non-deterministically choose an integer.\n\
         \This function is non-deterministic."
@@ -344,9 +344,9 @@ builtins =
         \the second argument is the base.\n\
         \This function is automatically vectorized over the base."
     , Builtin
-        "toBase"
+        "toBaseRev"
         'B'
-        toBase
+        toBaseRev
         "Convert an integer to a list of digits in reverse order.\n\
         \The first argument is the integer, \
         \the second argument is the base.\n\
@@ -361,7 +361,7 @@ builtins =
         \The addition is automatically vectorized with padding zeros."
     , Builtin
         "binomial"
-        'K'
+        'Ç'
         binomial
         "Compute the binomial coefficient.\n\
         \This function is automatically vectorized \
@@ -374,7 +374,7 @@ builtins =
         \This function is automatically vectorized."
     , Builtin
         "prime"
-        'ℙ'
+        'Ƥ'
         prime
         "Non-deterministically choose a prime number.\n\
         \This function is non-deterministic."
@@ -393,7 +393,7 @@ builtins =
         \This function is non-deterministic."
     , Builtin
         "emptyList"
-        '∅'
+        'Ø'
         emptyList
         "Push an empty list."
     , Builtin
@@ -408,7 +408,7 @@ builtins =
         "Create a list with two elements."
     , Builtin
         "removeFail"
-        'F'
+        '‼'
         removeFail
         "Remove failed items from a list."
     , Builtin
@@ -513,7 +513,7 @@ builtins =
         \the other argument is converted to a string as well."
     , Builtin
         "minimum"
-        '⊥'
+        'ṁ'
         minimum'
         "Get the minimum of a list.\n\
         \This order used in this function is different from the one \
@@ -521,7 +521,7 @@ builtins =
         \not just integers or strings."
     , Builtin
         "maximum"
-        '⊤'
+        'Ṁ'
         maximum'
         "Get the maximum of a list.\n\
         \This order used in this function is different from the one \
@@ -552,7 +552,7 @@ builtins =
         "Sort a list or a string."
     , Builtin
         "permutation"
-        '⇄'
+        '↕'
         permutation
         "Get a permutation of a list or a string.\n\
         \This function is non-deterministic."
@@ -850,15 +850,15 @@ fromBaseRev = binaryVecArg2 fromBase'
     mulAdd b i x y =
         toTryData b >>= vec2Pad mul' i y >>= vec2Pad add' (leftId i) x
 
-toBase :: Function
-toBase = binaryVecOuter toBase'
+toBaseRev :: Function
+toBaseRev = binaryVecOuter toBaseRev'
   where
-    toBase' _ (DIntT x) (DIntT b) = liftInt2 toBase_ x b
-    toBase' _ _ _ = Fail
-    toBase_ _ b | b < 2 = Fail
-    toBase_ x b | x < 0 = toBase_ (-x) b
-    toBase_ 0 _ = Val Nil
-    toBase_ x b = Val $ Cons (x `mod` b) (toBase_ (x `div` b) b)
+    toBaseRev' _ (DIntT x) (DIntT b) = liftInt2 toBaseRev_ x b
+    toBaseRev' _ _ _ = Fail
+    toBaseRev_ _ b | b < 2 = Fail
+    toBaseRev_ x b | x < 0 = toBaseRev_ (-x) b
+    toBaseRev_ 0 _ = Val Nil
+    toBaseRev_ x b = Val $ Cons (x `mod` b) (toBaseRev_ (x `div` b) b)
 
 cumsum :: Function
 cumsum = unary cumsum'

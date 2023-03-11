@@ -140,7 +140,7 @@ builtinParticles =
         \but replace the top value with Fail if the function fails."
     , BuiltinParticle
         "predicateNot"
-        '𐞥'
+        'ᵗ'
         predicateNot'
         "(m -> n) -> (1 -> 1)"
         "Apply a function without pushing or popping the stack, \
@@ -153,7 +153,7 @@ builtinParticles =
         "Apply a function zero or one time non-deterministically."
     , BuiltinParticle
         "iterate"
-        'ⁱ'
+        'ᶦ'
         iterate'
         "(n -> n) -> (n -> n)"
         "Apply a function zero or more times non-deterministically, \
@@ -171,7 +171,7 @@ builtinParticles =
         \return the intermediate results."
     , BuiltinParticle
         "nTimes"
-        'ⁿ'
+        'ᵑ'
         nTimes
         "(n -> n) -> (n + 1 -> n)"
         "Take an integer from the top of the stack, \

@@ -141,7 +141,7 @@ This looks similar to the previous computation. It also pushes two elements onto
 ## Example: Fibonacci Numbers (1)
 
 ```
-1:ⁱ{$ᵉ+
+1:ᶦ{$ᵉ+
 ```
 
 Or written in a more readable way:
@@ -153,10 +153,10 @@ Or written in a more readable way:
 This program takes no input. The result is non-deterministic, and all the possible results are the Fibonacci numbers.
 
 ```
-1:ⁱ{$ᵉ+
+1:ᶦ{$ᵉ+
 1       Push 1 onto the stack.
  :      Duplicate the top of the stack.
-  ⁱ     Iterate the following function zero or more times non-deterministically.
+  ᶦ     Iterate the following function zero or more times non-deterministically.
    {    Start a block.
     $   Swap the top two elements of the stack.
      ᵉ  Apply the following function, and then push the original top of the stack onto the stack.

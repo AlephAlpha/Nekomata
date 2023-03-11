@@ -47,7 +47,7 @@ testEval :: Spec
 testEval = describe "Evaluation" $ do
     describe "q85: Fibonacci function or sequence" $ do
         specEval
-            "1:ⁱ{$ᵉ+"
+            "1:ᶦ{$ᵉ+"
             [("", Truncated ["1", "1", "2", "3", "5", "8", "13", "21", "34", "55"])]
         specEval
             "ʷ{←Pᶜ←"
@@ -68,7 +68,7 @@ testEval = describe "Evaluation" $ do
             [("", All ["Hello, World!"])]
     describe "q66127: Catalan Numbers" $ do
         specEval
-            "2*$K$→÷"
+            "2*$Ç$→÷"
             [ ("0", All ["1"])
             , ("1", All ["1"])
             , ("2", All ["2"])
@@ -118,7 +118,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q141949: Count edits accounting for grace period" $ do
         specEval
-            "ⁱ{C4+>FN"
+            "ᶦ{C4+>‼N"
             [ ("[0]", Count 1)
             , ("[0,3,5,7]", Count 2)
             , ("[0,3,4,7,9,10,11,12]", Count 3)
@@ -132,7 +132,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q175248: The inverse Collatz Conjecture" $ do
         specEval
-            "ⁱ{Z:←2∣$3*→I"
+            "ᶦ{Z:←2¦$3*→I"
             [ ("0", All ["0"])
             , ("1", All ["1", "0"])
             , ("2", All ["2", "7", "3", "1", "0"])
@@ -142,7 +142,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q179464: Covering a Skyline with brush strokes" $ do
         specEval
-            "0c-PF∑"
+            "0c-P‼∑"
             [ ("[1,3,2,1,2,1,5,3,3,4,2]", All ["9"])
             , ("[5,8]", All ["8"])
             , ("[1,1,1,1]", All ["1"])
@@ -172,7 +172,7 @@ testEval = describe "Evaluation" $ do
             [("4", All ["[1]", "[2,1]", "[3,2,1]", "[4,3,2,1]"])]
     describe "q217303: Linear integer function generator" $ do
         specEval
-            "ᵉⁿ{ˣ{s∙}ɔ}T"
+            "ᵉᵑ{ˣ{s∙}ɔ}T"
             [ ("10 [0,1] [1,1]", All ["[0,1,1,2,3,5,8,13,21,34]"])
             , ("20 [1,0,0] [1,1,0]", All ["[1,0,0,1,0,1,1,1,2,2,3,4,5,7,9,12,16,21,28,37]"])
             , ("10 [3,0,2] [1,1,0]", All ["[3,0,2,3,2,5,5,7,10,12]"])
@@ -181,7 +181,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q225203: Delannoy numbers" $ do
         specEval
-            "⊤→ᵒK∏2d"
+            "Ṁ→ᵒÇ∏2d"
             [ ("[5,8]", All ["13073"])
             , ("[5,7]", All ["7183"])
             , ("[3,9]", All ["1159"])
@@ -193,7 +193,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q247398: Alternating sums of multidimensional arrays" $ do
         specEval
-            "ʷ{⨡d"
+            "ʷ{£d"
             [ ("[1]", All ["1"])
             , ("[-1]", All ["-1"])
             , ("[1,2]", All ["-1"])
@@ -207,7 +207,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q247676: Generate All 8 Knight's Moves" $ do
         specEval
-            "2R⇄ᵐᶜ_"
+            "2R↕ᵐᶜ_"
             [("", All ["[1,2]", "[1,-2]", "[-1,2]", "[-1,-2]", "[2,1]", "[2,-1]", "[-2,1]", "[-2,-1]"])]
     describe "q252082: Reconstruct Matrix from its diagonals" $ do
         specEval
@@ -224,7 +224,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q257631: Time to shortest permutation" $ do
         specEval
-            "⇄ᵃ{⑩b100B\"<∅\"e<60d}-_P∀⊥"
+            "↕ᵃ{¢b100B\"<∩\"e<60d}-_Paṁ"
             [ ("[1,1,4,3]", All ["91"])
             , ("[0,1,0,1]", All ["9"])
             , ("[1,7,3,8]", All ["59"])
@@ -245,14 +245,14 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q257752: Print all pandigital numbers" $ do
         specEval
-            "ℕᵖ{*$Bu$L"
+            "Ňᵖ{*$Bu$L"
             [ ("2", Truncated ["1", "2", "3", "4", "5", "6"])
             , ("3", Truncated ["5", "7", "11", "14", "15", "16", "17", "19"])
             , ("4", Truncated ["27", "30", "39", "45"])
             ]
     describe "q257998: Recognize a counting tree" $ do
         specEval
-            "qCᵉLR↔<∀*$h→L"
+            "qCᵉLR↔<a*$h→L"
             [ ("[5,2,0,0,0,0]", Check True)
             , ("[5,2,1,0,0,0]", Check True)
             , ("[5,2,1,0,1,0]", Check True)
@@ -269,14 +269,14 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q258299: Primes with Distinct Prime Digits" $ do
         specEval
-            "ℙ⑩BQ:u=⑩d"
+            "Ƥ¢BQ:u=¢d"
             [("", Truncated ["2", "3", "5", "7", "23", "37", "53", "73", "257", "523", "2357", "2753", "3257", "3527", "5237", "5273", "7253", "7523"])]
         specEval
-            "⑩rSQ⇄⑩bQ∀o"
+            "¢rSQ↕¢bQao"
             [("", All ["[2,3,5,7,23,37,53,73,257,523,2357,2753,3257,3527,5237,5273,7253,7523]"])]
     describe "q258335: Shortest Code to Find the Smallest Missing Positive Integer" $ do
         specEval
-            "ℕPᵖ{-Z"
+            "ŇPᵖ{-Z"
             [ ("[1,2,3]", First (Just "4"))
             , ("[3,4,-1,1]", First (Just "2"))
             , ("[7,8,9,11,12]", First (Just "1"))
@@ -292,7 +292,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q258511: Shortest Valid Parentheses" $ do
         specEval
-            "qe7%3%∫:l0?R≥∎#∀⊤"
+            "qe7%3%∫:l0?R≥¤#aṀ"
             [ ("\"(()())\"", All ["6"])
             , ("\")()())\"", All ["4"])
             , ("\"()(())\"", All ["6"])
@@ -302,7 +302,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q258951: \"Sort\" by element duplication" $ do
         specEval
-            "ⁱ{:Ɔ≥$tI}⊥"
+            "ᶦ{:Ɔ≥$tI}ṁ"
             [ ("[4,3,1,2]", All ["1", "1", "1", "2"])
             , ("[1,2,3,4]", All ["1", "2", "3", "4"])
             , ("[3,2,1,0]", All ["0", "1", "2", "3"])
