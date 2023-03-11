@@ -8,6 +8,7 @@ module Nekomata.Parser (
 
 import Control.Monad (void)
 import qualified Data.Map.Strict as Map
+import Data.Ratio ((%))
 import Nekomata.Builtin
 import Nekomata.Data
 import Nekomata.Particle
@@ -19,7 +20,7 @@ import Text.Parsec.String (Parser)
 parsePositive :: Parser Integer
 parsePositive = read <$> many1 digit <?> "positive integer"
 
--- | Parse an integer literal
+-- | Parse an integer
 parseInt :: Parser Integer
 parseInt =
     do
@@ -28,6 +29,22 @@ parseInt =
             Just _ -> negate <$> parsePositive
             Nothing -> parsePositive
         <?> "integer"
+
+-- | Parse a rational number
+parseRational :: Parser Rational
+parseRational =
+    do
+        num <- parseInt
+        spaces
+        _ <- oneOf "/\\"
+        spaces
+        den <- parsePositive
+        return $ num % den
+        <?> "rational number"
+
+-- | Parse a number literal
+parseNum :: Parser Rational
+parseNum = try parseRational <|> fromInteger <$> parseInt <?> "number"
 
 -- | Parse an escape character
 parseEscape :: Parser Char
@@ -55,7 +72,7 @@ parseList =
 parseData :: Parser Data
 parseData =
     choice
-        [ DInt <$> parseInt
+        [ DNum <$> parseNum
         , DString <$> parseString
         , DList <$> parseList
         ]

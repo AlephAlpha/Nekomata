@@ -47,7 +47,7 @@ instance Monad Try where
     Cut g >>= f = Cut (second (>>= f) . g)
 
 -- | A wrapper for deterministic tryValues
-newtype Det a = Det {fromDet :: a} deriving (Eq, Ord, Show)
+newtype Det a = Det {unDet :: a} deriving (Eq, Ord, Show)
 
 instance Functor Det where
     fmap f (Det x) = Det (f x)

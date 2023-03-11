@@ -108,7 +108,7 @@ builtinParticles =
         "(m -> 1) -> (m -> 1) where m > 0"
         "Apply a function to each value in a list.\n\
         \If the input is a string, apply the function to each character.\n\
-        \If the input is an integer, apply the function to each integer \
+        \If the input is an number, apply the function to each integer \
         \from 0 to the input minus 1."
     , BuiltinParticle
         "zipWith"
@@ -118,7 +118,7 @@ builtinParticles =
         "Zip two lists and apply a function to each pair of values.\n\
         \If one of the input is a string, apply the function to each \
         \character.\n\
-        \If one of the input is an integer, apply the function to each \
+        \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
     , BuiltinParticle
         "outer"
@@ -129,7 +129,7 @@ builtinParticles =
         \and return a list of lists.\n\
         \If one of the input is a string, apply the function to each \
         \character.\n\
-        \If one of the input is an integer, apply the function to each \
+        \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
     , BuiltinParticle
         "predicate"
@@ -379,7 +379,7 @@ nTimes = Particle nTimes'
                     (takeStack n . tryStack $ x >>= nTimes'' i f s)
                     (dropStack m s)
     nTimes' _ = Nothing
-    nTimes'' i f s (DIntT x) = toTry x >>= nTimes_ i f s
+    nTimes'' i f s (DNumT x) = toTryInt' x >>= nTimes_ i f s
     nTimes'' _ _ _ _ = Fail
     nTimes_ _ _ s 0 = Val s
     nTimes_ _ _ _ x | x < 0 = Fail

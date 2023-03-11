@@ -16,6 +16,7 @@ import Data.List (elemIndex)
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Data.Maybe (fromMaybe)
+import Data.Ratio (denominator, numerator)
 import Math.NumberTheory.Primes
 import Math.NumberTheory.Primes.Testing (isCertifiedPrime)
 import Nekomata.CodePage
@@ -133,43 +134,43 @@ builtins =
         "nonzero"
         'Z'
         nonzero
-        "Check if an integer is non-zero.\n\
-        \If it is, push the integer itself, otherwise fail.\n\
+        "Check if a number is non-zero.\n\
+        \If it is, push the number itself, otherwise fail.\n\
         \This function is automatically vectorized."
     , Builtin
         "positive"
         'P'
         positive
-        "Check if an integer is positive.\n\
-        \If it is, push the integer itself, otherwise fail.\n\
+        "Check if a number is positive.\n\
+        \If it is, push the number itself, otherwise fail.\n\
         \This function is automatically vectorized."
     , Builtin
         "less"
         '<'
         less
-        "Check if the first integer is less than the second.\n\
-        \If it is, push the first integer, otherwise fail.\n\
+        "Check if the first number is less than the second.\n\
+        \If it is, push the first number, otherwise fail.\n\
         \This function is automatically vectorized."
     , Builtin
         "lessEq"
         '≤'
         lessEq
-        "Check if the first integer is less than or equal to the second.\n\
-        \If it is, push the first integer, otherwise fail.\n\
+        "Check if the first number is less than or equal to the second.\n\
+        \If it is, push the first number, otherwise fail.\n\
         \This function is automatically vectorized."
     , Builtin
         "greater"
         '>'
         greater
-        "Check if the first integer is greater than the second.\n\
-        \If it is, push the first integer, otherwise fail.\n\
+        "Check if the first number is greater than the second.\n\
+        \If it is, push the first number, otherwise fail.\n\
         \This function is automatically vectorized."
     , Builtin
         "greaterEq"
         '≥'
         greaterEq
-        "Check if the first integer is greater than or equal to the second.\n\
-        \If it is, push the first integer, otherwise fail.\n\
+        "Check if the first number is greater than or equal to the second.\n\
+        \If it is, push the first number, otherwise fail.\n\
         \This function is automatically vectorized."
     , Builtin
         "neg1"
@@ -185,31 +186,31 @@ builtins =
         "neg"
         '_'
         neg
-        "Negate an integer.\n\
+        "Negate a number.\n\
         \This function is automatically vectorized."
     , Builtin
         "abs"
         'A'
         abs'
-        "Absolute value of an integer.\n\
+        "Absolute value of a number.\n\
         \This function is automatically vectorized."
     , Builtin
         "increment"
         '→'
         increment
-        "Increment an integer.\n\
+        "Increment a number.\n\
         \This function is automatically vectorized."
     , Builtin
         "decrement"
         '←'
         decrement
-        "Decrement an integer.\n\
+        "Decrement a number.\n\
         \This function is automatically vectorized."
     , Builtin
         "logicalNot"
         '¬'
         logicalNot
-        "Returns 1 if the argument is 0, and 0 otherwise.\n\
+        "Takes a number and returns 1 if it is 0, and 0 otherwise.\n\
         \This function is automatically vectorized."
     , Builtin
         "sign"
@@ -222,26 +223,34 @@ builtins =
         "add"
         '+'
         add
-        "Add two integers.\n\
+        "Add two numbers.\n\
         \This function is automatically vectorized with padding zeros."
     , Builtin
         "sub"
         '-'
         sub
-        "Subtract two integers.\n\
+        "Subtract two numbers.\n\
         \This function is automatically vectorized with padding zeros."
     , Builtin
         "mul"
         '*'
         mul
-        "Multiply two integers.\n\
+        "Multiply two numbers.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
         "div"
-        '÷'
+        '/'
         div'
-        "Integer division of two integers. \
+        "Division of two numbers. \n\
+        \Fails when the divisor is zero.\n\
+        \This function is automatically vectorized \
+        \and fails when the two lists are of different lengths."
+    , Builtin
+        "divInt"
+        '÷'
+        divInt
+        "Integer division of two numbers. \
         \Result is rounded towards negative infinity.\n\
         \Fails when the divisor is zero.\n\
         \This function is automatically vectorized \
@@ -250,7 +259,7 @@ builtins =
         "mod"
         '%'
         mod'
-        "Modulo two integers.\n\
+        "Modulo two numbers.\n\
         \Fails when the divisor is zero.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
@@ -258,30 +267,31 @@ builtins =
         "divExact"
         '¦'
         divExact
-        "Divide two integers.\n\
+        "Divide two numbers.\n\
         \Fails when the divisor is zero or \
-        \the result is not an exact integer.\n\
+        \the result is not an integer.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
         "pow"
         'E'
         pow
-        "Raise an integer to a non-negative integer power.\n\
-        \Fails when the base is negative.\n\
+        "Raise a number to a non-negative integer power.\n\
+        \Fails when the base is negative, or \
+        \the exponent is not a non-negative integer.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
         "min"
         'm'
         min'
-        "Get the minimum of two integers or two strings.\n\
+        "Get the minimum of two numbers or two strings.\n\
         \This function is automatically vectorized with padding."
     , Builtin
         "max"
         'M'
         max'
-        "Get the maximum of two integers or two strings.\n\
+        "Get the maximum of two numbers or two strings.\n\
         \This function is automatically vectorized with padding."
     , Builtin
         "range0"
@@ -311,37 +321,39 @@ builtins =
         "sum"
         '∑'
         sum'
-        "Take the sum of a list of integers.\n\
+        "Take the sum of a list of numbers.\n\
         \The addition is automatically vectorized with padding zeros."
     , Builtin
         "product"
         '∏'
         product'
-        "Take the product of a list of integers.\n\
+        "Take the product of a list of numbers.\n\
         \The multiplication is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
         "dot"
         '∙'
         dot
-        "Take the dot product of two lists of integers.\n\
+        "Take the dot product of two lists of numbers.\n\
         \The current implementation is simply a composition of \
         \mul and sum."
     , Builtin
         "fromBase"
         'b'
         fromBase
-        "Convert a list of digits to an integer.\n\
+        "Convert a list of digits to a number.\n\
         \The first argument is the list of digits, \
         \the second argument is the base.\n\
+        \This does not require the digits and the base to be integers.\n\
         \This function is automatically vectorized over the base."
     , Builtin
         "fromBaseRev"
         'd'
         fromBaseRev
-        "Convert a list of digits in reverse order to an integer.\n\
+        "Convert a list of digits in reverse order to a number.\n\
         \The first argument is the list of digits, \
         \the second argument is the base.\n\
+        \This does not require the digits and the base to be integers.\n\
         \This function is automatically vectorized over the base."
     , Builtin
         "toBaseRev"
@@ -350,6 +362,8 @@ builtins =
         "Convert an integer to a list of digits in reverse order.\n\
         \The first argument is the integer, \
         \the second argument is the base.\n\
+        \Fails when the inputs are not integers, \
+        \or the base is less than 2.\n\
         \This function is automatically vectorized over both arguments. \
         \If both arguments are lists, \
         \the result is a list of lists of digits."
@@ -357,13 +371,14 @@ builtins =
         "cumsum"
         '∫'
         cumsum
-        "Take the cumulative sum of a list of integers.\n\
+        "Take the cumulative sum of a list of numbers.\n\
         \The addition is automatically vectorized with padding zeros."
     , Builtin
         "binomial"
         'Ç'
         binomial
         "Compute the binomial coefficient.\n\
+        \The second argument must be an integer.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
@@ -518,7 +533,7 @@ builtins =
         "Get the minimum of a list.\n\
         \This order used in this function is different from the one \
         \used in min and max. It can compare two arbitrary values, \
-        \not just integers or strings."
+        \not just numbers or strings."
     , Builtin
         "maximum"
         'Ṁ'
@@ -526,7 +541,7 @@ builtins =
         "Get the maximum of a list.\n\
         \This order used in this function is different from the one \
         \used in min and max. It can compare two arbitrary values, \
-        \not just integers or strings."
+        \not just numbers or strings."
     , Builtin
         "concat"
         'j'
@@ -642,40 +657,40 @@ nonempty' = predicate nonempty''
 nonzero :: Function
 nonzero = predicateVec nonzero'
   where
-    nonzero' _ (DIntT x) = (/= 0) . fromDet <$> x
+    nonzero' _ (DNumT x) = (/= 0) . unDet <$> x
     nonzero' _ _ = Fail
 
 positive :: Function
 positive = predicateVec positive'
   where
-    positive' _ (DIntT x) = (> 0) . fromDet <$> x
+    positive' _ (DNumT x) = (> 0) . unDet <$> x
     positive' _ _ = Fail
 
 less :: Function
 less = predicateVec2 less'
   where
-    less' _ (DIntT x) (DIntT y) = tryLt x y
+    less' _ (DNumT x) (DNumT y) = tryLt x y
     less' _ (DStringT x) (DStringT y) = tryLt x y
     less' _ _ _ = Fail
 
 lessEq :: Function
 lessEq = predicateVec2 lessEq'
   where
-    lessEq' _ (DIntT x) (DIntT y) = tryLe x y
+    lessEq' _ (DNumT x) (DNumT y) = tryLe x y
     lessEq' _ (DStringT x) (DStringT y) = tryLe x y
     lessEq' _ _ _ = Fail
 
 greater :: Function
 greater = predicateVec2 greater'
   where
-    greater' _ (DIntT x) (DIntT y) = tryGt x y
+    greater' _ (DNumT x) (DNumT y) = tryGt x y
     greater' _ (DStringT x) (DStringT y) = tryGt x y
     greater' _ _ _ = Fail
 
 greaterEq :: Function
 greaterEq = predicateVec2 greaterEq'
   where
-    greaterEq' _ (DIntT x) (DIntT y) = tryGe x y
+    greaterEq' _ (DNumT x) (DNumT y) = tryGe x y
     greaterEq' _ (DStringT x) (DStringT y) = tryGe x y
     greaterEq' _ _ _ = Fail
 
@@ -690,47 +705,47 @@ ten = constant (10 :: Integer)
 neg :: Function
 neg = unaryVec neg'
   where
-    neg' _ (DIntT x) = liftInt negate x
+    neg' _ (DNumT x) = liftNum negate x
     neg' _ _ = Fail
 
 abs' :: Function
 abs' = unaryVec abs''
   where
-    abs'' _ (DIntT x) = liftInt abs x
+    abs'' _ (DNumT x) = liftNum abs x
     abs'' _ _ = Fail
 
 increment :: Function
 increment = unaryVec increment'
   where
-    increment' _ (DIntT x) = liftInt (+ 1) x
+    increment' _ (DNumT x) = liftNum (+ 1) x
     increment' _ _ = Fail
 
 decrement :: Function
 decrement = unaryVec decrement'
   where
-    decrement' _ (DIntT x) = liftInt (subtract 1) x
+    decrement' _ (DNumT x) = liftNum (subtract 1) x
     decrement' _ _ = Fail
 
 logicalNot :: Function
 logicalNot = unaryVec logicalNot'
   where
-    logicalNot' _ (DIntT x) = liftInt logicalNot_ x
+    logicalNot' _ (DNumT x) = liftNum logicalNot_ x
     logicalNot' _ _ = Fail
-    logicalNot_ :: Integer -> Integer
+    logicalNot_ :: Rational -> Rational
     logicalNot_ 0 = 1
     logicalNot_ _ = 0
 
 sign :: Function
 sign = unaryVec sign'
   where
-    sign' _ (DIntT x) = liftInt signum x
+    sign' _ (DNumT x) = liftNum signum x
     sign' _ _ = Fail
 
 add :: Function
 add = binaryVecPad add'
 
 add' :: Id -> DataTry -> DataTry -> TryData
-add' _ (DIntT x) (DIntT y) = liftInt2 (+) x y
+add' _ (DNumT x) (DNumT y) = liftNum2 (+) x y
 add' _ _ _ = Fail
 
 sub :: Function
@@ -740,64 +755,80 @@ mul :: Function
 mul = binaryVecFail mul'
 
 mul' :: Id -> DataTry -> DataTry -> TryData
-mul' _ (DIntT x) (DIntT y) = liftInt2 (*) x y
+mul' _ (DNumT x) (DNumT y) = liftNum2 (*) x y
 mul' _ _ _ = Fail
 
 div' :: Function
 div' = binaryVecFail div''
   where
-    div'' _ (DIntT x) (DIntT y) = liftInt2 div_ x y
+    div'' _ (DNumT x) (DNumT y) = liftNum2 div_ x y
     div'' _ _ _ = Fail
     div_ _ 0 = Fail
-    div_ x y = Val $ x `div` y
+    div_ x y = Val $ x / y
+
+divInt :: Function
+divInt = binaryVecFail divInt'
+  where
+    divInt' _ (DNumT x) (DNumT y) = liftNum2 div_ x y
+    divInt' _ _ _ = Fail
+    div_ :: Rational -> Rational -> Try Rational
+    div_ _ 0 = Fail
+    div_ x y = Val . fromInteger . floor $ x / y
 
 mod' :: Function
 mod' = binaryVecFail mod''
   where
-    mod'' _ (DIntT x) (DIntT y) = liftInt2 mod_ x y
+    mod'' _ (DNumT x) (DNumT y) = liftNum2 mod_ x y
     mod'' _ _ _ = Fail
     mod_ _ 0 = Fail
-    mod_ x y = Val $ x `mod` y
+    mod_ x y = Val $ x - y * fromInteger (floor $ x / y)
 
 divExact :: Function
 divExact = binaryVecFail divExact'
   where
-    divExact' _ (DIntT x) (DIntT y) = liftInt2 divExact_ x y
+    divExact' _ (DNumT x) (DNumT y) = liftNum2 divExact_ x y
     divExact' _ _ _ = Fail
-    divExact_ x y = if y /= 0 && x `mod` y == 0 then Val $ x `div` y else Fail
+    divExact_ _ 0 = Fail
+    divExact_ x y =
+        let q = x / y in if denominator q == 1 then Val $ numerator q else Fail
 
 pow :: Function
 pow = binaryVecFail pow'
   where
-    pow' _ (DIntT x) (DIntT y) = liftInt2 pow_ x y
+    pow' _ (DNumT x) (DNumT y) = liftNum2 pow'' x y
     pow' _ _ _ = Fail
-    pow_ x y = if y >= 0 then Val $ x ^ y else Fail
+    pow'' x y = toTryInt y >>= pow_ x
+    pow_ x y = if y >= 0 then Val (x ^ y) else Fail
 
 min' :: Function
 min' = binaryVecPad min''
   where
-    min'' _ (DIntT x) (DIntT y) = liftInt2 tryMin x y
+    min'' _ (DNumT x) (DNumT y) = liftNum2 tryMin x y
     min'' _ (DStringT x) (DStringT y) = liftString2 (AsString .: tryMin) x y
     min'' _ _ _ = Fail
 
 max' :: Function
 max' = binaryVecPad max''
   where
-    max'' _ (DIntT x) (DIntT y) = liftInt2 tryMax x y
+    max'' _ (DNumT x) (DNumT y) = liftInt2 tryMax x y
     max'' _ (DStringT x) (DStringT y) = liftString2 (AsString .: tryMax) x y
     max'' _ _ _ = Fail
 
 range0 :: Function
 range0 = unaryVec range0'
   where
-    range0' _ (DIntT x) = liftInt (enumFromTo 0 . subtract 1) x
+    range0' _ (DNumT x) = liftNum range0_ x
     range0' _ _ = Fail
+    range0_ :: Rational -> [Integer]
+    range0_ x = enumFromTo 0 . floor $ x - 1
 
 range1 :: Function
 range1 = unaryVec range1'
   where
-    range1' _ (DIntT x) = liftInt (enumFromTo 1) x
+    range1' _ (DNumT x) = liftNum range1_ x
     range1' _ _ = Fail
+    range1_ :: Rational -> [Integer]
+    range1_ = enumFromTo 1 . floor
 
 natural :: Function
 natural = nullary $
@@ -814,7 +845,7 @@ sum' = unary sum''
   where
     sum'' i (DListT xs) =
         liftList
-            (tryFoldl (vec2Pad add') i . DIntT . Val $ Det 0)
+            (tryFoldl (vec2Pad add') i . DNumT . Val $ Det 0)
             xs
     sum'' _ _ = Fail
 
@@ -823,7 +854,7 @@ product' = unary product''
   where
     product'' i (DListT xs) =
         liftList
-            (tryFoldl (vec2Fail mul') i . DIntT . Val $ Det 1)
+            (tryFoldl (vec2Fail mul') i . DNumT . Val $ Det 1)
             xs
     product'' _ _ = Fail
 
@@ -833,27 +864,27 @@ dot = compose mul sum'
 fromBase :: Function
 fromBase = binaryVecArg2 fromBase'
   where
-    fromBase' i (DListT xs) (DIntT b) =
-        liftList (\x -> liftInt (\b' -> fromBase_ i b' x) b) xs
+    fromBase' i (DListT xs) (DNumT b) =
+        liftList (\x -> liftNum (\b' -> fromBase_ i b' x) b) xs
     fromBase' _ _ _ = Fail
-    fromBase_ i b = tryFoldl (mulAdd b) i (DIntT . Val $ Det 0)
+    fromBase_ i b = tryFoldl (mulAdd b) i (DNumT . Val $ Det 0)
     mulAdd b i x y =
         toTryData b >>= vec2Pad mul' i x >>= vec2Pad add' (leftId i) y
 
 fromBaseRev :: Function
 fromBaseRev = binaryVecArg2 fromBase'
   where
-    fromBase' i (DListT xs) (DIntT b) =
-        liftList (\x -> liftInt (\b' -> fromBase_ i b' x) b) xs
+    fromBase' i (DListT xs) (DNumT b) =
+        liftList (\x -> liftNum (\b' -> fromBase_ i b' x) b) xs
     fromBase' _ _ _ = Fail
-    fromBase_ i b = tryFoldr (mulAdd b) i (DIntT . Val $ Det 0)
+    fromBase_ i b = tryFoldr (mulAdd b) i (DNumT . Val $ Det 0)
     mulAdd b i x y =
         toTryData b >>= vec2Pad mul' i y >>= vec2Pad add' (leftId i) x
 
 toBaseRev :: Function
 toBaseRev = binaryVecOuter toBaseRev'
   where
-    toBaseRev' _ (DIntT x) (DIntT b) = liftInt2 toBaseRev_ x b
+    toBaseRev' _ (DNumT x) (DNumT b) = liftInt2 toBaseRev_ x b
     toBaseRev' _ _ _ = Fail
     toBaseRev_ _ b | b < 2 = Fail
     toBaseRev_ x b | x < 0 = toBaseRev_ (-x) b
@@ -869,14 +900,17 @@ cumsum = unary cumsum'
 binomial :: Function
 binomial = binaryVecFail binomial'
   where
-    binomial' _ (DIntT n) (DIntT k) = liftInt2 binomial_ n k
+    binomial' _ (DNumT n) (DNumT k) = liftNum2 binomial'' n k
     binomial' _ _ _ = Fail
-    binomial_ n k = product [n - k + 1 .. n] `div` product [1 .. k]
+    binomial'' n k = binomial_ n <$> toTryInt k
+    binomial_ n k =
+        product [n + 1 - fromInteger i | i <- [1 .. k]]
+            / fromInteger (product [1 .. k])
 
 isPrime' :: Function
 isPrime' = predicateVec isPrime''
   where
-    isPrime'' _ (DIntT x) = isCertifiedPrime . fromDet <$> x
+    isPrime'' _ (DNumT x) = isCertifiedPrime <$> toTryInt' x
     isPrime'' _ _ = Fail
 
 prime :: Function
@@ -934,9 +968,9 @@ length' = unary length''
 lengthIs :: Function
 lengthIs = binary lengthIs'
   where
-    lengthIs' _ (DStringT xs) (DIntT y) =
+    lengthIs' _ (DStringT xs) (DNumT y) =
         liftString (\x -> liftInt (AsString . (`lengthIs_` x)) y) xs
-    lengthIs' _ (DListT xs) (DIntT y) =
+    lengthIs' _ (DListT xs) (DNumT y) =
         liftList (\x -> liftInt (`lengthIs_` x) y) xs
     lengthIs' _ _ _ = Fail
     lengthIs_ :: Integer -> ListTry a -> TryList a
@@ -948,9 +982,9 @@ lengthIs = binary lengthIs'
 nth :: Function
 nth = binaryVecArg2 nth'
   where
-    nth' _ (DStringT xs) (DIntT y) =
+    nth' _ (DStringT xs) (DNumT y) =
         liftString (\x -> liftInt (`nth_` x) y) xs
-    nth' _ (DListT xs) (DIntT y) =
+    nth' _ (DListT xs) (DNumT y) =
         liftList (\x -> liftInt (`nth_` x) y) xs
     nth' _ _ _ = Fail
     nth_ :: Integer -> ListTry a -> Try a
@@ -1073,9 +1107,9 @@ suffix = unary suffix'
 take' :: Function
 take' = binaryVecArg2 take''
   where
-    take'' _ (DStringT xs) (DIntT y) =
+    take'' _ (DStringT xs) (DNumT y) =
         liftString (\x -> liftInt (AsString . (`take_` x)) y) xs
-    take'' _ (DListT xs) (DIntT y) =
+    take'' _ (DListT xs) (DNumT y) =
         liftList (\x -> liftInt (`take_` x) y) xs
     take'' _ _ _ = Fail
     take_ :: Integer -> ListTry a -> TryList a

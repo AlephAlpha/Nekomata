@@ -6,6 +6,8 @@
 
 * The code page is completely redesigned. and only contains characters supported by the Liberation Mono font.
 * The short name for most of the built-ins are changed.
+* The numeric type is changed from `Integer` to `Rational`, and the semantics of some built-ins are changed accordingly.
+* `\div` is split into `\div` and `\divInt`.
 * `\toBase` is renamed to `\toBaseRev`, so that it is consistent with `\fromBaseRev`.
 
 ## 0.1.1.0 -- 2023-03-11

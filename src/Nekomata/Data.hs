@@ -6,6 +6,7 @@ module Nekomata.Data where
 
 import Control.Monad (join, liftM2)
 import Data.Functor ((<&>))
+import Data.Ratio (denominator, numerator)
 import Nekomata.NonDet
 
 -- | A helper function to lift a binary function to a monad
@@ -168,18 +169,21 @@ instance NonDet a => NonDet (ListTry a) where
 
 -- | Nekomata's data type (deterministic)
 data Data
-    = DInt Integer
+    = DNum Rational
     | DString String
     | DList [Data]
     deriving (Eq, Ord)
 
 instance Show Data where
-    show (DInt x) = show x
+    show (DNum x) =
+        if denominator x == 1
+            then show (numerator x)
+            else show (numerator x) ++ "/" ++ show (denominator x)
     show (DString x) = show x
     show (DList x) = show x
 
 data DataTry
-    = DIntT (Try (Det Integer))
+    = DNumT (Try (Det Rational))
     | DStringT (TryList (Det Char))
     | DListT (TryList TryData)
 
@@ -188,10 +192,10 @@ type TryData = Try DataTry
 
 instance NonDet DataTry where
     type Value DataTry = Data
-    fromValue (DInt x) = DIntT $ fromValue x
+    fromValue (DNum x) = DNumT $ fromValue x
     fromValue (DString x) = DStringT $ fromValue x
     fromValue (DList x) = DListT $ fromValue x
-    toTry (DIntT t) = DInt <$> toTry t
+    toTry (DNumT t) = DNum <$> toTry t
     toTry (DStringT t) = DString <$> toTry t
     toTry (DListT t) = DList <$> toTry t
 
@@ -202,9 +206,22 @@ For strings, it generates a list of strings with one character.
 -}
 toTryList :: DataTry -> TryList TryData
 toTryList (DListT xs) = xs
-toTryList (DIntT x) =
-    fromList . map toTryData . enumFromTo 0 . subtract 1 <$> toTry x
+toTryList (DNumT x) =
+    fromList . map toTryData . range0_ <$> toTry x
+  where
+    range0_ :: Rational -> [Integer]
+    range0_ x' = enumFromTo 0 . floor $ x' - 1
 toTryList (DStringT xs) = fmap (Val . DStringT . Val . singleton) <$> xs
+
+-- | Convert a @Rational@ to a @Try Integer@
+toTryInt :: Rational -> Try Integer
+toTryInt x
+    | denominator x == 1 = Val $ numerator x
+    | otherwise = Fail
+
+-- | Convert a @Try (Det Rational)@ to a @Try Integer@
+toTryInt' :: Try (Det Rational) -> Try Integer
+toTryInt' x = x >>= toTryInt . unDet
 
 -- | A helper class for lifting functions to @TryData@
 class ToTryData a where
@@ -214,7 +231,7 @@ class ToTryData a where
 newtype AsString a = AsString {fromAsString :: a}
 
 instance ToTryData a => ToTryData (Det a) where
-    toTryData = toTryData . fromDet
+    toTryData = toTryData . unDet
 
 instance ToTryData a => ToTryData (Try a) where
     toTryData = (>>= toTryData)
@@ -223,7 +240,10 @@ instance ToTryData a => ToTryData (Maybe a) where
     toTryData = maybe Fail toTryData
 
 instance ToTryData Integer where
-    toTryData = Val . DIntT . Val . Det
+    toTryData = Val . DNumT . Val . Det . fromInteger
+
+instance ToTryData Rational where
+    toTryData = Val . DNumT . Val . Det
 
 instance ToTryData Char where
     toTryData = Val . DStringT . Val . singleton . Det
@@ -261,23 +281,34 @@ to the top level.
 normalForm :: TryData -> TryData
 normalForm = toTryData . toTry
 
+-- | Lift a unary numeric function to @TryData@
+liftNum :: ToTryData a => (Rational -> a) -> (Try (Det Rational) -> TryData)
+liftNum f = toTryData . fmap f . toTry
+
+-- | Lift a binary numeric function to @TryData@
+liftNum2 ::
+    ToTryData a =>
+    (Rational -> Rational -> a) ->
+    (Try (Det Rational) -> Try (Det Rational) -> TryData)
+liftNum2 f x y = toTryData $ liftM2 f (toTry x) (toTry y)
+
 -- | Lift a unary integer function to @TryData@
-liftInt :: ToTryData a => (Integer -> a) -> (Try (Det Integer) -> TryData)
-liftInt f = toTryData . fmap f . toTry
+liftInt :: ToTryData a => (Integer -> a) -> (Try (Det Rational) -> TryData)
+liftInt f = toTryData . fmap f . toTryInt'
 
 -- | Lift a binary integer function to @TryData@
 liftInt2 ::
     ToTryData a =>
     (Integer -> Integer -> a) ->
-    (Try (Det Integer) -> Try (Det Integer) -> TryData)
-liftInt2 f x y = toTryData $ liftM2 f (toTry x) (toTry y)
+    (Try (Det Rational) -> Try (Det Rational) -> TryData)
+liftInt2 f x y = toTryData $ liftM2 f (toTryInt' x) (toTryInt' y)
 
 -- | Lift a unary string function to @TryData@
 liftString ::
     ToTryData a =>
     (ListTry Char -> a) ->
     (TryList (Det Char) -> TryData)
-liftString f = toTryData . fmap (f . fmap fromDet)
+liftString f = toTryData . fmap (f . fmap unDet)
 
 -- | Lift a binary string function to @TryData@
 liftString2 ::
@@ -286,7 +317,7 @@ liftString2 ::
     (TryList (Det Char) -> TryList (Det Char) -> TryData)
 liftString2 f x y =
     toTryData $
-        liftM2 f (fmap fromDet <$> x) (fmap fromDet <$> y)
+        liftM2 f (fmap unDet <$> x) (fmap unDet <$> y)
 
 -- | Lift a unary string function that returns two values to @TryData@
 liftString12 ::
@@ -294,7 +325,7 @@ liftString12 ::
     (ListTry Char -> Try (a, b)) ->
     (TryList (Det Char) -> (TryData, TryData))
 liftString12 f x =
-    let y = x >>= f . fmap fromDet
+    let y = x >>= f . fmap unDet
      in (toTryData $ fst <$> y, toTryData $ snd <$> y)
 
 -- | Lift a unary list function to @TryData@
@@ -391,6 +422,9 @@ class TryEq a where
 instance TryEq Integer where
     tryEq x y = Val $ x == y
 
+instance TryEq Rational where
+    tryEq x y = Val $ x == y
+
 instance TryEq Char where
     tryEq x y = Val $ x == y
 
@@ -409,7 +443,7 @@ instance TryEq a => TryEq (ListTry a) where
     tryEq _ _ = Val False
 
 instance TryEq DataTry where
-    tryEq (DIntT x) (DIntT y) = tryEq x y
+    tryEq (DNumT x) (DNumT y) = tryEq x y
     tryEq (DStringT x) (DStringT y) = tryEq x y
     tryEq (DListT x) (DListT y) = tryEq x y
     tryEq _ _ = Val False
@@ -433,6 +467,9 @@ class TryOrd a where
 instance TryOrd Integer where
     tryCmp x y = Val $ compare x y
 
+instance TryOrd Rational where
+    tryCmp x y = Val $ compare x y
+
 instance TryOrd Char where
     tryCmp x y = Val $ compare x y
 
@@ -450,10 +487,10 @@ instance TryOrd a => TryOrd (ListTry a) where
         tryCmp x y >>= \o -> if o == EQ then tryCmp xs ys else return o
 
 instance TryOrd DataTry where
-    tryCmp (DIntT x) (DIntT y) = tryCmp x y
+    tryCmp (DNumT x) (DNumT y) = tryCmp x y
     tryCmp (DStringT x) (DStringT y) = tryCmp x y
     tryCmp (DListT x) (DListT y) = tryCmp x y
-    tryCmp (DIntT _) _ = Val LT
-    tryCmp _ (DIntT _) = Val GT
+    tryCmp (DNumT _) _ = Val LT
+    tryCmp _ (DNumT _) = Val GT
     tryCmp (DStringT _) _ = Val LT
     tryCmp _ (DStringT _) = Val GT

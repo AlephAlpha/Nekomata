@@ -70,49 +70,49 @@ If it is, push the list or string itself, otherwise fail.
 
 ### `nonzero` (`Z`, `1 -> 1`)
 
-Check if an integer is non-zero.
+Check if a number is non-zero.
 
-If it is, push the integer itself, otherwise fail.
+If it is, push the number itself, otherwise fail.
 
 This function is automatically vectorized.
 
 ### `positive` (`P`, `1 -> 1`)
 
-Check if an integer is positive.
+Check if a number is positive.
 
-If it is, push the integer itself, otherwise fail.
+If it is, push the number itself, otherwise fail.
 
 This function is automatically vectorized.
 
 ### `less` (`<`, `2 -> 1`)
 
-Check if the first integer is less than the second.
+Check if the first number is less than the second.
 
-If it is, push the first integer, otherwise fail.
+If it is, push the first number, otherwise fail.
 
 This function is automatically vectorized.
 
 ### `lessEq` (`≤`, `2 -> 1`)
 
-Check if the first integer is less than or equal to the second.
+Check if the first number is less than or equal to the second.
 
-If it is, push the first integer, otherwise fail.
+If it is, push the first number, otherwise fail.
 
 This function is automatically vectorized.
 
 ### `greater` (`>`, `2 -> 1`)
 
-Check if the first integer is greater than the second.
+Check if the first number is greater than the second.
 
-If it is, push the first integer, otherwise fail.
+If it is, push the first number, otherwise fail.
 
 This function is automatically vectorized.
 
 ### `greaterEq` (`≥`, `2 -> 1`)
 
-Check if the first integer is greater than or equal to the second.
+Check if the first number is greater than or equal to the second.
 
-If it is, push the first integer, otherwise fail.
+If it is, push the first number, otherwise fail.
 
 This function is automatically vectorized.
 
@@ -126,31 +126,31 @@ The constant 10.
 
 ### `neg` (`_`, `1 -> 1`)
 
-Negate an integer.
+Negate a number.
 
 This function is automatically vectorized.
 
 ### `abs` (`A`, `1 -> 1`)
 
-Absolute value of an integer.
+Absolute value of a number.
 
 This function is automatically vectorized.
 
 ### `increment` (`→`, `1 -> 1`)
 
-Increment an integer.
+Increment a number.
 
 This function is automatically vectorized.
 
 ### `decrement` (`←`, `1 -> 1`)
 
-Decrement an integer.
+Decrement a number.
 
 This function is automatically vectorized.
 
 ### `logicalNot` (`¬`, `1 -> 1`)
 
-Returns 1 if the argument is 0, and 0 otherwise.
+Takes a number and returns 1 if it is 0, and 0 otherwise.
 
 This function is automatically vectorized.
 
@@ -162,25 +162,33 @@ This function is automatically vectorized.
 
 ### `add` (`+`, `2 -> 1`)
 
-Add two integers.
+Add two numbers.
 
 This function is automatically vectorized with padding zeros.
 
 ### `sub` (`-`, `2 -> 1`)
 
-Subtract two integers.
+Subtract two numbers.
 
 This function is automatically vectorized with padding zeros.
 
 ### `mul` (`*`, `2 -> 1`)
 
-Multiply two integers.
+Multiply two numbers.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
-### `div` (`÷`, `2 -> 1`)
+### `div` (`/`, `2 -> 1`)
 
-Integer division of two integers. Result is rounded towards negative infinity.
+Division of two numbers.
+
+Fails when the divisor is zero.
+
+This function is automatically vectorized and fails when the two lists are of different lengths.
+
+### `divInt` (`÷`, `2 -> 1`)
+
+Integer division of two numbers. Result is rounded towards negative infinity.
 
 Fails when the divisor is zero.
 
@@ -188,7 +196,7 @@ This function is automatically vectorized and fails when the two lists are of di
 
 ### `mod` (`%`, `2 -> 1`)
 
-Modulo two integers.
+Modulo two numbers.
 
 Fails when the divisor is zero.
 
@@ -196,29 +204,29 @@ This function is automatically vectorized and fails when the two lists are of di
 
 ### `divExact` (`¦`, `2 -> 1`)
 
-Divide two integers.
+Divide two numbers.
 
-Fails when the divisor is zero or the result is not an exact integer.
+Fails when the divisor is zero or the result is not an integer.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
 ### `pow` (`E`, `2 -> 1`)
 
-Raise an integer to a non-negative integer power.
+Raise a number to a non-negative integer power.
 
-Fails when the base is negative.
+Fails when the base is negative, or the exponent is not a non-negative integer.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
 ### `min` (`m`, `2 -> 1`)
 
-Get the minimum of two integers or two strings.
+Get the minimum of two numbers or two strings.
 
 This function is automatically vectorized with padding.
 
 ### `max` (`M`, `2 -> 1`)
 
-Get the maximum of two integers or two strings.
+Get the maximum of two numbers or two strings.
 
 This function is automatically vectorized with padding.
 
@@ -248,35 +256,39 @@ This function is non-deterministic.
 
 ### `sum` (`∑`, `1 -> 1`)
 
-Take the sum of a list of integers.
+Take the sum of a list of numbers.
 
 The addition is automatically vectorized with padding zeros.
 
 ### `product` (`∏`, `1 -> 1`)
 
-Take the product of a list of integers.
+Take the product of a list of numbers.
 
 The multiplication is automatically vectorized and fails when the two lists are of different lengths.
 
 ### `dot` (`∙`, `2 -> 1`)
 
-Take the dot product of two lists of integers.
+Take the dot product of two lists of numbers.
 
 The current implementation is simply a composition of mul and sum.
 
 ### `fromBase` (`b`, `2 -> 1`)
 
-Convert a list of digits to an integer.
+Convert a list of digits to a number.
 
 The first argument is the list of digits, the second argument is the base.
+
+This does not require the digits and the base to be integers.
 
 This function is automatically vectorized over the base.
 
 ### `fromBaseRev` (`d`, `2 -> 1`)
 
-Convert a list of digits in reverse order to an integer.
+Convert a list of digits in reverse order to a number.
 
 The first argument is the list of digits, the second argument is the base.
+
+This does not require the digits and the base to be integers.
 
 This function is automatically vectorized over the base.
 
@@ -286,17 +298,21 @@ Convert an integer to a list of digits in reverse order.
 
 The first argument is the integer, the second argument is the base.
 
+Fails when the inputs are not integers, or the base is less than 2.
+
 This function is automatically vectorized over both arguments. If both arguments are lists, the result is a list of lists of digits.
 
 ### `cumsum` (`∫`, `1 -> 1`)
 
-Take the cumulative sum of a list of integers.
+Take the cumulative sum of a list of numbers.
 
 The addition is automatically vectorized with padding zeros.
 
 ### `binomial` (`Ç`, `2 -> 1`)
 
 Compute the binomial coefficient.
+
+The second argument must be an integer.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
@@ -432,13 +448,13 @@ If one of the arguments is a string, the other argument is converted to a string
 
 Get the minimum of a list.
 
-This order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just integers or strings.
+This order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or strings.
 
 ### `maximum` (`Ṁ`, `1 -> 1`)
 
 Get the maximum of a list.
 
-This order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just integers or strings.
+This order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or strings.
 
 ### `concat` (`j`, `1 -> 1`)
 
@@ -500,7 +516,7 @@ Apply a function to each value in a list.
 
 If the input is a string, apply the function to each character.
 
-If the input is an integer, apply the function to each integer from 0 to the input minus 1.
+If the input is an number, apply the function to each integer from 0 to the input minus 1.
 
 ### `zipWith` (`ᶻ`, `(m -> 1) -> (m -> 1) where m > 1`)
 
@@ -508,7 +524,7 @@ Zip two lists and apply a function to each pair of values.
 
 If one of the input is a string, apply the function to each character.
 
-If one of the input is an integer, apply the function to each integer from 0 to the input minus 1.
+If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
 
 ### `outer` (`ᵒ`, `(m -> 1) -> (m -> 1) where m > 1`)
 
@@ -516,7 +532,7 @@ Apply a function to every possible pair of values in two lists and return a list
 
 If one of the input is a string, apply the function to each character.
 
-If one of the input is an integer, apply the function to each integer from 0 to the input minus 1.
+If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
 
 ### `predicate` (`ᵖ`, `(m -> n) -> (1 -> 1)`)
 

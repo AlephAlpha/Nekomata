@@ -4,7 +4,7 @@ Trying to make a small [non-deterministic](https://en.wikipedia.org/wiki/Nondete
 
 The implementation of non-determinism is based on the paper [*KiCS2: A New Compiler from Curry to Haskell*](https://www.informatik.uni-kiel.de/~mh/papers/WFLP11_KiCS2.pdf).
 
-The language is currently in an early stage of development. It has very few built-ins but lots of bugs. The custom code page is incomplete. The only supported numeric type is integer. I'm not even sure if it's Turing-complete yet (likely not).
+The language is currently in an early stage of development. It has very few built-ins but lots of bugs. The custom code page is incomplete. I'm not even sure if it's Turing-complete yet (likely not).
 
 ## Name
 

@@ -41,63 +41,6 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 
 即使可以省略右括号（目前未实现），这个解答也比前面的要多一个字节。
 
-## [Infinite Apple Dilemma](https://codegolf.stackexchange.com/q/257649/9288)
-
-这道题告诉我们，Nekomata 一定要支持有理数。以下解答照抄现有的 Vyxal 解答：
-
-```
-\reciprocal \complement \product \div
-```
-
-- [ ] `\reciprocal`：求一个数的倒数。不支持有理数的话，这个函数就毫无意义。
-- [ ] `\complement`：求 `1 - x`。感觉不一定常用，可以考虑拆成 `\decrement` 和 `\neg` 两个函数。`\neg` 已经有了。
-- [ ] `\product`：求一个列表的乘积。这个函数应该是比较常用的。已实现整数版本，待添加有理数支持。
-- [ ] `\div`：求两个数的商。目前已经有了这个函数，但是只支持整数，不支持有理数。加上有理数之后，可能需要三种版本的 `\div`：`\div`、`\divInt` 和 `\divExact`。`\div` 就是普通的除法；`\divInt` 是先除再取整；`\divExact` 是整除，如果结果不是整数就返回 `Fail`。
-
-或者抄现有的 05AB1E 解答：
-
-```
-\dup \decrement \div \product \mul
-```
-
-- [x] `\dup`：复制栈顶元素。已实现。
-- [x] `\decrement`：将一个数减 1。
-- [ ] `\mul`：乘法。已实现，待添加有理数支持。
-
-如果不支持有理数，这道题也不是不能解答，只是解答会比较长：
-
-```
-\product \mul \swap \decrement \product \div
-```
-
-- [x] `\dupDip`：这是个助词，不知道叫什么名字好。其作用是调用完函数之后把原来的栈顶元素再压回去。其它语言里没见过这个东西，但好像挺有用的。
-
-## [Time to shortest transposition](https://codegolf.stackexchange.com/q/257631/9288)
-
-这道题比较复杂，Vyxal 和 05AB1E 的解答都超过了 20 个字节。
-
-先试试：
-
-```
-\permutation \apply2 { 2 \chunks "\24\60" \bytes \zipWith \less 60 \fromBase } \sub \neg \allValues \minimum
-```
-
-凭空写的，大部分函数都没实现，不知道对不对。如果我没数错的话，这个解答有 20 个字节。
-
-这里的 `"\24\60"` 表示字符串里两个字符的编码分别是 24 和 60。Nekomata 实际上尚未支持这种写法，而且其字符编码还没有对应 `24` 的字符。
-
-- [x] `\permutation`：求一个列表的任意一个排列。这个函数是 non-deterministic 的。
-- [x] `\apply2`：助词，将一个一元函数应用到栈顶的两个元素上。已实现。
-- [ ] `\chunks`：输入一个列表和一个整数，将列表分成若干个长度为该整数的子列表。
-- [x] `\bytes`：输入一个字符串，输出一个列表，列表的每个元素是字符串中的一个字符的编码。
-- [x] `\zipWith`：助词，将一个二元函数应用到两个列表的对应元素上。
-- [x] `\less`：比较两个数的大小。如果第一个数小于第二个数，返回第一个数；否则返回 `Fail` 。
-- [x] `\fromBase`：输入一个列表和一个整数，将列表中的元素看作是某个进制的数的各位，输出这个数的十进制表示。比如输入 `[1, 2, 3]` 和 `10`，输出 `123`。
-- [x] `\sub`：求两个数的差。已实现。
-- [x] `\neg`：求一个数的相反数。已实现。不清楚要不要加一个合并 `\neg` 和 `\sub` 的函数。
-- [x] `\allValues`：求一个 non-deterministic 值的所有可能取值，返回一个列表。为了实现这个函数，需要对现有的运算机制做一些修改。
-- [x] `\minimum`：求一个列表的最小值。
-
 ## [Smallest groups in an array](https://codegolf.stackexchange.com/q/79037/9288)
 
 ```

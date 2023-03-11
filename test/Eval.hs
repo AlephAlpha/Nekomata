@@ -68,7 +68,7 @@ testEval = describe "Evaluation" $ do
             [("", All ["Hello, World!"])]
     describe "q66127: Catalan Numbers" $ do
         specEval
-            "2*$Ç$→÷"
+            "2*$Ç$→/"
             [ ("0", All ["1"])
             , ("1", All ["1"])
             , ("2", All ["2"])
@@ -90,7 +90,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q120350: Determine if an Array contains something other than 2" $ do
         specEval
-            "2-¬÷"
+            "2-¬/"
             [ ("[2]", Check True)
             , ("[2,2]", Check True)
             , ("[[2],[2,2],2]", Check True)
@@ -235,7 +235,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q257649: Arbitrary Apple Dilemma" $ do
         specEval
-            "∏*$←∏÷"
+            ":←/∏*"
             [ ("[3, 4, 6] 10", All ["24"])
             , ("[2] 14", All ["28"])
             , ("[6] 30", All ["36"])
@@ -290,7 +290,7 @@ testEval = describe "Evaluation" $ do
             [ ("20", All ["[3,4,5]", "[6,8,10]", "[5,12,13]", "[9,12,15]", "[8,15,17]", "[12,16,20]"])
             , ("5", All ["[3,4,5]"])
             ]
-    describe "q258511: Shortest Valid Parentheses" $ do
+    describe "q258511: Longest Valid Parentheses" $ do
         specEval
             "qe7%3%∫:l0?R≥¤#aṀ"
             [ ("\"(()())\"", All ["6"])

@@ -42,15 +42,15 @@ The program here is simply the built-in `+` function. The inputs are `1` and `2`
 
 ## Data Types
 
-Nekomata has three data types: integers, strings, and lists.
+Nekomata has three data types: numbers, strings, and lists.
 
-### Integers
+### Numbers
 
-Integers in Nekomata are arbitrary-precision.
+Numbers in Nekomata are arbitrary-precision rational numbers.
 
-Since the symbol `-` is already used for subtraction, when you want to push a negative integer, you need to use the built-in function for negation, `_`. For example, when you want to push the integer `-1` onto the stack, you need to write `1_`.
+Since the symbol `-` is already used for subtraction, when you want to push a negative number, you need to use the built-in function for negation, `_`. For example, when you want to push the number `-1` onto the stack, you need to write `1_`.
 
-Integers in lists are written as normal, e.g., `[-1, -2, -3]`.
+Numbers in lists are written as normal, e.g., `[-1, -2, -3/4]`.
 
 When you want to push two or more integers onto the stack, you can separate them with spaces. For example, `1 2 3` pushes the integers `1`, `2`, and `3` onto the stack. `123` pushes the integer `123`.
 
