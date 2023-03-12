@@ -42,9 +42,27 @@ parseRational =
         return $ num % den
         <?> "rational number"
 
+-- | Parse a rational number, but use '\' as a separator
+parseRational' :: Parser Rational
+parseRational' =
+    do
+        num <- parseInt
+        spaces
+        _ <- char '\\'
+        spaces
+        den <- parsePositive
+        return $ num % den
+        <?> "rational number"
+
 -- | Parse a number literal
 parseNum :: Parser Rational
 parseNum = try parseRational <|> fromInteger <$> parseInt <?> "number"
+
+{- | Parse a positive number literal,
+where '\' is used as a separator for rational numbers
+-}
+parseNum' :: Parser Rational
+parseNum' = try parseRational' <|> fromInteger <$> parsePositive <?> "number"
 
 -- | Parse an escape character
 parseEscape :: Parser Char
@@ -73,6 +91,16 @@ parseData :: Parser Data
 parseData =
     choice
         [ DNum <$> parseNum
+        , DString <$> parseString
+        , DList <$> parseList
+        ]
+        <?> "Nekomata data"
+
+-- | Parse a Nekomata data
+parseData' :: Parser Data
+parseData' =
+    choice
+        [ DNum <$> parseNum'
         , DString <$> parseString
         , DList <$> parseList
         ]
@@ -132,7 +160,7 @@ parseTerm =
     choice
         [ try $ TFunc <$> parseBuiltin
         , try $ TPart <$> parseParticle <* spaces <*> parseTerm
-        , TLit <$> parseData
+        , TLit <$> parseData'
         , TBlock
             <$> between
                 (char '{' >> spaces)

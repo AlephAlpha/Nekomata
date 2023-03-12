@@ -4,9 +4,7 @@
 
 Nekomata is written in [Haskell](https://www.haskell.org/). You need [Cabal](https://www.haskell.org/cabal/) and [GHC](https://www.haskell.org/ghc/) to build it.
 
-GHC 9.2.1 or later is required to build Nekomata. This is because I'm using some weird Unicode characters in Nekomata's code page. The character [`𐞥` (U+107A5, MODIFIER LETTER SMALL Q)](https://util.unicode.org/UnicodeJsps/character.jsp?a=107A5) was added to the Unicode standard in Unicode 14.0.0, which was released in 2021. Older versions of GHC don't support this character.
-
-The easiest way to install these tools is through [GHCup](https://www.haskell.org/ghcup/). The GHC provided by your Linux distribution's package manager may be too old to build Nekomata.
+The easiest way to install these tools is through [GHCup](https://www.haskell.org/ghcup/). The GHC provided by your Linux distribution's package manager may be too old to build Nekomata. GHC 9.0.1 or later is required.
 
 Once you have Cabal and GHC installed, you can build Nekomata by running the following command in the project's root directory:
 

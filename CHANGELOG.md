@@ -2,6 +2,8 @@
 
 ## 0.2.0.0 -- Unreleased
 
+* The dependency on `base` becomes `base >=4.15 && <5`. Now you can build Nekomata with GHC 9.0.1.
+
 ### Breaking changes
 
 * The code page is completely redesigned. and only contains characters supported by the Liberation Mono font.

@@ -50,7 +50,9 @@ Numbers in Nekomata are arbitrary-precision rational numbers.
 
 Since the symbol `-` is already used for subtraction, when you want to push a negative number, you need to use the built-in function for negation, `_`. For example, when you want to push the number `-1` onto the stack, you need to write `1_`.
 
-Numbers in lists are written as normal, e.g., `[-1, -2, -3/4]`.
+Similarly, when you want to push a fraction, the symbol `/` is already used for division. But you can write `\` instead of `/` to push a fraction. For example, when you want to push the number `-3/4`, you need to write `3\4_`. Of course, you can also write `3_4/` to push the same number.
+
+Numbers in lists are written as normal, e.g., `[-1, -2, -3/4]`. When taking input, numbers are also written as normal, e.g., `-1 -2 -3/4`.
 
 When you want to push two or more integers onto the stack, you can separate them with spaces. For example, `1 2 3` pushes the integers `1`, `2`, and `3` onto the stack. `123` pushes the integer `123`.
 
