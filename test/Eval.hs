@@ -4,24 +4,8 @@ module Eval (testEval) where
 
 import Control.Monad
 import Data.Either (isRight)
-import Data.Maybe (fromMaybe)
 import Nekomata.Eval
 import Test.Hspec
-
-data Result
-    = All [String]
-    | Truncated [String]
-    | First (Maybe String)
-    | Count Integer
-    | Check Bool
-    deriving (Eq)
-
-instance Show Result where
-    show (All xs) = unwords xs
-    show (Truncated xs) = unwords xs ++ " ..."
-    show (First x) = fromMaybe "None" x
-    show (Count n) = show n
-    show (Check b) = show b
 
 specEval :: String -> [(String, Result)] -> Spec
 specEval code testCases = context code $ do

@@ -2,9 +2,9 @@
 
 ## Installation
 
-Nekomata is written in [Haskell](https://www.haskell.org/). You need [Cabal](https://www.haskell.org/cabal/) and [GHC](https://www.haskell.org/ghc/) to build it.
+Nekomata is written in [Haskell](https://www.haskell.org/). You need [Cabal](https://www.haskell.org/cabal/) (version 3.0 or newer) and [GHC](https://www.haskell.org/ghc/) (version 8.8.4 or newer) to build Nekomata.
 
-The easiest way to install these tools is through [GHCup](https://www.haskell.org/ghcup/). The GHC provided by your Linux distribution's package manager may be too old to build Nekomata. GHC 9.0.1 or later is required.
+The easiest way to install these tools is through [GHCup](https://www.haskell.org/ghcup/). The packages provided by your Linux distribution's package manager may be too old to build Nekomata.
 
 Once you have Cabal and GHC installed, you can build Nekomata by running the following command in the project's root directory:
 
@@ -23,40 +23,6 @@ You can also run Nekomata without installing it by running:
 ```bash
 cabal run Nekomata
 ```
-
-## Using the REPL
-
-Nekomata has a REPL (read-eval-print loop) that you can use to try out the language.
-
-If you installed Nekomata, you can run the REPL by running:
-
-```bash
-Nekomata -r
-```
-
-If you didn't install Nekomata, you can run the REPL by running:
-
-```bash
-cabal run Nekomata -- -r
-```
-
-After entering the REPL, you will see a prompt that looks like this:
-
-```
-Nekomata REPL - type \H for help
->>>
-```
-
-Now you can type in some Nekomata code and press Enter to evaluate it. Let's try the "Hello, World!" program:
-
-```
->>> "Hello, World!"
-Hello, World!
-```
-
-You can type `\H` to see a list of commands that you can use in the REPL.
-
-Builtin functions in Nekomata all have an ASCII-only full name and a single-character short name. For example, the function for adding two numbers is called `\add` and its short name is `+`. The REPL supports TAB completion that completes the full name to the short name. For example, if you type `\add ` and press TAB, it will be replaced with `+`. The space after the function name is required, because there may be other functions that start with the same characters.
 
 ## Running Nekomata programs
 
@@ -81,6 +47,52 @@ Nekomata -h
 ```
 
 If you didn't install Nekomata, you can replace `Nekomata` with `cabal run Nekomata --` in the above commands.
+
+## Using the REPL
+
+Nekomata has a REPL (read-eval-print loop) that you can use to try out the language.
+
+If you installed Nekomata, you can run the REPL by running:
+
+```bash
+Nekomata
+```
+
+If you didn't install Nekomata, you can run the REPL by running:
+
+```bash
+cabal run Nekomata
+```
+
+After entering the REPL, you will see a prompt that looks like this:
+
+```
+Nekomata REPL - type \H for help
+>>>
+```
+
+Now you can type in some Nekomata code and press Enter to evaluate it. Let's try the "Hello, World!" program:
+
+```
+>>> "Hello, World!"
+Hello, World!
+```
+
+You can type `\H` to see a list of commands that you can use in the REPL.
+
+Builtin functions in Nekomata all have an ASCII-only full name and a single-character short name. For example, the function for adding two numbers is called `\add` and its short name is `+`. The REPL supports TAB completion that completes the full name to the short name. For example, if you type `\add ` and press TAB, it will be replaced with `+`. The space after the function name is required, because there may be other functions that start with the same characters.
+
+Some programs may require input from the user. You can enter the input by typing `\Input` followed by the input. After taking the input, the stack will be cleared and initialized with the input.
+
+For example, the following program adds one and two:
+
+```
+>>> \Input 1 2
+>>> +
+3
+```
+
+If you want to clear the stack without taking input, you can simply type `\Input` without any arguments.
 
 ## Modes
 

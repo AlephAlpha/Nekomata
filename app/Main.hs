@@ -1,5 +1,6 @@
 module Main (main) where
 
+import Control.Monad (forM_)
 import qualified Data.ByteString as ByteString
 import Doc
 import Nekomata.CodePage
@@ -75,10 +76,25 @@ optMode =
       )
     <|> pure AllValues
 
-data RunOnce = RunOnce {code :: Code, input :: Input, mode :: Mode}
+optMultiple :: Parser Bool
+optMultiple =
+  flag'
+    True
+    ( long "multiple"
+        <> short 'm'
+        <> help "Take multiple inputs separated by newlines"
+    )
+    <|> pure False
+
+data RunOnce = RunOnce
+  { code :: Code
+  , input :: Input
+  , mode :: Mode
+  , multiple :: Bool
+  }
 
 optRunOnce :: Parser RunOnce
-optRunOnce = RunOnce <$> optCode <*> optInput <*> optMode
+optRunOnce = RunOnce <$> optCode <*> optInput <*> optMode <*> optMultiple
 
 data Opts = Opts RunOnce | Repl | DocBuiltin | DocCodePage
 
@@ -92,6 +108,7 @@ opts =
     <|> flag'
       DocCodePage
       (long "codepage" <> help "Generate documentation for code page")
+    <|> pure Repl
 
 optsInfo :: ParserInfo Opts
 optsInfo =
@@ -115,10 +132,18 @@ main = do
       input' <- case input runOnce of
         InputArg input' -> return input'
         InputStdin -> getContents
-        InputNone -> return ""
-      case eval (mode runOnce) code' input' of
-        Left err -> die $ "Error: " ++ show err
-        Right result -> putStrLn result
+        InputNone -> return "\n"
+      fun <- case compile code' of
+        Left err -> die $ "Invalid code: " ++ show err
+        Right fun' -> return fun'
+      if multiple runOnce
+        then forM_ (lines input') $ \input'' ->
+          case eval (mode runOnce) Nothing fun input'' of
+            Left err -> die $ "Invalid input: " ++ show err
+            Right result -> putStrLn $ input'' ++ " -> " ++ show result
+        else case eval (mode runOnce) Nothing fun input' of
+          Left err -> die $ "Invalid input: " ++ show err
+          Right result -> putStrLn $ showResult result
     Repl -> runRepl
     DocBuiltin -> putStrLn docBuiltins
     DocCodePage -> putStrLn docCodePage

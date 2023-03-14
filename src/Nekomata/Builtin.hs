@@ -138,9 +138,9 @@ builtins =
         \If it is, push the number itself, otherwise fail.\n\
         \This function is automatically vectorized."
     , Builtin
-        "positive"
+        "isPositive"
         'P'
-        positive
+        isPositive
         "Check if a number is positive.\n\
         \If it is, push the number itself, otherwise fail.\n\
         \This function is automatically vectorized."
@@ -242,7 +242,7 @@ builtins =
         "div"
         '/'
         div'
-        "Division of two numbers. \n\
+        "Division of two numbers.\n\
         \Fails when the divisor is zero.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
@@ -660,11 +660,11 @@ nonzero = predicateVec nonzero'
     nonzero' _ (DNumT x) = (/= 0) . unDet <$> x
     nonzero' _ _ = Fail
 
-positive :: Function
-positive = predicateVec positive'
+isPositive :: Function
+isPositive = predicateVec isPositive'
   where
-    positive' _ (DNumT x) = (> 0) . unDet <$> x
-    positive' _ _ = Fail
+    isPositive' _ (DNumT x) = (> 0) . unDet <$> x
+    isPositive' _ _ = Fail
 
 less :: Function
 less = predicateVec2 less'

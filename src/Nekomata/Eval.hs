@@ -72,18 +72,45 @@ countResults = countValues initDecisions
 checkResult :: TryData -> Bool
 checkResult = hasValue initDecisions
 
--- | Show the result of a Nekomata evaluation according to the mode
-showResult :: Mode -> TryData -> String
-showResult AllValues = unlines . allResults
-showResult FirstValue = fromMaybe "" . firstResult
-showResult CountValues = show . countResults
-showResult CheckExistence = show . checkResult
+-- | The result of a Nekomata evaluation, to be shown to the user
+data Result
+    = All [String]
+    | Truncated [String]
+    | First (Maybe String)
+    | Count Integer
+    | Check Bool
+    deriving (Eq)
 
--- | Evaluate a Nekomata program string according to the mode
-eval :: Mode -> String -> String -> Either NekomataError String
-eval mode code input = do
-    f <- compile code
-    inputData <- readInput input
-    return . showResult mode . snd $ runFunction f (initRuntime inputData)
+instance Show Result where
+    show (All xs) = unwords xs
+    show (Truncated xs) = unwords xs ++ " ..."
+    show (First x) = fromMaybe "" x
+    show (Count n) = show n
+    show (Check b) = show b
 
--- | Get the information of a built-in function or particle
+-- | Show a Nekomata result separated by newlines
+showResult :: Result -> String
+showResult (All xs) = unlines xs
+showResult (Truncated xs) = unlines xs ++ "\n..."
+showResult (First x) = fromMaybe "" x
+showResult (Count n) = show n
+showResult (Check b) = show b
+
+-- | Truncate a list of strings to a given length
+truncate' :: Int -> [String] -> Result
+truncate' n xs =
+    let (ys, zs) = splitAt n xs in if null zs then All ys else Truncated ys
+
+-- | Get the result of a Nekomata evaluation according to the mode
+toResult :: Mode -> Maybe Int -> TryData -> Result
+toResult AllValues Nothing = All . allResults
+toResult AllValues (Just n) = truncate' n . allResults
+toResult FirstValue _ = First . firstResult
+toResult CountValues _ = Count . countResults
+toResult CheckExistence _ = Check . checkResult
+
+-- | Evaluate a Nekomata program according to the mode
+eval :: Mode -> Maybe Int -> Function -> String -> Either NekomataError Result
+eval mode limit fun input =
+    toResult mode limit . snd . runFunction fun . initRuntime
+        <$> readInput input

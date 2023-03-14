@@ -2,7 +2,8 @@
 
 ## 0.2.0.0 -- Unreleased
 
-* The dependency on `base` becomes `base >=4.15 && <5`. Now you can build Nekomata with GHC 9.0.1.
+* The dependency on `base` becomes `base >=4.13 && <5`. Now you can build Nekomata with GHC 8.8.4 or newer.
+* The interpreter can now take multiple inputs separated by newlines using the `-m` flag. This is useful for testing.
 
 ### Breaking changes
 
@@ -11,6 +12,7 @@
 * The numeric type is changed from `Integer` to `Rational`, and the semantics of some built-ins are changed accordingly.
 * `\div` is split into `\div` and `\divInt`.
 * `\toBase` is renamed to `\toBaseRev`, so that it is consistent with `\fromBaseRev`.
+* `\positive` is renamed to `\isPositive`.
 
 ## 0.1.1.0 -- 2023-03-11
 

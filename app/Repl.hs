@@ -17,7 +17,7 @@ data ReplState = ReplState
     }
 
 initReplState :: ReplState
-initReplState = ReplState AllValues (initRuntime []) 1024
+initReplState = ReplState AllValues (initRuntime []) 16
 
 data ReplCommand
     = ReplQuit
@@ -78,7 +78,7 @@ helpString =
         , "  \\Mode first    Show first result"
         , "  \\Mode count    Show number of results"
         , "  \\Mode exists   Show whether there are any results"
-        , "  \\Limit <n>     Set the max output size (default: 1024 bytes)"
+        , "  \\Limit <n>     Set the max number of results to show (default: 16)"
         , "  \\Input <data>  Reset the stack with the given input"
         , "  \\Info <name>   Show information about a builtin"
         , ""
@@ -89,11 +89,6 @@ helpString =
 
 builtinInfo :: String -> Maybe String
 builtinInfo name' = infoByName name' <|> Particle.infoByName name'
-
-showWithLimit :: Int -> String -> String
-showWithLimit n s =
-    let (h, t) = splitAt n s
-     in h ++ if null t then "" else "..."
 
 repl :: ReplState -> InputT IO ReplState
 repl state = handleInterrupt (outputStrLn "Cancelled." >> repl state) $ do
@@ -140,8 +135,9 @@ repl state = handleInterrupt (outputStrLn "Cancelled." >> repl state) $ do
                     repl state
                 Right function' -> do
                     let (rt, result) = runFunction function' (runtime state)
-                    outputStrLn . showWithLimit (limit state) $
-                        showResult (mode state) result
+                    let result' =
+                            toResult (mode state) (Just $ limit state) result
+                    outputStrLn $ showResult result'
                     repl state{runtime = rt}
 
 replCommandCompletion :: String -> [Completion]

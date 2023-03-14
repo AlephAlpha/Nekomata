@@ -76,7 +76,7 @@ If it is, push the number itself, otherwise fail.
 
 This function is automatically vectorized.
 
-### `positive` (`P`, `1 -> 1`)
+### `isPositive` (`P`, `1 -> 1`)
 
 Check if a number is positive.
 
