@@ -67,6 +67,24 @@ zipWithFail f i (Cons x xs) (Cons y ys) =
             (liftJoinM2 (zipWithFail f (rightId i)) xs ys)
 zipWithFail _ _ _ _ = Fail
 
+{- | Zip two @TryList@s with a function
+
+Truncate the result to the length of the shorter list.
+-}
+zipWithTrunc ::
+    (Id -> a -> b -> Try c) ->
+    Id ->
+    ListTry (Try a) ->
+    ListTry (Try b) ->
+    TryList (Try c)
+zipWithTrunc _ _ Nil _ = Val Nil
+zipWithTrunc _ _ _ Nil = Val Nil
+zipWithTrunc f i (Cons x xs) (Cons y ys) =
+    Val $
+        Cons
+            (liftJoinM2 (f (leftId i)) x y)
+            (liftJoinM2 (zipWithTrunc f (rightId i)) xs ys)
+
 -- | Choose an element from a @TryList@
 anyOf :: Id -> ListTry a -> Try a
 anyOf _ Nil = Fail

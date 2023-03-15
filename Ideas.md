@@ -48,8 +48,6 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 ```
 
 - [ ] `\splitRuns`：将一个列表从相邻元素不相等的地方拆开，得到一个列表的列表。比如输入 `[1, 2, 2, 3, 3, 3, 4, 5, 5, 5, 5, 6]`，输出 `[[1], [2, 2], [3, 3, 3], [4], [5, 5, 5, 5], [6]]`。
-- [x] `\map`：助词，将一个一元函数应用到一个列表的每个元素上。
-- [x] `\length`：求一个列表的长度。
 - [ ] `\minimumBy`：输入两个列表，其长度必须一致。根据第一个列表中最小的元素的索引，返回第二个列表中对应的元素。由于最小的元素可能不止一个，所以这个函数是 non-deterministic 的。
 
 和前面的 `\groupBy` 一样，`\minimumBy` 也是一个普通的函数而不是助词。但如果改成助词的话，解答会更短一些：
@@ -68,44 +66,6 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 
 - [x] `\nub`：输入一个列表，将其中的重复元素去掉。比如输入 `[1, 2, 3, 2, 1]`，输出 `[1, 2, 3]`。不清楚要不要排序。这道题用不着排序，但其它题目可能会用到。
 - [ ] `\setMinus`：输入两个列表，返回第一个列表中不在第二个列表中的元素。比如输入 `[1, 2, 3, 4]` 和 `[2, 4]`，输出 `[1, 3]`。如果第二个列表中的元素在第一个列表中有重复，那么只删除一个。比如输入 `[1, 2, 2, 3, 4]` 和 `[2, 4]`，输出 `[1, 2, 3]`。
-
-## [Covering a Skyline with brush strokes](https://codegolf.stackexchange.com/q/179464/9288)
-
-```
-0 \cons \delta \filter \positive \sum
-```
-
-或者
-
-```
-0 \cons \delta 0 \max \sum
-```
-
-- [x] `\cons`：输入一个元素和一个列表，将这个元素插入到列表的开头。
-- [ ] `\delta`：输入一个列表，输出列表中相邻元素的差。比如输入 `[1, 2, 3, 4]`，输出 `[1, 1, 1]`。
-- [ ] `\filter`：助词。将函数应用到一个列表的每个元素上，过滤掉返回 `Fail` 的元素。
-- [x] `\positive`：判断一个数是否大于 0。如果大于 0，返回这个数本身；否则返回 `Fail`。
-- [x] `\max`：求两个数中的最大值。自动向量化。
-- [x] `\sum`：求一个列表的和。
-
-两个想法：
-
-1. 要不要把 `0 \cons \delta` 这种组合写成一个函数。不过感觉不是很常用。这道题里甚至可以用 `0 \cons \sub` 来代替。
-2. 要不要让 `\positive` 这种作用于单个元素的谓词作用于列表时自动 filter。这样就不用写 `\filter` 了。实现后又后悔了，改回来了。
-
-想了一下还是不要自动 filter；自动 filter 只对单层的列表有用，对多层嵌套的列表没什么意义；但自动向量化什么时候都用得上。而且这种涉及到 Cut 的东西我自己都弄得不太清楚，容易出 bug。
-
-目前可以写成：
-
-```
-0 \cons \sub \positive \removeFail \sum
-```
-
-如果实现了 `\absDiff`，可以写成：
-
-```
-0 \cons \max \absDiff \sum
-```
 
 ## [Consolidate an Array](https://codegolf.stackexchange.com/q/70779/9288)
 
@@ -126,21 +86,6 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 - [ ] `\sortBy`：输入两个列表，其长度必须一致。将第一个列表中的元素按照第二个列表中的元素的大小进行排序。这要求排序算法是稳定的。
 - [x] `\logicalNot`：逻辑非。如果输入的数为 0，返回 1；如果输入的数不为 0，返回 0。不过给一个根本没有布尔值的语言加上逻辑运算符有点奇怪。就当它是一个数学函数好了。
 
-## [Print all pandigital numbers](https://codegolf.stackexchange.com/q/257752/9288)
-
-参考 05AB1E 解答：
-
-
-```
-\natural \predicate { \mul \swap \toBase \nub \swap \lengthIs }
-```
-
-9 个字节，输给了好几个 8 字节的解答。
-
-这里用了两次 `\swap`，感觉有点亏。不清楚要不要改变 `\toBase` 和 `\lengthIs` 的参数顺序。
-
-另一个问题是，助词如果修饰的不是单个内置函数，一定要加括号；能不能把括号就当作助词的一部分，不用写出来？不过那样在助词修饰单个内置函数时反而需要多加一个右括号，而且 parser 也有点难写。
-
 ## [There's more than one way to skin a set](https://codegolf.stackexchange.com/q/247326/9288)
 
 ```
@@ -148,8 +93,6 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 ```
 
 参考了前面 [Count repetitions of an array](https://codegolf.stackexchange.com/q/180302/9288) 的解答。
-
-- [x] `\subset`：求一个列表的任意一个子集。这个函数是 non-deterministic 的。
 
 也许要给 Nekomata 加上一个输出时自动去重的选项。
 
@@ -177,8 +120,6 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 几次用到 `\prefix` 都只需要用到非空的前缀。可以考虑让它只输出非空的前缀，省去 `\nonempty`。但如果碰上确实需要空前缀的情况，需要补上的字节数会更多。`\suffix` 和 `\subsequence` 也有类似的问题。
 
 ## [Approximate a root of an odd degree polynomial](https://codegolf.stackexchange.com/q/258021/9288)
-
-由于 Nekomata 目前仅支持整数，暂时还没办法解决这个问题。
 
 假设 Nekomata 支持有理数，可以参考 Charcoal 的解答：
 
@@ -254,30 +195,6 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 
 另一个问题是 `\toBase` 如何向量化。如果输入是一个列表和一个整数，对列表向量化就行。如果输入是两个列表，用 `\zipWith` 来向量化不一定是最佳的选择，也许可以用 `\outer` 来向量化。不过目前还没遇到过这种情况。
 
-## [Simplify a Cycle](https://codegolf.stackexchange.com/q/256920/9288)
-
-用已有的函数，目前能想到的最短的是 13 个字节：
-
-```
-\iterate { \uncons \swap \suffix \map { \swap \ne } \oneValue } \head
-```
-
-加上新函数的话，可以：
-
-```
-\iterate { \uncons \dip \suffix \map2 \ne \oneValue } \head
-```
-
-- [ ] `\map2`：助词。将一个二元函数应用到第一个参数（列表）的每个元素上。`f \map2` 等价于 `\swap \map { \swap f }`。
-
-甚至可以：
-
-```
-\iterate { \uncons \dip \suffix \free \oneValue } \head
-```
-
-- [ ] `\free`：检查一个列表是否不包含某个元素。如果包含，返回 `Fail`；否则返回列表本身。不清楚是不是还要一个 `\notElem` 函数，在不包含的时候返回的是元素而非列表。
-
 ## [A Fine sequence with fine interpretations](https://codegolf.stackexchange.com/q/258110/9288)
 
 参考 Vyxal 或 Jelly
@@ -305,7 +222,6 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 
 - [ ] `\transpose`：转置一个二维列表。
 - [ ] `\extract`：从一个列表中任意取出一个元素，原来的列表中删去这个元素。这个函数是 non-deterministic 的。
-- [ ] `\allEqual`：检查一个列表中的所有元素是否相等。
 - [ ] `\delete`：从一个列表中删除所有等于某个元素的元素。
 - [ ] `\isEmpty`：检查一个列表是否为空。
 
@@ -316,8 +232,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 ```
 \unjoin \orApply { 0 \cons } \reverse \zipWith \add
 ```
-
-- [ ] `\unjoin`：non-deterministic 地将一个列表拆成两部分。
 
 ```
 \length \increment 2 \div \splitAt \reverse \add
@@ -342,14 +256,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 目前已发布 0.1.0.0 版。还有很多常用的 built-in 没有实现。另外，由于 code page 中字符的选取过于随意，在常见的字体中甚至做不到等宽；可能需要重新设计一下 code page。
 
 不想让这篇文档太长，前面已实现的部分就删去了。
-
-## [Shortest Code to Find the Smallest Missing Positive Integer](https://codegolf.stackexchange.com/q/258335/9288)
-
-目前已有6个字节的解法。但如果实现了 `\free` 的话可以更短：
-
-```
-\natural \positive \predicate \free
-```
 
 ## [Shortest Valid Parentheses](https://codegolf.stackexchange.com/questions/258511/shortest-valid-parentheses/258549#258549)
 
@@ -392,3 +298,53 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 
 - [ ] `\squareNorm`：求一个向量各项的平方和。
 - [ ] `\sqrt`：求一个数的平方根。如果这个数的平方根不是整数，那么返回 `Fail`。这个需要用到 integer-roots 包。
+
+## [The Unaverageables](https://codegolf.stackexchange.com/q/248991/9288)
+
+```
+\filter { \add 2 \div \intersection 1 \lengthIs }
+```
+
+- [ ] `\filter`：助词。过滤一个列表，只保留函数不返回 `Fail` 的元素。
+- [ ] `\intersection`：求两个列表的交集。
+
+## [Is it a super-prime?](https://codegolf.stackexchange.com/q/130390/9288)
+
+```
+\isPrime \primePi \isPrime
+```
+
+- [ ] `\primePi`：求小于等于某个数的质数的个数。感觉不会很常用，以后再说。
+
+## [Move to Right and left](https://codegolf.stackexchange.com/q/241474/9288)
+
+```
+5 \toBase2 \convolve
+```
+
+- [ ] `\toBase2`：将一个数转换成二进制表示。
+- [ ] `\convolve`：卷积。比如说 `[1, 2, 3]` 和 `[4, 5, 6]` 卷积成 `[4, 13, 28, 27, 18]`。
+
+## [Guessing on straws](https://codegolf.stackexchange.com/q/258992/9288)
+
+参考 05AB1E 的解答：
+
+```
+\subset \concat \tally 2 \divExact \countValues 2 \equal
+```
+
+只差 `\tally` 还没有实现。
+
+或者：
+
+```
+\subset \concat \setPartition 2 \lengthIs \allEqual \countValues 2 \equal
+```
+
+- [ ] `\setPartition`：将一个列表拆成若干个子列表，使得每个子列表的元素互不相同。比如说 `[1, 2, 3, 4]` 拆成 `[[1, 2], [3, 4]]` 和 `[[1, 3], [2, 4]]`。
+
+只用现有的函数则需要 13 个字节：
+
+```
+\subset \concat \sort \unconcat \map { 2 \lengthIs \allEqual } \countValues 2 \equal
+```

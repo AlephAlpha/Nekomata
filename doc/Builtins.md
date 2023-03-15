@@ -308,6 +308,12 @@ Take the cumulative sum of a list of numbers.
 
 The addition is automatically vectorized with padding zeros.
 
+### `delta` (`∆`, `1 -> 1`)
+
+Take the difference between adjacent elements of a list of numbers.
+
+The subtraction is automatically vectorized with padding zeros.
+
 ### `binomial` (`Ç`, `2 -> 1`)
 
 Compute the binomial coefficient.
@@ -489,6 +495,14 @@ Check if all elements in a list are equal.
 If it is, push the equal element, otherwise fail.
 
 If the list is empty, this function fails.
+
+### `free` (`f`, `2 -> 1`)
+
+Check if a list is free of a given element.
+
+This means that the element does not occur in the list, its sublists, or its subsublists, etc.
+
+If it is, push the list itself, otherwise fail.
 
 ## Particles
 

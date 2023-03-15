@@ -91,7 +91,7 @@ instance Show Result where
 -- | Show a Nekomata result separated by newlines
 showResult :: Result -> String
 showResult (All xs) = unlines xs
-showResult (Truncated xs) = unlines xs ++ "\n..."
+showResult (Truncated xs) = unlines xs ++ "..."
 showResult (First x) = fromMaybe "" x
 showResult (Count n) = show n
 showResult (Check b) = show b

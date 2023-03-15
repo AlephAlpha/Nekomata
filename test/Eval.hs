@@ -114,6 +114,20 @@ testEval = describe "Evaluation" $ do
             , ("[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]", Count 5)
             , ("[0,1,4,5,9,11,12,14,16,18,23,24,26,28,29,30]", Count 6)
             ]
+    describe "q149890: Visible Dice Faces" $ do
+        specEval
+            "ᵒ+7f"
+            [ ("[6]", Check True)
+            , ("[6,2]", Check True)
+            , ("[1,3]", Check True)
+            , ("[2,1,3]", Check True)
+            , ("[3,2,6]", Check True)
+            , ("[1,6]", Check False)
+            , ("[5,4,2]", Check False)
+            , ("[3,1,4]", Check False)
+            , ("[5,4,6,2]", Check False)
+            , ("[1,2,3,4,5,6]", Check False)
+            ]
     describe "q175248: The inverse Collatz Conjecture" $ do
         specEval
             "ᶦ{Z:←2¦$3*→I"
@@ -187,7 +201,7 @@ testEval = describe "Evaluation" $ do
             , ("[[1,2],[4,8]]", All ["3"])
             , ("[[-1,-1],[2,2]]", All ["0"])
             , ("[[[[1],[2]],[[4],[8]]]]", All ["3"])
-            , ("[[[1,2],[2,4],[4,8]],[[-4,-4],[-1,1],[2,-2]]] ", All ["-9"])
+            , ("[[[1,2],[2,4],[4,8]],[[-4,-4],[-1,1],[2,-2]]]", All ["-9"])
             ]
     describe "q247676: Generate All 8 Knight's Moves" $ do
         specEval
@@ -205,6 +219,14 @@ testEval = describe "Evaluation" $ do
             "~ᵖ{JS="
             [ ("[\"dictionary\",\"transcriber\"] [\"dic\",\"ion\",\"ary\"]", First $ Just "dictionary")
             , ("[\"dictionary\",\"transcriber\"] [\"tra\",\"scr\",\"ber\"]", First $ Just "transcriber")
+            ]
+    describe "q256920: Simplify a Cycle" $ do
+        specEval
+            "ᶦ{Cᵈsf¡}h"
+            [ ("[1,2,3,4,2,5]", All ["1", "2", "5"])
+            , ("[4,3,6,2,3,8,5,2,8,7]", All ["4", "3", "8", "7"])
+            , ("[1,1,2]", All ["1", "2"])
+            , ("[1,2,7,2,7,2,3,7]", All ["1", "2", "3", "7"])
             ]
     describe "q257631: Time to shortest permutation" $ do
         specEval
@@ -260,13 +282,27 @@ testEval = describe "Evaluation" $ do
             [("", All ["[2,3,5,7,23,37,53,73,257,523,2357,2753,3257,3527,5237,5273,7253,7523]"])]
     describe "q258335: Shortest Code to Find the Smallest Missing Positive Integer" $ do
         specEval
-            "ŇPᵖ{-Z"
+            "ŇPᵖf"
             [ ("[1,2,3]", First (Just "4"))
             , ("[3,4,-1,1]", First (Just "2"))
             , ("[7,8,9,11,12]", First (Just "1"))
             , ("[-5,-4,-3,-2,-1,0,1,2,3,5,7,10]", First (Just "4"))
             , ("[]", First (Just "1"))
             , ("[-1,-4,-7]", First (Just "1"))
+            ]
+    describe "q258110: A Fine sequence with fine interpretations" $ do
+        specEval
+            "ᵃ→ᵉ_rÇ∫∑A$/"
+            [ ("0", All ["1"])
+            , ("1", All ["0"])
+            , ("2", All ["1"])
+            , ("3", All ["2"])
+            , ("4", All ["6"])
+            , ("5", All ["18"])
+            , ("6", All ["57"])
+            , ("7", All ["186"])
+            , ("8", All ["622"])
+            , ("9", All ["2120"])
             ]
     describe "q258432: Shortest code to generate all Pythagorean triples up to a given limit" $ do
         specEval
@@ -292,4 +328,21 @@ testEval = describe "Evaluation" $ do
             , ("[3,2,1,0]", All ["0", "1", "2", "3"])
             , ("[1,2,3,1]", All ["1", "1", "2", "3"])
             , ("[101,103,101,105] ", All ["101", "101", "101", "105"])
+            ]
+    describe "q259083: Is it traversable?" $ do
+        specEval
+            "R↔$∆0cJᵐ{CᵈAc}-0≥"
+            [ ("0 [1,1,1,1,1]", Check True)
+            , ("0 [50,45,20,19,18,10,1,1,1]", Check True)
+            , ("5 [1,6,11,16,21,26,31]", Check True)
+            , ("100 [500,1,100]", Check True)
+            , ("45 [20,50]", Check True)
+            , ("4 [6,2,1,2,5,6,1,2,3,5,1,1,1,3]", Check True)
+            , ("17 [59,61,47,64,23,34,21,22,25,29,25]", Check True)
+            , ("4 [6,2,1,2,5,6,1,2,3,5,1,1,1,4]", Check False)
+            , ("0 [1,1,2,1,1]", Check False)
+            , ("5 [30,28,22,18,13,9,7,9,11,14,22,23]", Check False)
+            , ("6 [40,47,49,55,61,66,69,70,50,55]", Check False)
+            , ("45 [79,48,41,70,76,85,27,12,31,66,13,17,94,77]", Check False)
+            , ("31 [65,21,20,32,9,9,37,14,23,19,32,63]", Check False)
             ]

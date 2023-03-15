@@ -14,7 +14,7 @@ The language is currently in an early stage of development. It has very few buil
 
 Like the language itself, the documentation is also incomplete. You can find it in the [doc](doc) folder.
 
-There are also some example programs in [`test/Eval.hs`](test/Eval.hs). These examples solve some challenges from [Code Golf StackExchange](https://codegolf.stackexchange.com/). But there aren't any explanations.
+There are also some example programs in [`test/Eval.hs`](test/Eval.hs). These examples are based on challenges from [Code Golf StackExchange](https://codegolf.stackexchange.com/). But there aren't any explanations.
 
 ## Influences
 

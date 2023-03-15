@@ -4,6 +4,7 @@
 
 * The dependency on `base` becomes `base >=4.13 && <5`. Now you can build Nekomata with GHC 8.8.4 or newer.
 * The interpreter can now take multiple inputs separated by newlines using the `-m` flag. This is useful for testing.
+* * New built-in functions: `\delta`, `\divInt`, `\free`.
 
 ### Breaking changes
 

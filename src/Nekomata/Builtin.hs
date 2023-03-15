@@ -10,7 +10,7 @@ module Nekomata.Builtin (
 ) where
 
 import Control.Arrow (second)
-import Control.Monad (join, (>=>))
+import Control.Monad (join, liftM2, (>=>))
 import Data.Functor ((<&>))
 import Data.List (elemIndex)
 import Data.Map.Strict (Map)
@@ -374,6 +374,12 @@ builtins =
         "Take the cumulative sum of a list of numbers.\n\
         \The addition is automatically vectorized with padding zeros."
     , Builtin
+        "delta"
+        '∆'
+        delta
+        "Take the difference between adjacent elements of a list of numbers.\n\
+        \The subtraction is automatically vectorized with padding zeros."
+    , Builtin
         "binomial"
         'Ç'
         binomial
@@ -578,6 +584,14 @@ builtins =
         "Check if all elements in a list are equal.\n\
         \If it is, push the equal element, otherwise fail.\n\
         \If the list is empty, this function fails."
+    , Builtin
+        "free"
+        'f'
+        free
+        "Check if a list is free of a given element.\n\
+        \This means that the element does not occur in the list, \
+        \its sublists, or its subsublists, etc.\n\
+        \If it is, push the list itself, otherwise fail."
     ]
 
 -- | The map from names to builtin functions
@@ -742,21 +756,32 @@ sign = unaryVec sign'
     sign' _ _ = Fail
 
 add :: Function
-add = binaryVecPad add'
+add = binary add'
 
 add' :: Id -> DataTry -> DataTry -> TryData
-add' _ (DNumT x) (DNumT y) = liftNum2 (+) x y
-add' _ _ _ = Fail
+add' = vec2Pad add''
+  where
+    add'' _ (DNumT x) (DNumT y) = liftNum2 (+) x y
+    add'' _ _ _ = Fail
 
 sub :: Function
-sub = compose neg add
+sub = binary sub'
+
+sub' :: Id -> DataTry -> DataTry -> TryData
+sub' i x y = neg' (leftId i) y >>= add' (rightId i) x
+  where
+    neg' = vec1 neg''
+    neg'' _ (DNumT x') = liftNum negate x'
+    neg'' _ _ = Fail
 
 mul :: Function
-mul = binaryVecFail mul'
+mul = binary mul'
 
 mul' :: Id -> DataTry -> DataTry -> TryData
-mul' _ (DNumT x) (DNumT y) = liftNum2 (*) x y
-mul' _ _ _ = Fail
+mul' = vec2Fail mul''
+  where
+    mul'' _ (DNumT x) (DNumT y) = liftNum2 (*) x y
+    mul'' _ _ _ = Fail
 
 div' :: Function
 div' = binaryVecFail div''
@@ -845,7 +870,7 @@ sum' = unary sum''
   where
     sum'' i (DListT xs) =
         liftList
-            (tryFoldl (vec2Pad add') i . DNumT . Val $ Det 0)
+            (tryFoldl add' i . DNumT . Val $ Det 0)
             xs
     sum'' _ _ = Fail
 
@@ -854,7 +879,7 @@ product' = unary product''
   where
     product'' i (DListT xs) =
         liftList
-            (tryFoldl (vec2Fail mul') i . DNumT . Val $ Det 1)
+            (tryFoldl mul' i . DNumT . Val $ Det 1)
             xs
     product'' _ _ = Fail
 
@@ -869,7 +894,7 @@ fromBase = binaryVecArg2 fromBase'
     fromBase' _ _ _ = Fail
     fromBase_ i b = tryFoldl (mulAdd b) i (DNumT . Val $ Det 0)
     mulAdd b i x y =
-        toTryData b >>= vec2Pad mul' i x >>= vec2Pad add' (leftId i) y
+        toTryData b >>= mul' (leftId i) x >>= add' (rightId i) y
 
 fromBaseRev :: Function
 fromBaseRev = binaryVecArg2 fromBase'
@@ -879,7 +904,7 @@ fromBaseRev = binaryVecArg2 fromBase'
     fromBase' _ _ _ = Fail
     fromBase_ i b = tryFoldr (mulAdd b) i (DNumT . Val $ Det 0)
     mulAdd b i x y =
-        toTryData b >>= vec2Pad mul' i y >>= vec2Pad add' (leftId i) x
+        toTryData b >>= mul' (leftId i) y >>= add' (rightId i) x
 
 toBaseRev :: Function
 toBaseRev = binaryVecOuter toBaseRev'
@@ -894,8 +919,16 @@ toBaseRev = binaryVecOuter toBaseRev'
 cumsum :: Function
 cumsum = unary cumsum'
   where
-    cumsum' i (DListT xs) = liftList (tryScanl1 (vec2Pad add') i) xs
+    cumsum' i (DListT xs) = liftList (tryScanl1 add' i) xs
     cumsum' _ _ = Fail
+
+delta :: Function
+delta = unary delta'
+  where
+    delta' i (DListT xs) = liftList (delta_ i) xs
+    delta' _ _ = Fail
+    delta_ _ Nil = Fail
+    delta_ i s@(Cons _ xs) = xs >>= flip (zipWithTrunc sub' i) s
 
 binomial :: Function
 binomial = binaryVecFail binomial'
@@ -1276,3 +1309,16 @@ allEqual = unary allEqual'
     allEqual' _ _ = Fail
     tryEq' :: TryEq a => Id -> a -> a -> Try a
     tryEq' _ x y = tryEq x y <&> \b -> if b then x else y
+
+free :: Function
+free = predicate2 free'
+  where
+    free' i x@(DListT xs) y = liftM2 (&&) (tryNe x y) (xs >>= free'' i y)
+    free' _ x y = tryNe x y
+    free'' :: Id -> DataTry -> ListTry TryData -> Try Bool
+    free'' _ _ Nil = Val True
+    free'' i y (Cons x xs) =
+        liftM2
+            (&&)
+            (x >>= flip (free' (leftId i)) y)
+            (xs >>= free'' (rightId i) y)
