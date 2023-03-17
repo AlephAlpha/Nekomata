@@ -356,6 +356,18 @@ builtins =
         \This does not require the digits and the base to be integers.\n\
         \This function is automatically vectorized over the base."
     , Builtin
+        "toBase"
+        'D'
+        toBase
+        "Convert an integer to a list of digits.\n\
+        \The first argument is the integer, \
+        \the second argument is the base.\n\
+        \Fails when the inputs are not integers, \
+        \or the base is less than 2.\n\
+        \This function is automatically vectorized over both arguments. \
+        \If both arguments are lists, \
+        \the result is a list of lists of digits."
+    , Builtin
         "toBaseRev"
         'B'
         toBaseRev
@@ -424,7 +436,7 @@ builtins =
         "Create a list with a single element."
     , Builtin
         "pair"
-        'D'
+        'Ð'
         pair
         "Create a list with two elements."
     , Builtin
@@ -491,6 +503,11 @@ builtins =
         unsnoc
         "Get the last element list and the rest of a list or a string."
     , Builtin
+        "cons0"
+        'ç'
+        cons0
+        "Prepend a zero to a list."
+    , Builtin
         "reverse"
         '↔'
         reverse'
@@ -532,6 +549,12 @@ builtins =
         "Concatenate two lists or two strings.\n\
         \If one of the arguments is a string, \
         \the other argument is converted to a string as well."
+    , Builtin
+        "split"
+        ';'
+        split
+        "Split a list or a string into two parts.\n\
+        \This function is non-deterministic."
     , Builtin
         "minimum"
         'ṁ'
@@ -592,6 +615,12 @@ builtins =
         \This means that the element does not occur in the list, \
         \its sublists, or its subsublists, etc.\n\
         \If it is, push the list itself, otherwise fail."
+    , Builtin
+        "enumerate"
+        'x'
+        enumerate
+        "Push a list of integers from 0 to the length of the argument minus 1 \
+        \without popping the argument."
     ]
 
 -- | The map from names to builtin functions
@@ -637,7 +666,7 @@ normalForm' :: Function
 normalForm' = Function (Arity 1 1) $ \_ (x :+ s) -> normalForm x :+ s
 
 if' :: Function
-if' = compose choice oneValue
+if' = choice .* oneValue
 
 -- Stack manipulation
 
@@ -884,7 +913,7 @@ product' = unary product''
     product'' _ _ = Fail
 
 dot :: Function
-dot = compose mul sum'
+dot = mul .* sum'
 
 fromBase :: Function
 fromBase = binaryVecArg2 fromBase'
@@ -911,10 +940,14 @@ toBaseRev = binaryVecOuter toBaseRev'
   where
     toBaseRev' _ (DNumT x) (DNumT b) = liftInt2 toBaseRev_ x b
     toBaseRev' _ _ _ = Fail
-    toBaseRev_ _ b | b < 2 = Fail
+    toBaseRev_ _ b | b < 1 = Fail
     toBaseRev_ x b | x < 0 = toBaseRev_ (-x) b
+    toBaseRev_ x 1 = Val . fromList $ replicate (fromIntegral x) 1
     toBaseRev_ 0 _ = Val Nil
     toBaseRev_ x b = Val $ Cons (x `mod` b) (toBaseRev_ (x `div` b) b)
+
+toBase :: Function
+toBase = toBaseRev .* reverse'
 
 cumsum :: Function
 cumsum = unary cumsum'
@@ -1083,7 +1116,7 @@ init' = unary init''
     init_ (Cons x xs) = xs >>= init_ >>= Val . Just . maybe Nil (Cons x . Val)
 
 snoc :: Function
-snoc = compose singleton' join'
+snoc = singleton' .* join'
 
 unsnoc :: Function
 unsnoc = unary2 unsnoc'
@@ -1104,6 +1137,9 @@ unsnoc = unary2 unsnoc'
     unzipMaybe :: Maybe (a, b) -> (Maybe a, Maybe b)
     unzipMaybe Nothing = (Nothing, Nothing)
     unzipMaybe (Just (a, b)) = (Just a, Just b)
+
+cons0 :: Function
+cons0 = constant (0 :: Integer) .* cons
 
 reverse' :: Function
 reverse' = unary reverse''
@@ -1202,6 +1238,21 @@ join_ :: ListTry a -> ListTry a -> TryList a
 join_ Nil ys = Val ys
 join_ (Cons x xs) ys = Val . Cons x $ liftJoinM2 join_ xs (Val ys)
 
+split :: Function
+split = unary2 split'
+  where
+    split' i (DStringT xs) =
+        liftString12 (split_ i >=> \(x, y) -> Val (AsString x, AsString y)) xs
+    split' i (DListT xs) = liftList12 (split_ i) xs
+    split' _ _ = (Fail, Fail)
+    split_ :: Id -> ListTry a -> Try (ListTry a, ListTry a)
+    split_ _ Nil = Val (Nil, Nil)
+    split_ i s@(Cons x xs) =
+        Choice
+            (leftId i)
+            (Val (Nil, s))
+            (xs >>= split_ (rightId i) <&> \(ys, zs) -> (Cons x (Val ys), zs))
+
 minimum' :: Function
 minimum' = unary minimum''
   where
@@ -1291,8 +1342,8 @@ permutation = unary permutation'
     permutation_ :: Id -> ListTry a -> TryList a
     permutation_ _ Nil = Val Nil
     permutation_ i xs =
-        extract' (leftId i) xs
-            >>= \(x, xs') -> Val $ Cons x (xs' >>= permutation_ (rightId i))
+        extract' (leftId i) xs >>= \(x, xs') ->
+            Val $ Cons x (xs' >>= permutation_ (rightId i))
     extract' :: Id -> ListTry a -> Try (a, TryList a)
     extract' _ Nil = Fail
     extract' i (Cons x xs) =
@@ -1322,3 +1373,6 @@ free = predicate2 free'
             (&&)
             (x >>= flip (free' (leftId i)) y)
             (xs >>= free'' (rightId i) y)
+
+enumerate :: Function
+enumerate = dup .* length' .* range0

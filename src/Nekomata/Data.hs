@@ -197,7 +197,7 @@ instance Show Data where
         if denominator x == 1
             then show (numerator x)
             else show (numerator x) ++ "/" ++ show (denominator x)
-    show (DString x) = show x
+    show (DString x) = "\"" ++ x ++ "\""
     show (DList x) = show x
 
 data DataTry

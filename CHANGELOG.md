@@ -2,17 +2,19 @@
 
 ## 0.2.0.0 -- Unreleased
 
+* The language is still incomplete. Everything, especially the code page, is subject to change.
 * The dependency on `base` becomes `base >=4.13 && <5`. Now you can build Nekomata with GHC 8.8.4 or newer.
 * The interpreter can now take multiple inputs separated by newlines using the `-m` flag. This is useful for testing.
-* * New built-in functions: `\delta`, `\divInt`, `\free`.
+* New built-in functions: `\cons0`, `\delta`, `\divInt`, `\enumerate`, `\free`, `\split`, `\toBase`.
+* Fixed some bugs in result printing and documentation generation.
 
 ### Breaking changes
 
-* The code page is completely redesigned. and only contains characters supported by the Liberation Mono font.
+* The code page is completely redesigned. Now it only contains characters supported by the [Liberation Mono font](https://en.wikipedia.org/wiki/Liberation_fonts).
 * The short name for most of the built-ins are changed.
 * The numeric type is changed from `Integer` to `Rational`, and the semantics of some built-ins are changed accordingly.
 * `\div` is split into `\div` and `\divInt`.
-* `\toBase` is renamed to `\toBaseRev`, so that it is consistent with `\fromBaseRev`.
+* `\toBase` is renamed to `\toBaseRev`, and a new `\toBase` is added.
 * `\positive` is renamed to `\isPositive`.
 
 ## 0.1.1.0 -- 2023-03-11

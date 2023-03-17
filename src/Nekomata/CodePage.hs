@@ -19,9 +19,9 @@ codePage =
         ++ "pqrstuvwxyz{|}~\n"
         ++ "ᵃᶜᵈᵉᶦᵐᵑᵒᵖᵗʷˣᶻ���"
         ++ "����������������"
-        ++ "ÇṀŇØƆƤŽ���������"
+        ++ "ÇÐṀŇØƆƤŽ��������"
         ++ "����������������"
-        ++ "ṁɔ��������������"
+        ++ "çṁɔ�������������"
         ++ "����������������"
         ++ "����������������"
         ++ "����������������"
@@ -32,14 +32,14 @@ codePageMarkdown =
     "| |"
         ++ concat ["**_" ++ d : "**|" | d <- hexDigits]
         ++ "\n|-|"
-        ++ concat ["-|" | _ <- hexDigits]
+        ++ concat (replicate 16 "-|")
         ++ "\n"
         ++ unlines
             [ "|**"
                 ++ d
                 : "_**|"
                 ++ concat
-                    [ '`' : (if c == '\n' then "\\n" else [c]) ++ "`|"
+                    [ '`' : escape c ++ "`|"
                     | j <- [0 .. 15]
                     , let c = codePage !! (i * 16 + j)
                     ]
@@ -47,6 +47,10 @@ codePageMarkdown =
             ]
   where
     hexDigits = "0123456789ABCDEF"
+    escape '\n' = "\\n"
+    escape '|' = "\\|"
+    escape '`' = "` ` `"
+    escape c = [c]
 
 -- | An error that occurs when a character is not in Nekomata's code page.
 data CodePageError = CodePageError {char :: Char, pos :: Int} deriving (Eq)

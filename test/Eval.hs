@@ -72,6 +72,23 @@ testEval = describe "Evaluation" $ do
             , ("3", All ["[[1,0,0],[0,1,0],[0,0,1]]"])
             , ("4", All ["[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]"])
             ]
+    describe "q94291: Is it a balanced number?" $ do
+        specEval
+            "¢D;ᶜtᶻ-∑0="
+            [ ("1", Check True)
+            , ("6", Check True)
+            , ("11", Check True)
+            , ("141", Check True)
+            , ("1221", Check True)
+            , ("23281453796004414", Check True)
+            , ("523428121656666655655556655656502809745249552466339089702361716477983610754966885128041975406005088", Check True)
+            , ("10", Check False)
+            , ("12", Check False)
+            , ("110", Check False)
+            , ("15421", Check False)
+            , ("5234095123508321", Check False)
+            , ("6240911314399072459493765661191058613491863144152352262897351988250431140546660035648795316740212454", Check False)
+            ]
     describe "q120350: Determine if an Array contains something other than 2" $ do
         specEval
             "2-¬/"
@@ -92,6 +109,12 @@ testEval = describe "Evaluation" $ do
             , ("2", All ["[[1,0],[0,1]]"])
             , ("3", All ["[[1,0,1],[0,1,0],[1,0,1]]"])
             , ("4", All ["[[1,0,1,0],[0,1,0,1],[1,0,1,0],[0,1,0,1]]"])
+            ]
+    describe "q136887: Fold a List in Half" $ do
+        specEval
+            ";ᶜç↔ᶻ+"
+            [ ("[1,2,3,4,5,6,7,8]", All ["[9,9,9,9]"])
+            , ("[1,2,3,4,5,6,7]", All ["[8,8,8,4]"])
             ]
     describe "q138510: Running second maximum of a list" $ do
         specEval
@@ -128,6 +151,12 @@ testEval = describe "Evaluation" $ do
             , ("[5,4,6,2]", Check False)
             , ("[1,2,3,4,5,6]", Check False)
             ]
+    describe "q177221: String rotation - output string repeatedly moving first character to the end" $ do
+        specEval
+            ";$N,"
+            [ ("\"john\"", All ["ohnj", "hnjo", "njoh", "john"])
+            , ("\"heehee\"", All ["eeheeh", "eheehe", "heehee", "eeheeh", "eheehe", "heehee"])
+            ]
     describe "q175248: The inverse Collatz Conjecture" $ do
         specEval
             "ᶦ{Z:←2¦$3*→I"
@@ -140,7 +169,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q179464: Covering a Skyline with brush strokes" $ do
         specEval
-            "0c-P‼∑"
+            "ç-P‼∑"
             [ ("[1,3,2,1,2,1,5,3,3,4,2]", All ["9"])
             , ("[5,8]", All ["8"])
             , ("[1,1,1,1]", All ["1"])
@@ -151,7 +180,7 @@ testEval = describe "Evaluation" $ do
             , ("[10,9,8,9]", All ["11"])
             ]
         specEval
-            "0cM-_∑"
+            "çM-_∑"
             [ ("[1,3,2,1,2,1,5,3,3,4,2]", All ["9"])
             , ("[5,8]", All ["8"])
             , ("[1,1,1,1]", All ["1"])
@@ -170,7 +199,7 @@ testEval = describe "Evaluation" $ do
             [("4", All ["[1]", "[2,1]", "[3,2,1]", "[4,3,2,1]"])]
     describe "q217303: Linear integer function generator" $ do
         specEval
-            "ᵉᵑ{ˣ{s∙}ɔ}T"
+            "ᵉᵑ{ˣ∙ɔᵈç}T"
             [ ("10 [0,1] [1,1]", All ["[0,1,1,2,3,5,8,13,21,34]"])
             , ("20 [1,0,0] [1,1,0]", All ["[1,0,0,1,0,1,1,1,2,2,3,4,5,7,9,12,16,21,28,37]"])
             , ("10 [3,0,2] [1,1,0]", All ["[3,0,2,3,2,5,5,7,10,12]"])
@@ -222,7 +251,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q256920: Simplify a Cycle" $ do
         specEval
-            "ᶦ{Cᵈsf¡}h"
+            "Cᶦ{ᵈsf¡C"
             [ ("[1,2,3,4,2,5]", All ["1", "2", "5"])
             , ("[4,3,6,2,3,8,5,2,8,7]", All ["4", "3", "8", "7"])
             , ("[1,1,2]", All ["1", "2"])
@@ -252,6 +281,12 @@ testEval = describe "Evaluation" $ do
     describe "q257752: Print all pandigital numbers" $ do
         specEval
             "Ňᵖ{*$Bu$L"
+            [ ("2", Truncated ["1", "2", "3", "4", "5", "6"])
+            , ("3", Truncated ["5", "7", "11", "14", "15", "16", "17", "19"])
+            , ("4", Truncated ["27", "30", "39", "45"])
+            ]
+        specEval
+            "Ňᵖ{$Bçu#="
             [ ("2", Truncated ["1", "2", "3", "4", "5", "6"])
             , ("3", Truncated ["5", "7", "11", "14", "15", "16", "17", "19"])
             , ("4", Truncated ["27", "30", "39", "45"])
@@ -312,7 +347,16 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q258511: Longest Valid Parentheses" $ do
         specEval
-            "qe7%3%∫:l0?R≥¤#aṀ"
+            "qe7%3%∫:çlR≥¤#aṀ"
+            [ ("\"(()())\"", All ["6"])
+            , ("\")()())\"", All ["4"])
+            , ("\"()(())\"", All ["6"])
+            , ("\"()(()\"", All ["2"])
+            , ("\"))\"", All ["0"])
+            , ("\"\"", All ["0"])
+            ]
+        specEval
+            "qe7%3%∫x>çƆᵖLaṀ"
             [ ("\"(()())\"", All ["6"])
             , ("\")()())\"", All ["4"])
             , ("\"()(())\"", All ["6"])
@@ -331,7 +375,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259083: Is it traversable?" $ do
         specEval
-            "R↔$∆0cJᵐ{CᵈAc}-0≥"
+            "R↔$∆çJᵐ{CᵈAc}-0≥"
             [ ("0 [1,1,1,1,1]", Check True)
             , ("0 [50,45,20,19,18,10,1,1,1]", Check True)
             , ("5 [1,6,11,16,21,26,31]", Check True)
@@ -345,4 +389,41 @@ testEval = describe "Evaluation" $ do
             , ("6 [40,47,49,55,61,66,69,70,50,55]", Check False)
             , ("45 [79,48,41,70,76,85,27,12,31,66,13,17,94,77]", Check False)
             , ("31 [65,21,20,32,9,9,37,14,23,19,32,63]", Check False)
+            ]
+    describe "q259143: Is it a valid chemical?" $ do
+        specEval
+            "∑2¦$ṁ±*$:#←c≥"
+            [ ("[1]", Check False)
+            , ("[4]", Check False)
+            , ("[1,1,1,1]", Check False)
+            , ("[0,0]", Check False)
+            , ("[1,3]", Check False)
+            , ("[2,3]", Check False)
+            , ("[1,1,1,1,1,3]", Check False)
+            , ("[1,1]", Check True)
+            , ("[4,2,2]", Check True)
+            , ("[3,3]", Check True)
+            , ("[2,2,2]", Check True)
+            , ("[0]", Check True)
+            , ("[3,2,1]", Check True)
+            , ("[3,3,3,3]", Check True)
+            , ("[4,1,1,1,1,2,2,2]", Check True)
+            , ("[4,2,2,1,1]", Check True)
+            , ("[3,3,2,1,1]", Check True)
+            ]
+        specEval
+            "ʷ{P↕1:Ð-:C0=+?}0U="
+            [ ("[1]", Check False)
+            , ("[4]", Check False)
+            , ("[1,1,1,1]", Check False)
+            , ("[0,0]", Check False)
+            , ("[1,3]", Check False)
+            , ("[2,3]", Check False)
+            , ("[1,1]", Check True)
+            , ("[4,2,2]", Check True)
+            , ("[3,3]", Check True)
+            , ("[2,2,2]", Check True)
+            , ("[0]", Check True)
+            , ("[3,2,1]", Check True)
+            , ("[3,3,3,3]", Check True)
             ]

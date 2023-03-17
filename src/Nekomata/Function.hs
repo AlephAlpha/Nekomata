@@ -73,10 +73,12 @@ identity :: Function
 identity = Function (Arity 0 0) $ \_ s -> s
 
 -- | Compose two functions
-compose :: Function -> Function -> Function
-compose f g =
+(.*) :: Function -> Function -> Function
+(.*) f g =
     Function (composeArity (arity f) (arity g)) $
         \i -> apply g (leftId i) . apply f (rightId i)
+
+infixr 9 .*
 
 -- | Convert a nullary function to a Nekomata function
 nullary :: (Id -> TryData) -> Function

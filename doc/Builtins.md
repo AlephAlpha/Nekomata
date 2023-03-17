@@ -292,6 +292,16 @@ This does not require the digits and the base to be integers.
 
 This function is automatically vectorized over the base.
 
+### `toBase` (`D`, `2 -> 1`)
+
+Convert an integer to a list of digits.
+
+The first argument is the integer, the second argument is the base.
+
+Fails when the inputs are not integers, or the base is less than 2.
+
+This function is automatically vectorized over both arguments. If both arguments are lists, the result is a list of lists of digits.
+
 ### `toBaseRev` (`B`, `2 -> 1`)
 
 Convert an integer to a list of digits in reverse order.
@@ -354,7 +364,7 @@ Push an empty list.
 
 Create a list with a single element.
 
-### `pair` (`D`, `2 -> 1`)
+### `pair` (`Ð`, `2 -> 1`)
 
 Create a list with two elements.
 
@@ -410,6 +420,10 @@ Append an element to a list.
 
 Get the last element list and the rest of a list or a string.
 
+### `cons0` (`ç`, `1 -> 1`)
+
+Prepend a zero to a list.
+
 ### `reverse` (`↔`, `1 -> 1`)
 
 Reverse a list or a string.
@@ -449,6 +463,12 @@ This function is non-deterministic.
 Concatenate two lists or two strings.
 
 If one of the arguments is a string, the other argument is converted to a string as well.
+
+### `split` (`;`, `1 -> 2`)
+
+Split a list or a string into two parts.
+
+This function is non-deterministic.
 
 ### `minimum` (`ṁ`, `1 -> 1`)
 
@@ -503,6 +523,10 @@ Check if a list is free of a given element.
 This means that the element does not occur in the list, its sublists, or its subsublists, etc.
 
 If it is, push the list itself, otherwise fail.
+
+### `enumerate` (`x`, `1 -> 2`)
+
+Push a list of integers from 0 to the length of the argument minus 1 without popping the argument.
 
 ## Particles
 

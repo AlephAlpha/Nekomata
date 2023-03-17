@@ -33,4 +33,4 @@ compileTerm (TBlock ts) = compileProgram ts
 
 -- | Compile a program into a function
 compileProgram :: Program -> Either ParticleArityError Function
-compileProgram (Program ts) = foldl compose identity <$> mapM compileTerm ts
+compileProgram (Program ts) = foldl (.*) identity <$> mapM compileTerm ts
