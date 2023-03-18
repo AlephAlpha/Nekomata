@@ -276,9 +276,8 @@ builtins =
         "pow"
         'E'
         pow
-        "Raise a number to a non-negative integer power.\n\
-        \Fails when the base is negative, or \
-        \the exponent is not a non-negative integer.\n\
+        "Raise a number to a an power.\n\
+        \Fails when the exponent is not an integer.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
@@ -851,8 +850,8 @@ pow = binaryVecFail pow'
   where
     pow' _ (DNumT x) (DNumT y) = liftNum2 pow'' x y
     pow' _ _ _ = Fail
-    pow'' x y = toTryInt y >>= pow_ x
-    pow_ x y = if y >= 0 then Val (x ^ y) else Fail
+    pow'' x y = toTryInt y <&> pow_ x
+    pow_ x y = if y >= 0 then x ^ y else 1 / (x ^ negate y)
 
 min' :: Function
 min' = binaryVecPad min''

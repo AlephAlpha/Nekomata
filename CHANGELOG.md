@@ -1,6 +1,6 @@
 # Revision history for Nekomata
 
-## 0.2.0.0 -- Unreleased
+## 0.2.0.0 -- 2023-03-18
 
 * The language is still incomplete. Everything, especially the code page, is subject to change.
 * The dependency on `base` becomes `base >=4.13 && <5`. Now you can build Nekomata with GHC 8.8.4 or newer.
