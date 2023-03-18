@@ -180,6 +180,7 @@ parseProgram = spaces >> parseBlock <* spaces <* eof <?> "Nekomata program"
 parseInput :: Parser [Data]
 parseInput =
     parseData
-        `endBy` (try (spaces >> char ',' >> spaces) <|> try spaces)
+        `endBy` (try (spaces >> char ',' >> spaces) <|> spaces)
+        <* spaces
         <* eof
         <?> "Nekomata input"
