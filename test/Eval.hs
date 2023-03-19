@@ -29,6 +29,10 @@ specEval code testCases = context code $ do
 
 testEval :: Spec
 testEval = describe "Evaluation" $ do
+    describe "q69: Golf you a quine for great good!" $ do
+        specEval
+            "[\":h,\"]:h,"
+            [("", All ["[\":h,\"]:h,"])]
     describe "q85: Fibonacci function or sequence" $ do
         specEval
             "1:ᶦ{$ᵉ+"

@@ -936,17 +936,21 @@ fromBaseRev = binaryVecArg2 fromBase'
 
 toBaseRev :: Function
 toBaseRev = binaryVecOuter toBaseRev'
-  where
-    toBaseRev' _ (DNumT x) (DNumT b) = liftInt2 toBaseRev_ x b
-    toBaseRev' _ _ _ = Fail
-    toBaseRev_ _ b | b < 1 = Fail
-    toBaseRev_ x b | x < 0 = toBaseRev_ (-x) b
-    toBaseRev_ x 1 = Val . fromList $ replicate (fromIntegral x) 1
-    toBaseRev_ 0 _ = Val Nil
-    toBaseRev_ x b = Val $ Cons (x `mod` b) (toBaseRev_ (x `div` b) b)
+
+toBaseRev' :: Id -> DataTry -> DataTry -> TryData
+toBaseRev' _ (DNumT x) (DNumT b) = liftInt2 toBaseRev_ x b
+toBaseRev' _ _ _ = Fail
+toBaseRev_ :: Integer -> Integer -> TryList Integer
+toBaseRev_ _ b | b < 1 = Fail
+toBaseRev_ x b | x < 0 = toBaseRev_ (-x) b
+toBaseRev_ x 1 = Val . fromList $ replicate (fromIntegral x) 1
+toBaseRev_ 0 _ = Val Nil
+toBaseRev_ x b = Val $ Cons (x `mod` b) (toBaseRev_ (x `div` b) b)
 
 toBase :: Function
-toBase = toBaseRev .* reverse'
+toBase = binaryVecOuter toBase'
+  where
+    toBase' i x y = toBaseRev' (leftId i) x y >>= reverse'' (rightId i)
 
 cumsum :: Function
 cumsum = unary cumsum'
@@ -1142,13 +1146,15 @@ cons0 = constant (0 :: Integer) .* cons
 
 reverse' :: Function
 reverse' = unary reverse''
-  where
-    reverse'' _ (DStringT xs) = liftString (AsString . reverse_ Nil) xs
-    reverse'' _ (DListT xs) = liftList (reverse_ Nil) xs
-    reverse'' _ _ = Fail
-    reverse_ :: ListTry a -> ListTry a -> TryList a
-    reverse_ ys Nil = Val ys
-    reverse_ ys (Cons x xs) = xs >>= reverse_ (Cons x (Val ys))
+
+reverse'' :: Id -> DataTry -> TryData
+reverse'' _ (DStringT xs) = liftString (AsString . reverse_ Nil) xs
+reverse'' _ (DListT xs) = liftList (reverse_ Nil) xs
+reverse'' _ _ = Fail
+
+reverse_ :: ListTry a -> ListTry a -> TryList a
+reverse_ ys Nil = Val ys
+reverse_ ys (Cons x xs) = xs >>= reverse_ (Cons x (Val ys))
 
 prefix :: Function
 prefix = unary prefix'
