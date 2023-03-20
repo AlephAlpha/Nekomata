@@ -132,7 +132,7 @@ main = do
       input' <- case input runOnce of
         InputArg input' -> return input'
         InputStdin -> getContents
-        InputNone -> return "\n"
+        InputNone -> return $ if multiple runOnce then "\n" else ""
       fun <- case compile code' of
         Left err -> die $ "Invalid code: " ++ show err
         Right fun' -> return fun'

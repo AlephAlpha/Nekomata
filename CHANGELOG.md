@@ -2,8 +2,7 @@
 
 ## 0.2.1.0 -- Unreleased
 
-* Fixed a bug in parsing empty inputs.
-* Fixed a bug in `\toBase`.
+* Fixed some bugs.
 
 ## 0.2.0.0 -- 2023-03-18
 

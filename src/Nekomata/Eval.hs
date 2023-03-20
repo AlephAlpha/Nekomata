@@ -2,6 +2,7 @@ module Nekomata.Eval where
 
 import Control.Arrow (left)
 import Control.Monad ((>=>))
+import Data.List (intercalate)
 import Data.Maybe (fromMaybe)
 import Nekomata.CodePage (CodePageError, checkCodePage)
 import Nekomata.Data (Data (..), TryData)
@@ -90,7 +91,7 @@ instance Show Result where
 
 -- | Show a Nekomata result separated by newlines
 showResult :: Result -> String
-showResult (All xs) = unlines xs
+showResult (All xs) = intercalate "\n" xs
 showResult (Truncated xs) = unlines xs ++ "..."
 showResult (First x) = fromMaybe "" x
 showResult (Count n) = show n
