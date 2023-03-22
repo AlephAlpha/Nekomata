@@ -1364,7 +1364,7 @@ allEqual = unary allEqual'
     allEqual' i (DListT xs) = liftList (tryFoldl1 tryEq' i) xs
     allEqual' _ _ = Fail
     tryEq' :: TryEq a => Id -> a -> a -> Try a
-    tryEq' _ x y = tryEq x y <&> \b -> if b then x else y
+    tryEq' _ x y = tryEq x y >>= \b -> if b then Val x else Fail
 
 free :: Function
 free = predicate2 free'

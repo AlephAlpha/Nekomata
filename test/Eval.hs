@@ -54,6 +54,12 @@ testEval = describe "Evaluation" $ do
         specEval
             "\"Hello, World!\""
             [("", All ["Hello, World!"])]
+    describe "q62732: Implement a Truth-Machine" $ do
+        specEval
+            "ᶦP"
+            [ ("0", All ["0"])
+            , ("1", Truncated ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1"])
+            ]
     describe "q66127: Catalan Numbers" $ do
         specEval
             "2*$Ç$→/"
@@ -221,6 +227,19 @@ testEval = describe "Evaluation" $ do
             , ("[7,0]", All ["1"])
             , ("[11,6]", All ["227305"])
             , ("[0,4]", All ["1"])
+            ]
+    describe "q238607: Converge to a number" $ do
+        specEval
+            "¢DsCr↔~c¢b-"
+            [ ("4", All ["1", "2", "3", "4"])
+            , ("16", All ["10", "11", "12", "13", "14", "15", "16"])
+            , ("35", All ["10", "20", "30", "31", "32", "33", "34", "35"])
+            , ("103", All ["100", "101", "102", "103"])
+            , ("320", All ["100", "200", "300", "310", "320"])
+            , ("354", All ["100", "200", "300", "310", "320", "330", "340", "350", "351", "352", "353", "354"])
+            , ("1000", All ["1000"])
+            , ("1001", All ["1000", "1001"])
+            , ("4037 ", All ["1000", "2000", "3000", "4000", "4010", "4020", "4030", "4031", "4032", "4033", "4034", "4035", "4036", "4037"])
             ]
     describe "q247398: Alternating sums of multidimensional arrays" $ do
         specEval
@@ -430,4 +449,29 @@ testEval = describe "Evaluation" $ do
             , ("[0]", Check True)
             , ("[3,2,1]", Check True)
             , ("[3,3,3,3]", Check True)
+            ]
+    describe "q259233: We're gonna need a bigger podium!" $ do
+        specEval
+            "R↕J:ᵐo=ᵐ≡‼$L"
+            [ ("0 0", Count 1)
+            , ("1 0", Count 0)
+            , ("1 1", Count 1)
+            , ("2 0", Count 1)
+            , ("2 1", Count 0)
+            , ("2 2", Count 2)
+            , ("3 0", Count 1)
+            , ("3 1", Count 6)
+            , ("3 2", Count 0)
+            , ("3 3", Count 6)
+            , ("4 0", Count 7)
+            , ("4 1", Count 8)
+            , ("4 2", Count 36)
+            , ("4 3", Count 0)
+            , ("4 4", Count 24)
+            , ("5 0", Count 21)
+            , ("5 1", Count 100)
+            , ("5 2", Count 60)
+            , ("5 3", Count 240)
+            , ("5 4", Count 0)
+            , ("5 5", Count 120)
             ]
