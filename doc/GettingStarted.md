@@ -127,3 +127,7 @@ This mode outputs `True` if the program has at least one result, and `False` oth
 When running a program from the command line, you can switch to this mode by passing the `-e` flag.
 
 In the REPL, you can switch to this mode by typing `\Mode exists`.
+
+## Online interpreter
+
+Nekomata is now on [Attempt This Online!](https://ato.pxeger.com/run?1=m70iLzU7PzexJHHBgqWlJWm6FguWFCclF8M4UBoA)

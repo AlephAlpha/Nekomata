@@ -457,7 +457,8 @@ instance TryEq a => TryEq (Try a) where
 
 instance TryEq a => TryEq (ListTry a) where
     tryEq Nil Nil = Val True
-    tryEq (Cons x xs) (Cons y ys) = liftM2 (&&) (tryEq x y) (tryEq xs ys)
+    tryEq (Cons x xs) (Cons y ys) =
+        tryEq x y >>= \b -> if b then tryEq xs ys else Val False
     tryEq _ _ = Val False
 
 instance TryEq DataTry where
