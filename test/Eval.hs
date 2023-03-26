@@ -411,15 +411,6 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q258511: Longest Valid Parentheses" $ do
         specEval
-            "qe7%3%∫:çlR≥¤#aṀ"
-            [ ("\"(()())\"", All ["6"])
-            , ("\")()())\"", All ["4"])
-            , ("\"()(())\"", All ["6"])
-            , ("\"()(()\"", All ["2"])
-            , ("\"))\"", All ["0"])
-            , ("\"\"", All ["0"])
-            ]
-        specEval
             "qe7%3%∫x>çƆᵖLaṀ"
             [ ("\"(()())\"", All ["6"])
             , ("\")()())\"", All ["4"])
