@@ -50,6 +50,10 @@ testEval = describe "Evaluation" $ do
             , ("8", Count 34)
             , ("9", Count 55)
             ]
+    describe "q50020: List Sophie Germain primes" $ do
+        specEval
+            "Ƥ←2¦Q"
+            [("", Truncated ["2", "3", "5", "11", "23", "29", "41", "53", "83", "89"])]
     describe "q55422: \"Hello, World!\"" $ do
         specEval
             "\"Hello, World!\""

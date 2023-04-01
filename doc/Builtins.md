@@ -12,7 +12,7 @@ This function is non-deterministic.
 
 ### `fail` (`!`, `0 -> 1`)
 
-Push a value that always fails.
+Push a non-deterministic object with no values.
 
 ### `allValues` (`a`, `1 -> 1`)
 
@@ -20,7 +20,7 @@ Get a list of all possible values for a non-deterministic object.
 
 ### `oneValue` (`¡`, `1 -> 1`)
 
-Get a single value from a non-deterministic object.
+Get the first possible value from a non-deterministic object.
 
 Fails if the object has no values.
 
@@ -212,9 +212,9 @@ This function is automatically vectorized and fails when the two lists are of di
 
 ### `pow` (`E`, `2 -> 1`)
 
-Raise a number to a non-negative integer power.
+Raise a number to a an power.
 
-Fails when the base is negative, or the exponent is not a non-negative integer.
+Fails when the exponent is not an integer.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 

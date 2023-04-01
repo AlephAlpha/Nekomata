@@ -72,7 +72,11 @@ library
     Nekomata.Program
 
   -- Modules included in this library but not exported.
-  -- other-modules:
+  other-modules:
+    Nekomata.Builtin.Basic
+    Nekomata.Builtin.List
+    Nekomata.Builtin.Math
+    Nekomata.Builtin.String
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:

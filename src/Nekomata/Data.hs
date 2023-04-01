@@ -10,7 +10,7 @@ import Data.Ratio (denominator, numerator)
 import Nekomata.NonDet
 
 -- | A helper function to lift a binary function to a monad
-liftJoinM2 :: Monad m => (a -> b -> m c) -> m a -> m b -> m c
+liftJoinM2 :: (Monad m) => (a -> b -> m c) -> m a -> m b -> m c
 liftJoinM2 f x y = join $ liftM2 f x y
 
 -- | A helper function to compose a unary function with a binary function
@@ -171,7 +171,7 @@ tryFilter f i (Cons x xs) =
             else xs >>= tryFilter f (rightId i)
 
 -- | Remove failed elements from a @TryList@
-filterTry :: NonDet a => ListTry (Try a) -> TryList (Try a)
+filterTry :: (NonDet a) => ListTry (Try a) -> TryList (Try a)
 filterTry Nil = Val Nil
 filterTry (Cons x xs) = Cut $ \ds ->
     ( ds
@@ -179,7 +179,7 @@ filterTry (Cons x xs) = Cut $ \ds ->
        in if hasValue ds x then x <&> \x' -> Cons (Val x') xs' else xs'
     )
 
-instance NonDet a => NonDet (ListTry a) where
+instance (NonDet a) => NonDet (ListTry a) where
     type Value (ListTry a) = [Value a]
     fromValue = fromList . map fromValue
     toTry Nil = Val []
@@ -248,13 +248,13 @@ class ToTryData a where
 -- | A wrapper to avoid overlapping instances
 newtype AsString a = AsString {fromAsString :: a}
 
-instance ToTryData a => ToTryData (Det a) where
+instance (ToTryData a) => ToTryData (Det a) where
     toTryData = toTryData . unDet
 
-instance ToTryData a => ToTryData (Try a) where
+instance (ToTryData a) => ToTryData (Try a) where
     toTryData = (>>= toTryData)
 
-instance ToTryData a => ToTryData (Maybe a) where
+instance (ToTryData a) => ToTryData (Maybe a) where
     toTryData = maybe Fail toTryData
 
 instance ToTryData Integer where
@@ -272,16 +272,16 @@ instance ToTryData (AsString String) where
 instance ToTryData (AsString (ListTry Char)) where
     toTryData = Val . DStringT . Val . fmap Det . fromAsString
 
-instance ToTryData (AsString a) => ToTryData (AsString (Try a)) where
+instance (ToTryData (AsString a)) => ToTryData (AsString (Try a)) where
     toTryData = toTryData . fmap AsString . fromAsString
 
-instance ToTryData (AsString a) => ToTryData (AsString (Maybe a)) where
+instance (ToTryData (AsString a)) => ToTryData (AsString (Maybe a)) where
     toTryData = toTryData . fmap AsString . fromAsString
 
-instance ToTryData a => ToTryData [a] where
+instance (ToTryData a) => ToTryData [a] where
     toTryData = Val . DListT . Val . fromList . map toTryData
 
-instance ToTryData a => ToTryData (ListTry a) where
+instance (ToTryData a) => ToTryData (ListTry a) where
     toTryData = Val . DListT . Val . fmap toTryData
 
 instance ToTryData Data where
@@ -300,37 +300,46 @@ normalForm :: TryData -> TryData
 normalForm = toTryData . toTry
 
 -- | Lift a unary numeric function to @TryData@
-liftNum :: ToTryData a => (Rational -> a) -> (Try (Det Rational) -> TryData)
+liftNum :: (ToTryData a) => (Rational -> a) -> (Try (Det Rational) -> TryData)
 liftNum f = toTryData . fmap f . toTry
 
 -- | Lift a binary numeric function to @TryData@
 liftNum2 ::
-    ToTryData a =>
+    (ToTryData a) =>
     (Rational -> Rational -> a) ->
     (Try (Det Rational) -> Try (Det Rational) -> TryData)
 liftNum2 f x y = toTryData $ liftM2 f (toTry x) (toTry y)
 
+-- | Lift a unary numeric function that returns two values to @TryData@
+liftNum12 ::
+    (ToTryData a, ToTryData b) =>
+    (Rational -> Try (a, b)) ->
+    (Try (Det Rational) -> (TryData, TryData))
+liftNum12 f x =
+    let y = x >>= f . unDet
+     in (toTryData $ fst <$> y, toTryData $ snd <$> y)
+
 -- | Lift a unary integer function to @TryData@
-liftInt :: ToTryData a => (Integer -> a) -> (Try (Det Rational) -> TryData)
+liftInt :: (ToTryData a) => (Integer -> a) -> (Try (Det Rational) -> TryData)
 liftInt f = toTryData . fmap f . toTryInt'
 
 -- | Lift a binary integer function to @TryData@
 liftInt2 ::
-    ToTryData a =>
+    (ToTryData a) =>
     (Integer -> Integer -> a) ->
     (Try (Det Rational) -> Try (Det Rational) -> TryData)
 liftInt2 f x y = toTryData $ liftM2 f (toTryInt' x) (toTryInt' y)
 
 -- | Lift a unary string function to @TryData@
 liftString ::
-    ToTryData a =>
+    (ToTryData a) =>
     (ListTry Char -> a) ->
     (TryList (Det Char) -> TryData)
 liftString f = toTryData . fmap (f . fmap unDet)
 
 -- | Lift a binary string function to @TryData@
 liftString2 ::
-    ToTryData a =>
+    (ToTryData a) =>
     (ListTry Char -> ListTry Char -> a) ->
     (TryList (Det Char) -> TryList (Det Char) -> TryData)
 liftString2 f x y =
@@ -348,14 +357,14 @@ liftString12 f x =
 
 -- | Lift a unary list function to @TryData@
 liftList ::
-    ToTryData a =>
+    (ToTryData a) =>
     (ListTry TryData -> a) ->
     (TryList TryData -> TryData)
 liftList f = toTryData . fmap f
 
 -- | Lift a binary list function to @TryData@
 liftList2 ::
-    ToTryData a =>
+    (ToTryData a) =>
     (ListTry TryData -> ListTry TryData -> a) ->
     (TryList TryData -> TryList TryData -> TryData)
 liftList2 f x y = toTryData $ liftM2 f x y
@@ -446,16 +455,16 @@ instance TryEq Rational where
 instance TryEq Char where
     tryEq x y = Val $ x == y
 
-instance Eq a => TryEq (Det a) where
+instance (Eq a) => TryEq (Det a) where
     tryEq (Det x) (Det y) = Val $ x == y
 
 instance TryEq Data where
     tryEq x y = Val $ x == y
 
-instance TryEq a => TryEq (Try a) where
+instance (TryEq a) => TryEq (Try a) where
     tryEq = liftJoinM2 tryEq
 
-instance TryEq a => TryEq (ListTry a) where
+instance (TryEq a) => TryEq (ListTry a) where
     tryEq Nil Nil = Val True
     tryEq (Cons x xs) (Cons y ys) =
         tryEq x y >>= \b -> if b then tryEq xs ys else Val False
@@ -492,13 +501,13 @@ instance TryOrd Rational where
 instance TryOrd Char where
     tryCmp x y = Val $ compare x y
 
-instance Ord a => TryOrd (Det a) where
+instance (Ord a) => TryOrd (Det a) where
     tryCmp (Det x) (Det y) = Val $ compare x y
 
-instance TryOrd a => TryOrd (Try a) where
+instance (TryOrd a) => TryOrd (Try a) where
     tryCmp = liftJoinM2 tryCmp
 
-instance TryOrd a => TryOrd (ListTry a) where
+instance (TryOrd a) => TryOrd (ListTry a) where
     tryCmp Nil Nil = Val EQ
     tryCmp Nil _ = Val LT
     tryCmp _ Nil = Val GT

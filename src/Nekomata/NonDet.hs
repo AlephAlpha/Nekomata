@@ -70,7 +70,7 @@ instance NonDet (Det a) where
     fromValue = Det
     toTry (Det x) = Val x
 
-instance NonDet a => NonDet (Try a) where
+instance (NonDet a) => NonDet (Try a) where
     type Value (Try a) = Value a
     fromValue = Val . fromValue
     toTry = (>>= toTry)
@@ -98,7 +98,7 @@ initDecisions :: Decisions
 initDecisions = Decisions Map.empty
 
 -- | Find all values and the corresponding decisions of a of a @Try@
-tryValues :: Alternative m => Decisions -> Try a -> m (Decisions, a)
+tryValues :: (Alternative m) => Decisions -> Try a -> m (Decisions, a)
 tryValues ds (Val x) = pure (ds, x)
 tryValues ds (Choice i t1 t2) = case getChoice i ds of
     Just ChooseLeft -> tryValues ds t1
@@ -114,7 +114,7 @@ values :: (NonDet a, Alternative m) => Decisions -> a -> m (Value a)
 values ds = fmap snd . tryValues ds . toTry
 
 -- | Find the first value and the corresponding decisions of a @NonDet@
-firstValue :: NonDet a => Decisions -> a -> Maybe (Decisions, Value a)
+firstValue :: (NonDet a) => Decisions -> a -> Maybe (Decisions, Value a)
 firstValue ds = tryValues ds . toTry
 
 -- | Count all values of a @Try@
