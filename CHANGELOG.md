@@ -2,6 +2,11 @@
 
 ## 0.3.0.0 -- Unreleased
 
+* The code page is updated. New characters are added, and the values of some characters are changed.
+* New built-in functions: `\rotate`, `\transpose`.
+* New built-in particle: `\mapFirst`.
+* `\map` now supports functions with no argument.
+
 ## 0.2.1.0 -- 2023-03-26
 
 * Fixed some bugs.

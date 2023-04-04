@@ -1,6 +1,6 @@
 module Nekomata.Builtin.List where
 
-import Control.Arrow (second)
+import Control.Arrow (first, second)
 import Control.Monad (join, liftM2, (>=>))
 import Data.Functor ((<&>))
 import Data.Maybe (fromMaybe)
@@ -22,7 +22,7 @@ nonempty' = predicate nonempty''
 anyOf' :: Function
 anyOf' = unary anyOf''
   where
-    anyOf'' i (DStringT xs) = Val . DStringT $ xs >>= fmap singleton . anyOf i
+    anyOf'' i (DStringT xs) = Val . DStringT $ xs >>= anyOf i <&> singleton
     anyOf'' i (DListT xs) = join (xs >>= anyOf i)
     anyOf'' _ _ = Fail
 
@@ -274,6 +274,7 @@ join'' i x y@(DStringT _) =
     join'' i (DStringT (fromList . map Det . show <$> toTry x)) y
 join'' _ (DListT xs) (DListT ys) = liftList2 join_ xs ys
 join'' _ _ _ = Fail
+
 join_ :: ListTry a -> ListTry a -> TryList a
 join_ Nil ys = Val ys
 join_ (Cons x xs) ys = Val . Cons x $ liftJoinM2 join_ xs (Val ys)
@@ -291,7 +292,7 @@ split = unary2 split'
         Choice
             (leftId i)
             (Val (Nil, s))
-            (xs >>= split_ (rightId i) <&> \(ys, zs) -> (Cons x (Val ys), zs))
+            (xs >>= split_ (rightId i) <&> first (Cons x . Val))
 
 minimum' :: Function
 minimum' = unary minimum''
@@ -416,3 +417,36 @@ free = predicate2 free'
 
 enumerate :: Function
 enumerate = dup .* length' .* range0
+
+rotate :: Function
+rotate = binaryVecArg2 rotate'
+  where
+    rotate' _ (DStringT xs) (DNumT y) =
+        liftString (\x -> liftInt (AsString . (`rotate_` x)) y) xs
+    rotate' _ (DListT xs) (DNumT y) =
+        liftList (\x -> liftInt (`rotate_` x) y) xs
+    rotate' _ _ _ = Fail
+    rotate_ :: Integer -> ListTry a -> TryList a
+    rotate_ _ Nil = Val Nil
+    rotate_ n s@(Cons x xs)
+        | n > 0 =
+            xs >>= (`join_` singleton x) >>= rotate_ (n - 1)
+        | n < 0 = reverse_ Nil s >>= rotate_ (-n) >>= reverse_ Nil
+        | otherwise = Val s
+
+transpose :: Function
+transpose = unary transpose'
+  where
+    transpose' i (DListT xs) = liftList (transpose'' . tryMap asList i) xs
+    transpose' _ _ = Fail
+    asList _ (DListT xs) = xs
+    asList _ _ = Fail
+    transpose'' :: ListTry (TryList a) -> TryList (TryList a)
+    transpose'' Nil = Val Nil
+    transpose'' (Cons x xs) = liftJoinM2 transpose_ x xs
+    transpose_ xs Nil = Val $ Val . singleton <$> xs
+    transpose_ xs ys = transpose'' ys >>= zipWithCons xs
+    zipWithCons Nil Nil = Val Nil
+    zipWithCons (Cons x xs) (Cons y ys) =
+        Val $ Cons (Val $ Cons x y) (liftJoinM2 zipWithCons xs ys)
+    zipWithCons _ _ = Fail

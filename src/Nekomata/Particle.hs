@@ -105,11 +105,24 @@ builtinParticles =
         "map"
         'ᵐ'
         map'
-        "(m -> 1) -> (m -> 1) where m > 0"
+        "(0 -> 1) -> (1 -> 1) \
+        \or (m -> 1) -> (m -> 1) where m > 0"
         "Apply a function to each value in a list.\n\
         \If the input is a string, apply the function to each character.\n\
         \If the input is an number, apply the function to each integer \
-        \from 0 to the input minus 1."
+        \from 0 to the input minus 1.\n\
+        \If the function takes no argument, return a list of n copies \
+        \of the result of the function, where n is the length of the input."
+    , BuiltinParticle
+        "mapFirst"
+        'ᵚ'
+        mapFirst
+        "(1 -> 1) -> (2 -> 1) \
+        \or (m -> 1) -> (m -> 1) where m > 1"
+        "Map a binary function over its first argument.\n\
+        \If the function is unary, return a list of n copies of the \
+        \result of applying the function to the second argument, where \
+        \n is the length of the first argument."
     , BuiltinParticle
         "zipWith"
         'ᶻ'
@@ -277,6 +290,11 @@ dupDip = Particle dupDip'
 map' :: Particle
 map' = Particle map''
   where
+    map'' (Function (Arity 0 1) f) =
+        Just . Function (Arity 1 1) $
+            \i (x :+ s) ->
+                let f' i' x' = top $ f i' (Val x' :+ s)
+                 in (x >>= liftList (tryMap f' i) . toTryList) :+ s
     map'' (Function (Arity m 1) f) | m > 0 =
         Just . Function (Arity m 1) $
             \i (x :+ s) ->
@@ -284,6 +302,22 @@ map' = Particle map''
                  in (x >>= liftList (tryMap f' i) . toTryList)
                         :+ dropStack (m - 1) s
     map'' _ = Nothing
+
+mapFirst :: Particle
+mapFirst = Particle mapFirst'
+  where
+    mapFirst' (Function (Arity 1 1) f) =
+        Just . Function (Arity 2 1) $
+            \i (x :+ y :+ s) ->
+                let f' i' y' = top $ f i' (x :+ Val y' :+ s)
+                 in (y >>= liftList (tryMap f' i) . toTryList) :+ s
+    mapFirst' (Function (Arity m 1) f) | m > 1 =
+        Just . Function (Arity m 1) $
+            \i (x :+ y :+ s) ->
+                let f' i' y' = top $ f i' (x :+ Val y' :+ s)
+                 in (y >>= liftList (tryMap f' i) . toTryList)
+                        :+ dropStack (m - 2) s
+    mapFirst' _ = Nothing
 
 zipWith' :: Particle
 zipWith' = Particle zipWith''

@@ -171,6 +171,11 @@ testEval = describe "Evaluation" $ do
             [ ("\"john\"", All ["ohnj", "hnjo", "njoh", "john"])
             , ("\"heehee\"", All ["eeheeh", "eheehe", "heehee", "eeheeh", "eheehe", "heehee"])
             ]
+        specEval
+            "xŘ↔"
+            [ ("\"john\"", All ["[\"njoh\",\"hnjo\",\"ohnj\",\"john\"]"])
+            , ("\"heehee\"", All ["[\"eheehe\",\"eeheeh\",\"heehee\",\"eheehe\",\"eeheeh\",\"heehee\"]"])
+            ]
     describe "q175248: The inverse Collatz Conjecture" $ do
         specEval
             "ᶦ{Z:←2¦$3*→I"
@@ -273,6 +278,15 @@ testEval = describe "Evaluation" $ do
             , ("[14,6,12,4,10,8,16,2]", Check False)
             , ("[33,32,37,16,34,10,35,30,27,13,5,14,17,1,18,39,28,40,8,0,26,22,19,31,25,24,36,7,12,29,38,6,4,2,20,3,10,15,9,21,11,23]", Check False)
             ]
+    describe "q233641: Hunt for discount" $ do
+        specEval
+            "o↔x2%∙2/"
+            [ ("[10]", All ["0"])
+            , ("[10,20]", All ["5"])
+            , ("[10,20,30]", All ["10"])
+            , ("[2,2,2,2]", All ["2"])
+            , ("[4,10,6,8,2,40]", All ["9"])
+            ]
     describe "q238607: Converge to a number" $ do
         specEval
             "¢DsCr↔~c¢b-"
@@ -310,6 +324,12 @@ testEval = describe "Evaluation" $ do
             [ ("[[5]]", All ["[[5]]"])
             , ("[[0],[1,69],[13]]", All ["[[1,0],[13,69]]"])
             , ("[[25],[0,1],[6,23,10],[420,9],[67]]", All ["[[6,0,25],[420,23,1],[67,9,10]]"])
+            ]
+        specEval
+            "Øc;$ᶻ,ŤxᶻŘ"
+            [ ("[[5]]", All ["[[5]]"])
+            , ("[[0],[1,69],[13]]", All ["[[1,13],[0,69]]"])
+            , ("[[25],[0,1],[6,23,10],[420,9],[67]]", All ["[[6,420,67],[9,0,23],[1,10,25]]"])
             ]
     describe "q252927: Make a Court Transcriber" $ do
         specEval
@@ -510,4 +530,17 @@ testEval = describe "Evaluation" $ do
             , ("5 3", Count 240)
             , ("5 4", Count 0)
             , ("5 5", Count 120)
+            ]
+    describe "q259633: Make a Custom Bayer Matrix" $ do
+        specEval
+            "r2B:ᵒ{ᵈ:-A2*+ç4£Ed"
+            [ ("1", All ["[[0]]"])
+            , ("2", All ["[[0,1/2],[3/4,1/4]]"])
+            , ("4", All ["[[0,1/2,1/8,5/8],[3/4,1/4,7/8,3/8],[3/16,11/16,1/16,9/16],[15/16,7/16,13/16,5/16]]"])
+            ]
+        specEval
+            "0UU$ᵑ{4*::3+,$→:→$,ᶻ,"
+            [ ("0", All ["[[0]]"])
+            , ("1", All ["[[0,2],[3,1]]"])
+            , ("2", All ["[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]]"])
             ]

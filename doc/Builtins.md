@@ -528,6 +528,18 @@ If it is, push the list itself, otherwise fail.
 
 Push a list of integers from 0 to the length of the argument minus 1 without popping the argument.
 
+### `rotate` (`Ř`, `2 -> 1`)
+
+Rotate a list or a string by a given number of positions.
+
+This function is automatically vectorized on the second argument.
+
+### `transpose` (`Ť`, `1 -> 1`)
+
+Transpose a list of lists.
+
+Fail if the sublists are not all of the same length.
+
 ## Particles
 
 ### `apply2` (`ᵃ`, `(0 -> n) -> (0 -> 2 * n) or (m -> n) -> (m + 1 -> 2 * n) where m > 0`)
@@ -548,13 +560,21 @@ Pop the top value of the stack, apply a function to the rest, and push the poppe
 
 Duplicate the top value of the stack, pop the top value, apply a function to the rest, and push the popped value back.
 
-### `map` (`ᵐ`, `(m -> 1) -> (m -> 1) where m > 0`)
+### `map` (`ᵐ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
 
 Apply a function to each value in a list.
 
 If the input is a string, apply the function to each character.
 
 If the input is an number, apply the function to each integer from 0 to the input minus 1.
+
+If the function takes no argument, return a list of n copies of the result of the function, where n is the length of the input.
+
+### `mapFirst` (`ᵚ`, `(1 -> 1) -> (2 -> 1) or (m -> 1) -> (m -> 1) where m > 1`)
+
+Map a binary function over its first argument.
+
+If the function is unary, return a list of n copies of the result of applying the function to the second argument, where n is the length of the first argument.
 
 ### `zipWith` (`ᶻ`, `(m -> 1) -> (m -> 1) where m > 1`)
 

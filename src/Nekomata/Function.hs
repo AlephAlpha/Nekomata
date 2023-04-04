@@ -120,7 +120,7 @@ predicate2 :: (Id -> DataTry -> DataTry -> Try Bool) -> Function
 predicate2 f = binary $ \i x y -> f i x y >>= \b -> if b then Val x else Fail
 
 -- | Convert a constant to a Nekomata function
-constant :: ToTryData a => a -> Function
+constant :: (ToTryData a) => a -> Function
 constant = nullary . const . toTryData
 
 -- | Convert and vectorize a unary function

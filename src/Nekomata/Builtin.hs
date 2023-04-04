@@ -613,6 +613,18 @@ builtins =
         enumerate
         "Push a list of integers from 0 to the length of the argument minus 1 \
         \without popping the argument."
+    , Builtin
+        "rotate"
+        'Ř'
+        rotate
+        "Rotate a list or a string by a given number of positions.\n\
+        \This function is automatically vectorized on the second argument."
+    , Builtin
+        "transpose"
+        'Ť'
+        transpose
+        "Transpose a list of lists.\n\
+        \Fail if the sublists are not all of the same length."
     ]
 
 -- | The map from names to builtin functions
