@@ -2,10 +2,17 @@
 
 ## 0.3.0.0 -- Unreleased
 
-* The code page is updated. New characters are added, and the values of some characters are changed.
-* New built-in functions: `\rotate`, `\transpose`.
+* The language is still incomplete. Everything, especially the code page, is subject to change.
+* New built-in functions: `\primePi`, `\rotate`, `\setPartition`, `\transpose`, `\unpair`, `\unsingleton`.
 * New built-in particle: `\mapFirst`.
 * `\map` now supports functions with no argument.
+
+### Breaking changes
+
+* The code page is updated. New characters are added, and the values of some characters are changed.
+* The argument order of `\pow` is reversed. Now the exponent is the first argument, and the base is the second.
+* `\length` and `\enumerate` now fail if the argument is not a list or a string.
+* The arity of `\noPop` is changed to `(m -> n) -> (m -> m + n)`.
 
 ## 0.2.1.0 -- 2023-03-26
 

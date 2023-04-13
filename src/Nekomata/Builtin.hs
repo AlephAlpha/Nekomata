@@ -269,7 +269,7 @@ builtins =
         "pow"
         'E'
         pow
-        "Raise a number to a an power.\n\
+        "Raise a number to a power.\n\
         \Fails when the exponent is not an integer.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
@@ -404,6 +404,12 @@ builtins =
         "Non-deterministically choose a prime number.\n\
         \This function is non-deterministic."
     , Builtin
+        "primePi"
+        'ƥ'
+        primePi
+        "Compute the number of primes less than or equal to an integer.\n\
+        \This function is automatically vectorized."
+    , Builtin
         "bytes"
         'e'
         bytes
@@ -427,10 +433,22 @@ builtins =
         singleton'
         "Create a list with a single element."
     , Builtin
+        "unsingleton"
+        'z'
+        unsingleton
+        "Get the only element of a list with a single element.\n\
+        \Fails when the list is empty or has more than one element."
+    , Builtin
         "pair"
         'Ð'
         pair
         "Create a list with two elements."
+    , Builtin
+        "unpair"
+        'đ'
+        unpair
+        "Get the two elements of a list with two elements.\n\
+        \Fails when the length of the list is not 2."
     , Builtin
         "removeFail"
         '‼'
@@ -625,6 +643,13 @@ builtins =
         transpose
         "Transpose a list of lists.\n\
         \Fail if the sublists are not all of the same length."
+    , Builtin
+        "setPartition"
+        'O'
+        setPartition
+        "Partition a list into a list of lists such that their concatenation \
+        \is a permutation of the original list.\n\
+        \This function is non-deterministic."
     ]
 
 -- | The map from names to builtin functions

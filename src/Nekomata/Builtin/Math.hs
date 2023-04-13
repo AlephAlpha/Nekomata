@@ -3,6 +3,7 @@ module Nekomata.Builtin.Math where
 import Data.Functor ((<&>))
 import Data.Ratio (denominator, numerator)
 import Math.NumberTheory.Primes
+import Math.NumberTheory.Primes.Counting
 import Math.NumberTheory.Primes.Testing (isCertifiedPrime)
 import Nekomata.Builtin.List (reverse'')
 import Nekomata.Data
@@ -159,7 +160,7 @@ divExact = binaryVecFail divExact'
 pow :: Function
 pow = binaryVecFail pow'
   where
-    pow' _ (DNumT x) (DNumT y) = liftNum2 pow'' x y
+    pow' _ (DNumT x) (DNumT y) = liftNum2 pow'' y x
     pow' _ _ _ = Fail
     pow'' x y = toTryInt y <&> pow_ x
     pow_ x y = if y >= 0 then x ^ y else 1 / (x ^ negate y)
@@ -283,3 +284,10 @@ prime = nullary $
         toTryData
             <$> anyOf i . fromList
             $ map unPrime [nextPrime (1 :: Integer) ..]
+
+primePi :: Function
+primePi = unaryVec primePi'
+  where
+    primePi' _ (DNumT x) = liftInt primePi_ x
+    primePi' _ _ = Fail
+    primePi_ x = Val $ primeCount x

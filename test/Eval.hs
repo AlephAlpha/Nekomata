@@ -66,7 +66,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q66127: Catalan Numbers" $ do
         specEval
-            "2*$Ç$→/"
+            "+$Ç$→/"
             [ ("0", All ["1"])
             , ("1", All ["1"])
             , ("2", All ["2"])
@@ -103,6 +103,13 @@ testEval = describe "Evaluation" $ do
             , ("5234095123508321", Check False)
             , ("6240911314399072459493765661191058613491863144152352262897351988250431140546660035648795316740212454", Check False)
             ]
+    describe "q105861: Can this number be written in (3^x) - 1 format?" $ do
+        specEval
+            "3D←P∑"
+            [ ("2", All ["1"])
+            , ("26", All ["3"])
+            , ("1024", All [])
+            ]
     describe "q120350: Determine if an Array contains something other than 2" $ do
         specEval
             "2-¬/"
@@ -123,6 +130,21 @@ testEval = describe "Evaluation" $ do
             , ("2", All ["[[1,0],[0,1]]"])
             , ("3", All ["[[1,0,1],[0,1,0],[1,0,1]]"])
             , ("4", All ["[[1,0,1,0],[0,1,0,1],[1,0,1,0],[0,1,0,1]]"])
+            ]
+    describe "q130390: Is it a super-prime?" $ do
+        specEval
+            "QƥQ"
+            [ ("2", Check False)
+            , ("3", Check True)
+            , ("4", Check False)
+            , ("5", Check True)
+            , ("7", Check False)
+            , ("11", Check True)
+            , ("13", Check False)
+            , ("17", Check True)
+            , ("709", Check True)
+            , ("851", Check False)
+            , ("991", Check True)
             ]
     describe "q136887: Fold a List in Half" $ do
         specEval
@@ -278,6 +300,33 @@ testEval = describe "Evaluation" $ do
             , ("[14,6,12,4,10,8,16,2]", Check False)
             , ("[33,32,37,16,34,10,35,30,27,13,5,14,17,1,18,39,28,40,8,0,26,22,19,31,25,24,36,7,12,29,38,6,4,2,20,3,10,15,9,21,11,23]", Check False)
             ]
+    describe "q231654: Third Stirling numbers of the second kind" $ do
+        specEval
+            "→4ᵒE∑∆l"
+            [ ("1", All ["1"])
+            , ("2", All ["6"])
+            , ("3", All ["25"])
+            , ("4", All ["90"])
+            , ("5", All ["301"])
+            , ("6", All ["966"])
+            , ("7", All ["3025"])
+            , ("8", All ["9330"])
+            , ("9", All ["28501"])
+            , ("10", All ["86526"])
+            ]
+        specEval
+            "RO3L"
+            [ ("1", Count 0)
+            , ("2", Count 0)
+            , ("3", Count 1)
+            , ("4", Count 6)
+            , ("5", Count 25)
+            , ("6", Count 90)
+            , ("7", Count 301)
+            , ("8", Count 966)
+            , ("9", Count 3025)
+            , ("10", Count 9330)
+            ]
     describe "q233641: Hunt for discount" $ do
         specEval
             "o↔x2%∙2/"
@@ -299,6 +348,17 @@ testEval = describe "Evaluation" $ do
             , ("1000", All ["1000"])
             , ("1001", All ["1000", "1001"])
             , ("4037 ", All ["1000", "2000", "3000", "4000", "4010", "4020", "4030", "4031", "4032", "4033", "4034", "4035", "4036", "4037"])
+            ]
+    describe "q245804: Damerau-Damerau distance" $ do
+        specEval
+            "Sđ>"
+            [ ("[3,2,1]", Count 3)
+            , ("[1,2,3,4]", Count 0)
+            , ("[2,1,3,4]", Count 1)
+            , ("[2,1,4,3]", Count 2)
+            , ("[2,4,1,3]", Count 3)
+            , ("[4,2,3,1]", Count 5)
+            , ("[4,3,2,1]", Count 6)
             ]
     describe "q247398: Alternating sums of multidimensional arrays" $ do
         specEval
@@ -347,7 +407,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q257631: Time to shortest permutation" $ do
         specEval
-            "↕ᵃ{¢b100B\"<∩\"e<60d}-_Paṁ"
+            "↕ᵃ{J¢ᵚb\"∩<\"e<60b}-_Paṁ"
             [ ("[1,1,4,3]", All ["91"])
             , ("[0,1,0,1]", All ["9"])
             , ("[1,7,3,8]", All ["59"])
@@ -429,8 +489,8 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q258432: Shortest code to generate all Pythagorean triples up to a given limit" $ do
         specEval
-            "RS3Lᵖ{:*Ɔ$∑="
-            [ ("20", All ["[3,4,5]", "[6,8,10]", "[5,12,13]", "[9,12,15]", "[8,15,17]", "[12,16,20]"])
+            "RSᵖ{:*Ɔ$đ+="
+            [ ("15", All ["[3,4,5]", "[6,8,10]", "[5,12,13]", "[9,12,15]"])
             , ("5", All ["[3,4,5]"])
             ]
     describe "q258511: Longest Valid Parentheses" $ do
@@ -508,7 +568,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259233: We're gonna need a bigger podium!" $ do
         specEval
-            "R↕J:ᵐo=ᵐ≡‼$L"
+            "R↕J:ᵐo=ᵐz‼$L"
             [ ("0 0", Count 1)
             , ("1 0", Count 0)
             , ("1 1", Count 1)
@@ -533,7 +593,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259633: Make a Custom Bayer Matrix" $ do
         specEval
-            "r2B:ᵒ{ᵈ:-A2*+ç4£Ed"
+            "r2B:ᵒ{ᵈ:-A2*+ç£4Ed"
             [ ("1", All ["[[0]]"])
             , ("2", All ["[[0,1/2],[3/4,1/4]]"])
             , ("4", All ["[[0,1/2,1/8,5/8],[3/4,1/4,7/8,3/8],[3/16,11/16,1/16,9/16],[15/16,7/16,13/16,5/16]]"])
@@ -543,4 +603,14 @@ testEval = describe "Evaluation" $ do
             [ ("0", All ["[[0]]"])
             , ("1", All ["[[0,2],[3,1]]"])
             , ("2", All ["[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]]"])
+            ]
+    describe "q259987: String Comparison" $ do
+        specEval
+            "$,ᵈ,>"
+            [ ("\"a\" \"b\"", Check True)
+            , ("\"ac\" \"a\"", Check False)
+            , ("\"bekcka\" \"kwnfoe\"", Check True)
+            , ("\"beztbest\" \"bestbe\"", Check False)
+            , ("\"mcjaf\" \"mc\"", Check True)
+            , ("\"akboe\" \"uenvi\"", Check True)
             ]

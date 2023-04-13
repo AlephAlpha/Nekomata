@@ -1,3 +1,5 @@
+{-# LANGUAGE LambdaCase #-}
+
 module Nekomata.Builtin.List where
 
 import Control.Arrow (first, second)
@@ -32,10 +34,39 @@ emptyList = constant . Val . DListT $ Val Nil
 singleton' :: Function
 singleton' = unary . const $ toTryData . singleton
 
+unsingleton :: Function
+unsingleton = unary unsingleton'
+  where
+    unsingleton' _ (DStringT xs) = liftString unsingleton_ xs
+    unsingleton' _ (DListT xs) = liftList unsingleton_ xs
+    unsingleton' _ _ = Fail
+    unsingleton_ :: ListTry a -> Try a
+    unsingleton_ (Cons x xs) =
+        xs >>= \case
+            Nil -> Val x
+            _ -> Fail
+    unsingleton_ _ = Fail
+
 pair :: Function
 pair = binary pair'
   where
     pair' _ x y = toTryData [x, y]
+
+unpair :: Function
+unpair = unary2 unpair'
+  where
+    unpair' _ (DStringT xs) = liftString12 unpair_ xs
+    unpair' _ (DListT xs) = liftList12 unpair_ xs
+    unpair' _ _ = (Fail, Fail)
+    unpair_ :: ListTry a -> Try (a, a)
+    unpair_ (Cons x xs) =
+        xs >>= \case
+            Nil -> Fail
+            Cons y ys ->
+                ys >>= \case
+                    Nil -> Val (x, y)
+                    _ -> Fail
+    unpair_ _ = Fail
 
 removeFail :: Function
 removeFail = unary removeFail'
@@ -48,7 +79,7 @@ length' = unary length''
   where
     length'' _ (DStringT xs) = liftString length_ xs
     length'' _ (DListT xs) = liftList length_ xs
-    length'' _ _ = toTryData (1 :: Integer)
+    length'' _ _ = Fail
     length_ :: ListTry a -> Try Integer
     length_ Nil = Val 0
     length_ (Cons _ xs) = xs >>= length_ <&> (+ 1)
@@ -324,12 +355,14 @@ unconcat = unary unconcat'
     unconcat_ :: Id -> ListTry a -> TryList (TryList a)
     unconcat_ _ Nil = Val Nil
     unconcat_ i (Cons x xs) =
-        Choice
-            (leftId i)
-            (Val $ Cons (Val $ singleton x) (xs >>= unconcat_ (rightId i)))
-            (xs >>= unconcat_ (rightId i) >>= prependToFirst x)
-    prependToFirst _ Nil = Fail
-    prependToFirst x (Cons y ys) = Val $ Cons (Val $ Cons x y) ys
+        let xs' = xs >>= unconcat_ (rightId i)
+         in Choice
+                (leftId i)
+                (Val $ Cons (Val $ singleton x) xs')
+                ( xs' >>= \case
+                    Nil -> Fail
+                    Cons y ys -> Val $ Cons (Val $ Cons x y) ys
+                )
 
 nub :: Function
 nub = unary nub'
@@ -450,3 +483,22 @@ transpose = unary transpose'
     zipWithCons (Cons x xs) (Cons y ys) =
         Val $ Cons (Val $ Cons x y) (liftJoinM2 zipWithCons xs ys)
     zipWithCons _ _ = Fail
+
+setPartition :: Function
+setPartition = unary setPartition'
+  where
+    setPartition' i (DStringT xs) =
+        liftString (fmap (fmap AsString) . setPartition_ i) xs
+    setPartition' i (DListT xs) = liftList (setPartition_ i) xs
+    setPartition' _ _ = Fail
+    setPartition_ :: Id -> ListTry a -> TryList (TryList a)
+    setPartition_ _ Nil = Val Nil
+    setPartition_ i (Cons x xs) =
+        xs >>= setPartition_ (leftId i) >>= insert (rightId i) x
+    insert :: Id -> a -> ListTry (TryList a) -> TryList (TryList a)
+    insert _ x Nil = Val . singleton . Val $ singleton x
+    insert i x (Cons y ys) =
+        Choice
+            (leftId i)
+            (Val $ Cons (Val $ Cons x y) ys)
+            (Val . Cons y $ ys >>= insert (rightId i) x)

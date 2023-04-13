@@ -85,7 +85,7 @@ builtinParticles =
         "noPop"
         'ˣ'
         noPop
-        "(m -> n) -> (0 -> n)"
+        "(m -> n) -> (m -> m + n)"
         "Apply a function without popping the stack."
     , BuiltinParticle
         "dip"
@@ -269,8 +269,8 @@ apply2 = Particle apply2'
 noPop :: Particle
 noPop = Particle noPop'
   where
-    noPop' (Function (Arity _ n) f) =
-        Just . Function (Arity 0 n) $
+    noPop' (Function (Arity m n) f) =
+        Just . Function (Arity m (m + n)) $
             \i s -> prepend (takeStack n $ f i s) s
 
 dip :: Particle

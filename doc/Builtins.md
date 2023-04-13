@@ -212,7 +212,7 @@ This function is automatically vectorized and fails when the two lists are of di
 
 ### `pow` (`E`, `2 -> 1`)
 
-Raise a number to a an power.
+Raise a number to a power.
 
 Fails when the exponent is not an integer.
 
@@ -344,6 +344,12 @@ Non-deterministically choose a prime number.
 
 This function is non-deterministic.
 
+### `primePi` (`ƥ`, `1 -> 1`)
+
+Compute the number of primes less than or equal to an integer.
+
+This function is automatically vectorized.
+
 ### `bytes` (`e`, `1 -> 1`)
 
 Convert a string to a list of integers according to Nekomata's custom encoding.
@@ -364,9 +370,21 @@ Push an empty list.
 
 Create a list with a single element.
 
+### `unsingleton` (`z`, `1 -> 1`)
+
+Get the only element of a list with a single element.
+
+Fails when the list is empty or has more than one element.
+
 ### `pair` (`Ð`, `2 -> 1`)
 
 Create a list with two elements.
+
+### `unpair` (`đ`, `1 -> 2`)
+
+Get the two elements of a list with two elements.
+
+Fails when the length of the list is not 2.
 
 ### `removeFail` (`‼`, `1 -> 1`)
 
@@ -540,6 +558,12 @@ Transpose a list of lists.
 
 Fail if the sublists are not all of the same length.
 
+### `setPartition` (`O`, `1 -> 1`)
+
+Partition a list into a list of lists such that their concatenation is a permutation of the original list.
+
+This function is non-deterministic.
+
 ## Particles
 
 ### `apply2` (`ᵃ`, `(0 -> n) -> (0 -> 2 * n) or (m -> n) -> (m + 1 -> 2 * n) where m > 0`)
@@ -548,7 +572,7 @@ Apply a function to the top two values of the stack.
 
 If the function takes no argument, simply apply it twice.
 
-### `noPop` (`ˣ`, `(m -> n) -> (0 -> n)`)
+### `noPop` (`ˣ`, `(m -> n) -> (m -> m + n)`)
 
 Apply a function without popping the stack.
 
