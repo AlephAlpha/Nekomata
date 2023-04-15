@@ -410,6 +410,20 @@ builtins =
         "Compute the number of primes less than or equal to an integer.\n\
         \This function is automatically vectorized."
     , Builtin
+        "gcd"
+        'G'
+        gcd'
+        "Compute the greatest common divisor of two numbers.\n\
+        \This function is automatically vectorized \
+        \and fails when the two lists are of different lengths."
+    , Builtin
+        "lcm"
+        'g'
+        lcm'
+        "Compute the least common multiple of two numbers.\n\
+        \This function is automatically vectorized \
+        \and fails when the two lists are of different lengths."
+    , Builtin
         "bytes"
         'e'
         bytes

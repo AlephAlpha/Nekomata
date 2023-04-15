@@ -86,6 +86,18 @@ testEval = describe "Evaluation" $ do
             , ("3", All ["[[1,0,0],[0,1,0],[0,0,1]]"])
             , ("4", All ["[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]"])
             ]
+    describe "q83533: Calculate Euler's totient function" $ do
+        specEval
+            "RG←¬∑"
+            [ ("1", All ["1"])
+            , ("2", All ["1"])
+            , ("3", All ["2"])
+            , ("8", All ["4"])
+            , ("9", All ["6"])
+            , ("26", All ["12"])
+            , ("44", All ["20"])
+            , ("105", All ["48"])
+            ]
     describe "q94291: Is it a balanced number?" $ do
         specEval
             "¢D;ᶜtᶻ-∑0="

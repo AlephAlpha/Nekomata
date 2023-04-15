@@ -4,9 +4,11 @@ import Control.Applicative ((<|>))
 import Data.List (isPrefixOf)
 import Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
+import Data.Version (showVersion)
 import Nekomata.Builtin (Builtin (short), builtinMap, infoByName)
 import Nekomata.Eval
 import qualified Nekomata.Particle as Particle
+import Paths_Nekomata (version)
 import System.Console.Haskeline
 import Text.Read (readMaybe)
 
@@ -170,7 +172,7 @@ builtinCompletion prefix =
     completionFromMap builtinMap short prefix
         ++ completionFromMap Particle.builtinParticleMap Particle.short prefix
 
-replCompletion :: Monad m => CompletionFunc m
+replCompletion :: (Monad m) => CompletionFunc m
 replCompletion (s, _) = do
     let (word, rest) = break (== '\\') s
     case rest of
@@ -184,11 +186,11 @@ replCompletion (s, _) = do
                         else []
             return (rest', builtin ++ replCommand)
 
-replSettings :: Monad m => Settings m
+replSettings :: (Monad m) => Settings m
 replSettings = Settings replCompletion Nothing True
 
 runRepl :: IO ()
 runRepl = do
-    putStrLn "Nekomata REPL - type \\H for help"
+    putStrLn $ "Nekomata " ++ showVersion version ++ "REPL - type \\H for help"
     _ <- runInputT replSettings . withInterrupt $ repl initReplState
     return ()

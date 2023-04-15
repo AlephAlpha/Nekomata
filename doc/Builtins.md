@@ -350,6 +350,18 @@ Compute the number of primes less than or equal to an integer.
 
 This function is automatically vectorized.
 
+### `gcd` (`G`, `2 -> 1`)
+
+Compute the greatest common divisor of two numbers.
+
+This function is automatically vectorized and fails when the two lists are of different lengths.
+
+### `lcm` (`g`, `2 -> 1`)
+
+Compute the least common multiple of two numbers.
+
+This function is automatically vectorized and fails when the two lists are of different lengths.
+
 ### `bytes` (`e`, `1 -> 1`)
 
 Convert a string to a list of integers according to Nekomata's custom encoding.

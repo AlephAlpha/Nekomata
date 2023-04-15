@@ -3,9 +3,10 @@
 ## 0.3.0.0 -- Unreleased
 
 * The language is still incomplete. Everything, especially the code page, is subject to change.
-* New built-in functions: `\primePi`, `\rotate`, `\setPartition`, `\transpose`, `\unpair`, `\unsingleton`.
+* New built-in functions: `\gcd`, `\lcm`, `\primePi`, `\rotate`, `\setPartition`, `\transpose`, `\unpair`, `\unsingleton`.
 * New built-in particle: `\mapFirst`.
 * `\map` now supports functions with no argument.
+* The interpreter can now print the version number using the `-v` flag.
 
 ### Breaking changes
 

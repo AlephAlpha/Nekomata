@@ -1,7 +1,7 @@
 module Nekomata.Builtin.Math where
 
 import Data.Functor ((<&>))
-import Data.Ratio (denominator, numerator)
+import Data.Ratio (denominator, numerator, (%))
 import Math.NumberTheory.Primes
 import Math.NumberTheory.Primes.Counting
 import Math.NumberTheory.Primes.Testing (isCertifiedPrime)
@@ -291,3 +291,23 @@ primePi = unaryVec primePi'
     primePi' _ (DNumT x) = liftInt primePi_ x
     primePi' _ _ = Fail
     primePi_ x = Val $ primeCount x
+
+gcd' :: Function
+gcd' = binaryVecFail gcd''
+  where
+    gcd'' _ (DNumT x) (DNumT y) = liftNum2 gcd_ x y
+    gcd'' _ _ _ = Fail
+    gcd_ x y =
+        Val $
+            gcd (numerator x) (numerator y)
+                % lcm (denominator x) (denominator y)
+
+lcm' :: Function
+lcm' = binaryVecFail lcm''
+  where
+    lcm'' _ (DNumT x) (DNumT y) = liftNum2 lcm_ x y
+    lcm'' _ _ _ = Fail
+    lcm_ x y =
+        Val $
+            lcm (numerator x) (numerator y)
+                % gcd (denominator x) (denominator y)

@@ -442,8 +442,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 \range1 \foldl1 \lcm
 ```
 
-- [ ] `\lcm`：求两个数的最小公倍数。
-
 ## [String Comparison](https://codegolf.stackexchange.com/q/259987/9288)
 
 ```
@@ -451,4 +449,10 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 ```
 
 - [ ] `\apply2Pair`：助词。输入四个参数，将一个二元函数分别应用于前两个参数和后两个参数。
+
+## [Coprimes up to N](https://codegolf.stackexchange.com/q/104665/9288)
+
+```
+\range0 \gcd 1 \index
+```
 
