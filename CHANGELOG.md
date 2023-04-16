@@ -1,6 +1,6 @@
 # Revision history for Nekomata
 
-## 0.3.0.0 -- Unreleased
+## 0.3.0.0 -- 2023-04-16
 
 * The language is still incomplete. Everything, especially the code page, is subject to change.
 * New built-in functions: `\factorial`, `\gcd`, `\inToChar`, `\lcm`, `\mean`, `\primePi`, `\rotate`, `\setPart`, `\transpose`, `\unpair`, `\unsingleton`.
