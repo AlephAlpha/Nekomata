@@ -272,6 +272,10 @@ Take the dot product of two lists of numbers.
 
 The current implementation is simply a composition of mul and sum.
 
+### `mean` (`µ`, `1 -> 1`)
+
+Take the mean of a list of numbers.
+
 ### `fromBase` (`b`, `2 -> 1`)
 
 Convert a list of digits to a number.
@@ -332,6 +336,12 @@ The second argument must be an integer.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+### `factorial` (`F`, `1 -> 1`)
+
+Compute the factorial of an integer.
+
+This function is automatically vectorized.
+
 ### `isPrime` (`Q`, `1 -> 1`)
 
 Check if an integer is prime.
@@ -362,11 +372,17 @@ Compute the least common multiple of two numbers.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
-### `bytes` (`e`, `1 -> 1`)
+### `charToInt` (`e`, `1 -> 1`)
 
 Convert a string to a list of integers according to Nekomata's custom encoding.
 
 This function is automatically vectorized.
+
+### `intToChar` (`H`, `1 -> 1`)
+
+Convert an integer or a list of integers to a string according to Nekomata's custom encoding.
+
+Fail when the integer is not in the range 0 to 255.
 
 ### `anyOf` (`~`, `1 -> 1`)
 
@@ -570,7 +586,7 @@ Transpose a list of lists.
 
 Fail if the sublists are not all of the same length.
 
-### `setPartition` (`O`, `1 -> 1`)
+### `setPart` (`O`, `1 -> 1`)
 
 Partition a list into a list of lists such that their concatenation is a permutation of the original list.
 

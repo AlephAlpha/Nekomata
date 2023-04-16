@@ -3,7 +3,7 @@
 ## 0.3.0.0 -- Unreleased
 
 * The language is still incomplete. Everything, especially the code page, is subject to change.
-* New built-in functions: `\gcd`, `\lcm`, `\primePi`, `\rotate`, `\setPartition`, `\transpose`, `\unpair`, `\unsingleton`.
+* New built-in functions: `\factorial`, `\gcd`, `\inToChar`, `\lcm`, `\mean`, `\primePi`, `\rotate`, `\setPart`, `\transpose`, `\unpair`, `\unsingleton`.
 * New built-in particle: `\mapFirst`.
 * `\map` now supports functions with no argument.
 * The interpreter can now print the version number using the `-v` flag.
@@ -12,6 +12,7 @@
 
 * The code page is updated. New characters are added, and the values of some characters are changed.
 * The argument order of `\pow` is reversed. Now the exponent is the first argument, and the base is the second.
+* `\bytes` is renamed to `\charToInt`.
 * `\length` and `\enumerate` now fail if the argument is not a list or a string.
 * The arity of `\noPop` is changed to `(m -> n) -> (m -> m + n)`.
 

@@ -11,7 +11,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 此处总结一下 Code Page 中已有但还没有用上的字符：
 
 ```
-¥§×∂∕√∞∩≈≢&'.FGHKOVWXY`gkvwy|
+¥§×∂∕√∞∩≈≢&'.KOVWXY`kvwy|
 ```
 
 有些是已经确定分配给什么函数的，比如说 `×` 给 `\convolve`，`∕` 给 `\setMinus`，`∩` 给 `\intersection`，`√` 给 `\sqrt`。别的都还没想好。
@@ -195,16 +195,6 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 - [ ] `\toBase2`：将一个整数转换成二进制表示的列表。
 - [ ] `\fromBase2`：将一个二进制表示的列表转换成整数。
 
-## [A Fine sequence with fine interpretations](https://codegolf.stackexchange.com/q/258110/9288)
-
-如果学 Vyxal 加上 `\mean` 和 `\cumsum` 函数，可以缩减到 8 个字节：
-
-```
-\increment \dupDip \neg \range0 \binomial \cumsum \abs \mean
-```
-
-- [ ] `\mean`：求一个列表的平均值。不清楚它用得多不多。可能要在 Nekomata 支持有理数之后再加上。
-
 ## [Painting with Line Filler](https://codegolf.stackexchange.com/q/256978/9288)
 
 ```
@@ -229,12 +219,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 
 `\factor` 的实现可以用 arithmoi 包的 `factorise` 函数。不过还不知道该怎样向量化。等遇到更多涉及到质因数分解的题目再说。
 
----
-
-目前已发布 0.1.0.0 版。还有很多常用的 built-in 没有实现。另外，由于 code page 中字符的选取过于随意，在常见的字体中甚至做不到等宽；可能需要重新设计一下 code page。
-
-不想让这篇文档太长，前面已实现的部分就删去了。
-
 ## [Shortest Valid Parentheses](https://codegolf.stackexchange.com/questions/258511/shortest-valid-parentheses/258549#258549)
 
 目前的解法有 17 个字节，输得比较惨。主要问题是缺乏字符串操作。比如说，如果有一个字符串替换的 built-in 的话，可以：
@@ -255,12 +239,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 - [ ] `\square`：求一个数的平方。
 - [ ] `\foldl1`：助词。就是 Haskell 里的 `foldl1`。
 - [ ] `\isZero`：检查一个数是否为 0。
-
-```
-\range1 \subset 3 \lengthIs \predicate { \square \unsnoc \swap \sum \equal }
-```
-
-- [x] `\unsnoc`：把一个列表拆成最后一个元素，和剩下的元素。比如说 `[1, 2, 3]` 拆成 `3` 和 `[1, 2]`。
 
 ```
 \range1 \subset 2 \lengthIs \dup \squareNorm \sqrt \snoc \swap \lessEq
@@ -292,26 +270,12 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 参考 05AB1E 的解答：
 
 ```
-\subset \concat \tally 2 \divExact \countValues 2 \equal
+\subset \concat \tally 2 \divExact \allValues \unpair
 ```
 
 - [ ] `\tally`：统计一个列表中每个元素出现的次数。比如说 `[2, 2, 3]` 统计成 `[2, 3] [2, 1]`。
 
 只差 `\tally` 还没有实现。
-
-或者：
-
-```
-\subset \concat \setPartition 2 \lengthIs \allEqual \countValues 2 \equal
-```
-
-- [ ] `\setPartition`：将一个列表拆成若干个子列表，使得每个子列表的元素互不相同。比如说 `[1, 2, 3, 4]` 拆成 `[[1, 2], [3, 4]]` 和 `[[1, 3], [2, 4]]`。
-
-只用现有的函数则需要 13 个字节：
-
-```
-\subset \concat \sort \unconcat \map { 2 \lengthIs \allEqual } \countValues 2 \equal
-```
 
 ## [How long to carry sort?](https://codegolf.stackexchange.com/q/259167/9288)
 
@@ -368,14 +332,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 
 刚说完 `\deinterleave`，这里又用到了。
 
-## [Big numbers: Ultrafactorials](https://codegolf.stackexchange.com/q/103756/9288)
-
-```
-\increment \range0 \factorial \dup \pow \sum
-```
-
-- [ ] `\factorial`：求一个数的阶乘。
-
 ## [The Jaccard Index](https://codegolf.stackexchange.com/q/259881/9288)
 
 ```
@@ -414,7 +370,7 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 ## [Is it a completely even number?](https://codegolf.stackexchange.com/q/142534/9288)
 
 ```
-\decrement 2 \toBase \div
+\decrement 2 \toBase \allEqual
 ```
 
 ```

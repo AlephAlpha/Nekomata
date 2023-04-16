@@ -78,6 +78,19 @@ testEval = describe "Evaluation" $ do
             , ("8", All ["1430"])
             , ("9", All ["4862"])
             ]
+        specEval
+            "+Ø$ᵑ{ᵉçt?}Ø="
+            [ ("0", Count 1)
+            , ("1", Count 1)
+            , ("2", Count 2)
+            , ("3", Count 5)
+            , ("4", Count 14)
+            , ("5", Count 42)
+            , ("6", Count 132)
+            , ("7", Count 429)
+            , ("8", Count 1430)
+            , ("9", Count 4862)
+            ]
     describe "q70365: Construct the Identity Matrix" $ do
         specEval
             "ᵒ-¬"
@@ -114,6 +127,14 @@ testEval = describe "Evaluation" $ do
             , ("15421", Check False)
             , ("5234095123508321", Check False)
             , ("6240911314399072459493765661191058613491863144152352262897351988250431140546660035648795316740212454", Check False)
+            ]
+    describe "q103756: Big numbers: Ultrafactorials" $ do
+        specEval
+            "→rF:E∑"
+            [ ("0", All ["1"])
+            , ("1", All ["2"])
+            , ("2", All ["6"])
+            , ("3", All ["46662"])
             ]
     describe "q105861: Can this number be written in (3^x) - 1 format?" $ do
         specEval
@@ -184,6 +205,19 @@ testEval = describe "Evaluation" $ do
             , ("[0,5,10,15,20]", Count 5)
             , ("[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]", Count 5)
             , ("[0,1,4,5,9,11,12,14,16,18,23,24,26,28,29,30]", Count 6)
+            ]
+    describe "q142534: Is it a completely even number?" $ do
+        specEval
+            "←2D≡"
+            [ ("2", Check True)
+            , ("4", Check True)
+            , ("16", Check True)
+            , ("128", Check True)
+            , ("10", Check False)
+            , ("12", Check False)
+            , ("14", Check False)
+            , ("18", Check False)
+            , ("1", Check False)
             ]
     describe "q149890: Visible Dice Faces" $ do
         specEval
@@ -409,6 +443,13 @@ testEval = describe "Evaluation" $ do
             [ ("[\"dictionary\",\"transcriber\"] [\"dic\",\"ion\",\"ary\"]", First $ Just "dictionary")
             , ("[\"dictionary\",\"transcriber\"] [\"tra\",\"scr\",\"ber\"]", First $ Just "transcriber")
             ]
+    describe "q256814: Knight to fork!" $ do
+        specEval
+            "eᵐ{2R↕ᵐᶜ_+}≡H"
+            [ ("[\"d6\",\"f6\",\"g3\"]", All ["e4"])
+            , ("[\"d4\",\"d6\",\"e7\"]", All ["f5"])
+            , ("[\"c3\",\"f2\",\"b2\"]", All ["d1"])
+            ]
     describe "q256920: Simplify a Cycle" $ do
         specEval
             "Cᶦ{ᵈsf¡C"
@@ -431,12 +472,12 @@ testEval = describe "Evaluation" $ do
     describe "q257649: Arbitrary Apple Dilemma" $ do
         specEval
             ":←/∏*"
-            [ ("[3, 4, 6] 10", All ["24"])
+            [ ("[3,4,6] 10", All ["24"])
             , ("[2] 14", All ["28"])
             , ("[6] 30", All ["36"])
-            , ("[4, 3], 20", All ["40"])
-            , ("[5, 8, 7], 9", All ["15"])
-            , ("[2, 9, 4, 8], 7", All ["24"])
+            , ("[4,3], 20", All ["40"])
+            , ("[5,8,7], 9", All ["15"])
+            , ("[2,9,4,8], 7", All ["24"])
             ]
     describe "q257752: Print all pandigital numbers" $ do
         specEval
@@ -487,7 +528,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q258110: A Fine sequence with fine interpretations" $ do
         specEval
-            "ᵃ→ᵉ_rÇ∫∑A$/"
+            "→ᵉ_rÇ∫µA"
             [ ("0", All ["1"])
             , ("1", All ["0"])
             , ("2", All ["1"])
@@ -523,6 +564,14 @@ testEval = describe "Evaluation" $ do
             , ("[3,2,1,0]", All ["0", "1", "2", "3"])
             , ("[1,2,3,1]", All ["1", "1", "2", "3"])
             , ("[101,103,101,105]", All ["101", "101", "101", "105"])
+            ]
+    describe "q258992: Guessing on straws" $ do
+        specEval
+            "SjoJŤđ=az"
+            [ ("[[1,2],[1,2]]", Check True)
+            , ("[[1,3],[1,3],[2,4],[2,4]]", Check False)
+            , ("[[1,3],[2,4],[2,3],[1,4]]", Check True)
+            , ("[[1,5],[1,6],[2,6],[2,7],[3,5],[3,8],[4,8],[4,5]]", Check True)
             ]
     describe "q259083: Is it traversable?" $ do
         specEval
@@ -580,7 +629,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259233: We're gonna need a bigger podium!" $ do
         specEval
-            "R↕J:ᵐo=ᵐz‼$L"
+            "RO↕ᵐz‼$L"
             [ ("0 0", Count 1)
             , ("1 0", Count 0)
             , ("1 1", Count 1)
@@ -603,6 +652,12 @@ testEval = describe "Evaluation" $ do
             , ("5 4", Count 0)
             , ("5 5", Count 120)
             ]
+    describe "q259576: All of the Boards" $ do
+        specEval
+            "2r↕1:ÐÐ3r~ᵑᵐç3r~ᵑçaᵐᶜ{0*}∑2<"
+            [ ("", Count 215)
+            , ("", Truncated ["[[0,1,0,1],[1,1,1,1],[0,1,0,1],[1,1,1,1]]", "[[0,1,0,1],[1,1,1,1],[0,1,1,0],[1,1,1,1]]"])
+            ]
     describe "q259633: Make a Custom Bayer Matrix" $ do
         specEval
             "r2B:ᵒ{ᵈ:-A2*+ç£4Ed"
@@ -616,6 +671,21 @@ testEval = describe "Evaluation" $ do
             , ("1", All ["[[0,2],[3,1]]"])
             , ("2", All ["[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]]"])
             ]
+    describe "q259875: How Super is this Prime?" $ do
+        specEval
+            "ᶦ{ƥQ}n2B#←"
+            [ ("2", All ["0"])
+            , ("3", All ["1"])
+            , ("11", All ["2"])
+            , ("211", All ["1"])
+            , ("277", All ["2"])
+            , ("823", All ["0"])
+            , ("4397", All ["2"])
+            , ("5381", All ["3"])
+            , ("171697", All ["2"])
+            , ("499403", All ["2"])
+            , ("648391", All ["3"])
+            ]
     describe "q259987: String Comparison" $ do
         specEval
             "$,ᵈ,>"
@@ -625,4 +695,18 @@ testEval = describe "Evaluation" $ do
             , ("\"beztbest\" \"bestbe\"", Check False)
             , ("\"mcjaf\" \"mc\"", Check True)
             , ("\"akboe\" \"uenvi\"", Check True)
+            ]
+    describe "q260120: Alternating factorial" $ do
+        specEval
+            "RF£b"
+            [ ("0", All ["0"])
+            , ("1", All ["1"])
+            , ("2", All ["1"])
+            , ("3", All ["5"])
+            , ("4", All ["19"])
+            , ("5", All ["101"])
+            , ("6", All ["619"])
+            , ("7", All ["4421"])
+            , ("8", All ["35899"])
+            , ("9", All ["326981"])
             ]

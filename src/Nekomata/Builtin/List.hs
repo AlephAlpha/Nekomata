@@ -395,9 +395,10 @@ sort = unary sort'
         ys >>= mergePairs >>= mergeLists' (liftJoinM2 merge x y)
     mergePairs :: (TryOrd a) => ListTry (TryList a) -> TryList (TryList a)
     mergePairs Nil = Val Nil
-    mergePairs (Cons x xs) = mergePairs' x <$> xs
-    mergePairs' x Nil = singleton x
-    mergePairs' x (Cons y ys) = Cons (liftJoinM2 merge x y) (ys >>= mergePairs)
+    mergePairs (Cons x xs) =
+        xs <&> \case
+            Nil -> singleton x
+            Cons y ys -> Cons (liftJoinM2 merge x y) (ys >>= mergePairs)
     merge :: (TryOrd a) => ListTry a -> ListTry a -> TryList a
     merge Nil ys = Val ys
     merge xs Nil = Val xs
@@ -484,17 +485,17 @@ transpose = unary transpose'
         Val $ Cons (Val $ Cons x y) (liftJoinM2 zipWithCons xs ys)
     zipWithCons _ _ = Fail
 
-setPartition :: Function
-setPartition = unary setPartition'
+setPart :: Function
+setPart = unary setPart'
   where
-    setPartition' i (DStringT xs) =
-        liftString (fmap (fmap AsString) . setPartition_ i) xs
-    setPartition' i (DListT xs) = liftList (setPartition_ i) xs
-    setPartition' _ _ = Fail
-    setPartition_ :: Id -> ListTry a -> TryList (TryList a)
-    setPartition_ _ Nil = Val Nil
-    setPartition_ i (Cons x xs) =
-        xs >>= setPartition_ (leftId i) >>= insert (rightId i) x
+    setPart' i (DStringT xs) =
+        liftString (fmap (fmap AsString) . setPart_ i) xs
+    setPart' i (DListT xs) = liftList (setPart_ i) xs
+    setPart' _ _ = Fail
+    setPart_ :: Id -> ListTry a -> TryList (TryList a)
+    setPart_ _ Nil = Val Nil
+    setPart_ i (Cons x xs) =
+        xs >>= setPart_ (leftId i) >>= insert (rightId i) x
     insert :: Id -> a -> ListTry (TryList a) -> TryList (TryList a)
     insert _ x Nil = Val . singleton . Val $ singleton x
     insert i x (Cons y ys) =

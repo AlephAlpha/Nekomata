@@ -5,7 +5,8 @@ import Data.Ratio (denominator, numerator, (%))
 import Math.NumberTheory.Primes
 import Math.NumberTheory.Primes.Counting
 import Math.NumberTheory.Primes.Testing (isCertifiedPrime)
-import Nekomata.Builtin.List (reverse'')
+import Nekomata.Builtin.Basic (dup, swap)
+import Nekomata.Builtin.List (length', reverse'')
 import Nekomata.Data
 import Nekomata.Function
 import Nekomata.NonDet
@@ -210,6 +211,9 @@ product' = unary product''
 dot :: Function
 dot = mul .* sum'
 
+mean :: Function
+mean = dup .* sum' .* swap .* length' .* div'
+
 fromBase :: Function
 fromBase = binaryVecArg2 fromBase'
   where
@@ -271,6 +275,15 @@ binomial = binaryVecFail binomial'
     binomial_ n k =
         product [n + 1 - fromInteger i | i <- [1 .. k]]
             / fromInteger (product [1 .. k])
+
+factorial :: Function
+factorial = unaryVec factorial'
+  where
+    factorial' _ (DNumT x) = liftInt factorial_ x
+    factorial' _ _ = Fail
+    factorial_ x
+        | x < 0 = Fail
+        | otherwise = Val $ product [1 .. x]
 
 isPrime' :: Function
 isPrime' = predicateVec isPrime''

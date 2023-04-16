@@ -110,7 +110,17 @@ Many built-in functions in Nekomata are automatically vectorized. So the above e
 [1,2,3]1+
 ```
 
-*(TODO: Explain what vectorization means, and explain the difference types of vectorization: `[1,2,3][4,5]+` returns `[5,7,3]`, while `[1,2,3][4,5]*` fails.)*
+For unary functions, vectorization simply means that the function is applied to each element of the list.
+
+For binary functions, if one of the arguments is a list, and the other is not, the function is vectorized over the list. For example, both `[1,2,3]4+` and `4[1,2,3]+` return `[5,6,7]`.
+
+When both arguments are lists, the situation is more complicated.
+
+Some functions like `*` (`\mul`) will check if the two lists have the same length. If they do, the function is vectorized over the two lists. For example, `[1,2,3][4,5,6]*` returns `[4,10,18]`. If they don't, the function will fail. For example, `[1,2,3][4,5]*` fails.
+
+Some functions like `+` (`\add`) do not check the lengths. They will pad the shorter list with zeros. For example, `[1,2,3][4,5]+` returns `[5,7,3]`.
+
+Please refer to [Builtins.md](Builtins.md) for the vectorization behavior of each built-in function.
 
 ## Non-deterministic Computation
 

@@ -330,6 +330,11 @@ builtins =
         \The current implementation is simply a composition of \
         \mul and sum."
     , Builtin
+        "mean"
+        'µ'
+        mean
+        "Take the mean of a list of numbers."
+    , Builtin
         "fromBase"
         'b'
         fromBase
@@ -392,6 +397,12 @@ builtins =
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
+        "factorial"
+        'F'
+        factorial
+        "Compute the factorial of an integer.\n\
+        \This function is automatically vectorized."
+    , Builtin
         "isPrime"
         'Q'
         isPrime'
@@ -424,12 +435,19 @@ builtins =
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
-        "bytes"
+        "charToInt"
         'e'
-        bytes
+        charToInt
         "Convert a string to a list of integers according to Nekomata's \
         \custom encoding.\n\
         \This function is automatically vectorized."
+    , Builtin
+        "intToChar"
+        'H'
+        intToChar
+        "Convert an integer or a list of integers to a string according to \
+        \Nekomata's custom encoding.\n\
+        \Fail when the integer is not in the range 0 to 255."
     , Builtin
         "anyOf"
         '~'
@@ -658,9 +676,9 @@ builtins =
         "Transpose a list of lists.\n\
         \Fail if the sublists are not all of the same length."
     , Builtin
-        "setPartition"
+        "setPart"
         'O'
-        setPartition
+        setPart
         "Partition a list into a list of lists such that their concatenation \
         \is a permutation of the original list.\n\
         \This function is non-deterministic."
