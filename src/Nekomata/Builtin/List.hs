@@ -325,6 +325,16 @@ split = unary2 split'
             (Val (Nil, s))
             (xs >>= split_ (rightId i) <&> first (Cons x . Val))
 
+replicate' :: Function
+replicate' = binaryVecArg2 replicate''
+  where
+    replicate'' _ x (DNumT y) = liftInt (replicate_ x) y
+    replicate'' _ _ _ = Fail
+    replicate_ :: a -> Integer -> TryList a
+    replicate_ _ 0 = Val Nil
+    replicate_ x n | n > 0 = Val $ Cons x (replicate_ x (n - 1))
+    replicate_ _ _ = Fail
+
 minimum' :: Function
 minimum' = unary minimum''
   where
@@ -485,17 +495,17 @@ transpose = unary transpose'
         Val $ Cons (Val $ Cons x y) (liftJoinM2 zipWithCons xs ys)
     zipWithCons _ _ = Fail
 
-setPart :: Function
-setPart = unary setPart'
+setPartition :: Function
+setPartition = unary setPartition'
   where
-    setPart' i (DStringT xs) =
-        liftString (fmap (fmap AsString) . setPart_ i) xs
-    setPart' i (DListT xs) = liftList (setPart_ i) xs
-    setPart' _ _ = Fail
-    setPart_ :: Id -> ListTry a -> TryList (TryList a)
-    setPart_ _ Nil = Val Nil
-    setPart_ i (Cons x xs) =
-        xs >>= setPart_ (leftId i) >>= insert (rightId i) x
+    setPartition' i (DStringT xs) =
+        liftString (fmap (fmap AsString) . setPartition_ i) xs
+    setPartition' i (DListT xs) = liftList (setPartition_ i) xs
+    setPartition' _ _ = Fail
+    setPartition_ :: Id -> ListTry a -> TryList (TryList a)
+    setPartition_ _ Nil = Val Nil
+    setPartition_ i (Cons x xs) =
+        xs >>= setPartition_ (leftId i) >>= insert (rightId i) x
     insert :: Id -> a -> ListTry (TryList a) -> TryList (TryList a)
     insert _ x Nil = Val . singleton . Val $ singleton x
     insert i x (Cons y ys) =

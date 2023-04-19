@@ -11,7 +11,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 此处总结一下 Code Page 中已有但还没有用上的字符：
 
 ```
-¥§×∂∕√∞∩≈≢&'.KOVWXY`kvwy|
+¥§×∂∕√∞∩≈&'.KVWXY`kvwy|
 ```
 
 有些是已经确定分配给什么函数的，比如说 `×` 给 `\convolve`，`∕` 给 `\setMinus`，`∩` 给 `\intersection`，`√` 给 `\sqrt`。别的都还没想好。
@@ -284,17 +284,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 ```
 
 - [ ] `\ordering`：求一个列表的排序索引。比如说 `[3, 1, 2]` 的排序索引是 `[1, 2, 0]`。
-- [x] `\enumerate`：相当于 `\dup \length \range0`。感觉会比较常用。
-
-## [Number of ways to make an amount with coins](https://codegolf.stackexchange.com/q/251674/9288)
-
-```
-\intPartition \ten \swap \divExact
-```
-
-需要 `-n` flag。
-
-- [ ] `\intPartition`：求一个整数的一个划分。比如说 `3` 的划分是 `[1, 1, 1], [1, 2], [3]`。这个函数是 non-deterministic 的。
 
 ## [Make a Custom Bayer Matrix](https://codegolf.stackexchange.com/q/259633/9288)
 
@@ -370,10 +359,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 ## [Is it a completely even number?](https://codegolf.stackexchange.com/q/142534/9288)
 
 ```
-\decrement 2 \toBase \allEqual
-```
-
-```
 \decrement \bitxor \less
 ```
 
@@ -412,3 +397,28 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 \range0 \gcd 1 \index
 ```
 
+## [Generate a Walsh Matrix](https://codegolf.stackexchange.com/q/162254/9288)
+
+```
+2 \pow \dup \outer \bitand \popcount \neg1 \pow
+```
+
+- [ ] `\bitand`：按位与。
+- [ ] `\popcount`：求一个数的二进制表示中 1 的个数。
+
+位运算还是很有用的。
+
+## [Shortest distinguishable slice](https://codegolf.stackexchange.com/q/259707/9288)
+
+```
+\charToInt \pad \transpose \enumerate \dup \apply2 \anyOf \increment \predicate { \range0 \add \nth \transpose \allUnique } \cons0 \swap \add
+```
+
+- [ ] `\pad`：输入一个列表的列表，将每个列表的长度补齐到最长的子列表的长度。比如说 `[[1, 2], [3, 4, 5]]` 补齐成 `[[1, 2, 0], [3, 4, 5]]`。
+- [ ] `\allUnique`：判断一个列表中的元素是否都不相同。
+
+如果 `\subsequence` 的输出是按长度从小到大排序的，那么可以简化为（16 字节）：
+
+```
+\charToInt \pad \transpose \enumerate \subsequence \predicate { \nth \transpose \allUnique } \dupDip \first \last \increment \pair
+```

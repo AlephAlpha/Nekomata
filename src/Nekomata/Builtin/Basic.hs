@@ -1,6 +1,7 @@
 module Nekomata.Builtin.Basic where
 
 import Control.Arrow (second)
+import Data.List (nub)
 import Nekomata.Data
 import Nekomata.Function
 import Nekomata.NonDet
@@ -23,6 +24,11 @@ oneValue = Function (Arity 1 1) $
 countValues' :: Function
 countValues' = Function (Arity 1 1) $
     \_ (x :+ s) -> Cut (\ds -> (ds, toTryData $ countValues ds x)) :+ s
+
+uniqueValue :: Function
+uniqueValue = Function (Arity 1 1) $
+    \i (x :+ s) ->
+        Cut (\ds -> (ds, anyOf' i (nub $ values ds x) >>= toTryData)) :+ s
 
 normalForm' :: Function
 normalForm' = Function (Arity 1 1) $ \_ (x :+ s) -> normalForm x :+ s

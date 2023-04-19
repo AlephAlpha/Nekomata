@@ -57,6 +57,9 @@ neg1 = constant (-1 :: Integer)
 ten :: Function
 ten = constant (10 :: Integer)
 
+octet :: Function
+octet = constant (256 :: Integer)
+
 neg :: Function
 neg = unaryVec neg'
   where
@@ -324,3 +327,17 @@ lcm' = binaryVecFail lcm''
         Val $
             lcm (numerator x) (numerator y)
                 % gcd (denominator x) (denominator y)
+
+intPartition :: Function
+intPartition = unaryVec intPartition'
+  where
+    intPartition' i (DNumT x) = liftInt (intPartition_ i 1) x
+    intPartition' _ _ = Fail
+    intPartition_ :: Id -> Integer -> Integer -> Try [Integer]
+    intPartition_ _ _ 0 = Val []
+    intPartition_ i x y
+        | x > y = Fail
+        | otherwise = do
+            x' <- anyOf' (leftId i) [x .. y]
+            p <- intPartition_ (rightId i) x' (y - x')
+            return $ x' : p

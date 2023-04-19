@@ -191,6 +191,6 @@ replSettings = Settings replCompletion Nothing True
 
 runRepl :: IO ()
 runRepl = do
-    putStrLn $ "Nekomata " ++ showVersion version ++ "REPL - type \\H for help"
+    putStrLn $ "Nekomata " ++ showVersion version ++ " REPL - type \\H for help"
     _ <- runInputT replSettings . withInterrupt $ repl initReplState
     return ()

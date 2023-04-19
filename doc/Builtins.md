@@ -28,6 +28,12 @@ Fails if the object has no values.
 
 Count the number of values in a non-deterministic object.
 
+### `uniqueValue` (`ũ`, `1 -> 1`)
+
+Remove duplicate values from a non-deterministic object.
+
+This function is non-deterministic.
+
 ### `normalForm` (`¤`, `1 -> 1`)
 
 Convert a non-deterministic object to the normal form.
@@ -123,6 +129,10 @@ The constant -1.
 ### `ten` (`¢`, `0 -> 1`)
 
 The constant 10.
+
+### `octet` (`¥`, `0 -> 1`)
+
+The constant 256.
 
 ### `neg` (`_`, `1 -> 1`)
 
@@ -372,6 +382,12 @@ Compute the least common multiple of two numbers.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+### `intPartition` (`Ṗ`, `1 -> 1`)
+
+Partition an integer into a list of integers, whose sum is the original integer.
+
+This function is non-deterministic and automatically vectorized.
+
 ### `charToInt` (`e`, `1 -> 1`)
 
 Convert a string to a list of integers according to Nekomata's custom encoding.
@@ -516,6 +532,12 @@ Split a list or a string into two parts.
 
 This function is non-deterministic.
 
+### `replicate` (`ř`, `2 -> 1`)
+
+Create a list with n copies of an element.
+
+This function is automatically vectorized on the second argument.
+
 ### `minimum` (`ṁ`, `1 -> 1`)
 
 Get the minimum of a list.
@@ -586,7 +608,7 @@ Transpose a list of lists.
 
 Fail if the sublists are not all of the same length.
 
-### `setPart` (`O`, `1 -> 1`)
+### `setPartition` (`O`, `1 -> 1`)
 
 Partition a list into a list of lists such that their concatenation is a permutation of the original list.
 

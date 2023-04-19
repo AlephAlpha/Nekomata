@@ -90,6 +90,12 @@ builtins =
         countValues'
         "Count the number of values in a non-deterministic object."
     , Builtin
+        "uniqueValue"
+        'ũ'
+        uniqueValue
+        "Remove duplicate values from a non-deterministic object.\n\
+        \This function is non-deterministic."
+    , Builtin
         "normalForm"
         '¤'
         normalForm'
@@ -175,6 +181,11 @@ builtins =
         '¢'
         ten
         "The constant 10."
+    , Builtin
+        "octet"
+        '¥'
+        octet
+        "The constant 256."
     , Builtin
         "neg"
         '_'
@@ -435,6 +446,13 @@ builtins =
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
+        "intPartition"
+        'Ṗ'
+        intPartition
+        "Partition an integer into a list of integers, \
+        \whose sum is the original integer.\n\
+        \This function is non-deterministic and automatically vectorized."
+    , Builtin
         "charToInt"
         'e'
         charToInt
@@ -598,6 +616,12 @@ builtins =
         "Split a list or a string into two parts.\n\
         \This function is non-deterministic."
     , Builtin
+        "replicate"
+        'ř'
+        replicate'
+        "Create a list with n copies of an element.\n\
+        \This function is automatically vectorized on the second argument."
+    , Builtin
         "minimum"
         'ṁ'
         minimum'
@@ -676,9 +700,9 @@ builtins =
         "Transpose a list of lists.\n\
         \Fail if the sublists are not all of the same length."
     , Builtin
-        "setPart"
+        "setPartition"
         'O'
-        setPart
+        setPartition
         "Partition a list into a list of lists such that their concatenation \
         \is a permutation of the original list.\n\
         \This function is non-deterministic."

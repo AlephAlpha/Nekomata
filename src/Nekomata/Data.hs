@@ -90,6 +90,11 @@ anyOf :: Id -> ListTry a -> Try a
 anyOf _ Nil = Fail
 anyOf i (Cons x xs) = Choice (leftId i) (Val x) (xs >>= anyOf (rightId i))
 
+-- | Choose an element from a list
+anyOf' :: Id -> [a] -> Try a
+anyOf' _ [] = Fail
+anyOf' i (x : xs) = Choice (leftId i) (Val x) (anyOf' (rightId i) xs)
+
 -- | A singleton list
 singleton :: a -> ListTry a
 singleton x = Cons x (Val Nil)

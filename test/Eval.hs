@@ -99,6 +99,14 @@ testEval = describe "Evaluation" $ do
             , ("3", All ["[[1,0,0],[0,1,0],[0,0,1]]"])
             , ("4", All ["[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]"])
             ]
+    describe "q83377: Write a program to elasticize strings" $ do
+        specEval
+            "#Rᶻřjj"
+            [ ("\"Why\"", All ["Whhyyy"])
+            , ("\"SKype\"", All ["SKKyyyppppeeeee"])
+            , ("\"LobbY\"", All ["LoobbbbbbbYYYYY"])
+            , ("\"A and B\"", All ["A  aaannnnddddd      BBBBBBB"])
+            ]
     describe "q83533: Calculate Euler's totient function" $ do
         specEval
             "RG←¬∑"
@@ -382,6 +390,19 @@ testEval = describe "Evaluation" $ do
             , ("[2,2,2,2]", All ["2"])
             , ("[4,10,6,8,2,40]", All ["9"])
             ]
+    describe "q235964: Implement the hyperfactorial" $ do
+        specEval
+            "R:E∏"
+            [ ("0", All ["1"])
+            , ("1", All ["1"])
+            , ("2", All ["4"])
+            , ("3", All ["108"])
+            , ("4", All ["27648"])
+            , ("5", All ["86400000"])
+            , ("6", All ["4031078400000"])
+            , ("7", All ["3319766398771200000"])
+            , ("8", All ["55696437941726556979200000"])
+            ]
     describe "q238607: Converge to a number" $ do
         specEval
             "¢DsCr↔~c¢b-"
@@ -424,6 +445,20 @@ testEval = describe "Evaluation" $ do
         specEval
             "2R↕ᵐᶜ_"
             [("", All ["[1,2]", "[1,-2]", "[-1,2]", "[-1,-2]", "[2,1]", "[2,-1]", "[-2,1]", "[-2,-1]"])]
+    describe "q251674: Number of ways to make an amount with coins" $ do
+        specEval
+            "Ṗ¢$¦"
+            [ ("0", Count 1)
+            , ("1", Count 1)
+            , ("2", Count 2)
+            , ("3", Count 2)
+            , ("4", Count 3)
+            , ("5", Count 4)
+            , ("6", Count 5)
+            , ("7", Count 6)
+            , ("8", Count 7)
+            , ("9", Count 8)
+            ]
     describe "q252082: Reconstruct Matrix from its diagonals" $ do
         specEval
             "#2÷:→:ᵒ{ˣmᵈ{-+@}@"
@@ -671,6 +706,13 @@ testEval = describe "Evaluation" $ do
             , ("1", All ["[[0,2],[3,1]]"])
             , ("2", All ["[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]]"])
             ]
+    describe "q259707: Shortest distinguishable slice" $ do
+        specEval
+            "e¥b¥Dx:ᵃ~→ᵖ{r+@Ť:u=}ç$+"
+            [ ("[\"happy\",\"angry\",\"hungry\"]", First (Just "[1,2]"))
+            , ("[\"sheer\",\"shrew\",\"shine\",\"shire\",\"spike\",\"shy\"]", First (Just "[2,4]"))
+            , ("[\"snap\",\"crackle\",\"pop\",\"smack\",\"sizzle\",\"whiff\",\"sheen\"]", First (Just "[0,2]"))
+            ]
     describe "q259875: How Super is this Prime?" $ do
         specEval
             "ᶦ{ƥQ}n2B#←"
@@ -709,4 +751,17 @@ testEval = describe "Evaluation" $ do
             , ("7", All ["4421"])
             , ("8", All ["35899"])
             , ("9", All ["326981"])
+            ]
+    describe "q260198: String Concatenate" $ do
+        specEval
+            "Ṗ↕rj@ũ"
+            [ ("8 \"aaaaa\"", Count 1)
+            , ("4 \"abcde\"", Count 8)
+            , ("5 \"abcdef\"", Count 16)
+            ]
+        specEval
+            "$ᵚpj$Lũ"
+            [ ("8 \"aaaaa\"", Count 1)
+            , ("4 \"abcde\"", Count 8)
+            , ("5 \"abcdef\"", Count 16)
             ]
