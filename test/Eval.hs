@@ -695,7 +695,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259633: Make a Custom Bayer Matrix" $ do
         specEval
-            "r2B:ᵒ{ᵈ:-A2*+ç£4Ed"
+            "r2B:ᵒ{ᵈ:-A2*+ç4ŗd"
             [ ("1", All ["[[0]]"])
             , ("2", All ["[[0,1/2],[3/4,1/4]]"])
             , ("4", All ["[[0,1/2,1/8,5/8],[3/4,1/4,7/8,3/8],[3/16,11/16,1/16,9/16],[15/16,7/16,13/16,5/16]]"])
@@ -764,4 +764,36 @@ testEval = describe "Evaluation" $ do
             [ ("8 \"aaaaa\"", Count 1)
             , ("4 \"abcde\"", Count 8)
             , ("5 \"abcdef\"", Count 16)
+            ]
+    describe "q260266: The number of solutions to Hertzsprung's Problem" $ do
+        specEval
+            "r↕∆A1>"
+            [ ("1", Count 1)
+            , ("2", Count 0)
+            , ("3", Count 0)
+            , ("4", Count 2)
+            , ("5", Count 14)
+            , ("6", Count 90)
+            ]
+    describe "q260302: Is it a plausible chess move?" $ do
+        specEval
+            "-AZ‼2M≡"
+            [ ("[97,49] [97,52]", Check True)
+            , ("[98,50] [100,51]", Check True)
+            , ("[98,50] [101,51]", Check False)
+            , ("[98,50] [99,51]", Check True)
+            , ("[97,49] [104,56]", Check True)
+            , ("[99,55] [103,51]", Check True)
+            , ("[99,55] [103,50]", Check False)
+            , ("[102,52] [98,56]", Check True)
+            ]
+    describe "q260472: Find Index of Rational Number in Calkin-Wilf Sequence" $ do
+        specEval
+            "ᶦ{ŗ:£%2*-←Z"
+            [ ("1", Count 1)
+            , ("1/3", Count 4)
+            , ("4/3", Count 9)
+            , ("3/4", Count 14)
+            , ("53/37", Count 1081)
+            , ("37/53", Count 1990)
             ]

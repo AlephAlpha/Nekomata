@@ -169,6 +169,9 @@ pow = binaryVecFail pow'
     pow'' x y = toTryInt y <&> pow_ x
     pow_ x y = if y >= 0 then x ^ y else 1 / (x ^ negate y)
 
+recip' :: Function
+recip' = constant (1 :: Integer) .* swap .* div'
+
 min' :: Function
 min' = binaryVecPad min''
   where

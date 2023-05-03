@@ -1,11 +1,12 @@
 # Revision history for Nekomata
 
-## 0.4.0.0 -- Unreleased
+## 0.3.1.0 -- 2023-05-03
 
-* New built-in functions: `\intPartition`, `\octet`, `\replicate`, `\uniqueValue`.
+* New built-in functions: `\intPartition`, `\octet`, `\recip`, `\replicate`, `\uniqueValue`.
 
 ### Breaking changes
 
+* To prevent the version number from growing too fast, small breaking changes like code page updates and function renames are no longer considered major version changes.
 * The code page is updated. New characters are added, and the values of some characters are changed.
 * `\setPart` is renamed to `\setPartition`.
 

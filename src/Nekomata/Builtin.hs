@@ -285,6 +285,13 @@ builtins =
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
+        "recip"
+        'ŗ'
+        recip'
+        "Reciprocal of a number.\n\
+        \Fails when the number is zero.\n\
+        \This function is automatically vectorized."
+    , Builtin
         "min"
         'm'
         min'

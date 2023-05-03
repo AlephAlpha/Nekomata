@@ -422,3 +422,31 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 ```
 \charToInt \pad \transpose \enumerate \subsequence \predicate { \nth \transpose \allUnique } \dupDip \first \last \increment \pair
 ```
+
+## [Find Index of Rational Number in Calkin-Wilf Sequence](https://codegolf.stackexchange.com/q/260472/9288)
+
+以下解答都需要 `-n` flag。
+
+现有的 11 字节的解答：
+
+```
+\iterate { \recip \dup \neg1 \mod 2 \mul \sub \decrement \nonZero }
+```
+
+另一种 11 字节的解答：
+
+```
+\iterate { \recip \dup \ceil 2 \mul \swap \sub \decrement \nonZero }
+```
+
+- [ ] `\ceil`：向上取整。
+
+虽然字节数不变，但 `\ceil` 看起来会比较常用，先记录下来。
+
+
+```
+\iterate { \recip \decrement \neg1 \divMod \add \neg \nonZero }
+```
+
+- [ ] `\divMod`：同时求商和余数。由于有两个返回值，还不知道怎么向量化。
+
