@@ -112,10 +112,10 @@ executable Nekomata
 
   -- Other library packages from which modules are imported.
   build-depends:
-    , base                  >=4.13  && <5
+    , base                  >=4.13 && <5
     , bytestring            ^>=0.11
     , containers            ^>=0.6
-    , haskeline             ^>=0.8.1
+    , haskeline             ^>=0.8
     , Nekomata
     , optparse-applicative  ^>=0.17
 

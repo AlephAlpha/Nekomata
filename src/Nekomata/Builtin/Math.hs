@@ -246,6 +246,7 @@ toBaseRev = binaryVecOuter toBaseRev'
 toBaseRev' :: Id -> DataTry -> DataTry -> TryData
 toBaseRev' _ (DNumT x) (DNumT b) = liftInt2 toBaseRev_ x b
 toBaseRev' _ _ _ = Fail
+
 toBaseRev_ :: Integer -> Integer -> TryList Integer
 toBaseRev_ _ b | b < 1 = Fail
 toBaseRev_ x b | x < 0 = toBaseRev_ (-x) b
