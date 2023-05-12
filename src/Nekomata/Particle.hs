@@ -434,7 +434,8 @@ while = Particle while'
         Cut $ \ds ->
             ( ds
             , let s' = f (leftId i) s
-               in if hasValue ds (top s')
-                    then normalForm (top s') $> s' >>= while'' (rightId i) f
+                  t = normalForm (top s')
+               in if hasValue ds t
+                    then t $> s' >>= while'' (rightId i) f
                     else Val s
             )

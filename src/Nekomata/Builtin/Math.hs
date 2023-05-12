@@ -167,10 +167,24 @@ pow = binaryVecFail pow'
     pow' _ (DNumT x) (DNumT y) = liftNum2 pow'' y x
     pow' _ _ _ = Fail
     pow'' x y = toTryInt y <&> pow_ x
-    pow_ x y = if y >= 0 then x ^ y else 1 / (x ^ negate y)
+    pow_ x y | y >= 0 = Val $ x ^ y
+    pow_ 0 _ = Fail
+    pow_ x y = Val $ 1 / (x ^ (-y))
 
 recip' :: Function
 recip' = constant (1 :: Integer) .* swap .* div'
+
+numerator' :: Function
+numerator' = unaryVec numerator''
+  where
+    numerator'' _ (DNumT x) = liftNum numerator x
+    numerator'' _ _ = Fail
+
+denominator' :: Function
+denominator' = unaryVec denominator''
+  where
+    denominator'' _ (DNumT x) = liftNum denominator x
+    denominator'' _ _ = Fail
 
 min' :: Function
 min' = binaryVecPad min''

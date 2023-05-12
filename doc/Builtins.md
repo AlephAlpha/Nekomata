@@ -228,6 +228,26 @@ Fails when the exponent is not an integer.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+### `recip` (`ŗ`, `1 -> 1`)
+
+Reciprocal of a number.
+
+Fails when the number is zero.
+
+This function is automatically vectorized.
+
+### `denominator` (`ḍ`, `1 -> 1`)
+
+Get the denominator of a number.
+
+This function is automatically vectorized.
+
+### `numerator` (`ṇ`, `1 -> 1`)
+
+Get the numerator of a number.
+
+This function is automatically vectorized.
+
 ### `min` (`m`, `2 -> 1`)
 
 Get the minimum of two numbers or two strings.
@@ -613,6 +633,10 @@ Fail if the sublists are not all of the same length.
 Partition a list into a list of lists such that their concatenation is a permutation of the original list.
 
 This function is non-deterministic.
+
+### `setMinus` (`∕`, `2 -> 1`)
+
+For each element in the second list, remove the first occurrence of that element in the first list.
 
 ## Particles
 

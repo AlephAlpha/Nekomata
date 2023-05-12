@@ -11,10 +11,10 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 此处总结一下 Code Page 中已有但还没有用上的字符：
 
 ```
-¥§×∂∕√∞∩≈&'.KVWXY`kvwy|
+¥§×∂√∞∩≈&'.KVWXY`kvwy|
 ```
 
-有些是已经确定分配给什么函数的，比如说 `×` 给 `\convolve`，`∕` 给 `\setMinus`，`∩` 给 `\intersection`，`√` 给 `\sqrt`。别的都还没想好。
+有些是已经确定分配给什么函数的，比如说 `×` 给 `\convolve`，`∩` 给 `\intersection`，`√` 给 `\sqrt`。别的都还没想好。
 
 LiberationMono 字体所支持的字符也列举于此，以后新的符号可以从这里挑选：
 
@@ -102,15 +102,6 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 
 看来是用普通函数还是助词还需要斟酌。可能两种都要支持，不过名字怎样区分是个问题。
 
-## [Count repetitions of an array](https://codegolf.stackexchange.com/q/180302/9288)
-
-```
-\nub \setMinus \nub \length
-```
-
-- [x] `\nub`：输入一个列表，将其中的重复元素去掉。比如输入 `[1, 2, 3, 2, 1]`，输出 `[1, 2, 3]`。不清楚要不要排序。这道题用不着排序，但其它题目可能会用到。
-- [ ] `\setMinus`：输入两个列表，返回第一个列表中不在第二个列表中的元素。比如输入 `[1, 2, 3, 4]` 和 `[2, 4]`，输出 `[1, 3]`。如果第二个列表中的元素在第一个列表中有重复，那么只删除一个。比如输入 `[1, 2, 2, 3, 4]` 和 `[2, 4]`，输出 `[1, 2, 3]`。
-
 ## [Consolidate an Array](https://codegolf.stackexchange.com/q/70779/9288)
 
 这道题需要用到 sortBy。和前面说过的 `\groupBy` 和 `\minimumBy` 一样，也需要考虑它究竟要写成助词还是普通的函数。
@@ -129,16 +120,6 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 
 - [ ] `\sortBy`：输入两个列表，其长度必须一致。将第一个列表中的元素按照第二个列表中的元素的大小进行排序。这要求排序算法是稳定的。
 - [x] `\logicalNot`：逻辑非。如果输入的数为 0，返回 1；如果输入的数不为 0，返回 0。不过给一个根本没有布尔值的语言加上逻辑运算符有点奇怪。就当它是一个数学函数好了。
-
-## [There's more than one way to skin a set](https://codegolf.stackexchange.com/q/247326/9288)
-
-```
-\subset \sum \allValues \dup \nub \setMinus \nub
-```
-
-参考了前面 [Count repetitions of an array](https://codegolf.stackexchange.com/q/180302/9288) 的解答。
-
-也许要给 Nekomata 加上一个输出时自动去重的选项。
 
 ## [Split some points](https://codegolf.stackexchange.com/q/257870/9288)
 
@@ -219,7 +200,7 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 
 `\factor` 的实现可以用 arithmoi 包的 `factorise` 函数。不过还不知道该怎样向量化。等遇到更多涉及到质因数分解的题目再说。
 
-## [Shortest Valid Parentheses](https://codegolf.stackexchange.com/questions/258511/shortest-valid-parentheses/258549#258549)
+## [Shortest Valid Parentheses](https://codegolf.stackexchange.com/q/258511/9288)
 
 目前的解法有 17 个字节，输得比较惨。主要问题是缺乏字符串操作。比如说，如果有一个字符串替换的 built-in 的话，可以：
 
@@ -450,3 +431,18 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 
 - [ ] `\divMod`：同时求商和余数。由于有两个返回值，还不知道怎么向量化。
 
+## [Continued Fraction of a Rational Number](https://codegolf.stackexchange.com/q/79483/9288)
+
+```
+\iterate { 1 \mod \recip } \floor
+```
+
+- [ ] `\floor`：向下取整。
+
+## [Is it a brainfuck instruction?](https://codegolf.stackexchange.com/q/203330/9288)
+
+```
+"+,-.<>[]" \elem
+```
+
+- [ ] `\elem`：检查一个元素是否在一个列表中。注意其参数顺序与 `\free` 相反。

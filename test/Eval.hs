@@ -64,6 +64,27 @@ testEval = describe "Evaluation" $ do
             [ ("0", All ["0"])
             , ("1", Truncated ["1", "1", "1", "1", "1", "1", "1", "1", "1", "1"])
             ]
+    describe "q63999: Parenthifiable Binary Numbers" $ do
+        specEval
+            "2D£E∫Ɔ0=≤"
+            [ ("2", Check True)
+            , ("10", Check True)
+            , ("12", Check True)
+            , ("42", Check True)
+            , ("44", Check True)
+            , ("50", Check True)
+            , ("52", Check True)
+            , ("56", Check True)
+            , ("1", Check False)
+            , ("3", Check False)
+            , ("4", Check False)
+            , ("18", Check False)
+            , ("27", Check False)
+            , ("39", Check False)
+            , ("74", Check False)
+            , ("80", Check False)
+            , ("86", Check False)
+            ]
     describe "q66127: Catalan Numbers" $ do
         specEval
             "+$Ç$→/"
@@ -99,6 +120,19 @@ testEval = describe "Evaluation" $ do
             , ("3", All ["[[1,0,0],[0,1,0],[0,0,1]]"])
             , ("4", All ["[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]"])
             ]
+    describe "q79483: Continued Fraction of a Rational Number" $ do
+        specEval
+            "ᶦ{1%ŗ}1÷"
+            [ ("860438", All ["860438"])
+            , ("3245/1000", All ["3", "4", "12", "4"])
+            , ("-42/10", All ["-5", "1", "4"])
+            , ("-1147802/10000", All ["-115", "4", "1", "1", "4", "1", "1", "5", "1", "1", "4"])
+            , ("0/11", All ["0"])
+            , ("1/42", All ["0", "42"])
+            , ("2/7", All ["0", "3", "2"])
+            , ("-18/17056", All ["-1", "1", "946", "1", "1", "4"])
+            , ("-17056/18", All ["-948", "2", "4"])
+            ]
     describe "q83377: Write a program to elasticize strings" $ do
         specEval
             "#Rᶻřjj"
@@ -118,6 +152,18 @@ testEval = describe "Evaluation" $ do
             , ("26", All ["12"])
             , ("44", All ["20"])
             , ("105", All ["48"])
+            ]
+    describe "q84673: Is it a sum-free set?" $ do
+        specEval
+            "ᵒ+j∕="
+            [ ("[]", Check True)
+            , ("[4]", Check True)
+            , ("[1,5,7]", Check True)
+            , ("[16,1,4,9]", Check True)
+            , ("[0]", Check False)
+            , ("[1,4,5,7]", Check False)
+            , ("[3,0]", Check False)
+            , ("[16,1,4,8]", Check False)
             ]
     describe "q94291: Is it a balanced number?" $ do
         specEval
@@ -285,6 +331,20 @@ testEval = describe "Evaluation" $ do
             , ("[2,0,2]", All ["4"])
             , ("[10,9,8,9]", All ["11"])
             ]
+    describe "q180302: Count repetitions of an array" $ do
+        specEval
+            "u∕u#"
+            [ ("[1,10,16,4,8,10,9,19,2,15,18,19,10,9,17,15,19,5,13,20]", All ["4"])
+            , ("[11,8,6,15,9,19,2,2,4,19,14,19,13,12,16,13,0,5,0,8]", All ["5"])
+            , ("[9,7,8,16,3,9,20,19,15,6,8,4,18,14,19,12,12,16,11,19]", All ["5"])
+            , ("[10,17,17,7,2,18,7,13,3,10,1,5,15,4,6,0,19,4,17,0]", All ["5"])
+            , ("[12,7,17,13,5,3,4,15,20,15,5,18,18,18,4,8,15,13,11,13]", All ["5"])
+            , ("[0,3,6,1,5,2,16,1,6,3,12,1,16,5,4,5,6,17,4,8]", All ["6"])
+            , ("[11,19,2,3,11,15,19,8,2,12,12,20,13,18,1,11,19,7,11,2]", All ["4"])
+            , ("[6,4,11,14,17,3,17,11,2,16,14,1,2,1,15,15,12,10,11,13]", All ["6"])
+            , ("[0,19,2,0,10,10,16,9,19,9,15,0,10,18,0,17,18,18,0,9]", All ["5"])
+            , ("[1,19,17,17,0,2,14,10,10,12,5,14,16,7,15,15,18,11,17,7]", All ["5"])
+            ]
     describe "q199290: Reversed Iota's" $ do
         specEval
             "RRᵐ↔"
@@ -426,6 +486,16 @@ testEval = describe "Evaluation" $ do
             , ("[2,4,1,3]", Count 3)
             , ("[4,2,3,1]", Count 5)
             , ("[4,3,2,1]", Count 6)
+            ]
+    describe "q247326: There's more than one way to skin a set" $ do
+        specEval
+            "S∑a:u∕u"
+            [ ("[1]", All ["[]"])
+            , ("[4,5,2]", All ["[]"])
+            , ("[9,10,11,12]", All ["[21]"])
+            , ("[2,3,5,6]", All ["[5,8,11]"])
+            , ("[15,16,7,1,4]", All ["[16,23,20,27]"])
+            , ("[1,2,3,4,5]", All ["[3,4,5,6,7,8,9,10,11,12]"])
             ]
     describe "q247398: Alternating sums of multidimensional arrays" $ do
         specEval
@@ -583,7 +653,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q258511: Longest Valid Parentheses" $ do
         specEval
-            "qe7%3%∫x>çƆᵖLaṀ"
+            "qe£E→∫x>çƆᵖLaṀ"
             [ ("\"(()())\"", All ["6"])
             , ("\")()())\"", All ["4"])
             , ("\"()(())\"", All ["6"])
@@ -796,4 +866,39 @@ testEval = describe "Evaluation" $ do
             , ("3/4", Count 14)
             , ("53/37", Count 1081)
             , ("37/53", Count 1990)
+            ]
+    describe "q260804: Minkowski's ?(x) for rational x" $ do
+        specEval
+            "ᶦ{1%ŗ}1÷aC$∫←ᵉ{_2E£d+ṇ}çlÐ"
+            [ ("0/1", All ["[0,0]"])
+            , ("1/1", All ["[1,0]"])
+            , ("1/2", All ["[1,1]"])
+            , ("-1/2", All ["[-1,1]"])
+            , ("2/1", All ["[2,0]"])
+            , ("1/3", All ["[1,2]"])
+            , ("1/8", All ["[1,7]"])
+            , ("2/5", All ["[3,3]"])
+            , ("8/5", All ["[13,3]"])
+            , ("58/27", All ["[1033,9]"])
+            , ("30/73", All ["[399,10]"])
+            , ("144/89", All ["[853,9]"])
+            , ("-17/77", All ["[-767,13]"])
+            , ("-17/99", All ["[-133,12]"])
+            , ("355/113", All ["[12648447,22]"])
+            , ("16000/1", All ["[16000,0]"])
+            ]
+    describe "q260811: Given 4 fence lengths, what's the largest rectangular yard you can make?" $ do
+        specEval
+            "o;*ṁ"
+            [ ("[1,1,1,1]", All ["1"])
+            , ("[1,2,3,4]", All ["3"])
+            , ("[4,3,2,1]", All ["3"])
+            , ("[90,1,2,1]", All ["2"])
+            , ("[1,90,1,1]", All ["1"])
+            , ("[44,51,50,36]", All ["1800"])
+            , ("[3,3,3,3]", All ["9"])
+            , ("[3,3,3,4]", All ["9"])
+            , ("[3,4,3,4]", All ["12"])
+            , ("[4,4,3,4]", All ["12"])
+            , ("[4,4,4,4]", All ["16"])
             ]

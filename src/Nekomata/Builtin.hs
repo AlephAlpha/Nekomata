@@ -292,6 +292,18 @@ builtins =
         \Fails when the number is zero.\n\
         \This function is automatically vectorized."
     , Builtin
+        "denominator"
+        'ḍ'
+        denominator'
+        "Get the denominator of a number.\n\
+        \This function is automatically vectorized."
+    , Builtin
+        "numerator"
+        'ṇ'
+        numerator'
+        "Get the numerator of a number.\n\
+        \This function is automatically vectorized."
+    , Builtin
         "min"
         'm'
         min'
@@ -713,6 +725,12 @@ builtins =
         "Partition a list into a list of lists such that their concatenation \
         \is a permutation of the original list.\n\
         \This function is non-deterministic."
+    , Builtin
+        "setMinus"
+        '∕'
+        setMinus
+        "For each element in the second list, \
+        \remove the first occurrence of that element in the first list."
     ]
 
 -- | The map from names to builtin functions

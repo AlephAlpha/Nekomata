@@ -513,3 +513,19 @@ setPartition = unary setPartition'
             (leftId i)
             (Val $ Cons (Val $ Cons x y) ys)
             (Val . Cons y $ ys >>= insert (rightId i) x)
+
+setMinus :: Function
+setMinus = binary setMinus'
+  where
+    setMinus' _ (DStringT xs) (DStringT ys) =
+        liftString2 (AsString .: setMinus_) xs ys
+    setMinus' _ (DListT xs) (DListT ys) = liftList2 setMinus_ xs ys
+    setMinus' _ _ _ = Fail
+    setMinus_ :: (TryEq a) => ListTry a -> ListTry a -> TryList a
+    setMinus_ xs Nil = Val xs
+    setMinus_ xs (Cons y ys) = liftJoinM2 setMinus_ (delete y xs) ys
+    delete :: (TryEq a) => a -> ListTry a -> TryList a
+    delete _ Nil = Val Nil
+    delete x (Cons y ys) =
+        tryEq x y
+            >>= \b -> if b then ys else Val $ Cons y (ys >>= delete x)

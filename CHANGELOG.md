@@ -1,5 +1,10 @@
 # Revision history for Nekomata
 
+## 0.3.2.0 -- Unreleased
+
+* New built-in functions: `\denominator`, `\numerator`, `\setMinus`.
+* Fixed a bug in `\pow`.
+
 ## 0.3.1.0 -- 2023-05-03
 
 * New built-in functions: `\intPartition`, `\octet`, `\recip`, `\replicate`, `\uniqueValue`.
