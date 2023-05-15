@@ -11,10 +11,10 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 此处总结一下 Code Page 中已有但还没有用上的字符：
 
 ```
-¥§×∂√∞∩≈&'.KVWXY`kvwy|
+¥§×∂∞∩≈&'.VWXY`vwy|
 ```
 
-有些是已经确定分配给什么函数的，比如说 `×` 给 `\convolve`，`∩` 给 `\intersection`，`√` 给 `\sqrt`。别的都还没想好。
+有些是已经确定分配给什么函数的，比如说 `×` 给 `\convolve`，`∩` 给 `\intersection`。如果要支持位运算，`|` 给 `\bitOr`，`&` 给 `\bitAnd`，`X` 给 `\bitXor`。别的都还没想好。
 
 LiberationMono 字体所支持的字符也列举于此，以后新的符号可以从这里挑选：
 
@@ -60,7 +60,7 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 参考现有的解答的话，大概是这样：
 
 ```
-\rangeLength1 \absDiff \groupBy
+\enumerate \absDiff \groupBy
 ```
 
 或者
@@ -69,8 +69,7 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 \sort \absDiff \groupBy
 ```
 
-- [ ] `\rangeLength1`：输入一个列表，输出一个从 1 开始到列表长度的列表。不清楚这个函数用得多不多，用得不多的话可以拆成 `\range1` 和 `\length` 两个更常用的函数。
-- [ ] `\absDiff`：求两个数的绝对值差；自动向量化。同样，也可以考虑拆成 `\sub` 和 `\abs` 两个函数。
+- [ ] `\absDiff`：求两个数的绝对值差；自动向量化。可以考虑拆成 `\sub` 和 `\abs` 两个函数。
 - [ ] `\groupBy`：输入两个列表，其长度必须一致。根据第一个列表的元素，将第二个列表的元素分组。比如输入 `[1, 2, 1, 2]` 和 `[a, b, c, d]`，输出 `[[a, c], [b, d]]`。
 
 其它语言里的 `\groupBy` 一般都是高阶函数，输入的是一个函数和一个列表，而非两个列表。我觉得输入两个列表更方便一些，能更好地利用自动向量化。
@@ -210,23 +209,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 
 - [ ] `\emptyString`：空字符串。
 - [ ] `\stringReplaceRepeated`：重复地将一个字符串中的某个子串替换成另一个子串，直到没有子串可以替换为止。这个函数有点复杂，感觉用得不多，以后再说。
-
-## [Shortest code to generate all Pythagorean triples up to a given limit](https://codegolf.stackexchange.com/q/258432/9288)
-
-```
-\range1 \subset 3 \lengthIs \predicate { \square \reverse \foldl1 \sub \isZero }
-```
-
-- [ ] `\square`：求一个数的平方。
-- [ ] `\foldl1`：助词。就是 Haskell 里的 `foldl1`。
-- [ ] `\isZero`：检查一个数是否为 0。
-
-```
-\range1 \subset 2 \lengthIs \dup \squareNorm \sqrt \snoc \swap \lessEq
-```
-
-- [ ] `\squareNorm`：求一个向量各项的平方和。
-- [ ] `\sqrt`：求一个数的平方根。如果这个数的平方根不是整数，那么返回 `Fail`。这个需要用到 integer-roots 包。
 
 ## [The Unaverageables](https://codegolf.stackexchange.com/q/248991/9288)
 
@@ -406,23 +388,7 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 
 ## [Find Index of Rational Number in Calkin-Wilf Sequence](https://codegolf.stackexchange.com/q/260472/9288)
 
-以下解答都需要 `-n` flag。
-
-现有的 11 字节的解答：
-
-```
-\iterate { \recip \dup \neg1 \mod 2 \mul \sub \decrement \nonZero }
-```
-
-另一种 11 字节的解答：
-
-```
-\iterate { \recip \dup \ceil 2 \mul \swap \sub \decrement \nonZero }
-```
-
-- [ ] `\ceil`：向上取整。
-
-虽然字节数不变，但 `\ceil` 看起来会比较常用，先记录下来。
+需要 `-n` flag。
 
 
 ```
@@ -430,14 +396,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 ```
 
 - [ ] `\divMod`：同时求商和余数。由于有两个返回值，还不知道怎么向量化。
-
-## [Continued Fraction of a Rational Number](https://codegolf.stackexchange.com/q/79483/9288)
-
-```
-\iterate { 1 \mod \recip } \floor
-```
-
-- [ ] `\floor`：向下取整。
 
 ## [Is it a brainfuck instruction?](https://codegolf.stackexchange.com/q/203330/9288)
 

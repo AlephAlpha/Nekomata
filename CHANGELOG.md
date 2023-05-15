@@ -1,8 +1,8 @@
 # Revision history for Nekomata
 
-## 0.3.2.0 -- Unreleased
+## 0.3.2.0 -- 2023-05-15
 
-* New built-in functions: `\denominator`, `\numerator`, `\setMinus`.
+* New built-in functions: `\ceil`, `\denominator`, `\floor`, `\numerator`, `\setMinus`, `\sqrt`.
 * Fixed a bug in `\pow`.
 
 ## 0.3.1.0 -- 2023-05-03

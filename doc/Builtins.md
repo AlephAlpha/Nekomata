@@ -260,6 +260,18 @@ Get the maximum of two numbers or two strings.
 
 This function is automatically vectorized with padding.
 
+### `ceil` (`K`, `1 -> 1`)
+
+Round a number up to the nearest integer.
+
+This function is automatically vectorized.
+
+### `floor` (`k`, `1 -> 1`)
+
+Round a number down to the nearest integer.
+
+This function is automatically vectorized.
+
 ### `range0` (`r`, `1 -> 1`)
 
 Create a list of integers from 0 to n-1.
@@ -407,6 +419,14 @@ This function is automatically vectorized and fails when the two lists are of di
 Partition an integer into a list of integers, whose sum is the original integer.
 
 This function is non-deterministic and automatically vectorized.
+
+### `sqrt` (`√`, `1 -> 1`)
+
+Compute the square root of a rational number.
+
+Fails when the argument is not a perfect square.
+
+This function is automatically vectorized.
 
 ### `charToInt` (`e`, `1 -> 1`)
 

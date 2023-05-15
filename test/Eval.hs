@@ -122,7 +122,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q79483: Continued Fraction of a Rational Number" $ do
         specEval
-            "ᶦ{1%ŗ}1÷"
+            "ᶦ{1%ŗ}k"
             [ ("860438", All ["860438"])
             , ("3245/1000", All ["3", "4", "12", "4"])
             , ("-42/10", All ["-5", "1", "4"])
@@ -209,6 +209,22 @@ testEval = describe "Evaluation" $ do
             , ("[22]", Check False)
             , ("[2,2,2,1]", Check False)
             , ("[[1,2],2]", Check False)
+            ]
+    describe "q122087: Is this number triangular?" $ do
+        specEval
+            "8*→√"
+            [ ("1", Check True)
+            , ("3", Check True)
+            , ("6", Check True)
+            , ("10", Check True)
+            , ("500500", Check True)
+            , ("998991", Check True)
+            , ("2", Check False)
+            , ("4", Check False)
+            , ("5", Check False)
+            , ("7", Check False)
+            , ("501500", Check False)
+            , ("999999", Check False)
             ]
     describe "q126699: Create a checkerboard matrix" $ do
         specEval
@@ -651,6 +667,11 @@ testEval = describe "Evaluation" $ do
             [ ("15", All ["[3,4,5]", "[6,8,10]", "[5,12,13]", "[9,12,15]"])
             , ("5", All ["[3,4,5]"])
             ]
+        specEval
+            "RS2L::∙√ɔ$≤"
+            [ ("15", All ["[3,4,5]", "[6,8,10]", "[5,12,13]", "[9,12,15]"])
+            , ("5", All ["[3,4,5]"])
+            ]
     describe "q258511: Longest Valid Parentheses" $ do
         specEval
             "qe£E→∫x>çƆᵖLaṀ"
@@ -859,7 +880,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q260472: Find Index of Rational Number in Calkin-Wilf Sequence" $ do
         specEval
-            "ᶦ{ŗ:£%2*-←Z"
+            "ᶦ{ŗ:K2*$-←Z"
             [ ("1", Count 1)
             , ("1/3", Count 4)
             , ("4/3", Count 9)
@@ -869,7 +890,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q260804: Minkowski's ?(x) for rational x" $ do
         specEval
-            "ᶦ{1%ŗ}1÷aC$∫←ᵉ{_2E£d+ṇ}çlÐ"
+            "ᶦ{1%ŗ}kaC$∫←ᵉ{_2E£d+ṇ}çlÐ"
             [ ("0/1", All ["[0,0]"])
             , ("1/1", All ["[1,0]"])
             , ("1/2", All ["[1,1]"])

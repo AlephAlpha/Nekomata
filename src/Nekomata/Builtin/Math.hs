@@ -1,10 +1,12 @@
 module Nekomata.Builtin.Math where
 
+import Control.Monad (liftM2)
 import Data.Functor ((<&>))
 import Data.Ratio (denominator, numerator, (%))
 import Math.NumberTheory.Primes
 import Math.NumberTheory.Primes.Counting
 import Math.NumberTheory.Primes.Testing (isCertifiedPrime)
+import Math.NumberTheory.Roots (exactSquareRoot)
 import Nekomata.Builtin.Basic (dup, swap)
 import Nekomata.Builtin.List (length', reverse'')
 import Nekomata.Data
@@ -200,6 +202,18 @@ max' = binaryVecPad max''
     max'' _ (DStringT x) (DStringT y) = liftString2 (AsString .: tryMax) x y
     max'' _ _ _ = Fail
 
+ceil :: Function
+ceil = unaryVec ceil'
+  where
+    ceil' _ (DNumT x) = liftNum (ceiling :: Rational -> Integer) x
+    ceil' _ _ = Fail
+
+floor' :: Function
+floor' = unaryVec floor''
+  where
+    floor'' _ (DNumT x) = liftNum (floor :: Rational -> Integer) x
+    floor'' _ _ = Fail
+
 natural :: Function
 natural = nullary $
     \i -> toTryData <$> anyOf i $ fromList [0 :: Integer ..]
@@ -359,3 +373,14 @@ intPartition = unaryVec intPartition'
             x' <- anyOf' (leftId i) [x .. y]
             p <- intPartition_ (rightId i) x' (y - x')
             return $ x' : p
+
+sqrt' :: Function
+sqrt' = unaryVec sqrt''
+  where
+    sqrt'' _ (DNumT x) = liftNum sqrt_ x
+    sqrt'' _ _ = Fail
+    sqrt_ x =
+        liftM2
+            (%)
+            (exactSquareRoot (numerator x))
+            (exactSquareRoot (denominator x))

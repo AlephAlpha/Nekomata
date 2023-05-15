@@ -316,6 +316,18 @@ builtins =
         "Get the maximum of two numbers or two strings.\n\
         \This function is automatically vectorized with padding."
     , Builtin
+        "ceil"
+        'K'
+        ceil
+        "Round a number up to the nearest integer.\n\
+        \This function is automatically vectorized."
+    , Builtin
+        "floor"
+        'k'
+        floor'
+        "Round a number down to the nearest integer.\n\
+        \This function is automatically vectorized."
+    , Builtin
         "range0"
         'r'
         range0
@@ -471,6 +483,13 @@ builtins =
         "Partition an integer into a list of integers, \
         \whose sum is the original integer.\n\
         \This function is non-deterministic and automatically vectorized."
+    , Builtin
+        "sqrt"
+        '√'
+        sqrt'
+        "Compute the square root of a rational number.\n\
+        \Fails when the argument is not a perfect square.\n\
+        \This function is automatically vectorized."
     , Builtin
         "charToInt"
         'e'
