@@ -1,10 +1,12 @@
 module Nekomata.Builtin.Math where
 
+import Control.Arrow (second, (***))
 import Control.Monad (liftM2)
 import Data.Functor ((<&>))
+import Data.List (sort)
 import Data.Ratio (denominator, numerator, (%))
-import Math.NumberTheory.Primes
-import Math.NumberTheory.Primes.Counting
+import Math.NumberTheory.Primes (Prime (unPrime), factorise, nextPrime)
+import Math.NumberTheory.Primes.Counting (primeCount)
 import Math.NumberTheory.Primes.Testing (isCertifiedPrime)
 import Math.NumberTheory.Roots (exactSquareRoot)
 import Nekomata.Builtin.Basic (dup, swap)
@@ -339,6 +341,23 @@ primePi = unaryVec primePi'
     primePi' _ (DNumT x) = liftInt primePi_ x
     primePi' _ _ = Fail
     primePi_ x = Val $ primeCount x
+
+factor :: Function
+factor = unary2Vec factor'
+  where
+    factor' _ (DNumT x) = liftNum12 factor_ x
+    factor' _ _ = (Fail, Fail)
+    factor_ 0 = Fail
+    factor_ x =
+        Val . unzip $
+            merge (factorInt $ numerator x) (factorInt $ denominator x)
+    factorInt = sort . map (unPrime *** toInteger) . factorise
+    merge [] ys = map (second negate) ys
+    merge xs [] = xs
+    merge xs@((p, n) : xs') ys@((q, m) : ys')
+        | p == q = (p, n - m) : merge xs' ys'
+        | p < q = (p, n) : merge xs' ys
+        | otherwise = (q, m) : merge xs ys'
 
 gcd' :: Function
 gcd' = binaryVecFail gcd''

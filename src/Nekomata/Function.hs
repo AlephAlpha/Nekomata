@@ -127,6 +127,10 @@ constant = nullary . const . toTryData
 unaryVec :: (Id -> DataTry -> TryData) -> Function
 unaryVec = unary . vec1
 
+-- | Convert and vectorize a unary function that returns two values
+unary2Vec :: (Id -> DataTry -> (TryData, TryData)) -> Function
+unary2Vec = unary2 . vec12
+
 -- | Convert and vectorize a binary function with padding
 binaryVecPad :: (Id -> DataTry -> DataTry -> TryData) -> Function
 binaryVecPad = binary . vec2Pad

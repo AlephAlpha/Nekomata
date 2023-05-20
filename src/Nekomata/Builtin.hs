@@ -463,6 +463,14 @@ builtins =
         "Compute the number of primes less than or equal to an integer.\n\
         \This function is automatically vectorized."
     , Builtin
+        "factor"
+        'ƒ'
+        factor
+        "Factorize a rational number, \
+        \and return a list of prime factors and a list of exponents.\n\
+        \Fails when the input is zero.\n\
+        \This function is automatically vectorized."
+    , Builtin
         "gcd"
         'G'
         gcd'

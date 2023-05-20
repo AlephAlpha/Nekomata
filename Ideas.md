@@ -11,7 +11,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 此处总结一下 Code Page 中已有但还没有用上的字符：
 
 ```
-¥§×∂∞∩≈&'.VWXY`vwy|
+§×∂∞∩≈&'.VWXY`vwy|
 ```
 
 有些是已经确定分配给什么函数的，比如说 `×` 给 `\convolve`，`∩` 给 `\intersection`。如果要支持位运算，`|` 给 `\bitOr`，`&` 给 `\bitAnd`，`X` 给 `\bitXor`。别的都还没想好。
@@ -188,16 +188,6 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 - [ ] `\isEmpty`：检查一个列表是否为空。
 
 Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个在 non-deterministic 语言中不好弄，语义也不是很明确。
-
-## [Find the Prime Signature](https://codegolf.stackexchange.com/q/256147/9288)
-
-```
-\factor \sort \reverse
-```
-
-- [ ] `\factor`：将一个整数分解成质因数。比如说 `12` 分解成 `[2, 3] [2, 1]`。
-
-`\factor` 的实现可以用 arithmoi 包的 `factorise` 函数。不过还不知道该怎样向量化。等遇到更多涉及到质因数分解的题目再说。
 
 ## [Shortest Valid Parentheses](https://codegolf.stackexchange.com/q/258511/9288)
 

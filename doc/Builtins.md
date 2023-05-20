@@ -402,6 +402,14 @@ Compute the number of primes less than or equal to an integer.
 
 This function is automatically vectorized.
 
+### `factor` (`ƒ`, `1 -> 2`)
+
+Factorize a rational number, and return a list of prime factors and a list of exponents.
+
+Fails when the input is zero.
+
+This function is automatically vectorized.
+
 ### `gcd` (`G`, `2 -> 1`)
 
 Compute the greatest common divisor of two numbers.

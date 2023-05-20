@@ -165,6 +165,25 @@ testEval = describe "Evaluation" $ do
             , ("[3,0]", Check False)
             , ("[16,1,4,8]", Check False)
             ]
+    describe "q91420: Excessive Integers" $ do
+        specEval
+            "ƒ←∑"
+            [ ("1", All ["0"])
+            , ("2", All ["0"])
+            , ("3", All ["0"])
+            , ("4", All ["1"])
+            , ("5", All ["0"])
+            , ("6", All ["0"])
+            , ("7", All ["0"])
+            , ("8", All ["2"])
+            , ("9", All ["1"])
+            , ("10", All ["0"])
+            , ("11", All ["0"])
+            , ("12", All ["1"])
+            , ("13", All ["0"])
+            , ("14", All ["0"])
+            , ("15", All ["0"])
+            ]
     describe "q94291: Is it a balanced number?" $ do
         specEval
             "¢D;ᶜtᶻ-∑0="
@@ -275,6 +294,35 @@ testEval = describe "Evaluation" $ do
             , ("[0,5,10,15,20]", Count 5)
             , ("[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]", Count 5)
             , ("[0,1,4,5,9,11,12,14,16,18,23,24,26,28,29,30]", Count 6)
+            ]
+    describe "q143278: Am I an insignificant array?" $ do
+        specEval
+            "∆A2<"
+            [ ("[1,2,3,4,3,4,5,5,5,4]", Check True)
+            , ("[1,2,3,4,5,6,7,8,9,8]", Check True)
+            , ("[3,3,3,3,3,3,3]", Check True)
+            , ("[3,4,4,4,3,3,3,4,4,4]", Check True)
+            , ("[1,2,3,4]", Check True)
+            , ("[5,4,3,2]", Check True)
+            , ("[1,3,5,7,9,7,5,3,1]", Check False)
+            , ("[1,1,1,2,3,4,5,6,19]", Check False)
+            , ("[3,4,5,6,7,8,7,5]", Check False)
+            , ("[1,2,4,10,18,10,100]", Check False)
+            , ("[10,20,30,30,30]", Check False)
+            ]
+        specEval
+            "∆:±="
+            [ ("[1,2,3,4,3,4,5,5,5,4]", Check True)
+            , ("[1,2,3,4,5,6,7,8,9,8]", Check True)
+            , ("[3,3,3,3,3,3,3]", Check True)
+            , ("[3,4,4,4,3,3,3,4,4,4]", Check True)
+            , ("[1,2,3,4]", Check True)
+            , ("[5,4,3,2]", Check True)
+            , ("[1,3,5,7,9,7,5,3,1]", Check False)
+            , ("[1,1,1,2,3,4,5,6,19]", Check False)
+            , ("[3,4,5,6,7,8,7,5]", Check False)
+            , ("[1,2,4,10,18,10,100]", Check False)
+            , ("[10,20,30,30,30]", Check False)
             ]
     describe "q142534: Is it a completely even number?" $ do
         specEval
@@ -563,6 +611,25 @@ testEval = describe "Evaluation" $ do
             "~ᵖ{JS="
             [ ("[\"dictionary\",\"transcriber\"] [\"dic\",\"ion\",\"ary\"]", First $ Just "dictionary")
             , ("[\"dictionary\",\"transcriber\"] [\"tra\",\"scr\",\"ber\"]", First $ Just "transcriber")
+            ]
+    describe "q256147: Find the Prime Signature" $ do
+        specEval
+            "ƒo↔"
+            [ ("1", All ["[]"])
+            , ("2", All ["[1]"])
+            , ("4", All ["[2]"])
+            , ("6", All ["[1,1]"])
+            , ("8", All ["[3]"])
+            , ("12", All ["[2,1]"])
+            , ("16", All ["[4]"])
+            , ("24", All ["[3,1]"])
+            , ("30", All ["[1,1,1]"])
+            , ("32", All ["[5]"])
+            , ("36", All ["[2,2]"])
+            , ("1234567", All ["[1,1]"])
+            , ("5174928", All ["[5,4,3]"])
+            , ("8388608", All ["[23]"])
+            , ("9999991", All ["[1]"])
             ]
     describe "q256814: Knight to fork!" $ do
         specEval
@@ -922,4 +989,18 @@ testEval = describe "Evaluation" $ do
             , ("[3,4,3,4]", All ["12"])
             , ("[4,4,3,4]", All ["12"])
             , ("[4,4,4,4]", All ["16"])
+            ]
+    describe "q260966: sum of a range of a sum of a range of n" $ do
+        specEval
+            "R∑R∑"
+            [ ("1", All ["1"])
+            , ("2", All ["6"])
+            , ("3", All ["21"])
+            , ("4", All ["55"])
+            , ("5", All ["120"])
+            , ("6", All ["231"])
+            , ("7", All ["406"])
+            , ("8", All ["666"])
+            , ("9", All ["1035"])
+            , ("10", All ["1540"])
             ]

@@ -122,6 +122,18 @@ tryMap2 ::
     ListTry (Try c)
 tryMap2 f i x = tryMap (`f` x) i
 
+-- | Map a non-deterministic function that returns two values over a @TryList@
+tryUnzipWith ::
+    (Id -> a -> Try (b, c)) ->
+    Id ->
+    ListTry (Try a) ->
+    (ListTry (Try b), ListTry (Try c))
+tryUnzipWith _ _ Nil = (Nil, Nil)
+tryUnzipWith f i (Cons x xs) =
+    let y = x >>= f (leftId i)
+        ys = tryUnzipWith f (rightId i) <$> xs
+     in (Cons (fst <$> y) (fst <$> ys), Cons (snd <$> y) (snd <$> ys))
+
 -- | Fold a non-deterministic function over a @TryList@ from right to left
 tryFoldr :: (Id -> a -> b -> Try b) -> Id -> b -> ListTry (Try a) -> Try b
 tryFoldr _ _ b Nil = Val b
@@ -444,6 +456,15 @@ vec2Arg2 ::
     TryData
 vec2Arg2 f i x (DListT ys) = liftList (tryMap2 (vec2Arg2 f) i x) ys
 vec2Arg2 f i x y = f i x y
+
+-- | Vectorize a unary function that returns two values
+vec12 ::
+    (Id -> DataTry -> (TryData, TryData)) ->
+    Id ->
+    DataTry ->
+    (TryData, TryData)
+vec12 f i (DListT xs) = liftList12 (Val . tryUnzipWith (Val .: vec12 f) i) xs
+vec12 f i x = f i x
 
 -- | A helper class for checking for equality
 class TryEq a where
