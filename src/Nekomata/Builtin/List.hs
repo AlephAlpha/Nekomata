@@ -2,8 +2,8 @@
 
 module Nekomata.Builtin.List where
 
-import Control.Arrow (first, second)
-import Control.Monad (join, liftM2, (>=>))
+import Control.Arrow (first, second, (***))
+import Control.Monad (join, liftM2)
 import Data.Functor ((<&>))
 import Data.Maybe (fromMaybe)
 import Nekomata.Builtin.Basic (dup)
@@ -157,7 +157,7 @@ uncons :: Function
 uncons = unary2 uncons'
   where
     uncons' _ (DStringT xs) =
-        liftString12 (uncons_ >=> \(ys, y) -> Val (AsString ys, y)) xs
+        liftString12 (fmap (first AsString) . uncons_) xs
     uncons' _ (DListT xs) = liftList12 uncons_ xs
     uncons' _ _ = (Fail, Fail)
     uncons_ :: ListTry a -> Try (TryList a, a)
@@ -191,7 +191,7 @@ unsnoc :: Function
 unsnoc = unary2 unsnoc'
   where
     unsnoc' _ (DStringT xs) =
-        liftString12 (unsnoc'' >=> \(ys, y) -> Val (AsString ys, y)) xs
+        liftString12 (fmap (first AsString) . unsnoc'') xs
     unsnoc' _ (DListT xs) = liftList12 unsnoc'' xs
     unsnoc' _ _ = (Fail, Fail)
     unsnoc'' = fmap unzipMaybe . unsnoc_
@@ -202,7 +202,7 @@ unsnoc = unary2 unsnoc'
             >>= unsnoc_
             >>= Val
                 . Just
-                . maybe (Nil, x) (\(ys, y) -> (Cons x (Val ys), y))
+                . maybe (Nil, x) (first (Cons x . Val))
     unzipMaybe :: Maybe (a, b) -> (Maybe a, Maybe b)
     unzipMaybe Nothing = (Nothing, Nothing)
     unzipMaybe (Just (a, b)) = (Just a, Just b)
@@ -314,7 +314,7 @@ split :: Function
 split = unary2 split'
   where
     split' i (DStringT xs) =
-        liftString12 (split_ i >=> \(x, y) -> Val (AsString x, AsString y)) xs
+        liftString12 (fmap (AsString *** AsString) . split_ i) xs
     split' i (DListT xs) = liftList12 (split_ i) xs
     split' _ _ = (Fail, Fail)
     split_ :: Id -> ListTry a -> Try (ListTry a, ListTry a)

@@ -11,7 +11,7 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 此处总结一下 Code Page 中已有但还没有用上的字符：
 
 ```
-§×∂∞∩≈&'.VWXY`vwy|
+×∂∞∩≈&'.VWXY`vwy|
 ```
 
 有些是已经确定分配给什么函数的，比如说 `×` 给 `\convolve`，`∩` 给 `\intersection`。如果要支持位运算，`|` 给 `\bitOr`，`&` 给 `\bitAnd`，`X` 给 `\bitXor`。别的都还没想好。
@@ -277,17 +277,9 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 ## [The Jaccard Index](https://codegolf.stackexchange.com/q/259881/9288)
 
 ```
-\noPop \union \dip \intersection \apply2 \length \div
-```
-- [ ] `\union`：求两个列表的并集。
-
-也许可以考虑加一个助词：
-
-```
 \dupDip2 \intersection \union \apply2 \length \div
 ```
-
-- [ ] `\dupDip2`：助词。保存（而不是弹出）栈顶的两个元素，然后将函数应用于栈，最后再将这两个元素压回栈。比如说 `1 2 \dupDip2 \add` 得到的结果是 `3 1 2`（栈顶在右边）。
+- [ ] `\union`：求两个列表的并集。
 
 或者抄 MATL 的解答，相当神奇的一个解答：
 

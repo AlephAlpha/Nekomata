@@ -45,6 +45,9 @@ dup = Function (Arity 1 2) $ \_ (x :+ s) -> x :+ x :+ s
 swap :: Function
 swap = Function (Arity 2 2) $ \_ (x :+ y :+ s) -> y :+ x :+ s
 
+rot3 :: Function
+rot3 = Function (Arity 3 3) $ \_ (x :+ y :+ z :+ s) -> z :+ x :+ y :+ s
+
 eq :: Function
 eq = predicate2 $ \_ x y -> tryEq x y
 

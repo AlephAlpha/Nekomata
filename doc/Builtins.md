@@ -56,6 +56,10 @@ Duplicate the top value of the stack.
 
 Swap the top two values of the stack.
 
+### `rot3` (`§`, `3 -> 3`)
+
+Rotate the top three values of the stack.
+
 ### `eq` (`=`, `2 -> 1`)
 
 Check if two values are equal.
@@ -512,7 +516,7 @@ Prepend an element to a list.
 
 ### `uncons` (`C`, `1 -> 2`)
 
-Get the first element list and the rest of a list or a string.
+Get the first element and the rest of a list or a string.
 
 ### `last` (`l`, `1 -> 1`)
 
@@ -528,7 +532,7 @@ Append an element to a list.
 
 ### `unsnoc` (`Ɔ`, `1 -> 2`)
 
-Get the last element list and the rest of a list or a string.
+Get the last element and the rest of a list or a string.
 
 ### `cons0` (`ç`, `1 -> 1`)
 
@@ -684,7 +688,11 @@ Pop the top value of the stack, apply a function to the rest, and push the poppe
 
 ### `dupDip` (`ᵉ`, `(m -> n) -> (m -> n + 1)`)
 
-Duplicate the top value of the stack, pop the top value, apply a function to the rest, and push the popped value back.
+Apply a function to the stack, and then push the original top value back.
+
+### `dupDup2` (`ᵋ`, `(m -> n) -> (m -> n + 2)`)
+
+Apply a function to the stack, and then push the original top two values back.
 
 ### `map` (`ᵐ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
 

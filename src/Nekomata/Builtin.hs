@@ -112,6 +112,11 @@ builtins =
     , Builtin "dup" ':' dup "Duplicate the top value of the stack."
     , Builtin "swap" '$' swap "Swap the top two values of the stack."
     , Builtin
+        "rot3"
+        '§'
+        rot3
+        "Rotate the top three values of the stack."
+    , Builtin
         "eq"
         '='
         eq
@@ -587,7 +592,7 @@ builtins =
         "uncons"
         'C'
         uncons
-        "Get the first element list and the rest of a list or a string."
+        "Get the first element and the rest of a list or a string."
     , Builtin
         "last"
         'l'
@@ -607,7 +612,7 @@ builtins =
         "unsnoc"
         'Ɔ'
         unsnoc
-        "Get the last element list and the rest of a list or a string."
+        "Get the last element and the rest of a list or a string."
     , Builtin
         "cons0"
         'ç'

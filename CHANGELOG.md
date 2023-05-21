@@ -2,7 +2,8 @@
 
 ## 0.3.3.0 -- Unreleased
 
-* New built-in functions: `\factor`.
+* New built-in functions: `\factor`, `\rot3`.
+* New particle: `\dupDip2`.
 
 ## 0.3.2.0 -- 2023-05-15
 

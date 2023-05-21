@@ -595,7 +595,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q252082: Reconstruct Matrix from its diagonals" $ do
         specEval
-            "#2÷:→:ᵒ{ˣmᵈ{-+@}@"
+            "#2÷:→:ᵒ{ᵋ{-+@}m@"
             [ ("[[5]]", All ["[[5]]"])
             , ("[[0],[1,69],[13]]", All ["[[1,0],[13,69]]"])
             , ("[[25],[0,1],[6,23,10],[420,9],[67]]", All ["[[6,0,25],[420,23,1],[67,9,10]]"])
@@ -859,7 +859,7 @@ testEval = describe "Evaluation" $ do
             , ("4", All ["[[0,1/2,1/8,5/8],[3/4,1/4,7/8,3/8],[3/16,11/16,1/16,9/16],[15/16,7/16,13/16,5/16]]"])
             ]
         specEval
-            "0UU$ᵑ{4*::3+,$→:→$,ᶻ,"
+            "0UU$ᵑ{4*4ᵐ+↔3Ř;ᶻᶻ,j"
             [ ("0", All ["[[0]]"])
             , ("1", All ["[[0,2],[3,1]]"])
             , ("2", All ["[[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]]"])
@@ -888,13 +888,13 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259987: String Comparison" $ do
         specEval
-            "$,ᵈ,>"
-            [ ("\"a\" \"b\"", Check True)
-            , ("\"ac\" \"a\"", Check False)
-            , ("\"bekcka\" \"kwnfoe\"", Check True)
-            , ("\"beztbest\" \"bestbe\"", Check False)
-            , ("\"mcjaf\" \"mc\"", Check True)
-            , ("\"akboe\" \"uenvi\"", Check True)
+            "↔ᵃj<"
+            [ ("[\"a\",\"b\"]", Check True)
+            , ("[\"ac\",\"a\"]", Check False)
+            , ("[\"bekcka\",\"kwnfoe\"]", Check True)
+            , ("[\"beztbest\",\"bestbe\"]", Check False)
+            , ("[\"mcjaf\",\"mc\"]", Check True)
+            , ("[\"akboe\",\"uenvi\"]", Check True)
             ]
     describe "q260120: Alternating factorial" $ do
         specEval
@@ -918,10 +918,10 @@ testEval = describe "Evaluation" $ do
             , ("5 \"abcdef\"", Count 16)
             ]
         specEval
-            "$ᵚpj$Lũ"
-            [ ("8 \"aaaaa\"", Count 1)
-            , ("4 \"abcde\"", Count 8)
-            , ("5 \"abcdef\"", Count 16)
+            "ᵚpj§Lũ"
+            [ ("\"aaaaa\" 8", Count 1)
+            , ("\"abcde\" 4", Count 8)
+            , ("\"abcdef\" 5", Count 16)
             ]
     describe "q260266: The number of solutions to Hertzsprung's Problem" $ do
         specEval
@@ -957,7 +957,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q260804: Minkowski's ?(x) for rational x" $ do
         specEval
-            "ᶦ{1%ŗ}kaC$∫←ᵉ{_2E£d+ṇ}çlÐ"
+            "ᶦ{1%ŗ}kaC$∫←:_2E£d§+ṇ$çlÐ"
             [ ("0/1", All ["[0,0]"])
             , ("1/1", All ["[1,0]"])
             , ("1/2", All ["[1,1]"])

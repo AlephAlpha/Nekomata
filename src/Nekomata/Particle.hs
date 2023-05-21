@@ -99,8 +99,15 @@ builtinParticles =
         'ᵉ'
         dupDip
         "(m -> n) -> (m -> n + 1)"
-        "Duplicate the top value of the stack, pop the top value, \
-        \apply a function to the rest, and push the popped value back."
+        "Apply a function to the stack, \
+        \and then push the original top value back."
+    , BuiltinParticle
+        "dupDup2"
+        'ᵋ'
+        dupDup2
+        "(m -> n) -> (m -> n + 2)"
+        "Apply a function to the stack, \
+        \and then push the original top two values back."
     , BuiltinParticle
         "map"
         'ᵐ'
@@ -286,6 +293,13 @@ dupDip = Particle dupDip'
     dupDip' (Function (Arity m n) f) =
         Just . Function (Arity m (n + 1)) $
             \i (x :+ s) -> x :+ f i (x :+ s)
+
+dupDup2 :: Particle
+dupDup2 = Particle dupDup2'
+  where
+    dupDup2' (Function (Arity m n) f) =
+        Just . Function (Arity m (n + 2)) $
+            \i (x :+ y :+ s) -> x :+ y :+ f i (x :+ y :+ s)
 
 map' :: Particle
 map' = Particle map''
