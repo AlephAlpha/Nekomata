@@ -437,6 +437,26 @@ testEval = describe "Evaluation" $ do
             , ("[11,6]", All ["227305"])
             , ("[0,4]", All ["1"])
             ]
+    describe "q226593: Split a list into maximal equal-sum sections" $ do
+        specEval
+            "O:ᵐ∑≡$Ðaṁl"
+            [ ("[9,5,1,2,9,2]", All ["[[1,2,9,2],[9,5]]"])
+            , ("[1,1,3,5,7,4]", All ["[[3,4],[7],[1,1,5]]"])
+            , ("[2,9,6,1,5,8,2]", All ["[[1,8,2],[6,5],[2,9]]"])
+            , ("[5,4,1]", All ["[[4,1],[5]]"])
+            , ("[3,8,1,4,2,2]", All ["[[3,1,4,2],[8,2]]"])
+            , ("[6,9,3,8,1]", All ["[[8,1],[6,3],[9]]"])
+            , ("[4,1,6,9,1,4,5,2]", All ["[[1,9,4,2],[4,6,1,5]]"])
+            , ("[8,7,8,6,1]", All ["[[8,6,1],[7,8]]"])
+            , ("[2,7,4,5]", All ["[[4,5],[2,7]]"])
+            , ("[5,2,1,4,4]", All ["[[4,4],[5,2,1]]"])
+            , ("[5,7,4,6,2]", All ["[[4,6,2],[5,7]]"])
+            , ("[4,1,6,6,9]", All ["[[4,9],[1,6,6]]"])
+            , ("[2,6,4]", All ["[[2,4],[6]]"])
+            , ("[6,3,1,6,8,4,5,7]", All ["[[1,8,4,7],[6,3,6,5]]"])
+            , ("[2,2,2]", All ["[[2],[2],[2]]"])
+            , ("[2,4,5]", All ["[[2,4,5]]"])
+            ]
     describe "q230402: Is this a Permutation of 1..n" $ do
         specEval
             "ox="
@@ -612,6 +632,13 @@ testEval = describe "Evaluation" $ do
             [ ("[\"dictionary\",\"transcriber\"] [\"dic\",\"ion\",\"ary\"]", First $ Just "dictionary")
             , ("[\"dictionary\",\"transcriber\"] [\"tra\",\"scr\",\"ber\"]", First $ Just "transcriber")
             ]
+    describe "q256017: CGAC2022 Day 25: When The Planets Align" $ do
+        specEval
+            "Ňᵖ{*+$/1%≡"
+            [ ("[0,0] [0,0] [1,1]", First $ Just "0")
+            , ("[1,0] [1,0] [100,100]", First $ Just "99")
+            , ("[1,5,3] [0,1,0] [4,8,12]", First $ Just "5")
+            ]
     describe "q256147: Find the Prime Signature" $ do
         specEval
             "ƒo↔"
@@ -667,6 +694,21 @@ testEval = describe "Evaluation" $ do
             , ("[5,8,7], 9", All ["15"])
             , ("[2,9,4,8], 7", All ["24"])
             ]
+    describe "q257372: Smallest Bit Rotation" $ do
+        specEval
+            "2DxŘ2bṁ"
+            [ ("177", All ["27"])
+            , ("1", All ["1"])
+            , ("12", All ["3"])
+            , ("23", All ["15"])
+            , ("34", All ["5"])
+            , ("45", All ["27"])
+            , ("56", All ["7"])
+            , ("67", All ["7"])
+            , ("78", All ["29"])
+            , ("89", All ["27"])
+            , ("100", All ["19"])
+            ]
     describe "q257752: Print all pandigital numbers" $ do
         specEval
             "Ňᵖ{*$Bu$L"
@@ -707,12 +749,12 @@ testEval = describe "Evaluation" $ do
     describe "q258335: Shortest Code to Find the Smallest Missing Positive Integer" $ do
         specEval
             "ŇPᵖf"
-            [ ("[1,2,3]", First (Just "4"))
-            , ("[3,4,-1,1]", First (Just "2"))
-            , ("[7,8,9,11,12]", First (Just "1"))
-            , ("[-5,-4,-3,-2,-1,0,1,2,3,5,7,10]", First (Just "4"))
-            , ("[]", First (Just "1"))
-            , ("[-1,-4,-7]", First (Just "1"))
+            [ ("[1,2,3]", First $ Just "4")
+            , ("[3,4,-1,1]", First $ Just "2")
+            , ("[7,8,9,11,12]", First $ Just "1")
+            , ("[-5,-4,-3,-2,-1,0,1,2,3,5,7,10]", First $ Just "4")
+            , ("[]", First $ Just "1")
+            , ("[-1,-4,-7]", First $ Just "1")
             ]
     describe "q258110: A Fine sequence with fine interpretations" $ do
         specEval
@@ -867,9 +909,9 @@ testEval = describe "Evaluation" $ do
     describe "q259707: Shortest distinguishable slice" $ do
         specEval
             "e¥b¥Dx:ᵃ~→ᵖ{r+@Ť:u=}ç$+"
-            [ ("[\"happy\",\"angry\",\"hungry\"]", First (Just "[1,2]"))
-            , ("[\"sheer\",\"shrew\",\"shine\",\"shire\",\"spike\",\"shy\"]", First (Just "[2,4]"))
-            , ("[\"snap\",\"crackle\",\"pop\",\"smack\",\"sizzle\",\"whiff\",\"sheen\"]", First (Just "[0,2]"))
+            [ ("[\"happy\",\"angry\",\"hungry\"]", First $ Just "[1,2]")
+            , ("[\"sheer\",\"shrew\",\"shine\",\"shire\",\"spike\",\"shy\"]", First $ Just "[2,4]")
+            , ("[\"snap\",\"crackle\",\"pop\",\"smack\",\"sizzle\",\"whiff\",\"sheen\"]", First $ Just "[0,2]")
             ]
     describe "q259875: How Super is this Prime?" $ do
         specEval

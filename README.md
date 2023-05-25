@@ -1,6 +1,6 @@
 # Nekomata
 
-Trying to make a small [non-deterministic](https://en.wikipedia.org/wiki/Nondeterministic_programming) [concatenative](https://en.wikipedia.org/wiki/Concatenative_programming_language) [golfing](https://en.wikipedia.org/wiki/Code_golf) language.
+Trying to make an experimental [non-deterministic](https://en.wikipedia.org/wiki/Nondeterministic_programming) [concatenative](https://en.wikipedia.org/wiki/Concatenative_programming_language) [golfing](https://en.wikipedia.org/wiki/Code_golf) language.
 
 The implementation of non-determinism is based on the paper [*KiCS2: A New Compiler from Curry to Haskell*](https://www.informatik.uni-kiel.de/~mh/papers/WFLP11_KiCS2.pdf).
 
@@ -22,6 +22,6 @@ You can also [search for `Nekomata` on Code Golf StackExchange](https://codegolf
 
 Nekomata is influenced by the following languages:
 
-- [**Curry**](https://curry.pages.ps.informatik.uni-kiel.de/curry-lang.org/). Curry is the first non-deterministic programming language I've heard of. Nekomata is lazy, purely functional, and non-deterministic like Curry. The implementation of non-determinism is also inspired by Curry's KiCS2 compiler.
+- [**Curry**](https://curry.pages.ps.informatik.uni-kiel.de/curry-lang.org/). Curry is the first non-deterministic programming language I've learned. Nekomata is lazy, purely functional, and non-deterministic like Curry. The implementation of non-determinism is also inspired by Curry's KiCS2 compiler.
 - [**Brachylog**](https://github.com/JCumin/Brachylog). This is a declarative logic golfing language based on Prolog. I think it's the first golfing language that uses non-determinism. Nekomata's syntax and choice of built-ins are heavily influenced by Brachylog. For example, Nekomata uses superscript letters for particles (called "Metapredicates" in Brachylog), though particles in Nekomata come before the arguments instead of after them.
 - [**Vyxal**](https://github.com/Vyxal/Vyxal), [**Jelly**](https://github.com/DennisMitchell/jellylanguage), [**05AB1E**](https://github.com/Adriandmen/05AB1E), [**Husk**](https://github.com/barbuz/Husk), [**Thunno 2**](https://github.com/Thunno/Thunno2) and other golfing languages. They influence Nekomata's choice of built-ins. When I don't know what built-in to add to Nekomata, I usually look at existing answers on [Code Golf StackExchange](https://codegolf.stackexchange.com/) in these languages.

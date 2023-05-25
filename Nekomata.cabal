@@ -24,7 +24,8 @@ name:            Nekomata
 version:         0.3.2.0
 
 -- A short (one-line) description of the package.
-synopsis:        A small non-determinstic concatenative golfing language
+synopsis:
+  An experimental non-determinstic concatenative golfing language
 
 -- A longer description of the package.
 -- description:
