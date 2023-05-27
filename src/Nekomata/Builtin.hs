@@ -763,6 +763,29 @@ builtins =
         setMinus
         "For each element in the second list, \
         \remove the first occurrence of that element in the first list."
+    , Builtin
+        "index"
+        'Ĩ'
+        index
+        "Get the index of any occurrence of an element in a list.\n\
+        \Fail if the element does not occur in the list.\n\
+        \This function is non-deterministic."
+    , Builtin
+        "tally"
+        'Ţ'
+        tally
+        "Count the number of occurrences of each element in a list.\n\
+        \Return a list of elements and a list of counts in the same order."
+    , Builtin
+        "intersect"
+        '∩'
+        intersect
+        "Get the intersection of two lists."
+    , Builtin
+        "union"
+        'Ŭ'
+        union
+        "Get the union of two lists."
     ]
 
 -- | The map from names to builtin functions

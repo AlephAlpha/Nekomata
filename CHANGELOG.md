@@ -1,8 +1,8 @@
 # Revision history for Nekomata
 
-## 0.3.3.0 -- Unreleased
+## 0.3.3.0 -- 2023-05-27
 
-* New built-in functions: `\factor`, `\rot3`.
+* New built-in functions: `\factor`, `\index`, `\intersect`, `\rot3`, `\tally`, `\union`.
 * New particle: `\dupDip2`.
 
 ## 0.3.2.0 -- 2023-05-15

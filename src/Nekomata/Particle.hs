@@ -102,9 +102,9 @@ builtinParticles =
         "Apply a function to the stack, \
         \and then push the original top value back."
     , BuiltinParticle
-        "dupDup2"
+        "dupDip2"
         'ᵋ'
-        dupDup2
+        dupDip2
         "(m -> n) -> (m -> n + 2)"
         "Apply a function to the stack, \
         \and then push the original top two values back."
@@ -294,10 +294,10 @@ dupDip = Particle dupDip'
         Just . Function (Arity m (n + 1)) $
             \i (x :+ s) -> x :+ f i (x :+ s)
 
-dupDup2 :: Particle
-dupDup2 = Particle dupDup2'
+dupDip2 :: Particle
+dupDip2 = Particle dupDip2'
   where
-    dupDup2' (Function (Arity m n) f) =
+    dupDip2' (Function (Arity m n) f) =
         Just . Function (Arity m (n + 2)) $
             \i (x :+ y :+ s) -> x :+ y :+ f i (x :+ y :+ s)
 

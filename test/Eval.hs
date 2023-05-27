@@ -209,6 +209,17 @@ testEval = describe "Evaluation" $ do
             , ("2", All ["6"])
             , ("3", All ["46662"])
             ]
+    describe "q104665: Coprimes up to N" $ do
+        specEval
+            "rG1Ĩ"
+            [ ("2", All ["1"])
+            , ("3", All ["1", "2"])
+            , ("6", All ["1", "5"])
+            , ("10", All ["1", "3", "7", "9"])
+            , ("20", All ["1", "3", "7", "9", "11", "13", "17", "19"])
+            , ("25", All ["1", "2", "3", "4", "6", "7", "8", "9", "11", "12", "13", "14", "16", "17", "18", "19", "21", "22", "23", "24"])
+            , ("30", All ["1", "7", "11", "13", "17", "19", "23", "29"])
+            ]
     describe "q105861: Can this number be written in (3^x) - 1 format?" $ do
         specEval
             "3D←P∑"
@@ -599,6 +610,17 @@ testEval = describe "Evaluation" $ do
         specEval
             "2R↕ᵐᶜ_"
             [("", All ["[1,2]", "[1,-2]", "[-1,2]", "[-1,-2]", "[2,1]", "[2,-1]", "[-2,1]", "[-2,-1]"])]
+    describe "q248991: The Unaverageables" $ do
+        specEval
+            "~ᵖ{+2/∩z"
+            [ ("[1,2,3]", All ["2"])
+            , ("[1,2,3,4]", All [])
+            , ("[1,3,4,5]", All ["4"])
+            , ("[1,5,10,20,40]", All ["1", "5", "10", "20", "40"])
+            , ("[1,5,6,10]", All ["1", "5", "6", "10"])
+            , ("[1,2,3,4,10,52,100,200]", All ["10", "52", "200"])
+            , ("[1,2,3,5,8,13,21,34]", All [])
+            ]
     describe "q251674: Number of ways to make an amount with coins" $ do
         specEval
             "Ṗ¢$¦"
@@ -802,7 +824,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q258992: Guessing on straws" $ do
         specEval
-            "SjoJŤđ=az"
+            "SjŢ2¦ađ"
             [ ("[[1,2],[1,2]]", Check True)
             , ("[[1,3],[1,3],[2,4],[2,4]]", Check False)
             , ("[[1,3],[2,4],[2,3],[1,4]]", Check True)
@@ -912,6 +934,25 @@ testEval = describe "Evaluation" $ do
             [ ("[\"happy\",\"angry\",\"hungry\"]", First $ Just "[1,2]")
             , ("[\"sheer\",\"shrew\",\"shine\",\"shire\",\"spike\",\"shy\"]", First $ Just "[2,4]")
             , ("[\"snap\",\"crackle\",\"pop\",\"smack\",\"sizzle\",\"whiff\",\"sheen\"]", First $ Just "[0,2]")
+            ]
+    describe "q259881: The Jaccard Index" $ do
+        specEval
+            ",Ţ←µ"
+            [ ("[1,2] []", All ["0"])
+            , ("[-7,3,-9] [9,2,3,4]", All ["1/6"])
+            , ("[1,2,3] [2,4,6]", All ["1/5"])
+            , ("[0,64] [0,64,89,93]", All ["1/2"])
+            , ("[6,42,7,1] [42,7,6]", All ["3/4"])
+            , ("[3,6,9] [3,6,9]", All ["1"])
+            ]
+        specEval
+            "ᵋ∩Ŭᵃ#/"
+            [ ("[1,2] []", All ["0"])
+            , ("[-7,3,-9] [9,2,3,4]", All ["1/6"])
+            , ("[1,2,3] [2,4,6]", All ["1/5"])
+            , ("[0,64] [0,64,89,93]", All ["1/2"])
+            , ("[6,42,7,1] [42,7,6]", All ["3/4"])
+            , ("[3,6,9] [3,6,9]", All ["1"])
             ]
     describe "q259875: How Super is this Prime?" $ do
         specEval

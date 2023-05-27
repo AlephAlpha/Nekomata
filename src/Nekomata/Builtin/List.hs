@@ -88,9 +88,9 @@ lengthIs :: Function
 lengthIs = binary lengthIs'
   where
     lengthIs' _ (DStringT xs) (DNumT y) =
-        liftString (\x -> liftInt (AsString . (`lengthIs_` x)) y) xs
+        liftString (\x -> liftInt (AsString . flip lengthIs_ x) y) xs
     lengthIs' _ (DListT xs) (DNumT y) =
-        liftList (\x -> liftInt (`lengthIs_` x) y) xs
+        liftList (\x -> liftInt (flip lengthIs_ x) y) xs
     lengthIs' _ _ _ = Fail
     lengthIs_ :: Integer -> ListTry a -> TryList a
     lengthIs_ 0 Nil = Val Nil
@@ -118,9 +118,9 @@ nth :: Function
 nth = binaryVecArg2 nth'
   where
     nth' _ (DStringT xs) (DNumT y) =
-        liftString (\x -> liftInt (`nth_` x) y) xs
+        liftString (\x -> liftInt (flip nth_ x) y) xs
     nth' _ (DListT xs) (DNumT y) =
-        liftList (\x -> liftInt (`nth_` x) y) xs
+        liftList (\x -> liftInt (flip nth_ x) y) xs
     nth' _ _ _ = Fail
     nth_ :: Integer -> ListTry a -> Try a
     nth_ 0 (Cons x _) = Val x
@@ -248,9 +248,9 @@ take' :: Function
 take' = binaryVecArg2 take''
   where
     take'' _ (DStringT xs) (DNumT y) =
-        liftString (\x -> liftInt (AsString . (`take_` x)) y) xs
+        liftString (\x -> liftInt (AsString . flip take_ x) y) xs
     take'' _ (DListT xs) (DNumT y) =
-        liftList (\x -> liftInt (`take_` x) y) xs
+        liftList (\x -> liftInt (flip take_ x) y) xs
     take'' _ _ _ = Fail
     take_ :: Integer -> ListTry a -> TryList a
     take_ 0 _ = Val Nil
@@ -295,16 +295,16 @@ subsequence = unary subsequence'
         Choice (leftId i) (Val s) (xs >>= suffix' (rightId i))
 
 join' :: Function
-join' = binary join''
+join' = binary (const join'')
 
-join'' :: Id -> DataTry -> DataTry -> TryData
-join'' _ (DStringT xs) (DStringT ys) = liftString2 (AsString .: join_) xs ys
-join'' i x@(DStringT _) y =
-    join'' i x (DStringT (fromList . map Det . show <$> toTry y))
-join'' i x y@(DStringT _) =
-    join'' i (DStringT (fromList . map Det . show <$> toTry x)) y
-join'' _ (DListT xs) (DListT ys) = liftList2 join_ xs ys
-join'' _ _ _ = Fail
+join'' :: DataTry -> DataTry -> TryData
+join'' (DStringT xs) (DStringT ys) = liftString2 (AsString .: join_) xs ys
+join'' x@(DStringT _) y =
+    join'' x (DStringT (fromList . map Det . show <$> toTry y))
+join'' x y@(DStringT _) =
+    join'' (DStringT (fromList . map Det . show <$> toTry x)) y
+join'' (DListT xs) (DListT ys) = liftList2 join_ xs ys
+join'' _ _ = Fail
 
 join_ :: ListTry a -> ListTry a -> TryList a
 join_ Nil ys = Val ys
@@ -353,7 +353,7 @@ concat' = unary concat''
     concat'' i (DListT xs) = xs >>= concat_ i
     concat'' _ _ = Fail
     concat_ _ Nil = Val . DListT $ Val Nil
-    concat_ i (Cons x xs) = liftJoinM2 (tryFoldl join'' i) x xs
+    concat_ i (Cons x xs) = liftJoinM2 (tryFoldl (const join'') i) x xs
 
 unconcat :: Function
 unconcat = unary unconcat'
@@ -466,15 +466,15 @@ rotate :: Function
 rotate = binaryVecArg2 rotate'
   where
     rotate' _ (DStringT xs) (DNumT y) =
-        liftString (\x -> liftInt (AsString . (`rotate_` x)) y) xs
+        liftString (\x -> liftInt (AsString . flip rotate_ x) y) xs
     rotate' _ (DListT xs) (DNumT y) =
-        liftList (\x -> liftInt (`rotate_` x) y) xs
+        liftList (\x -> liftInt (flip rotate_ x) y) xs
     rotate' _ _ _ = Fail
     rotate_ :: Integer -> ListTry a -> TryList a
     rotate_ _ Nil = Val Nil
     rotate_ n s@(Cons x xs)
         | n > 0 =
-            xs >>= (`join_` singleton x) >>= rotate_ (n - 1)
+            xs >>= flip join_ (singleton x) >>= rotate_ (n - 1)
         | n < 0 = reverse_ Nil s >>= rotate_ (-n) >>= reverse_ Nil
         | otherwise = Val s
 
@@ -529,3 +529,74 @@ setMinus = binary setMinus'
     delete x (Cons y ys) =
         tryEq x y
             >>= \b -> if b then ys else Val $ Cons y (ys >>= delete x)
+
+index :: Function
+index = binary index'
+  where
+    index' i (DListT xs) y = liftList (index_ i 0 (Val y)) xs
+    index' _ _ _ = Fail
+    index_ :: (TryEq a) => Id -> Integer -> a -> ListTry a -> Try Integer
+    index_ _ _ _ Nil = Fail
+    index_ i n y (Cons x xs) =
+        let ns = xs >>= index_ (rightId i) (n + 1) y
+         in tryEq x y >>= \b -> if b then Choice (leftId i) (Val n) ns else ns
+
+tally :: Function
+tally = unary2 tally'
+  where
+    tally' i (DStringT xs) = liftString12 (tally_ i . fmap Val) xs
+    tally' i (DListT xs) = liftList12 (tally_ i) xs
+    tally' _ _ = (Fail, Fail)
+    tally_ ::
+        (TryEq a) =>
+        Id ->
+        ListTry (Try a) ->
+        Try (ListTry a, ListTry Integer)
+    tally_ i xs = unzip' <$> tryFoldl insertCount i Nil xs
+    unzip' :: ListTry (a, b) -> (ListTry a, ListTry b)
+    unzip' Nil = (Nil, Nil)
+    unzip' (Cons x xs) =
+        let ys = unzip' <$> xs
+         in (Cons (fst x) (fst <$> ys), Cons (snd x) (snd <$> ys))
+    insertCount _ Nil x = Val $ singleton (x, 1)
+    insertCount i (Cons (y, n) ys) x =
+        tryEq x y
+            <&> \b ->
+                if b
+                    then Cons (y, n + 1) ys
+                    else Cons (y, n) $ ys >>= flip (insertCount i) x
+
+tryElem :: (TryEq a) => a -> ListTry a -> Try Bool
+tryElem _ Nil = Val False
+tryElem x (Cons y ys) =
+    tryEq x y >>= \b -> if b then Val True else ys >>= tryElem x
+
+intersect :: Function
+intersect = binary intersect'
+  where
+    intersect' _ (DStringT xs) (DStringT ys) =
+        liftString2 (AsString .: intersect_) xs ys
+    intersect' _ (DListT xs) (DListT ys) = liftList2 intersect_ xs ys
+    intersect' _ _ _ = Fail
+    intersect_ :: (TryEq a) => ListTry a -> ListTry a -> TryList a
+    intersect_ Nil _ = Val Nil
+    intersect_ (Cons x xs) ys =
+        tryElem x ys >>= \b ->
+            if b
+                then Val $ Cons x (xs >>= flip intersect_ ys)
+                else xs >>= flip intersect_ ys
+
+union :: Function
+union = binary union'
+  where
+    union' _ (DStringT xs) (DStringT ys) =
+        liftString2 (AsString .: union_) xs ys
+    union' _ (DListT xs) (DListT ys) = liftList2 union_ xs ys
+    union' _ _ _ = Fail
+    union_ :: (TryEq a) => ListTry a -> ListTry a -> TryList a
+    union_ Nil xs = Val xs
+    union_ (Cons x xs) ys =
+        tryElem x ys >>= \b ->
+            if b
+                then xs >>= flip union_ ys
+                else Val $ Cons x (xs >>= flip union_ ys)

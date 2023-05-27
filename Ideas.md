@@ -11,10 +11,10 @@ Nekomata 现在已经有了一个非常简单的解释器。不过已有的内�
 此处总结一下 Code Page 中已有但还没有用上的字符：
 
 ```
-×∂∞∩≈&'.VWXY`vwy|
+×∂∞≈&'.VWXY`vwy|
 ```
 
-有些是已经确定分配给什么函数的，比如说 `×` 给 `\convolve`，`∩` 给 `\intersection`。如果要支持位运算，`|` 给 `\bitOr`，`&` 给 `\bitAnd`，`X` 给 `\bitXor`。别的都还没想好。
+有些是已经确定分配给什么函数的，比如说 `×` 给 `\convolve`。如果要支持位运算，`|` 给 `\bitOr`，`&` 给 `\bitAnd`，`X` 给 `\bitXor`。别的都还没想好。
 
 LiberationMono 字体所支持的字符也列举于此，以后新的符号可以从这里挑选：
 
@@ -182,11 +182,10 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 ## [The Unaverageables](https://codegolf.stackexchange.com/q/248991/9288)
 
 ```
-\filter { \add 2 \div \intersection \unsingleton }
+\filter { \add 2 \div \intersect \unsingleton }
 ```
 
 - [ ] `\filter`：助词。过滤一个列表，只保留函数不返回 `Fail` 的元素。
-- [ ] `\intersection`：求两个列表的交集。
 
 ## [Move to Right and left](https://codegolf.stackexchange.com/q/241474/9288)
 
@@ -196,16 +195,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 
 - [ ] `\toBase2`：将一个数转换成二进制表示。
 - [ ] `\convolve`：卷积。比如说 `[1, 2, 3]` 和 `[4, 5, 6]` 卷积成 `[4, 13, 28, 27, 18]`。
-
-## [Guessing on straws](https://codegolf.stackexchange.com/q/258992/9288)
-
-参考 05AB1E 的解答：
-
-```
-\subset \concat \tally 2 \divExact \allValues \unpair
-```
-
-只差 `\tally` 还没有实现。
 
 ## [How long to carry sort?](https://codegolf.stackexchange.com/q/259167/9288)
 
@@ -223,7 +212,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 
 - [ ] `\toBase2Rev`：将一个数转换成二进制表示，低位在前。
 - [ ] `\bitxor`：按位异或。
-- [ ] `\recip`：求一个数的倒数。如果这个数是 0，那么返回 `Fail`。
 
 或者：
 
@@ -250,18 +238,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 ```
 
 刚说完 `\deinterleave`，这里又用到了。
-
-## [The Jaccard Index](https://codegolf.stackexchange.com/q/259881/9288)
-
-```
-\dupDip2 \intersection \union \apply2 \length \div
-```
-- [ ] `\union`：求两个列表的并集。
-
-或者抄 MATL 的解答，相当神奇的一个解答：
-
-```
-\join \tally \decrement \mean
 ```
 
 ## [How Super is this Prime?](https://codegolf.stackexchange.com/q/259875/9288)
@@ -312,12 +288,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 ```
 
 - [ ] `\apply2Pair`：助词。输入四个参数，将一个二元函数分别应用于前两个参数和后两个参数。
-
-## [Coprimes up to N](https://codegolf.stackexchange.com/q/104665/9288)
-
-```
-\range0 \gcd 1 \index
-```
 
 ## [Generate a Walsh Matrix](https://codegolf.stackexchange.com/q/162254/9288)
 

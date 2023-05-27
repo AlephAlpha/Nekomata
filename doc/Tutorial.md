@@ -150,6 +150,42 @@ But the following computation is different:
 
 This looks similar to the previous computation. It also pushes two elements onto the stack, both of which are either `1` or `2`. But the two elements are not related this time. So the result might be `1+1=2`, `1+2=3`, `2+1=3`, or `2+2=4`. When printing the results, `3` will appear twice, because there are two ways to get `3`.
 
+## Modes
+
+Nekomata is a non-deterministic programming language. A program can have multiple possible outputs. Nekomata supports four modes for outputting the results of a program:
+
+### `all`
+
+This is the default mode. It outputs all possible results of a program, separated by newlines.
+
+In the REPL, you can switch to this mode by typing `\Mode all`.
+
+### `first`
+
+This mode outputs the first result of a program. If the program has no results, it outputs nothing.
+
+When running a program from the command line, you can switch to this mode by passing the `-1` flag.
+
+In the REPL, you can switch to this mode by typing `\Mode first`.s
+
+### `count`
+
+This mode outputs the number of possible results of a program.
+
+When running a program from the command line, you can switch to this mode by passing the `-n` flag.
+
+In the REPL, you can switch to this mode by typing `\Mode count`.
+
+### `exists`
+
+This mode outputs `True` if the program has at least one result, and `False` otherwise.
+
+Since Nekomata does not have the concept of booleans or truthiness, this mode is required for [decision-problem](https://codegolf.stackexchange.com/questions/tagged/decision-problem) challenges.
+
+When running a program from the command line, you can switch to this mode by passing the `-e` flag.
+
+In the REPL, you can switch to this mode by typing `\Mode exists`.
+
 ## Example: Fibonacci Numbers (1)
 
 ```
@@ -183,7 +219,7 @@ A computation may also have no result at all. In this case, we say that the comp
 
 Nekomata does not have a Boolean type. Functions that return a Boolean value in other languages are represented by a function that possibly fails. For example, the built-in function `=` (`\eq`) returns the value itself if the top two elements of the stack are equal, and fails otherwise.
 
-This is useful for filtering out the correct path in a non-deterministic computation. Let's look at this example:
+This is useful for filtering out incorrect paths in a non-deterministic computation. Let's look at this example:
 
 ```
 1 2?2 3?=

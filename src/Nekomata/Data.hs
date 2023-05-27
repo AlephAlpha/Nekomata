@@ -120,7 +120,7 @@ tryMap2 ::
     a ->
     ListTry (Try b) ->
     ListTry (Try c)
-tryMap2 f i x = tryMap (`f` x) i
+tryMap2 f i x = tryMap (flip f x) i
 
 -- | Map a non-deterministic function that returns two values over a @TryList@
 tryUnzipWith ::

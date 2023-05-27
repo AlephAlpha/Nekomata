@@ -670,6 +670,28 @@ This function is non-deterministic.
 
 For each element in the second list, remove the first occurrence of that element in the first list.
 
+### `index` (`Ĩ`, `2 -> 1`)
+
+Get the index of any occurrence of an element in a list.
+
+Fail if the element does not occur in the list.
+
+This function is non-deterministic.
+
+### `tally` (`Ţ`, `1 -> 2`)
+
+Count the number of occurrences of each element in a list.
+
+Return a list of elements and a list of counts in the same order.
+
+### `intersect` (`∩`, `2 -> 1`)
+
+Get the intersection of two lists.
+
+### `union` (`Ŭ`, `2 -> 1`)
+
+Get the union of two lists.
+
 ## Particles
 
 ### `apply2` (`ᵃ`, `(0 -> n) -> (0 -> 2 * n) or (m -> n) -> (m + 1 -> 2 * n) where m > 0`)
@@ -690,7 +712,7 @@ Pop the top value of the stack, apply a function to the rest, and push the poppe
 
 Apply a function to the stack, and then push the original top value back.
 
-### `dupDup2` (`ᵋ`, `(m -> n) -> (m -> n + 2)`)
+### `dupDip2` (`ᵋ`, `(m -> n) -> (m -> n + 2)`)
 
 Apply a function to the stack, and then push the original top two values back.
 
