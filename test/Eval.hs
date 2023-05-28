@@ -58,6 +58,19 @@ testEval = describe "Evaluation" $ do
         specEval
             "\"Hello, World!\""
             [("", All ["Hello, World!"])]
+    describe "q57617: Is this number a prime?" $ do
+        specEval
+            "Q"
+            [ ("1", Check False)
+            , ("2", Check True)
+            , ("3", Check True)
+            , ("4", Check False)
+            , ("5", Check True)
+            , ("6", Check False)
+            , ("7", Check True)
+            , ("8", Check False)
+            , ("9", Check False)
+            ]
     describe "q62732: Implement a Truth-Machine" $ do
         specEval
             "ᶦP"
@@ -143,7 +156,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q83533: Calculate Euler's totient function" $ do
         specEval
-            "RG←¬∑"
+            "RGŢh"
             [ ("1", All ["1"])
             , ("2", All ["1"])
             , ("3", All ["2"])
@@ -152,6 +165,16 @@ testEval = describe "Evaluation" $ do
             , ("26", All ["12"])
             , ("44", All ["20"])
             , ("105", All ["48"])
+            ]
+    describe "q84519: Implement Takewhile" $ do
+        specEval
+            "2%∫¬∑T"
+            [ ("[14,42,2324,97090,4080622,171480372]", All ["[14,42,2324,97090,4080622,171480372]"])
+            , ("[42,14,42,2324]", All ["[42,14,42,2324]"])
+            , ("[7,14,42]", All ["[]"])
+            , ("[]", All ["[]"])
+            , ("[171480372,13,14,42]", All ["[171480372]"])
+            , ("[42,14,42,43,41,4080622,171480372]", All ["[42,14,42]"])
             ]
     describe "q84673: Is it a sum-free set?" $ do
         specEval
@@ -570,6 +593,18 @@ testEval = describe "Evaluation" $ do
             , ("1000", All ["1000"])
             , ("1001", All ["1000", "1001"])
             , ("4037 ", All ["1000", "2000", "3000", "4000", "4010", "4020", "4030", "4031", "4032", "4033", "4034", "4035", "4036", "4037"])
+            ]
+        specEval
+            "¢Bx¢E$ᶻřj↔∫"
+            [ ("4", All ["[1,2,3,4]"])
+            , ("16", All ["[10,11,12,13,14,15,16]"])
+            , ("35", All ["[10,20,30,31,32,33,34,35]"])
+            , ("103", All ["[100,101,102,103]"])
+            , ("320", All ["[100,200,300,310,320]"])
+            , ("354", All ["[100,200,300,310,320,330,340,350,351,352,353,354]"])
+            , ("1000", All ["[1000]"])
+            , ("1001", All ["[1000,1001]"])
+            , ("4037 ", All ["[1000,2000,3000,4000,4010,4020,4030,4031,4032,4033,4034,4035,4036,4037]"])
             ]
     describe "q245804: Damerau-Damerau distance" $ do
         specEval
@@ -1027,6 +1062,13 @@ testEval = describe "Evaluation" $ do
             , ("[99,55] [103,51]", Check True)
             , ("[99,55] [103,50]", Check False)
             , ("[102,52] [98,56]", Check True)
+            ]
+    describe "q260370: Counting fading" $ do
+        specEval
+            "~2rᶜ_↕+ᵖfaᵒ{-A∑}ᵐṁçṀ"
+            [ ("[]", All ["0"])
+            , ("[[1,1]]", All ["1"])
+            , ("[[1,2],[2,1],[2,2],[2,3],[3,2]]", All ["2"])
             ]
     describe "q260472: Find Index of Rational Number in Calkin-Wilf Sequence" $ do
         specEval

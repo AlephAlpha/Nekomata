@@ -238,7 +238,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 ```
 
 刚说完 `\deinterleave`，这里又用到了。
-```
 
 ## [How Super is this Prime?](https://codegolf.stackexchange.com/q/259875/9288)
 
@@ -338,4 +337,10 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 
 ```
 \map \sort \groupBy \map \first
+```
+
+## [Implement Takewhile](https://codegolf.stackexchange.com/q/84519/9288)
+
+```
+2 \mod \cumsum \minimumBy
 ```
