@@ -165,6 +165,13 @@ divExact = binaryVecFail divExact'
     divExact_ x y =
         let q = x / y in if denominator q == 1 then Val $ numerator q else Fail
 
+half :: Function
+half = unaryVec half'
+  where
+    half' _ (DNumT x) = liftInt half_ x
+    half' _ _ = Fail
+    half_ x = if even x then Val $ x `div` 2 else Fail
+
 pow :: Function
 pow = binaryVecFail pow'
   where
@@ -247,6 +254,24 @@ product' = unary product''
 dot :: Function
 dot = mul .* sum'
 
+convolve :: Function
+convolve = binary convolve'
+  where
+    convolve' i (DListT xs) (DListT ys) = liftList2 (convolve_ i) xs ys
+    convolve' _ _ _ = Fail
+    convolve_ :: Id -> ListTry TryData -> ListTry TryData -> ListTry TryData
+    convolve_ _ Nil _ = Nil
+    convolve_ _ _ Nil = Nil
+    convolve_ i xs (Cons y ys) =
+        zipWithPad
+            add'
+            (leftId i)
+            (tryMap (\i' x -> y >>= mul' i' x) (leftId (rightId i)) xs)
+            ( Cons
+                (toTryData (0 :: Integer))
+                (convolve_ (rightId (rightId i)) xs <$> ys)
+            )
+
 mean :: Function
 mean = dup .* sum' .* swap .* length' .* div'
 
@@ -288,6 +313,9 @@ toBase :: Function
 toBase = binaryVecOuter toBase'
   where
     toBase' i x y = toBaseRev' (leftId i) x y >>= reverse'' (rightId i)
+
+toBase2Rev :: Function
+toBase2Rev = constant (2 :: Integer) .* toBaseRev
 
 cumsum :: Function
 cumsum = unary cumsum'

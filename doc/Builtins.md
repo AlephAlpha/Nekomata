@@ -224,6 +224,14 @@ Fails when the divisor is zero or the result is not an integer.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+### `half` (`½`, `1 -> 1`)
+
+Divide an integer by two.
+
+Fails when the number is odd.
+
+This function is automatically vectorized.
+
 ### `pow` (`E`, `2 -> 1`)
 
 Raise a number to a power.
@@ -318,6 +326,10 @@ Take the dot product of two lists of numbers.
 
 The current implementation is simply a composition of mul and sum.
 
+### `convolve` (`×`, `2 -> 1`)
+
+Take the convolution of two lists of numbers.
+
 ### `mean` (`µ`, `1 -> 1`)
 
 Take the mean of a list of numbers.
@@ -361,6 +373,12 @@ The first argument is the integer, the second argument is the base.
 Fails when the inputs are not integers, or the base is less than 2.
 
 This function is automatically vectorized over both arguments. If both arguments are lists, the result is a list of lists of digits.
+
+### `toBase2Rev` (`Ƃ`, `1 -> 1`)
+
+Convert an integer to a list of binary digits in reverse order.
+
+This function is automatically vectorized.
 
 ### `cumsum` (`∫`, `1 -> 1`)
 
@@ -750,11 +768,27 @@ If one of the input is an number, apply the function to each integer from 0 to t
 
 ### `predicate` (`ᵖ`, `(m -> n) -> (1 -> 1)`)
 
-Apply a function without pushing or popping the stack, but replace the top value with Fail if the function fails.
+Check if a function would succeed without actually applying it.
+
+If the function fails, replace the top value with Fail.
+
+Otherwise, do nothing.
 
 ### `predicateNot` (`ᵗ`, `(m -> n) -> (1 -> 1)`)
 
-Apply a function without pushing or popping the stack, but replace the top value with Fail if the function succeeds.
+Check if a function would fail without actually applying it.
+
+If the function does not fail, replace the top value with Fail.
+
+Otherwise, do nothing.
+
+### `filter` (`ᶠ`, `(m -> n) -> (1 -> 1)`)
+
+For each value in a list, check if a function would succeed without actually applying it, and remove the value if it fails.
+
+If the input is a string, convert it to a list of characters before filtering.
+
+If the input is an number, convert it to a list of integers from 0 to the input minus 1 before filtering.
 
 ### `orApply` (`ᶜ`, `(n -> n) -> (n -> n)`)
 

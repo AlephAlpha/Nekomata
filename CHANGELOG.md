@@ -1,5 +1,11 @@
 # Revision history for Nekomata
 
+## 0.3.4.0 -- Unreleased
+
+* New built-in functions: `\convolve`, `\half`, `\toBase2Rev`.
+* New particle: `\filter`.
+* The code page is updated. The character `∞` (unused) is replaced with `½`.
+
 ## 0.3.3.0 -- 2023-05-27
 
 * New built-in functions: `\factor`, `\index`, `\intersect`, `\rot3`, `\tally`, `\union`.

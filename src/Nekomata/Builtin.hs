@@ -282,6 +282,13 @@ builtins =
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
+        "half"
+        '½'
+        half
+        "Divide an integer by two.\n\
+        \Fails when the number is odd.\n\
+        \This function is automatically vectorized."
+    , Builtin
         "pow"
         'E'
         pow
@@ -377,6 +384,11 @@ builtins =
         \The current implementation is simply a composition of \
         \mul and sum."
     , Builtin
+        "convolve"
+        '×'
+        convolve
+        "Take the convolution of two lists of numbers."
+    , Builtin
         "mean"
         'µ'
         mean
@@ -423,6 +435,12 @@ builtins =
         \This function is automatically vectorized over both arguments. \
         \If both arguments are lists, \
         \the result is a list of lists of digits."
+    , Builtin
+        "toBase2Rev"
+        'Ƃ'
+        toBase2Rev
+        "Convert an integer to a list of binary digits in reverse order.\n\
+        \This function is automatically vectorized."
     , Builtin
         "cumsum"
         '∫'

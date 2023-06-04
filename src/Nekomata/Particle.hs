@@ -156,15 +156,28 @@ builtinParticles =
         'ᵖ'
         predicate'
         "(m -> n) -> (1 -> 1)"
-        "Apply a function without pushing or popping the stack, \
-        \but replace the top value with Fail if the function fails."
+        "Check if a function would succeed without actually applying it.\n\
+        \If the function fails, replace the top value with Fail.\n\
+        \Otherwise, do nothing."
     , BuiltinParticle
         "predicateNot"
         'ᵗ'
         predicateNot'
         "(m -> n) -> (1 -> 1)"
-        "Apply a function without pushing or popping the stack, \
-        \but replace the top value with Fail if the function succeeds."
+        "Check if a function would fail without actually applying it.\n\
+        \If the function does not fail, replace the top value with Fail.\n\
+        \Otherwise, do nothing."
+    , BuiltinParticle
+        "filter"
+        'ᶠ'
+        filter'
+        "(m -> n) -> (1 -> 1)"
+        "For each value in a list, check if a function would succeed \
+        \without actually applying it, and remove the value if it fails.\n\
+        \If the input is a string, convert it to a list of characters \
+        \before filtering.\n\
+        \If the input is an number, convert it to a list of integers \
+        \from 0 to the input minus 1 before filtering."
     , BuiltinParticle
         "orApply"
         'ᶜ'
@@ -369,10 +382,8 @@ predicate' = Particle predicate''
     predicate'' (Function (Arity _ _) f) =
         Just . Function (Arity 1 1) $
             \i (x :+ s) ->
-                ( normalForm x
-                    >>= (\x' -> normalForm (top (f i (Val x' :+ s))) $> x')
-                )
-                    :+ s
+                let f' i' x' = top $ f i' (Val x' :+ s)
+                 in (normalForm x >>= (\x' -> normalForm (f' i x') $> x')) :+ s
 
 predicateNot' :: Particle
 predicateNot' = Particle predicateNot''
@@ -380,12 +391,21 @@ predicateNot' = Particle predicateNot''
     predicateNot'' (Function (Arity _ _) f) =
         Just . Function (Arity 1 1) $
             \i (x :+ s) ->
-                ( normalForm x
-                    >>= predicateNot_ (\x' -> top (f i (Val x' :+ s)))
-                )
-                    :+ s
+                let f' i' x' = top $ f i' (Val x' :+ s)
+                 in (normalForm x >>= predicateNot_ (f' i)) :+ s
     predicateNot_ f x =
         Cut $ \ds -> (ds, if hasValue ds (f x) then Fail else Val x)
+
+filter' :: Particle
+filter' = Particle filter''
+  where
+    filter'' (Function (Arity _ _) f) =
+        Just . Function (Arity 1 1) $
+            \i (x :+ s) ->
+                let f' i' x' = top $ f i' (Val x' :+ s)
+                    f'' i' x' = normalForm (f' i' x') $> x'
+                 in (x >>= liftList (filterTry . tryMap f'' i) . toTryList)
+                        :+ s
 
 orApply :: Particle
 orApply = Particle orApply'

@@ -36,6 +36,6 @@ with open(output_dir + "corpus.txt", "w") as f:
 
 for n in range(1, 6):
     freq = ngram_freq(corpus, n)
-    with open(output_dir + f"ngram_freq_{n}.txt", "w") as f:
+    with open(output_dir + f"freq_{n}gram.txt", "w") as f:
         for ngram, count in freq.items():
             f.write(f"{ngram} : {count}\n")
