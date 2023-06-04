@@ -147,7 +147,6 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 
 需要 `-1` flag 来仅输出第一个结果。
 
-- [ ] `\tally`：统计一个列表中每个元素出现的次数。比如说 `[2, 2, 3]` 统计成 `[2, 3] [2, 1]`。
 - [ ] `\maximumBy`：输入两个列表，其长度必须一致。根据第一个列表中最大的元素的索引，返回第二个列表中对应的元素。由于最大的元素可能不止一个，所以这个函数是 non-deterministic 的。
 
 ## [Painting with Line Filler](https://codegolf.stackexchange.com/q/256978/9288)
@@ -326,4 +325,32 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 
 ```
 \filter { \unconcat \subset \equal } \dup \map \length \minimumBy
+```
+
+## [2048-like array shift](https://codegolf.stackexchange.com/q/95409/9288)
+
+```
+\chunks \map { \deinterleave \add \reverse } \concat
+```
+
+## [The shortest way to find one unique value when all other values are the same](https://codegolf.stackexchange.com/q/207736/9288)
+
+```
+\tally \minimumBy
+```
+
+```
+\sort \chunks \anyOf \unsingleton
+```
+
+```
+\extract \swap \allEqual \then
+```
+
+- [ ] `\then`: 相当于 `Try` monad 里的 `>>`。
+
+## [Most Common Multiple](https://codegolf.stackexchange.com/q/170047/9288)
+
+```
+\subset \unpair \times \allValues \tally \maximumBy
 ```

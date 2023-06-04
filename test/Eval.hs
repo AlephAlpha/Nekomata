@@ -91,6 +91,15 @@ testEval = describe "Evaluation" $ do
             , ("8", Check False)
             , ("9", Check False)
             ]
+    describe "q60610: Non-Unique/Duplicate Elements" $ do
+        specEval
+            "u∕u"
+            [ ("[]", All ["[]"])
+            , ("[-1,0,1]", All ["[]"])
+            , ("[1,1]", All ["[1]"])
+            , ("[3,0,0,1,1,0,5,3]", All ["[1,0,3]"])
+            , ("[-34,0,1,-34,4,8,4]", All ["[-34,4]"])
+            ]
     describe "q62732: Implement a Truth-Machine" $ do
         specEval
             "ᶦP"
