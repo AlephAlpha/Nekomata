@@ -710,6 +710,10 @@ Get the intersection of two lists.
 
 Get the union of two lists.
 
+### `chunks` (`ĉ`, `1 -> 1`)
+
+Split a list or a string into a list of chunks of equal elements.
+
 ## Particles
 
 ### `apply2` (`ᵃ`, `(0 -> n) -> (0 -> 2 * n) or (m -> n) -> (m + 1 -> 2 * n) where m > 0`)

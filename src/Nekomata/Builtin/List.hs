@@ -600,3 +600,24 @@ union = binary union'
             if b
                 then xs >>= flip union_ ys
                 else Val $ Cons x (xs >>= flip union_ ys)
+
+chunks :: Function
+chunks = unary chunks'
+  where
+    chunks' _ (DStringT xs) = liftString chunks_ xs
+    chunks' _ (DListT xs) = liftList chunks_ xs
+    chunks' _ _ = Fail
+    chunks_ :: (TryEq a) => ListTry a -> TryList (TryList a)
+    chunks_ Nil = Val Nil
+    chunks_ (Cons x xs) =
+        xs
+            >>= spanEq x
+            <&> \(ys, zs) -> Cons (Val $ Cons x (Val ys)) (chunks_ zs)
+    spanEq :: (TryEq a) => a -> ListTry a -> Try (ListTry a, ListTry a)
+    spanEq _ Nil = Val (Nil, Nil)
+    spanEq x s@(Cons y ys) =
+        tryEq x y
+            >>= \b ->
+                if b
+                    then ys >>= spanEq x <&> first (Cons x . Val)
+                    else Val (Nil, s)

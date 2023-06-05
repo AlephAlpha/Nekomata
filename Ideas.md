@@ -90,7 +90,6 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 \chunks \dup \map \length \minimumBy
 ```
 
-- [ ] `\chunks`：将一个列表从相邻元素不相等的地方拆开，得到一个列表的列表。比如输入 `[1, 2, 2, 3, 3, 3, 4, 5, 5, 5, 5, 6]`，输出 `[[1], [2, 2], [3, 3, 3], [4], [5, 5, 5, 5], [6]]`。
 - [ ] `\minimumBy`：输入两个列表，其长度必须一致。根据第一个列表中最小的元素的索引，返回第二个列表中对应的元素。由于最小的元素可能不止一个，所以这个函数是 non-deterministic 的。
 
 和前面的 `\groupBy` 一样，`\minimumBy` 也是一个普通的函数而不是助词。但如果改成助词的话，解答会更短一些：
@@ -128,16 +127,6 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 ```
 
 - [ ] `\anyPair`：输入两个列表，输出一个二元组，第一个元素是第一个列表的任意一个元素，第二个元素是第二个列表的任意一个元素。这个函数是 non-deterministic 的。实现时要注意两个列表的长度都可能是无穷的。
-
-## [Chunk + Enumerate a list of digits](https://codegolf.stackexchange.com/q/189932/9288)
-
-参考 Jonathan Allan 的 Jelly 解答：
-
-```
-\prefix \nonempty \chunks \length
-```
-
-几次用到 `\prefix` 都只需要用到非空的前缀。可以考虑让它只输出非空的前缀，省去 `\nonempty`。但如果碰上确实需要空前缀的情况，需要补上的字节数会更多。`\suffix` 和 `\subsequence` 也有类似的问题。
 
 ## [Mode (most common element) of a list](https://codegolf.stackexchange.com/q/42529/9288)
 
@@ -256,6 +245,8 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 \range1 \foldl1 \lcm
 ```
 
+- [ ] `\foldl1`：从左到右地将一个二元函数应用于一个列表中的所有元素。比如说 `[1, 2, 3] \foldl1 \add` 等价于 `1 2 \add 3 \add`。
+
 ## [String Comparison](https://codegolf.stackexchange.com/q/259987/9288)
 
 ```
@@ -340,10 +331,6 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 ```
 
 ```
-\sort \chunks \anyOf \unsingleton
-```
-
-```
 \extract \swap \allEqual \then
 ```
 
@@ -353,4 +340,10 @@ Vyxal、Jelly、05AB1E 都用到了类似于 fixed-point 的函数，但这个�
 
 ```
 \subset \unpair \times \allValues \tally \maximumBy
+```
+
+## [Least Common Multiple](https://codegolf.stackexchange.com/q/94999/9288)
+
+```
+\foldl1 \lcm
 ```

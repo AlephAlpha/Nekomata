@@ -97,7 +97,7 @@ testEval = describe "Evaluation" $ do
             [ ("[]", All ["[]"])
             , ("[-1,0,1]", All ["[]"])
             , ("[1,1]", All ["[1]"])
-            , ("[3,0,0,1,1,0,5,3]", All ["[1,0,3]"])
+            , ("[3,0,0,1,1,0,5,3]", All ["[0,1,3]"])
             , ("[-34,0,1,-34,4,8,4]", All ["[-34,4]"])
             ]
     describe "q62732: Implement a Truth-Machine" $ do
@@ -520,6 +520,10 @@ testEval = describe "Evaluation" $ do
             , ("[0,19,2,0,10,10,16,9,19,9,15,0,10,18,0,17,18,18,0,9]", All ["5"])
             , ("[1,19,17,17,0,2,14,10,10,12,5,14,16,7,15,15,18,11,17,7]", All ["5"])
             ]
+    describe "q189932: Chunk + Enumerate a list of digits" $ do
+        specEval
+            "pNĉ#"
+            [("[4,4,4,7,7,9,9,9,9,2,2,2,4,4]", All ["1", "1", "1", "2", "2", "3", "3", "3", "3", "4", "4", "4", "5", "5"])]
     describe "q199290: Reversed Iota's" $ do
         specEval
             "RRᵐ↔"
@@ -527,6 +531,17 @@ testEval = describe "Evaluation" $ do
         specEval
             "RpN↔"
             [("4", All ["[1]", "[2,1]", "[3,2,1]", "[4,3,2,1]"])]
+    describe "q207736: The shortest way to find one unique value when all other values are the same" $ do
+        specEval
+            "oĉ~z"
+            [ ("[1,1,1,2,1,1]", All ["2"])
+            , ("[3,5,5,5,5]", All ["3"])
+            , ("[9,2,9,9,9,9,9]", All ["2"])
+            , ("[4,4,4,6]", All ["6"])
+            , ("[5,8,8]", All ["5"])
+            , ("[8,5,8]", All ["5"])
+            , ("[8,8,5]", All ["5"])
+            ]
     describe "q217303: Linear integer function generator" $ do
         specEval
             "ᵉᵑ{ˣ∙ɔᵈç}T"

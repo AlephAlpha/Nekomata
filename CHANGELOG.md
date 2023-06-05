@@ -2,7 +2,7 @@
 
 ## 0.3.4.0 -- Unreleased
 
-* New built-in functions: `\convolve`, `\half`, `\toBase2Rev`.
+* New built-in functions: `\chunks`, `\convolve`, `\half`, `\toBase2Rev`.
 * New particle: `\filter`.
 * The code page is updated. The character `∞` (unused) is replaced with `½`.
 

@@ -804,6 +804,11 @@ builtins =
         'Ŭ'
         union
         "Get the union of two lists."
+    , Builtin
+        "chunks"
+        'ĉ'
+        chunks
+        "Split a list or a string into a list of chunks of equal elements."
     ]
 
 -- | The map from names to builtin functions
