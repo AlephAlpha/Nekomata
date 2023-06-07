@@ -36,6 +36,9 @@ normalForm' = Function (Arity 1 1) $ \_ (x :+ s) -> normalForm x :+ s
 if' :: Function
 if' = choice .* oneValue
 
+andThen :: Function
+andThen = Function (Arity 2 1) $ \_ (x :+ y :+ s) -> (normalForm x >> y) :+ s
+
 drop' :: Function
 drop' = Function (Arity 1 0) $ \_ (_ :+ s) -> s
 

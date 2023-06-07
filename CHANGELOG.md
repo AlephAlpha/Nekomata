@@ -1,10 +1,13 @@
 # Revision history for Nekomata
 
-## 0.3.4.0 -- Unreleased
+## 0.3.4.0 -- 2023-06-07
 
-* New built-in functions: `\chunks`, `\convolve`, `\half`, `\toBase2Rev`.
+* New built-in functions: `\andThen`, `\chunks`, `\convolve`, `\extract`, `\half`, `\isZero`, `\toBase2Rev`.
 * New particle: `\filter`.
-* The code page is updated. The character `∞` (unused) is replaced with `½`.
+
+### Breaking changes
+
+* The code page is updated. The character `∞` is replaced with `½`, and the character `∂` is replaced with `¿`.
 
 ## 0.3.3.0 -- 2023-05-27
 

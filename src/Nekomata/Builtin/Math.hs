@@ -27,6 +27,12 @@ isPositive = predicateVec isPositive'
     isPositive' _ (DNumT x) = (> 0) . unDet <$> x
     isPositive' _ _ = Fail
 
+isZero :: Function
+isZero = predicateVec isZero'
+  where
+    isZero' _ (DNumT x) = (== 0) . unDet <$> x
+    isZero' _ _ = Fail
+
 less :: Function
 less = predicateVec2 less'
   where

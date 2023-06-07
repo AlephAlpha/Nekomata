@@ -108,7 +108,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q63999: Parenthifiable Binary Numbers" $ do
         specEval
-            "Ƃ£E∫Ɔ0=≥"
+            "Ƃ£E∫Ɔž≥"
             [ ("2", Check True)
             , ("10", Check True)
             , ("12", Check True)
@@ -247,7 +247,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q94291: Is it a balanced number?" $ do
         specEval
-            "¢D;ᶜtᶻ-∑0="
+            "¢D;ᶜtᶻ-∑ž"
             [ ("1", Check True)
             , ("6", Check True)
             , ("11", Check True)
@@ -300,6 +300,15 @@ testEval = describe "Evaluation" $ do
             , ("6", All ["6"])
             , ("7", All ["7"])
             ]
+    describe "q119854: Raise integer x to power x, without exponentiation built-ins" $ do
+        specEval
+            "ř∏"
+            [ ("2", All ["4"])
+            , ("3", All ["27"])
+            , ("5", All ["3125"])
+            , ("6", All ["46656"])
+            , ("10", All ["10000000000"])
+            ]
     describe "q199409: Is it a doubling sequence?" $ do
         specEval
             "∆$i≥"
@@ -313,7 +322,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q120350: Determine if an Array contains something other than 2" $ do
         specEval
-            "2-¬/"
+            "2-ž"
             [ ("[2]", Check True)
             , ("[2,2]", Check True)
             , ("[[2],[2,2],2]", Check True)
@@ -534,6 +543,16 @@ testEval = describe "Evaluation" $ do
     describe "q207736: The shortest way to find one unique value when all other values are the same" $ do
         specEval
             "oĉ~z"
+            [ ("[1,1,1,2,1,1]", All ["2"])
+            , ("[3,5,5,5,5]", All ["3"])
+            , ("[9,2,9,9,9,9,9]", All ["2"])
+            , ("[4,4,4,6]", All ["6"])
+            , ("[5,8,8]", All ["5"])
+            , ("[8,5,8]", All ["5"])
+            , ("[8,8,5]", All ["5"])
+            ]
+        specEval
+            "ĕ$≡¿"
             [ ("[1,1,1,2,1,1]", All ["2"])
             , ("[3,5,5,5,5]", All ["3"])
             , ("[9,2,9,9,9,9,9]", All ["2"])
@@ -866,6 +885,18 @@ testEval = describe "Evaluation" $ do
             , ("[1,1,2]", All ["1", "2"])
             , ("[1,2,7,2,7,2,3,7]", All ["1", "2", "3", "7"])
             ]
+    describe "q256978: Painting with Line Filler" $ do
+        specEval
+            "ʷ{ᶜŤĕ≡¿}Ø="
+            [ ("[[1,1,1,1,1],[2,3,4,5,6],[2,3,4,5,6]]", Check True)
+            , ("[[1,1,1,1,1],[2,3,4,1,6],[2,3,4,1,6]]", Check True)
+            , ("[[1,1,1,1,6],[2,3,4,1,6],[2,3,4,1,6]]", Check True)
+            , ("[[1,1],[1,1]]", Check True)
+            , ("[[1,2],[2,1]]", Check False)
+            , ("[[1,2],[3,4]]", Check False)
+            , ("[[1,1,2],[4,5,2],[4,3,3]]", Check False)
+            , ("[[1,2,4],[2,1,4],[3,3,3]]", Check False)
+            ]
     describe "q257631: Time to shortest permutation" $ do
         specEval
             "↕ᵃ{J¢ᵚb\"∩<\"e<60b}-_Paṁ"
@@ -1040,7 +1071,7 @@ testEval = describe "Evaluation" $ do
             , ("[3,3,2,1,1]", Check True)
             ]
         specEval
-            "ʷ{P↕1:Ð-:C0=+?}0U="
+            "ʷ{P↕1:Ð-:Cž¿?}žz"
             [ ("[1]", Check False)
             , ("[4]", Check False)
             , ("[1,1,1,1]", Check False)

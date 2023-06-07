@@ -93,8 +93,7 @@ builtins =
         "uniqueValue"
         'ũ'
         uniqueValue
-        "Remove duplicate values from a non-deterministic object.\n\
-        \This function is non-deterministic."
+        "Remove duplicate values from a non-deterministic object."
     , Builtin
         "normalForm"
         '¤'
@@ -108,6 +107,12 @@ builtins =
         'I'
         if'
         "Choose the first value that doesn't fail between two values."
+    , Builtin
+        "andThen"
+        '¿'
+        andThen
+        "Take two values, \n\
+        \and return the first one if the second one doesn't fail."
     , Builtin "drop" '^' drop' "Drop the top value of the stack."
     , Builtin "dup" ':' dup "Duplicate the top value of the stack."
     , Builtin "swap" '$' swap "Swap the top two values of the stack."
@@ -146,6 +151,13 @@ builtins =
         'P'
         isPositive
         "Check if a number is positive.\n\
+        \If it is, push the number itself, otherwise fail.\n\
+        \This function is automatically vectorized."
+    , Builtin
+        "isZero"
+        'ž'
+        isZero
+        "Check if a number is zero.\n\
         \If it is, push the number itself, otherwise fail.\n\
         \This function is automatically vectorized."
     , Builtin
@@ -734,6 +746,13 @@ builtins =
         '↕'
         permutation
         "Get a permutation of a list or a string.\n\
+        \This function is non-deterministic."
+    , Builtin
+        "extract"
+        'ĕ'
+        extract
+        "Extract an element from a list or a character from a string.\n\
+        \Returns the element and the rest of the list or string.\n\
         \This function is non-deterministic."
     , Builtin
         "allEqual"

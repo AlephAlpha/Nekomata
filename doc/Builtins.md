@@ -32,8 +32,6 @@ Count the number of values in a non-deterministic object.
 
 Remove duplicate values from a non-deterministic object.
 
-This function is non-deterministic.
-
 ### `normalForm` (`¤`, `1 -> 1`)
 
 Convert a non-deterministic object to the normal form.
@@ -43,6 +41,12 @@ I haven't given a formal definition for the normal form. This function basically
 ### `if` (`I`, `2 -> 1`)
 
 Choose the first value that doesn't fail between two values.
+
+### `andThen` (`¿`, `2 -> 1`)
+
+Take two values, 
+
+and return the first one if the second one doesn't fail.
 
 ### `drop` (`^`, `1 -> 0`)
 
@@ -89,6 +93,14 @@ This function is automatically vectorized.
 ### `isPositive` (`P`, `1 -> 1`)
 
 Check if a number is positive.
+
+If it is, push the number itself, otherwise fail.
+
+This function is automatically vectorized.
+
+### `isZero` (`ž`, `1 -> 1`)
+
+Check if a number is zero.
 
 If it is, push the number itself, otherwise fail.
 
@@ -643,6 +655,14 @@ Sort a list or a string.
 ### `permutation` (`↕`, `1 -> 1`)
 
 Get a permutation of a list or a string.
+
+This function is non-deterministic.
+
+### `extract` (`ĕ`, `1 -> 2`)
+
+Extract an element from a list or a character from a string.
+
+Returns the element and the rest of the list or string.
 
 This function is non-deterministic.
 

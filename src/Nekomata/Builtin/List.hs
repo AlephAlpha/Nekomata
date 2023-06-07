@@ -2,7 +2,7 @@
 
 module Nekomata.Builtin.List where
 
-import Control.Arrow (first, second, (***))
+import Control.Arrow (first, (***))
 import Control.Monad (join, liftM2)
 import Data.Functor ((<&>))
 import Data.Maybe (fromMaybe)
@@ -427,15 +427,24 @@ permutation = unary permutation'
     permutation_ :: Id -> ListTry a -> TryList a
     permutation_ _ Nil = Val Nil
     permutation_ i xs =
-        extract' (leftId i) xs >>= \(x, xs') ->
+        extract_ (leftId i) xs >>= \(xs', x) ->
             Val $ Cons x (xs' >>= permutation_ (rightId i))
-    extract' :: Id -> ListTry a -> Try (a, TryList a)
-    extract' _ Nil = Fail
-    extract' i (Cons x xs) =
-        Choice
-            (leftId i)
-            (Val (x, xs))
-            (xs >>= extract' (rightId i) <&> second (Val . Cons x))
+
+extract :: Function
+extract = unary2 extract'
+  where
+    extract' i (DStringT xs) =
+        liftString12 (fmap (first AsString) . extract_ i) xs
+    extract' i (DListT xs) = liftList12 (extract_ i) xs
+    extract' _ _ = (Fail, Fail)
+
+extract_ :: Id -> ListTry a -> Try (TryList a, a)
+extract_ _ Nil = Fail
+extract_ i (Cons x xs) =
+    Choice
+        (leftId i)
+        (Val (xs, x))
+        (xs >>= extract_ (rightId i) <&> first (Val . Cons x))
 
 allEqual :: Function
 allEqual = unary allEqual'
