@@ -4,7 +4,7 @@ Trying to make an experimental [non-deterministic](https://en.wikipedia.org/wiki
 
 The implementation of non-determinism is based on the paper [*KiCS2: A New Compiler from Curry to Haskell*](https://www.informatik.uni-kiel.de/~mh/papers/WFLP11_KiCS2.pdf).
 
-The language is still in an early stage of development. Many important features are not implemented yet. The custom code page is incomplete. I'm not even sure if it's Turing-complete yet.
+The language is still in an early stage of development. Many important features are not implemented yet. The custom code page is incomplete. The semantics of some built-ins are not clear. I'm not even sure if it's Turing-complete yet.
 
 ## Name
 

@@ -1,5 +1,13 @@
 # Revision history for Nekomata
 
+## 0.3.5.0 -- Unreleased
+
+* New built-in functions: `\deinterleave`, `\maximumBy`, `\minimumBy`.
+
+### Breaking changes
+
+* `\toBase2Rev` is renamed to `\binary`.
+
 ## 0.3.4.0 -- 2023-06-07
 
 * New built-in functions: `\andThen`, `\chunks`, `\convolve`, `\extract`, `\half`, `\isZero`, `\toBase2Rev`.

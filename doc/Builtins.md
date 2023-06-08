@@ -386,7 +386,7 @@ Fails when the inputs are not integers, or the base is less than 2.
 
 This function is automatically vectorized over both arguments. If both arguments are lists, the result is a list of lists of digits.
 
-### `toBase2Rev` (`Ƃ`, `1 -> 1`)
+### `binary'` (`Ƃ`, `1 -> 1`)
 
 Convert an integer to a list of binary digits in reverse order.
 
@@ -624,13 +624,21 @@ This function is automatically vectorized on the second argument.
 
 Get the minimum of a list.
 
-This order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or strings.
+If there are multiple minimums, return the first one.
+
+Fail when the list is empty.
+
+The order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or strings.
 
 ### `maximum` (`Ṁ`, `1 -> 1`)
 
 Get the maximum of a list.
 
-This order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or strings.
+If there are multiple maximums, return the first one.
+
+Fail when the list is empty.
+
+The order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or strings.
 
 ### `concat` (`j`, `1 -> 1`)
 
@@ -733,6 +741,30 @@ Get the union of two lists.
 ### `chunks` (`ĉ`, `1 -> 1`)
 
 Split a list or a string into a list of chunks of equal elements.
+
+### `deinterleave` (`ĭ`, `1 -> 2`)
+
+Deinterleave a list or a string into a list of elements at even positions and a list of elements at odd positions.
+
+### `minimumBy` (`ṃ`, `2 -> 1`)
+
+Get the minimum value of a list according to a list of keys.
+
+If there are multiple minimums, return any of them non-deterministically.
+
+Fails when the two lists are of different lengths.
+
+This function is non-deterministic.
+
+### `maximumBy` (`Ṃ`, `2 -> 1`)
+
+Get the maximum value of a list according to a list of keys.
+
+If there are multiple maximums, return any of them non-deterministically.
+
+Fails when the two lists are of different lengths.
+
+This function is non-deterministic.
 
 ## Particles
 

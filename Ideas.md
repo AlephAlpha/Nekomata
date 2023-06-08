@@ -80,8 +80,6 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 \groupBy { \index \absDiff }
 ```
 
-- [ ] `\index`：输入一个列表和一个元素，输出这个元素在列表中的索引。这个函数肯定是比较常用的，不过不知道要不要弄成 non-deterministic 的。
-
 即使省略右括号，这个解答也比前面的要多一个字节。而且，如果助词修饰的函数是 non-deterministic 的，不知道该怎么处理。
 
 ## [Smallest groups in an array](https://codegolf.stackexchange.com/q/79037/9288)
@@ -90,7 +88,7 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 \chunks \dup \map \length \minimumBy
 ```
 
-- [ ] `\minimumBy`：输入两个列表，其长度必须一致。根据第一个列表中最小的元素的索引，返回第二个列表中对应的元素。由于最小的元素可能不止一个，所以这个函数是 non-deterministic 的。
+- [x] `\minimumBy`：输入两个列表，其长度必须一致。根据第一个列表中最小的元素的索引，返回第二个列表中对应的元素。由于最小的元素可能不止一个，所以这个函数是 non-deterministic 的。
 
 和前面的 `\groupBy` 一样，`\minimumBy` 也是一个普通的函数而不是助词。但如果改成助词的话，解答会更短一些：
 
@@ -99,6 +97,8 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 ```
 
 看来是用普通函数还是助词还需要斟酌。可能两种都要支持，不过名字怎样区分是个问题。
+
+或者专门加一个 `\minimumByLength` 函数。
 
 ## [Consolidate an Array](https://codegolf.stackexchange.com/q/70779/9288)
 
@@ -117,16 +117,6 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 ```
 
 - [ ] `\sortBy`：输入两个列表，其长度必须一致。将第一个列表中的元素按照第二个列表中的元素的大小进行排序。这要求排序算法是稳定的。
-
-## [Mode (most common element) of a list](https://codegolf.stackexchange.com/q/42529/9288)
-
-```
-\tally \maximumBy
-```
-
-需要 `-1` flag 来仅输出第一个结果。
-
-- [ ] `\maximumBy`：输入两个列表，其长度必须一致。根据第一个列表中最大的元素的索引，返回第二个列表中对应的元素。由于最大的元素可能不止一个，所以这个函数是 non-deterministic 的。
 
 ## [Shortest Valid Parentheses](https://codegolf.stackexchange.com/q/258511/9288)
 
@@ -150,7 +140,7 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 ## [Make a Custom Bayer Matrix](https://codegolf.stackexchange.com/q/259633/9288)
 
 ```
-\range0 \toBase2Rev \dup \outer { \dip \dup \bitxor 2 \mul \add \cons0 4 \recip \fromBaseRev }
+\range0 \binary \dup \outer { \dip \dup \bitxor 2 \mul \add \cons0 4 \recip \fromBaseRev }
 ```
 
 - [ ] `\bitxor`：按位异或。
@@ -158,26 +148,10 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 或者：
 
 ```
-\range0 \toBase2Rev \dup \outer { \dip \dup \bitxor \interleave \cons0 2 \recip \fromBaseRev }
+\range0 \binary \dup \outer { \dip \dup \bitxor \interleave \cons0 2 \recip \fromBaseRev }
 ```
 
 - [ ] `\interleave`：将两个列表交错合并。比如说 `[1, 2, 3]` 和 `[4, 5, 6]` 交错合并成 `[1, 4, 2, 5, 3, 6]`。第二个列表可以和第一个列表一样长，也可以比第一个列表少一个元素。
-
-## [Hunt for discount](https://codegolf.stackexchange.com/q/233641/9288)
-
-```
-\sort \reverse \deinterleave \sum \half
-```
-
-- [ ] `\deinterleave`：将一个列表拆成两个列表，一个列表包含所有奇数位置的元素，另一个列表包含所有偶数位置的元素。比如说 `[1, 2, 3, 4]` 拆成 `[1, 3]` 和 `[2, 4]`。目前还没遇到其它会用到这个函数的场景。
-
-## [Sum every second digit in a number](https://codegolf.stackexchange.com/a/255665/9288)
-
-```
-\ten \toBase \deinterleave \sum
-```
-
-刚说完 `\deinterleave`，这里又用到了。
 
 ## [How Super is this Prime?](https://codegolf.stackexchange.com/q/259875/9288)
 
@@ -221,14 +195,6 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 ```
 
 - [ ] `\foldl1`：从左到右地将一个二元函数应用于一个列表中的所有元素。比如说 `[1, 2, 3] \foldl1 \add` 等价于 `1 2 \add 3 \add`。
-
-## [String Comparison](https://codegolf.stackexchange.com/q/259987/9288)
-
-```
-\swap \apply2Pair \join \less
-```
-
-- [ ] `\apply2Pair`：助词。输入四个参数，将一个二元函数分别应用于前两个参数和后两个参数。
 
 ## [Generate a Walsh Matrix](https://codegolf.stackexchange.com/q/162254/9288)
 
@@ -278,41 +244,26 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 ## [Find Unique Anagrams](https://codegolf.stackexchange.com/q/261128/9288)
 
 ```
-\map \sort \groupBy \map \first
+\map \sort \nubBy
 ```
 
-## [Implement Takewhile](https://codegolf.stackexchange.com/q/84519/9288)
-
-```
-2 \mod \cumsum \minimumBy
-```
-
-## [Make a Court Transcriber](https://codegolf.stackexchange.com/q/252927/9288)
-
-```
-\filter { \unconcat \subset \equal } \dup \map \length \minimumBy
-```
-
-## [2048-like array shift](https://codegolf.stackexchange.com/q/95409/9288)
-
-```
-\chunks \map { \deinterleave \add \reverse } \concat
-```
-
-## [The shortest way to find one unique value when all other values are the same](https://codegolf.stackexchange.com/q/207736/9288)
-
-```
-\tally \minimumBy
-```
-
-## [Most Common Multiple](https://codegolf.stackexchange.com/q/170047/9288)
-
-```
-\subset \unpair \times \allValues \tally \maximumBy
-```
-
+- [ ] `\nubBy`：输入两个列表，其长度必须一致。根据第二个列表的元素，将第一个列表的元素去重。比如输入 `[a, b, c, d]` 和 `[1, 2, 1, 2]`，输出 `[a, b]`
 ## [Least Common Multiple](https://codegolf.stackexchange.com/q/94999/9288)
 
 ```
 \foldl1 \lcm
+```
+
+## [Guess the song title](https://codegolf.stackexchange.com/q/256502/9288)
+
+```
+\map \length \sortBy \nub
+```
+
+或者考虑加一个 `\sortByLength` 函数。
+
+## [Remove duplicates from my academic transcript](https://codegolf.stackexchange.com/q/256441/9288)
+
+```
+\map \first \groupBy \anyOf \dup \last \last \minimumBy
 ```

@@ -6,6 +6,7 @@ import Control.Arrow (first, (***))
 import Control.Monad (join, liftM2)
 import Data.Functor ((<&>))
 import Data.Maybe (fromMaybe)
+import Data.Tuple (swap)
 import Nekomata.Builtin.Basic (dup)
 import Nekomata.Data
 import Nekomata.Function
@@ -299,10 +300,8 @@ join' = binary (const join'')
 
 join'' :: DataTry -> DataTry -> TryData
 join'' (DStringT xs) (DStringT ys) = liftString2 (AsString .: join_) xs ys
-join'' x@(DStringT _) y =
-    join'' x (DStringT (fromList . map Det . show <$> toTry y))
-join'' x y@(DStringT _) =
-    join'' (DStringT (fromList . map Det . show <$> toTry x)) y
+join'' x@(DStringT _) y = join'' x (DStringT (fromValue . show <$> toTry y))
+join'' x y@(DStringT _) = join'' (DStringT (fromValue . show <$> toTry x)) y
 join'' (DListT xs) (DListT ys) = liftList2 join_ xs ys
 join'' _ _ = Fail
 
@@ -557,10 +556,7 @@ tally = unary2 tally'
     tally' i (DListT xs) = liftList12 (tally_ i) xs
     tally' _ _ = (Fail, Fail)
     tally_ ::
-        (TryEq a) =>
-        Id ->
-        ListTry (Try a) ->
-        Try (ListTry a, ListTry Integer)
+        (TryEq a) => Id -> ListTry (Try a) -> Try (ListTry a, ListTry Integer)
     tally_ i xs = unzip' <$> tryFoldl insertCount i Nil xs
     unzip' :: ListTry (a, b) -> (ListTry a, ListTry b)
     unzip' Nil = (Nil, Nil)
@@ -630,3 +626,39 @@ chunks = unary chunks'
                 if b
                     then ys >>= spanEq x <&> first (Cons x . Val)
                     else Val (Nil, s)
+
+deinterleave :: Function
+deinterleave = unary2 deinterleave'
+  where
+    deinterleave' _ (DStringT xs) =
+        liftString12 (fmap (AsString *** AsString) . deinterleave_) xs
+    deinterleave' _ (DListT xs) = liftList12 deinterleave_ xs
+    deinterleave' _ _ = (Fail, Fail)
+    deinterleave_ :: ListTry a -> Try (ListTry a, ListTry a)
+    deinterleave_ Nil = Val (Nil, Nil)
+    deinterleave_ (Cons x xs) =
+        xs >>= deinterleave_ <&> first (Cons x . Val) . swap
+
+minimumBy :: Function
+minimumBy = binary minimumBy'
+  where
+    minimumBy' i (DListT xs) (DListT ys) = liftList2 (minimumBy_ i) xs ys
+    minimumBy' _ _ _ = Fail
+    minimumBy_ ::
+        (TryOrd b) => Id -> ListTry (Try a) -> ListTry (Try b) -> Try a
+    minimumBy_ i xs ys =
+        zipWithFail (\_ x y -> Val (OrdBy y $ Val x)) (leftId i) xs ys
+            >>= tryFoldl1 tryMinBy (rightId i)
+            >>= ordVal
+
+maximumBy :: Function
+maximumBy = binary maximumBy'
+  where
+    maximumBy' i (DListT xs) (DListT ys) = liftList2 (maximumBy_ i) xs ys
+    maximumBy' _ _ _ = Fail
+    maximumBy_ ::
+        (TryOrd b) => Id -> ListTry (Try a) -> ListTry (Try b) -> Try a
+    maximumBy_ i xs ys =
+        zipWithFail (\_ x y -> Val (OrdBy y $ Val x)) (leftId i) xs ys
+            >>= tryFoldl1 tryMaxBy (rightId i)
+            >>= ordVal

@@ -448,9 +448,9 @@ builtins =
         \If both arguments are lists, \
         \the result is a list of lists of digits."
     , Builtin
-        "toBase2Rev"
+        "binary'"
         'Ƃ'
-        toBase2Rev
+        binary'
         "Convert an integer to a list of binary digits in reverse order.\n\
         \This function is automatically vectorized."
     , Builtin
@@ -707,7 +707,9 @@ builtins =
         'ṁ'
         minimum'
         "Get the minimum of a list.\n\
-        \This order used in this function is different from the one \
+        \If there are multiple minimums, return the first one.\n\
+        \Fail when the list is empty.\n\
+        \The order used in this function is different from the one \
         \used in min and max. It can compare two arbitrary values, \
         \not just numbers or strings."
     , Builtin
@@ -715,7 +717,9 @@ builtins =
         'Ṁ'
         maximum'
         "Get the maximum of a list.\n\
-        \This order used in this function is different from the one \
+        \If there are multiple maximums, return the first one.\n\
+        \Fail when the list is empty.\n\
+        \The order used in this function is different from the one \
         \used in min and max. It can compare two arbitrary values, \
         \not just numbers or strings."
     , Builtin
@@ -828,6 +832,30 @@ builtins =
         'ĉ'
         chunks
         "Split a list or a string into a list of chunks of equal elements."
+    , Builtin
+        "deinterleave"
+        'ĭ'
+        deinterleave
+        "Deinterleave a list or a string into a list of elements \
+        \at even positions and a list of elements at odd positions."
+    , Builtin
+        "minimumBy"
+        'ṃ'
+        minimumBy
+        "Get the minimum value of a list according to a list of keys.\n\
+        \If there are multiple minimums, \
+        \return any of them non-deterministically.\n\
+        \Fails when the two lists are of different lengths.\n\
+        \This function is non-deterministic."
+    , Builtin
+        "maximumBy"
+        'Ṃ'
+        maximumBy
+        "Get the maximum value of a list according to a list of keys.\n\
+        \If there are multiple maximums, \
+        \return any of them non-deterministically.\n\
+        \Fails when the two lists are of different lengths.\n\
+        \This function is non-deterministic."
     ]
 
 -- | The map from names to builtin functions

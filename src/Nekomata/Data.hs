@@ -1,5 +1,6 @@
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Nekomata.Data where
@@ -513,10 +514,16 @@ class TryOrd a where
     tryGe x y = (>= EQ) <$> tryCmp x y
     tryGt :: a -> a -> Try Bool
     tryGt x y = (> EQ) <$> tryCmp x y
+
+    -- | Take the minimum of two values
+    -- If the two values are equal, return the first value
     tryMin :: a -> a -> Try a
-    tryMin x y = tryCmp x y <&> \o -> if o == LT then x else y
+    tryMin x y = tryCmp x y <&> \o -> if o == GT then y else x
+
+    -- | Take the maximum of two values
+    -- If the two values are equal, return the first value
     tryMax :: a -> a -> Try a
-    tryMax x y = tryCmp x y <&> \o -> if o == GT then x else y
+    tryMax x y = tryCmp x y <&> \o -> if o == LT then y else x
 
 instance TryOrd Integer where
     tryCmp x y = Val $ compare x y
@@ -548,3 +555,40 @@ instance TryOrd DataTry where
     tryCmp _ (DNumT _) = Val GT
     tryCmp (DStringT _) _ = Val LT
     tryCmp _ (DStringT _) = Val GT
+
+-- | A helper type for ordering by a key
+data OrdBy a b = OrdBy {ordKey :: a, ordVal :: b}
+
+instance (TryEq a) => TryEq (OrdBy a b) where
+    tryEq (OrdBy x _) (OrdBy y _) = tryEq x y
+
+instance (TryOrd a) => TryOrd (OrdBy a b) where
+    tryCmp (OrdBy x _) (OrdBy y _) = tryCmp x y
+
+-- | Take the minimum of two @OrdBy@s by the key
+tryMinBy ::
+    (TryOrd a) =>
+    Id ->
+    OrdBy a (Try b) ->
+    OrdBy a (Try b) ->
+    Try (OrdBy a (Try b))
+tryMinBy i x@(OrdBy kx vx) y@(OrdBy ky vy) =
+    tryCmp kx ky
+        <&> \case
+            LT -> x
+            EQ -> OrdBy kx (Choice i vx vy)
+            GT -> y
+
+-- | Take the maximum of two @OrdBy@s by the key
+tryMaxBy ::
+    (TryOrd a) =>
+    Id ->
+    OrdBy a (Try b) ->
+    OrdBy a (Try b) ->
+    Try (OrdBy a (Try b))
+tryMaxBy i x@(OrdBy kx vx) y@(OrdBy ky vy) =
+    tryCmp kx ky
+        <&> \case
+            LT -> y
+            EQ -> OrdBy kx (Choice i vx vy)
+            GT -> x

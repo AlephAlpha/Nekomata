@@ -243,18 +243,14 @@ sum' :: Function
 sum' = unary sum''
   where
     sum'' i (DListT xs) =
-        liftList
-            (tryFoldl add' i . DNumT . Val $ Det 0)
-            xs
+        liftList (tryFoldl add' i . DNumT . Val $ Det 0) xs
     sum'' _ _ = Fail
 
 product' :: Function
 product' = unary product''
   where
     product'' i (DListT xs) =
-        liftList
-            (tryFoldl mul' i . DNumT . Val $ Det 1)
-            xs
+        liftList (tryFoldl mul' i . DNumT . Val $ Det 1) xs
     product'' _ _ = Fail
 
 dot :: Function
@@ -320,8 +316,8 @@ toBase = binaryVecOuter toBase'
   where
     toBase' i x y = toBaseRev' (leftId i) x y >>= reverse'' (rightId i)
 
-toBase2Rev :: Function
-toBase2Rev = constant (2 :: Integer) .* toBaseRev
+binary' :: Function
+binary' = constant (2 :: Integer) .* toBaseRev
 
 cumsum :: Function
 cumsum = unary cumsum'
