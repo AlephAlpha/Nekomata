@@ -23,7 +23,7 @@ def ngram_freq(corpus: list[str], n: int) -> dict[str, int]:
 
 
 testcase_path = "test/Eval.hs"
-output_dir = "corpus/"
+output_dir = "analysis/"
 
 if not os.path.exists(output_dir):
     os.makedirs(output_dir)

@@ -12,7 +12,7 @@ module Nekomata.Particle (
     infoByName,
 ) where
 
-import Data.Functor (($>))
+import Data.Functor (($>), (<&>))
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Nekomata.Data
@@ -194,6 +194,13 @@ builtinParticles =
         \This is different from `while` in that it returns \
         \the intermediate results."
     , BuiltinParticle
+        "nTimes"
+        'ᵑ'
+        nTimes
+        "(n -> n) -> (n + 1 -> n)"
+        "Take an integer from the top of the stack, \
+        \and apply a function that many times."
+    , BuiltinParticle
         "while"
         'ʷ'
         while
@@ -203,12 +210,13 @@ builtinParticles =
         \This is different from `iterate` in that it does not \
         \return the intermediate results."
     , BuiltinParticle
-        "nTimes"
-        'ᵑ'
-        nTimes
-        "(n -> n) -> (n + 1 -> n)"
-        "Take an integer from the top of the stack, \
-        \and apply a function that many times."
+        "lengthWhile"
+        'ˡ'
+        lengthWhile
+        "(n -> n) -> (n -> 1)"
+        "Apply a function zero or more times, \
+        \until the top value of the stack is Fail, \
+        \and return the number of times the function was applied."
     ]
 
 -- | The map of from names to builtin particles
@@ -472,4 +480,22 @@ while = Particle while'
                in if hasValue ds t
                     then t $> s' >>= while'' (rightId i) f
                     else Val s
+            )
+
+lengthWhile :: Particle
+lengthWhile = Particle lengthWhile'
+  where
+    lengthWhile' (Function (Arity m n) f) | m == n =
+        Just . Function (Arity m 1) $
+            \i s -> toTryData (lengthWhile'' i f s) :+ dropStack m s
+    lengthWhile' _ = Nothing
+    lengthWhile'' :: Id -> (Id -> Stack -> Stack) -> Stack -> Try Integer
+    lengthWhile'' i f s =
+        Cut $ \ds ->
+            ( ds
+            , let s' = f (leftId i) s
+                  t = normalForm (top s')
+               in if hasValue ds t
+                    then t $> s' >>= lengthWhile'' (rightId i) f <&> (+ 1)
+                    else Val 0
             )

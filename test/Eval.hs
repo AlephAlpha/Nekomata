@@ -64,11 +64,11 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q12177: Collatz Conjecture (OEIS A006577)" $ do
         specEval
-            "ᶦ{ᵉ½3*→I1>"
-            [ ("2", Count 1)
-            , ("16", Count 4)
-            , ("5", Count 5)
-            , ("7", Count 16)
+            "ˡ{1>ᵉ½3*→I"
+            [ ("2", All ["1"])
+            , ("16", All ["4"])
+            , ("5", All ["5"])
+            , ("7", All ["16"])
             ]
     describe "q42529: Mode (most common element) of a list" $ do
         specEval
@@ -178,6 +178,55 @@ testEval = describe "Evaluation" $ do
             , ("2", All ["[[1,0],[0,1]]"])
             , ("3", All ["[[1,0,0],[0,1,0],[0,0,1]]"])
             , ("4", All ["[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]"])
+            ]
+    describe "q71833: How even is a number?" $ do
+        specEval
+            "ˡ½"
+            [ ("14", All ["1"])
+            , ("20", All ["2"])
+            , ("94208", All ["12"])
+            , ("7", All ["0"])
+            , ("-4", All ["2"])
+            ]
+    describe "q77270: Greatest Common Divisor" $ do
+        specEval
+            "G"
+            [ ("0 2", All ["2"])
+            , ("6 0", All ["6"])
+            , ("30 42", All ["6"])
+            , ("15 14", All ["1"])
+            , ("7 7", All ["7"])
+            , ("69 25", All ["1"])
+            , ("21 12", All ["3"])
+            , ("169 123", All ["1"])
+            , ("20 142", All ["2"])
+            , ("101 202", All ["101"])
+            ]
+        specEval
+            "ʷ{$Zᵉ%"
+            [ ("0 2", All ["2"])
+            , ("6 0", All ["6"])
+            , ("30 42", All ["6"])
+            , ("15 14", All ["1"])
+            , ("7 7", All ["7"])
+            , ("69 25", All ["1"])
+            , ("21 12", All ["3"])
+            , ("169 123", All ["1"])
+            , ("20 142", All ["2"])
+            , ("101 202", All ["101"])
+            ]
+        specEval
+            "ṀRᶠ¦Ṁ"
+            [ ("[0,2]", All ["2"])
+            , ("[6,0]", All ["6"])
+            , ("[30,42]", All ["6"])
+            , ("[15,14]", All ["1"])
+            , ("[7,7]", All ["7"])
+            , ("[69,25]", All ["1"])
+            , ("[21,12]", All ["3"])
+            , ("[169,123]", All ["1"])
+            , ("[20,142]", All ["2"])
+            , ("[101,202]", All ["101"])
             ]
     describe "q79037: Smallest groups in an array" $ do
         specEval
@@ -455,17 +504,17 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q141949: Count edits accounting for grace period" $ do
         specEval
-            "ᶦ{C4+>‼N"
-            [ ("[0]", Count 1)
-            , ("[0,3,5,7]", Count 2)
-            , ("[0,3,4,7,9,10,11,12]", Count 3)
-            , ("[0,30,120]", Count 3)
-            , ("[0,4,8,12,16]", Count 3)
-            , ("[0,4,8,12,16,20]", Count 3)
-            , ("[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]", Count 4)
-            , ("[0,5,10,15,20]", Count 5)
-            , ("[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]", Count 5)
-            , ("[0,1,4,5,9,11,12,14,16,18,23,24,26,28,29,30]", Count 6)
+            "ˡ{C4+>‼"
+            [ ("[0]", All ["1"])
+            , ("[0,3,5,7]", All ["2"])
+            , ("[0,3,4,7,9,10,11,12]", All ["3"])
+            , ("[0,30,120]", All ["3"])
+            , ("[0,4,8,12,16]", All ["3"])
+            , ("[0,4,8,12,16,20]", All ["3"])
+            , ("[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19]", All ["4"])
+            , ("[0,5,10,15,20]", All ["5"])
+            , ("[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]", All ["5"])
+            , ("[0,1,4,5,9,11,12,14,16,18,23,24,26,28,29,30]", All ["6"])
             ]
     describe "q143278: Am I an insignificant array?" $ do
         specEval
@@ -687,7 +736,7 @@ testEval = describe "Evaluation" $ do
             , ("[0,4]", All ["1"])
             ]
         specEval
-            "ʷ{2r↕1?-0≥"
+            "ʷ{į1?-0≥"
             [ ("[3,3]", Count 63)
             , ("[3,9]", Count 1159)
             , ("[1,7]", Count 15)
@@ -913,7 +962,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q247676: Generate All 8 Knight's Moves" $ do
         specEval
-            "2R↕ᵐᶜ_"
+            "į→ᵐᶜ_"
             [("", All ["[1,2]", "[1,-2]", "[-1,2]", "[-1,-2]", "[2,1]", "[2,-1]", "[-2,1]", "[-2,-1]"])]
     describe "q248991: The Unaverageables" $ do
         specEval
@@ -1018,7 +1067,7 @@ testEval = describe "Evaluation" $ do
             [("[\"Hello, world\",\"Hello, world\",\"I just got to say it, hello world\",\"Goodbye, world\",\"Goodbye, world\",\"Goodbye\"]", All ["Hello, world"])]
     describe "q256814: Knight to fork!" $ do
         specEval
-            "eᵐ{2R↕ᵐᶜ_+}≡H"
+            "eᵐ{į→ᵐᶜ_+}≡H"
             [ ("[\"d6\",\"f6\",\"g3\"]", All ["e4"])
             , ("[\"d4\",\"d6\",\"e7\"]", All ["f5"])
             , ("[\"c3\",\"f2\",\"b2\"]", All ["d1"])
@@ -1259,7 +1308,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259576: All of the Boards" $ do
         specEval
-            "2r↕1:ÐÐ3r~ᵑᵐç3r~ᵑçaᵐᶜ{0*}∑2<"
+            "į1:ÐÐ3r~ᵑᵐç3r~ᵑçaᵐᶜ{0*}∑2<"
             [ ("", Count 215)
             , ("", Truncated ["[[0,1,0,1],[1,1,1,1],[0,1,0,1],[1,1,1,1]]", "[[0,1,0,1],[1,1,1,1],[0,1,1,0],[1,1,1,1]]"])
             ]
@@ -1304,7 +1353,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259875: How Super is this Prime?" $ do
         specEval
-            "ᶦ{ƥQ}nƂ#←"
+            "ˡ{Qƥ}Ƃ#←"
             [ ("2", All ["0"])
             , ("3", All ["1"])
             , ("11", All ["2"])
@@ -1378,20 +1427,20 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q260370: Counting fading" $ do
         specEval
-            "~2rᶜ_↕+ᵖfaᵒ{-A∑}ᵐṁçṀ"
-            [ ("[]", All ["0"])
-            , ("[[1,1]]", All ["1"])
-            , ("[[1,2],[2,1],[2,2],[2,3],[3,2]]", All ["2"])
+            "Ňᵖᵚ{ᵑ{įᶜ_+}f"
+            [ ("[]", First $ Just "0")
+            , ("[[1,1]]", First $ Just "1")
+            , ("[[1,2],[2,1],[2,2],[2,3],[3,2]]", First $ Just "2")
             ]
     describe "q260472: Find Index of Rational Number in Calkin-Wilf Sequence" $ do
         specEval
-            "ᶦ{ŗ:K2*$-←Z"
-            [ ("1", Count 1)
-            , ("1/3", Count 4)
-            , ("4/3", Count 9)
-            , ("3/4", Count 14)
-            , ("53/37", Count 1081)
-            , ("37/53", Count 1990)
+            "ˡ{ŗ:K2*$-←"
+            [ ("1", All ["1"])
+            , ("1/3", All ["4"])
+            , ("4/3", All ["9"])
+            , ("3/4", All ["14"])
+            , ("53/37", All ["1081"])
+            , ("37/53", All ["1990"])
             ]
     describe "q260804: Minkowski's ?(x) for rational x" $ do
         specEval

@@ -448,7 +448,7 @@ builtins =
         \If both arguments are lists, \
         \the result is a list of lists of digits."
     , Builtin
-        "binary'"
+        "binary"
         'Ƃ'
         binary'
         "Convert an integer to a list of binary digits in reverse order.\n\
@@ -533,6 +533,12 @@ builtins =
         "Compute the square root of a rational number.\n\
         \Fails when the argument is not a perfect square.\n\
         \This function is automatically vectorized."
+    , Builtin
+        "unitVec2"
+        'į'
+        unitVec2
+        "Choose one of [0, 1] and [1, 0] non-deterministically.\n\
+        \This function is non-deterministic."
     , Builtin
         "charToInt"
         'e'

@@ -386,7 +386,7 @@ Fails when the inputs are not integers, or the base is less than 2.
 
 This function is automatically vectorized over both arguments. If both arguments are lists, the result is a list of lists of digits.
 
-### `binary'` (`Ƃ`, `1 -> 1`)
+### `binary` (`Ƃ`, `1 -> 1`)
 
 Convert an integer to a list of binary digits in reverse order.
 
@@ -469,6 +469,12 @@ Compute the square root of a rational number.
 Fails when the argument is not a perfect square.
 
 This function is automatically vectorized.
+
+### `unitVec2` (`į`, `0 -> 1`)
+
+Choose one of [0, 1] and [1, 0] non-deterministically.
+
+This function is non-deterministic.
 
 ### `charToInt` (`e`, `1 -> 1`)
 
@@ -856,14 +862,18 @@ Apply a function zero or more times non-deterministically, until the top value o
 
 This is different from `while` in that it returns the intermediate results.
 
+### `nTimes` (`ᵑ`, `(n -> n) -> (n + 1 -> n)`)
+
+Take an integer from the top of the stack, and apply a function that many times.
+
 ### `while` (`ʷ`, `(n -> n) -> (n -> n)`)
 
 Apply a function zero or more times, until the top value of the stack is Fail.
 
 This is different from `iterate` in that it does not return the intermediate results.
 
-### `nTimes` (`ᵑ`, `(n -> n) -> (n + 1 -> n)`)
+### `lengthWhile` (`ˡ`, `(n -> n) -> (n -> 1)`)
 
-Take an integer from the top of the stack, and apply a function that many times.
+Apply a function zero or more times, until the top value of the stack is Fail, and return the number of times the function was applied.
 
 

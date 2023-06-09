@@ -433,3 +433,12 @@ sqrt' = unaryVec sqrt''
             (%)
             (exactSquareRoot (numerator x))
             (exactSquareRoot (denominator x))
+
+unitVec2 :: Function
+unitVec2 =
+    nullary $
+        \i ->
+            Choice
+                i
+                (toTryData ([0, 1] :: [Integer]))
+                (toTryData ([1, 0] :: [Integer]))
