@@ -81,9 +81,10 @@ length' = unary length''
     length'' _ (DStringT xs) = liftString length_ xs
     length'' _ (DListT xs) = liftList length_ xs
     length'' _ _ = Fail
-    length_ :: ListTry a -> Try Integer
-    length_ Nil = Val 0
-    length_ (Cons _ xs) = xs >>= length_ <&> (+ 1)
+
+length_ :: ListTry a -> Try Integer
+length_ Nil = Val 0
+length_ (Cons _ xs) = xs >>= length_ <&> (+ 1)
 
 lengthIs :: Function
 lengthIs = binary lengthIs'
@@ -662,3 +663,29 @@ maximumBy = binary maximumBy'
         zipWithFail (\_ x y -> Val (OrdBy y $ Val x)) (leftId i) xs ys
             >>= tryFoldl1 tryMaxBy (rightId i)
             >>= ordVal
+
+shortest :: Function
+shortest = unary shortest'
+  where
+    shortest' i (DListT xs) = liftList (shortest_ i) xs
+    shortest' _ _ = Fail
+    shortest_ :: Id -> ListTry TryData -> TryData
+    shortest_ i xs =
+        tryFoldl1 tryMinBy i (xs <&> (\x -> Val $ OrdBy (x >>= length'') x))
+            >>= ordVal
+    length'' (DStringT xs) = xs >>= length_
+    length'' (DListT xs) = xs >>= length_
+    length'' _ = Fail
+
+longest :: Function
+longest = unary longest'
+  where
+    longest' i (DListT xs) = liftList (longest_ i) xs
+    longest' _ _ = Fail
+    longest_ :: Id -> ListTry TryData -> TryData
+    longest_ i xs =
+        tryFoldl1 tryMaxBy i (xs <&> (\x -> Val $ OrdBy (x >>= length'') x))
+            >>= ordVal
+    length'' (DStringT xs) = xs >>= length_
+    length'' (DListT xs) = xs >>= length_
+    length'' _ = Fail

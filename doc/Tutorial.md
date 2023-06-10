@@ -14,6 +14,8 @@ For example, here is the "Hello, World!" program in Nekomata:
 "Hello, World!"
 ```
 
+[*Attempt This Online!*](https://ato.pxeger.com/run?1=m70iLzU7PzexJHHBgqWlJWm6FuuVPFJzcvJ1FMLzi3JSFJWWFCclF0PlYGoA)
+
 This program pushes the string `"Hello, World!"` onto the stack. After that, the top of the stack is printed.
 
 Now let's try to add two numbers:
@@ -21,6 +23,8 @@ Now let's try to add two numbers:
 ```
 1 2+
 ```
+
+[*Attempt This Online!*](https://ato.pxeger.com/run?1=m70iLzU7PzexJHHBgqWlJWm6FksMFYy0lxQnJRdDBWASAA)
 
 There are three instructions in this program:
 
@@ -39,6 +43,10 @@ Nekomata -c '+' -i '1 2'
 ```
 
 The program here is simply the built-in `+` function. The inputs are `1` and `2`, which are passed as command-line arguments. Before the program is executed, the inputs are cycled and pushed onto the stack. In this case, the stack will become the infinite sequence `1 2 1 2 1 2 ...`. After execution, the stack becomes `3 1 2 1 2 1 2 ...`. The top of the stack is printed, which is `3`.
+
+On ATO, you can input the code in the "Code" box, and the inputs in the "Input" box.
+
+[*Attempt This Online!*](https://ato.pxeger.com/run?1=m70iLzU7PzexJHHBgqWlJWm6Fgu1lxQnJRdDeQsWGyoYQZgA)
 
 ## Data Types
 
@@ -96,6 +104,8 @@ Let's look at this example:
 [1,2,3]ᵐ{1+}
 ```
 
+[*Attempt This Online!*](https://ato.pxeger.com/run?1=m70iLzU7PzexJHHBgqWlJWm6FuuiDXWMdIxjH26dUG2oXbukOCm5GCoFUwIA)
+
 Here the superscript letter `ᵐ` is the particle `\map`. It maps a function over a list. The function it maps is the block `{1+}`. The list it maps over is `[1,2,3]`. So the result is `[2,3,4]`.
 
 The behavior of a particle may depend on the arity of the function it modifies.
@@ -109,6 +119,8 @@ Many built-in functions in Nekomata are automatically vectorized. So the above e
 ```
 [1,2,3]1+
 ```
+
+[*Attempt This Online!*](https://ato.pxeger.com/run?1=m70iLzU7PzexJHHBgqWlJWm6FiujDXWMdIxjDbWXFCclF0NFYbIA)
 
 For unary functions, vectorization simply means that the function is applied to each element of the list.
 
@@ -138,17 +150,21 @@ Now look at a more complicated example:
 1 2?:+
 ```
 
+[*Attempt This Online!*](https://ato.pxeger.com/run?1=m70iLzU7PzexJHHBgqWlJWm6FssMFYzsrbSXFCclF0OFYFIA)
+
 There is a new built-in function, `:` (`\dup`). It pops an element from the stack, and pushes two copies of it onto the stack.
 
 After executing `1 2?:`, the stack is either `1 1` or `2 2`. Now adding them gives `2` or `4`. So the result of the computation is either `2` or `4`.
 
-But the following computation is different:
+But the following code is different:
 
 ```
 1 2?1 2?+
 ```
 
-This looks similar to the previous computation. It also pushes two elements onto the stack, both of which are either `1` or `2`. But the two elements are not related this time. So the result might be `1+1=2`, `1+2=3`, `2+1=3`, or `2+2=4`. When printing the results, `3` will appear twice, because there are two ways to get `3`.
+[*Attempt This Online!*](https://ato.pxeger.com/run?1=m70iLzU7PzexJHHBgqWlJWm6FisNFYzsQVh7SXFScjFUFCYLAA)
+
+This looks similar to the previous code. It also pushes two elements onto the stack, both of which are either `1` or `2`. But the two elements are not related this time. So the result might be `1+1=2`, `1+2=3`, `2+1=3`, or `2+2=4`. When printing the results, `3` will appear twice, because there are two ways to get `3`.
 
 ## Modes
 
@@ -192,6 +208,8 @@ In the REPL, you can switch to this mode by typing `\Mode exists`.
 1:ᶦ{$ᵉ+
 ```
 
+[*Attempt This Online!*](https://ato.pxeger.com/run?1=m70iLzU7PzexJHHBgqWlJWm6FqsNrR5uW1at8nBrp_aS4qTkYqg4TB4A)
+
 Or written in a more readable way:
 
 ```
@@ -219,11 +237,13 @@ A computation may also have no result at all. In this case, we say that the comp
 
 Nekomata does not have a Boolean type. Functions that return a Boolean value in other languages are represented by a function that possibly fails. For example, the built-in function `=` (`\eq`) returns the value itself if the top two elements of the stack are equal, and fails otherwise.
 
-This is useful for filtering out incorrect paths in a non-deterministic computation. Let's look at this example:
+This is useful for choosing the correct paths in a non-deterministic computation. Let's look at this example:
 
 ```
 1 2?2 3?=
 ```
+
+[*Attempt This Online!*](https://ato.pxeger.com/run?1=m70iLzU7PzexJHHBgqWlJWm6FisNFYzsjRSM7W2XFCclF0NFYbIA)
 
 After executing `1 2?2 3?`, the top of the stack is either `2` or `3`, and the element below it is either `1` or `2`. Now the only way for them to be equal is choosing `2` for both. All the other paths fail. So the result `2`.
 
@@ -232,6 +252,8 @@ After executing `1 2?2 3?`, the top of the stack is either `2` or `3`, and the e
 ```
 ʷ{←Pᶜ←
 ```
+
+[*Attempt This Online!*](https://ato.pxeger.com/run?1=m70iLzU7PzexJHFZtJJunlLsgqWlJWm6FmtPba9-1DYh4OG2OUBqSXFScjFUZsFCYwgDAA)
 
 Or written in a more readable way:
 

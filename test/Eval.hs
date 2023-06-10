@@ -230,7 +230,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q79037: Smallest groups in an array" $ do
         specEval
-            "ĉ:ᵐ#ṃ"
+            "ĉş"
             [ ("[1,1,1,2,2,1,1,1,1,2,2,2,1,1,1]", All ["[2,2]"])
             , ("[3,3,3,4,4,4,4,5,5,4,4,3,3,4,4]", All ["[5,5]", "[4,4]", "[3,3]", "[4,4]"])
             , ("[1,1,2,2,3,3,4]", All ["[4]"])
@@ -745,7 +745,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q252927: Make a Court Transcriber" $ do
         specEval
-            "ᶠ{JS=}:ᵐ#ṃ"
+            "ᶠ{JS=}ş"
             [ ("[\"dictionary\",\"transcriber\"] [\"dic\",\"ion\",\"ary\"]", All ["dictionary"])
             , ("[\"dictionary\",\"transcriber\"] [\"tra\",\"scr\",\"ber\"]", All ["transcriber"])
             ]
@@ -975,6 +975,12 @@ testEval = describe "Evaluation" $ do
             , ("[1,2,3,4,10,52,100,200]", All ["[10,52,200]"])
             , ("[1,2,3,5,8,13,21,34]", All ["[]"])
             ]
+    describe "q249868: Every possible pairing" $ do
+        specEval
+            "rO2ᵚL"
+            [ ("2", All ["[[0,1]]"])
+            , ("4", All ["[[2,3],[0,1]]", "[[1,3],[0,2]]", "[[0,3],[1,2]]"])
+            ]
     describe "q251674: Number of ways to make an amount with coins" $ do
         specEval
             "Ṗ¢$¦"
@@ -1063,7 +1069,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q256502: Guess the song title" $ do
         specEval
-            "ŢṂa:ᵐ#ṃ"
+            "ŢṂaş"
             [("[\"Hello, world\",\"Hello, world\",\"I just got to say it, hello world\",\"Goodbye, world\",\"Goodbye, world\",\"Goodbye\"]", All ["Hello, world"])]
     describe "q256814: Knight to fork!" $ do
         specEval

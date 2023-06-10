@@ -2,7 +2,7 @@
 
 ## 0.3.5.0 -- Unreleased
 
-* New built-in functions: `\deinterleave`, `\maximumBy`, `\minimumBy`, `\unitVec2D`.
+* New built-in functions: `\deinterleave`, `\longest`, `\maximumBy`, `\minimumBy`, `\shortest`, `\unitVec2D`.
 * New particle: `\lengthWhile`.
 
 ### Breaking changes

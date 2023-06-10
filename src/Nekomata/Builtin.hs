@@ -862,6 +862,22 @@ builtins =
         \return any of them non-deterministically.\n\
         \Fails when the two lists are of different lengths.\n\
         \This function is non-deterministic."
+    , Builtin
+        "shortest"
+        'ş'
+        shortest
+        "Get the shortest one in a list of lists or strings.\n\
+        \If there are multiple shortest ones, \
+        \return any of them non-deterministically.\n\
+        \This function is non-deterministic."
+    , Builtin
+        "longest"
+        'Ş'
+        longest
+        "Get the longest one in a list of lists or strings.\n\
+        \If there are multiple longest ones, \
+        \return any of them non-deterministically.\n\
+        \This function is non-deterministic."
     ]
 
 -- | The map from names to builtin functions

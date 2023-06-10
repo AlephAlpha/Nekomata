@@ -772,6 +772,22 @@ Fails when the two lists are of different lengths.
 
 This function is non-deterministic.
 
+### `shortest` (`ş`, `1 -> 1`)
+
+Get the shortest one in a list of lists or strings.
+
+If there are multiple shortest ones, return any of them non-deterministically.
+
+This function is non-deterministic.
+
+### `longest` (`Ş`, `1 -> 1`)
+
+Get the longest one in a list of lists or strings.
+
+If there are multiple longest ones, return any of them non-deterministically.
+
+This function is non-deterministic.
+
 ## Particles
 
 ### `apply2` (`ᵃ`, `(0 -> n) -> (0 -> 2 * n) or (m -> n) -> (m + 1 -> 2 * n) where m > 0`)

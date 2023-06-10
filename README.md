@@ -16,7 +16,7 @@ Like the language itself, the documentation is also incomplete. You can find it 
 
 There are also some example programs in [`test/Eval.hs`](test/Eval.hs). These examples are based on challenges from [Code Golf StackExchange](https://codegolf.stackexchange.com/). But there aren't any explanations.
 
-You can also [search for `Nekomata` on Code Golf StackExchange](https://codegolf.stackexchange.com/search?q=Nekomata) to find some examples.
+You can also [search for `Nekomata` on Code Golf StackExchange](https://codegolf.stackexchange.com/search?q=Nekomata) to find some examples. Most of them come with explanations.
 
 ## Influences
 

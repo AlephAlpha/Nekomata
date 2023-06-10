@@ -56,10 +56,10 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 * 最常用的一个字符是 `{`，用来开启一个 block。
 * 在两个字符的组合中，排前三的分别是 `ᶦ{`、`ʷ{`、`ᵖ{`。也许可以像 Vyxal 等语言一样，让 `ᶦ`、`ʷ`、`ᵖ` 自动开启 block，省去一个 `{`。不过这样语法会变得不太一致，可读性也会下降。
 * 单个字符中，排第二、第三的分别是 `:`（`\dup`）和 `$`（`\swap`），都是常见的栈操作。其它 stack-based 的 golfing 语言中，这两个操作也排名很靠前。
-* 四到九名分别是 `+`（`\add`）、`R`（`\range1`）、`∑`（`\sum`）、`→`（`\increment`）、`ᵐ`（`\map`）、`}`（结束 block）。这些都是常见的操作。
+* 四到七名分别是 `+`（`\add`）、`R`（`\range1`）、`∑`（`\sum`）、`→`（`\increment`）。这些都是常见的操作。
 * `}` 排到并列第七，出现次数不到 `{` 的一半。看来代码结尾可以省略 `}` 的设计是正确的。
+* 数字 `2` 也并列第七。很多二元函数会以 `2` 为一个参数。可以考虑添加 `\mod2`、`\mul2`、`\div2`、`\pow2` 等函数，省去一个参数。尚待更多数据支持。
 * `ç`（`\cons0`）能排到第十。这个完全出乎我的意料，因为很多别的 golfing 语言中根本没有这个操作。它的作用是给列表加一个 0，通常是配合 `\head`、`\last`、`\minimum`、`\maximum` 等函数使用，来处理空列表的特殊情况。需要看一看其它语言是怎么处理空列表的。
-* 数字 `2` 也并列第十。很多二元函数会以 `2` 为一个参数。可以考虑添加 `\mod2`、`\mul2`、`\div2`、`\pow2` 等函数，省去一个参数。尚待更多数据支持。
 * 多个字符的组合目前样本还不够多，暂时分析不出什么有用的信息。
 * 统计结果与其它语言的差异，除了考虑到语言本身的特点之外，还要考虑到语言的使用者的偏好。目前 Nekomata 的使用者只有我自己，解答的也主要是我感兴趣的题目类型，string 相关的题目较少，ascii-art 更是完全没有。
 
@@ -95,24 +95,6 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 ```
 
 即使省略右括号，这个解答也比前面的要多一个字节。而且，如果助词修饰的函数是 non-deterministic 的，不知道该怎么处理。
-
-### [Smallest groups in an array](https://codegolf.stackexchange.com/q/79037/9288)
-
-```
-\chunks \dup \map \length \minimumBy
-```
-
-- [x] `\minimumBy`：输入两个列表，其长度必须一致。根据第一个列表中最小的元素的索引，返回第二个列表中对应的元素。由于最小的元素可能不止一个，所以这个函数是 non-deterministic 的。
-
-和前面的 `\groupBy` 一样，`\minimumBy` 也是一个普通的函数而不是助词。但如果改成助词的话，解答会更短一些：
-
-```
-\chunks \minimumBy \length
-```
-
-看来是用普通函数还是助词还需要斟酌。可能两种都要支持，不过名字怎样区分是个问题。
-
-或者专门加一个 `\minimumByLength` 函数。
 
 ### [Consolidate an Array](https://codegolf.stackexchange.com/q/70779/9288)
 
@@ -242,14 +224,6 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 ```
 \foldl1 \lcm
 ```
-
-### [Guess the song title](https://codegolf.stackexchange.com/q/256502/9288)
-
-```
-\map \length \sortBy \nub
-```
-
-或者考虑加一个 `\sortByLength` 函数。
 
 ### [Remove duplicates from my academic transcript](https://codegolf.stackexchange.com/q/256441/9288)
 
