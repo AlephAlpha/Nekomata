@@ -476,6 +476,14 @@ Choose one of [0, 1] and [1, 0] non-deterministically.
 
 This function is non-deterministic.
 
+### `orNeg` (`ŋ`, `1 -> 1`)
+
+Optionally negate a number.
+
+This function is non-deterministic and automatically vectorized.
+
+When the input is a list, each element is optionally negated independently.
+
 ### `charToInt` (`e`, `1 -> 1`)
 
 Convert a string to a list of integers according to Nekomata's custom encoding.

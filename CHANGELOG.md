@@ -1,8 +1,8 @@
 # Revision history for Nekomata
 
-## 0.3.5.0 -- Unreleased
+## 0.3.5.0 -- 2023-06-12
 
-* New built-in functions: `\deinterleave`, `\longest`, `\maximumBy`, `\minimumBy`, `\shortest`, `\unitVec2D`.
+* New built-in functions: `\deinterleave`, `\longest`, `\maximumBy`, `\minimumBy`, `\orNeg`, `\shortest`, `\unitVec2D`.
 * New particle: `\lengthWhile`.
 
 ### Breaking changes

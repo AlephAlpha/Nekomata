@@ -540,6 +540,14 @@ builtins =
         "Choose one of [0, 1] and [1, 0] non-deterministically.\n\
         \This function is non-deterministic."
     , Builtin
+        "orNeg"
+        'ŋ'
+        orNeg
+        "Optionally negate a number.\n\
+        \This function is non-deterministic and automatically vectorized.\n\
+        \When the input is a list, \
+        \each element is optionally negated independently."
+    , Builtin
         "charToInt"
         'e'
         charToInt

@@ -442,3 +442,11 @@ unitVec2 =
                 i
                 (toTryData ([0, 1] :: [Integer]))
                 (toTryData ([1, 0] :: [Integer]))
+
+orNeg :: Function
+orNeg = unaryVec orNeg'
+  where
+    orNeg' i (DNumT x) = liftNum (orNeg_ i) x
+    orNeg' _ _ = Fail
+    orNeg_ _ 0 = Val $ 0
+    orNeg_ i x = Choice i (Val $ x) (Val $ -x)
