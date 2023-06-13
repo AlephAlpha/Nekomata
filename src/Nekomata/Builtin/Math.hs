@@ -259,6 +259,8 @@ dot = mul .* sum'
 convolve :: Function
 convolve = binary convolve'
   where
+    convolve' i x@(DNumT _) y@(DListT _) = mul' i x y
+    convolve' i x@(DListT _) y@(DNumT _) = mul' i x y
     convolve' i (DListT xs) (DListT ys) = liftList2 (convolve_ i) xs ys
     convolve' _ _ _ = Fail
     convolve_ :: Id -> ListTry TryData -> ListTry TryData -> ListTry TryData
@@ -314,7 +316,7 @@ toBaseRev_ x b = Val $ Cons (x `mod` b) (toBaseRev_ (x `div` b) b)
 toBase :: Function
 toBase = binaryVecOuter toBase'
   where
-    toBase' i x y = toBaseRev' (leftId i) x y >>= reverse'' (rightId i)
+    toBase' i x y = toBaseRev' i x y >>= reverse''
 
 binary' :: Function
 binary' = constant (2 :: Integer) .* toBaseRev

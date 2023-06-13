@@ -3,7 +3,7 @@
 module Nekomata.Builtin.List where
 
 import Control.Arrow (first, (***))
-import Control.Monad (join, liftM2)
+import Control.Monad (liftM2)
 import Data.Functor ((<&>))
 import Data.Maybe (fromMaybe)
 import Data.Tuple (swap)
@@ -11,6 +11,9 @@ import Nekomata.Builtin.Basic (dup)
 import Nekomata.Data
 import Nekomata.Function
 import Nekomata.NonDet
+
+range0_ :: Rational -> [Integer]
+range0_ x = enumFromTo 0 . floor $ x - 1
 
 nonempty' :: Function
 nonempty' = predicate nonempty''
@@ -25,9 +28,9 @@ nonempty' = predicate nonempty''
 anyOf' :: Function
 anyOf' = unary anyOf''
   where
-    anyOf'' i (DStringT xs) = Val . DStringT $ xs >>= anyOf i <&> singleton
-    anyOf'' i (DListT xs) = join (xs >>= anyOf i)
-    anyOf'' _ _ = Fail
+    anyOf'' i (DNumT x) = liftNum (anyOf i . fromList . range0_) x
+    anyOf'' i (DStringT xs) = liftString (anyOf i) xs
+    anyOf'' i (DListT xs) = liftList (anyOf i) xs
 
 emptyList :: Function
 emptyList = constant . Val . DListT $ Val Nil
@@ -105,8 +108,6 @@ range0 = unaryVec range0'
   where
     range0' _ (DNumT x) = liftNum range0_ x
     range0' _ _ = Fail
-    range0_ :: Rational -> [Integer]
-    range0_ x = enumFromTo 0 . floor $ x - 1
 
 range1 :: Function
 range1 = unaryVec range1'
@@ -213,12 +214,12 @@ cons0 :: Function
 cons0 = constant (0 :: Integer) .* cons
 
 reverse' :: Function
-reverse' = unary reverse''
+reverse' = unary $ const reverse''
 
-reverse'' :: Id -> DataTry -> TryData
-reverse'' _ (DStringT xs) = liftString (AsString . reverse_ Nil) xs
-reverse'' _ (DListT xs) = liftList (reverse_ Nil) xs
-reverse'' _ _ = Fail
+reverse'' :: DataTry -> TryData
+reverse'' (DNumT x) = liftNum (reverse_ Nil . fromList . range0_) x
+reverse'' (DStringT xs) = liftString (AsString . reverse_ Nil) xs
+reverse'' (DListT xs) = liftList (reverse_ Nil) xs
 
 reverse_ :: ListTry a -> ListTry a -> TryList a
 reverse_ ys Nil = Val ys
@@ -227,9 +228,9 @@ reverse_ ys (Cons x xs) = xs >>= reverse_ (Cons x (Val ys))
 prefix :: Function
 prefix = unary prefix'
   where
+    prefix' i (DNumT x) = liftNum (prefix_ i . fromList . range0_) x
     prefix' i (DStringT xs) = liftString (AsString . prefix_ i) xs
     prefix' i (DListT xs) = liftList (prefix_ i) xs
-    prefix' _ _ = Fail
     prefix_ :: Id -> ListTry a -> TryList a
     prefix_ _ Nil = Val Nil
     prefix_ i (Cons x xs) =
@@ -238,9 +239,9 @@ prefix = unary prefix'
 suffix :: Function
 suffix = unary suffix'
   where
+    suffix' i (DNumT x) = liftNum (suffix_ i . fromList . range0_) x
     suffix' i (DStringT xs) = liftString (AsString . suffix_ i) xs
     suffix' i (DListT xs) = liftList (suffix_ i) xs
-    suffix' _ _ = Fail
     suffix_ :: Id -> ListTry a -> TryList a
     suffix_ _ Nil = Val Nil
     suffix_ i s@(Cons _ xs) =
@@ -262,10 +263,10 @@ take' = binaryVecArg2 take''
 subset :: Function
 subset = unary subset'
   where
+    subset' i (DNumT x) = liftNum (subset_ i . fromList . range0_) x
     subset' i (DStringT xs) =
         liftString (AsString . subset_ i) xs
     subset' i (DListT xs) = liftList (subset_ i) xs
-    subset' _ _ = Fail
     subset_ :: Id -> ListTry a -> TryList a
     subset_ i xs = Choice (leftId i) (Val Nil) (nonemptySubset (rightId i) xs)
     nonemptySubset _ Nil = Fail
@@ -277,9 +278,9 @@ subset = unary subset'
 subsequence :: Function
 subsequence = unary subsequence'
   where
+    subsequence' i (DNumT x) = liftNum (subsequence_ i . fromList . range0_) x
     subsequence' i (DStringT xs) = liftString (AsString . subsequence_ i) xs
     subsequence' i (DListT xs) = liftList (subsequence_ i) xs
-    subsequence' _ _ = Fail
     subsequence_ :: Id -> ListTry a -> TryList a
     subsequence_ i xs =
         Choice
@@ -313,10 +314,10 @@ join_ (Cons x xs) ys = Val . Cons x $ liftJoinM2 join_ xs (Val ys)
 split :: Function
 split = unary2 split'
   where
+    split' i (DNumT x) = liftNum12 (split_ i . fromList . range0_) x
     split' i (DStringT xs) =
         liftString12 (fmap (AsString *** AsString) . split_ i) xs
     split' i (DListT xs) = liftList12 (split_ i) xs
-    split' _ _ = (Fail, Fail)
     split_ :: Id -> ListTry a -> Try (ListTry a, ListTry a)
     split_ _ Nil = Val (Nil, Nil)
     split_ i s@(Cons x xs) =
@@ -358,10 +359,10 @@ concat' = unary concat''
 unconcat :: Function
 unconcat = unary unconcat'
   where
+    unconcat' i (DNumT x) = liftNum (unconcat_ i . fromList . range0_) x
     unconcat' i (DStringT xs) =
         liftString (fmap (fmap AsString) . unconcat_ i) xs
     unconcat' i (DListT xs) = liftList (unconcat_ i) xs
-    unconcat' _ _ = Fail
     unconcat_ :: Id -> ListTry a -> TryList (TryList a)
     unconcat_ _ Nil = Val Nil
     unconcat_ i (Cons x xs) =
@@ -421,9 +422,9 @@ sort = unary sort'
 permutation :: Function
 permutation = unary permutation'
   where
+    permutation' i (DNumT x) = liftNum (permutation_ i . fromList . range0_) x
     permutation' i (DStringT xs) = liftString (AsString . permutation_ i) xs
     permutation' i (DListT xs) = liftList (permutation_ i) xs
-    permutation' _ _ = Fail
     permutation_ :: Id -> ListTry a -> TryList a
     permutation_ _ Nil = Val Nil
     permutation_ i xs =
@@ -433,10 +434,10 @@ permutation = unary permutation'
 extract :: Function
 extract = unary2 extract'
   where
+    extract' i (DNumT x) = liftNum12 (extract_ i . fromList . range0_) x
     extract' i (DStringT xs) =
         liftString12 (fmap (first AsString) . extract_ i) xs
     extract' i (DListT xs) = liftList12 (extract_ i) xs
-    extract' _ _ = (Fail, Fail)
 
 extract_ :: Id -> ListTry a -> Try (TryList a, a)
 extract_ _ Nil = Fail
@@ -474,6 +475,8 @@ enumerate = dup .* length' .* range0
 rotate :: Function
 rotate = binaryVecArg2 rotate'
   where
+    rotate' _ (DNumT x) (DNumT y) =
+        liftNum (\x' -> liftInt (flip rotate_ . fromList $ range0_ x') y) x
     rotate' _ (DStringT xs) (DNumT y) =
         liftString (\x -> liftInt (AsString . flip rotate_ x) y) xs
     rotate' _ (DListT xs) (DNumT y) =
@@ -507,10 +510,11 @@ transpose = unary transpose'
 setPartition :: Function
 setPartition = unary setPartition'
   where
+    setPartition' i (DNumT x) =
+        liftNum (setPartition_ i . fromList . range0_) x
     setPartition' i (DStringT xs) =
         liftString (fmap (fmap AsString) . setPartition_ i) xs
     setPartition' i (DListT xs) = liftList (setPartition_ i) xs
-    setPartition' _ _ = Fail
     setPartition_ :: Id -> ListTry a -> TryList (TryList a)
     setPartition_ _ Nil = Val Nil
     setPartition_ i (Cons x xs) =
@@ -631,10 +635,10 @@ chunks = unary chunks'
 deinterleave :: Function
 deinterleave = unary2 deinterleave'
   where
+    deinterleave' _ (DNumT x) = liftNum12 (deinterleave_ . fromList . range0_) x
     deinterleave' _ (DStringT xs) =
         liftString12 (fmap (AsString *** AsString) . deinterleave_) xs
     deinterleave' _ (DListT xs) = liftList12 deinterleave_ xs
-    deinterleave' _ _ = (Fail, Fail)
     deinterleave_ :: ListTry a -> Try (ListTry a, ListTry a)
     deinterleave_ Nil = Val (Nil, Nil)
     deinterleave_ (Cons x xs) =

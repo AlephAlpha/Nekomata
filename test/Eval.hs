@@ -174,9 +174,21 @@ testEval = describe "Evaluation" $ do
             , ("7", Count 429)
             , ("8", Count 1430)
             ]
+        specEval
+            "+Ø$ᵑ{ᵉçt?}Ø="
+            [ ("0", Count 1)
+            , ("1", Count 1)
+            , ("2", Count 2)
+            , ("3", Count 5)
+            , ("4", Count 14)
+            , ("5", Count 42)
+            , ("6", Count 132)
+            , ("7", Count 429)
+            , ("8", Count 1430)
+            ]
     describe "q66851: Motzkin Numbers" $ do
         specEval
-            "ᵐ{3r~←}∫Ɔž≥"
+            "ᵐ{3~←}∫Ɔž≥"
             [ ("1", Count 1)
             , ("2", Count 2)
             , ("3", Count 4)
@@ -870,7 +882,7 @@ testEval = describe "Evaluation" $ do
             , ("10", All ["86526"])
             ]
         specEval
-            "RO3L"
+            "O3L"
             [ ("1", Count 0)
             , ("2", Count 0)
             , ("3", Count 1)
@@ -920,7 +932,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q238607: Converge to a number" $ do
         specEval
-            "¢DsCr↔~c¢b-"
+            "¢DsC↔~c¢b-"
             [ ("4", All ["1", "2", "3", "4"])
             , ("16", All ["10", "11", "12", "13", "14", "15", "16"])
             , ("35", All ["10", "20", "30", "31", "32", "33", "34", "35"])
@@ -1009,6 +1021,10 @@ testEval = describe "Evaluation" $ do
         specEval
             "į→ŋ"
             [("", All ["[1,2]", "[1,-2]", "[-1,2]", "[-1,-2]", "[2,1]", "[2,-1]", "[-2,1]", "[-2,-1]"])]
+    describe "q248445: Print the power set of the power set ... of an empty set" $ do
+        specEval
+            "Øᶦ{Sa"
+            [("", Truncated ["[]", "[[]]", "[[],[[]]]", "[[],[[]],[[[]]],[[],[[]]]]"])]
     describe "q248991: The Unaverageables" $ do
         specEval
             "ᶠ{+2/∩z"
@@ -1022,7 +1038,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q249868: Every possible pairing" $ do
         specEval
-            "rO2ᵚL"
+            "O2ᵚL"
             [ ("2", All ["[[0,1]]"])
             , ("4", All ["[[2,3],[0,1]]", "[[1,3],[0,2]]", "[[0,3],[1,2]]"])
             ]
@@ -1194,7 +1210,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q257998: Recognize a counting tree" $ do
         specEval
-            "qCᵉLR↔<a*$h→L"
+            "qCᵉL↔≤a*$h→L"
             [ ("[5,2,0,0,0,0]", Check True)
             , ("[5,2,1,0,0,0]", Check True)
             , ("[5,2,1,0,1,0]", Check True)
@@ -1214,7 +1230,7 @@ testEval = describe "Evaluation" $ do
             "Ƥ¢BQ:u=¢d"
             [("", Truncated ["2", "3", "5", "7", "23", "37", "53", "73", "257", "523", "2357", "2753", "3257", "3527", "5237", "5273", "7253", "7523"])]
         specEval
-            "¢rSQ↕¢bQao"
+            "¢SQ↕¢bQao"
             [("", All ["[2,3,5,7,23,37,53,73,257,523,2357,2753,3257,3527,5237,5273,7253,7523]"])]
     describe "q258335: Shortest Code to Find the Smallest Missing Positive Integer" $ do
         specEval
@@ -1334,7 +1350,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259233: We're gonna need a bigger podium!" $ do
         specEval
-            "RO↕ᶠz$L"
+            "O↕ᶠz$L"
             [ ("0 0", Count 1)
             , ("1 0", Count 0)
             , ("1 1", Count 1)
@@ -1359,7 +1375,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259576: All of the Boards" $ do
         specEval
-            "į1:ÐÐ3r~ᵑᵐç3r~ᵑçaᵐᶜ{0*}∑2<"
+            "į1:ÐÐ3~ᵑᵐç3~ᵑçaᵐᶜ{0*}∑2<"
             [ ("", Count 215)
             , ("", Truncated ["[[0,1,0,1],[1,1,1,1],[0,1,0,1],[1,1,1,1]]", "[[0,1,0,1],[1,1,1,1],[0,1,1,0],[1,1,1,1]]"])
             ]
@@ -1456,7 +1472,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q260266: The number of solutions to Hertzsprung's Problem" $ do
         specEval
-            "r↕∆A1>"
+            "↕∆A1>"
             [ ("1", Count 1)
             , ("2", Count 0)
             , ("3", Count 0)

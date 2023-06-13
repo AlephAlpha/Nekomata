@@ -1,5 +1,11 @@
 # Revision history for Nekomata
 
+## 0.4.0.0 -- Unreleased
+
+* The language is still incomplete. The code page isn't filled yet. Everything is subject to change.
+* Some list functions are now overloaded to work on numbers. When they are used on numbers, they are applied to the range from 0 to the number - 1. These functions are: `\anyOf`, `\deinterleave`, `\extract`, `\permutation`, `\prefix`, `\reverse`, `\rotate`, `\setPartition`, `\split`, `\subsequence`, `\subset`, `\suffix`, `\unconcat`.
+* `\convolve` is also overloaded to work on numbers. When one of the arguments is a number, it simply multiplies the other argument by that number.
+
 ## 0.3.5.0 -- 2023-06-12
 
 * New built-in functions: `\deinterleave`, `\longest`, `\maximumBy`, `\minimumBy`, `\orNeg`, `\shortest`, `\unitVec2D`.

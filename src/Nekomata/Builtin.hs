@@ -399,7 +399,9 @@ builtins =
         "convolve"
         '×'
         convolve
-        "Take the convolution of two lists of numbers."
+        "Take the convolution of two lists of numbers.\n\
+        \If one of the arguments is a number, \
+        \it simply multiplies the other argument by that number."
     , Builtin
         "mean"
         'µ'
@@ -566,6 +568,8 @@ builtins =
         '~'
         anyOf'
         "Choose an element from a list or a character from a string.\n\
+        \If the argument is a number, \
+        \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
     , Builtin
         "emptyList"
@@ -666,18 +670,24 @@ builtins =
         "reverse"
         '↔'
         reverse'
-        "Reverse a list or a string."
+        "Reverse a list or a string.\n\
+        \If the argument is a number, \
+        \it is converted to a range from 0 to that number minus 1."
     , Builtin
         "prefix"
         'p'
         prefix
         "Get a prefix of a list or a string.\n\
+        \If the argument is a number, \
+        \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
     , Builtin
         "suffix"
         's'
         suffix
         "Get a suffix of a list or a string.\n\
+        \If the argument is a number, \
+        \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
     , Builtin
         "take"
@@ -690,12 +700,16 @@ builtins =
         'S'
         subset
         "Get a finite subset of a list or a string.\n\
+        \If the argument is a number, \
+        \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
     , Builtin
         "subsequence"
         'q'
         subsequence
         "Get a finite contiguous subsequence of a list or a string.\n\
+        \If the argument is a number, \
+        \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
     , Builtin
         "join"
@@ -709,6 +723,8 @@ builtins =
         ';'
         split
         "Split a list or a string into two parts.\n\
+        \If the argument is a number, \
+        \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
     , Builtin
         "replicate"
@@ -748,6 +764,8 @@ builtins =
         'J'
         unconcat
         "Split a list or a string into a list of lists or a list of strings.\n\
+        \If the argument is a number, \
+        \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
     , Builtin
         "nub"
@@ -764,12 +782,16 @@ builtins =
         '↕'
         permutation
         "Get a permutation of a list or a string.\n\
+        \If the argument is a number, \
+        \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
     , Builtin
         "extract"
         'ĕ'
         extract
         "Extract an element from a list or a character from a string.\n\
+        \If the argument is a number, \
+        \it is converted to a range from 0 to that number minus 1.\n\
         \Returns the element and the rest of the list or string.\n\
         \This function is non-deterministic."
     , Builtin
@@ -798,6 +820,8 @@ builtins =
         'Ř'
         rotate
         "Rotate a list or a string by a given number of positions.\n\
+        \If the first argument is a number, \
+        \it is converted to a range from 0 to that number minus 1.\n\
         \This function is automatically vectorized on the second argument."
     , Builtin
         "transpose"
@@ -811,6 +835,8 @@ builtins =
         setPartition
         "Partition a list into a list of lists such that their concatenation \
         \is a permutation of the original list.\n\
+        \If the argument is a number, \
+        \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
     , Builtin
         "setMinus"
@@ -851,7 +877,9 @@ builtins =
         'ĭ'
         deinterleave
         "Deinterleave a list or a string into a list of elements \
-        \at even positions and a list of elements at odd positions."
+        \at even positions and a list of elements at odd positions.\n\
+        \If the argument is a number, \
+        \it is converted to a range from 0 to that number minus 1."
     , Builtin
         "minimumBy"
         'ṃ'

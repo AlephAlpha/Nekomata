@@ -342,6 +342,8 @@ The current implementation is simply a composition of mul and sum.
 
 Take the convolution of two lists of numbers.
 
+If one of the arguments is a number, it simply multiplies the other argument by that number.
+
 ### `mean` (`µ`, `1 -> 1`)
 
 Take the mean of a list of numbers.
@@ -500,6 +502,8 @@ Fail when the integer is not in the range 0 to 255.
 
 Choose an element from a list or a character from a string.
 
+If the argument is a number, it is converted to a range from 0 to that number minus 1.
+
 This function is non-deterministic.
 
 ### `emptyList` (`Ø`, `0 -> 1`)
@@ -586,15 +590,21 @@ Prepend a zero to a list.
 
 Reverse a list or a string.
 
+If the argument is a number, it is converted to a range from 0 to that number minus 1.
+
 ### `prefix` (`p`, `1 -> 1`)
 
 Get a prefix of a list or a string.
+
+If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
 This function is non-deterministic.
 
 ### `suffix` (`s`, `1 -> 1`)
 
 Get a suffix of a list or a string.
+
+If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
 This function is non-deterministic.
 
@@ -608,11 +618,15 @@ This function is automatically vectorized on the second argument.
 
 Get a finite subset of a list or a string.
 
+If the argument is a number, it is converted to a range from 0 to that number minus 1.
+
 This function is non-deterministic.
 
 ### `subsequence` (`q`, `1 -> 1`)
 
 Get a finite contiguous subsequence of a list or a string.
+
+If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
 This function is non-deterministic.
 
@@ -625,6 +639,8 @@ If one of the arguments is a string, the other argument is converted to a string
 ### `split` (`;`, `1 -> 2`)
 
 Split a list or a string into two parts.
+
+If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
 This function is non-deterministic.
 
@@ -664,6 +680,8 @@ If one item in the list is a string, the other items are converted to strings as
 
 Split a list or a string into a list of lists or a list of strings.
 
+If the argument is a number, it is converted to a range from 0 to that number minus 1.
+
 This function is non-deterministic.
 
 ### `nub` (`u`, `1 -> 1`)
@@ -678,11 +696,15 @@ Sort a list or a string.
 
 Get a permutation of a list or a string.
 
+If the argument is a number, it is converted to a range from 0 to that number minus 1.
+
 This function is non-deterministic.
 
 ### `extract` (`ĕ`, `1 -> 2`)
 
 Extract an element from a list or a character from a string.
+
+If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
 Returns the element and the rest of the list or string.
 
@@ -712,6 +734,8 @@ Push a list of integers from 0 to the length of the argument minus 1 without pop
 
 Rotate a list or a string by a given number of positions.
 
+If the first argument is a number, it is converted to a range from 0 to that number minus 1.
+
 This function is automatically vectorized on the second argument.
 
 ### `transpose` (`Ť`, `1 -> 1`)
@@ -723,6 +747,8 @@ Fail if the sublists are not all of the same length.
 ### `setPartition` (`O`, `1 -> 1`)
 
 Partition a list into a list of lists such that their concatenation is a permutation of the original list.
+
+If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
 This function is non-deterministic.
 
@@ -759,6 +785,8 @@ Split a list or a string into a list of chunks of equal elements.
 ### `deinterleave` (`ĭ`, `1 -> 2`)
 
 Deinterleave a list or a string into a list of elements at even positions and a list of elements at odd positions.
+
+If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
 ### `minimumBy` (`ṃ`, `2 -> 1`)
 
