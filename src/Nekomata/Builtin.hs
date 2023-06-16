@@ -154,6 +154,13 @@ builtins =
         \If it is, push the number itself, otherwise fail.\n\
         \This function is automatically vectorized."
     , Builtin
+        "isNonnegative"
+        'ň'
+        isNonnegative
+        "Check if a number is non-negative.\n\
+        \If it is, push the number itself, otherwise fail.\n\
+        \This function is automatically vectorized."
+    , Builtin
         "isZero"
         'ž'
         isZero
@@ -251,6 +258,12 @@ builtins =
         '-'
         sub
         "Subtract two numbers.\n\
+        \This function is automatically vectorized with padding zeros."
+    , Builtin
+        "absDiff"
+        '≈'
+        absDiff
+        "Absolute difference of two numbers.\n\
         \This function is automatically vectorized with padding zeros."
     , Builtin
         "mul"
@@ -454,6 +467,12 @@ builtins =
         'Ƃ'
         binary'
         "Convert an integer to a list of binary digits in reverse order.\n\
+        \This function is automatically vectorized."
+    , Builtin
+        "digits"
+        'Ɗ'
+        digits
+        "Convert an integer to a list of decimal digits.\n\
         \This function is automatically vectorized."
     , Builtin
         "cumsum"

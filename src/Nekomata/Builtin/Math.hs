@@ -27,6 +27,12 @@ isPositive = predicateVec isPositive'
     isPositive' _ (DNumT x) = (> 0) . unDet <$> x
     isPositive' _ _ = Fail
 
+isNonnegative :: Function
+isNonnegative = predicateVec isNonnegative'
+  where
+    isNonnegative' _ (DNumT x) = (>= 0) . unDet <$> x
+    isNonnegative' _ _ = Fail
+
 isZero :: Function
 isZero = predicateVec isZero'
   where
@@ -127,6 +133,9 @@ sub' i x y = neg' (leftId i) y >>= add' (rightId i) x
     neg' = vec1 neg''
     neg'' _ (DNumT x') = liftNum negate x'
     neg'' _ _ = Fail
+
+absDiff :: Function
+absDiff = sub .* abs'
 
 mul :: Function
 mul = binary mul'
@@ -320,6 +329,9 @@ toBase = binaryVecOuter toBase'
 
 binary' :: Function
 binary' = constant (2 :: Integer) .* toBaseRev
+
+digits :: Function
+digits = constant (10 :: Integer) .* toBase
 
 cumsum :: Function
 cumsum = unary cumsum'

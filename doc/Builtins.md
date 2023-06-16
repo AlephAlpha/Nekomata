@@ -98,6 +98,14 @@ If it is, push the number itself, otherwise fail.
 
 This function is automatically vectorized.
 
+### `isNonnegative` (`ň`, `1 -> 1`)
+
+Check if a number is non-negative.
+
+If it is, push the number itself, otherwise fail.
+
+This function is automatically vectorized.
+
 ### `isZero` (`ž`, `1 -> 1`)
 
 Check if a number is zero.
@@ -195,6 +203,12 @@ This function is automatically vectorized with padding zeros.
 ### `sub` (`-`, `2 -> 1`)
 
 Subtract two numbers.
+
+This function is automatically vectorized with padding zeros.
+
+### `absDiff` (`≈`, `2 -> 1`)
+
+Absolute difference of two numbers.
 
 This function is automatically vectorized with padding zeros.
 
@@ -391,6 +405,12 @@ This function is automatically vectorized over both arguments. If both arguments
 ### `binary` (`Ƃ`, `1 -> 1`)
 
 Convert an integer to a list of binary digits in reverse order.
+
+This function is automatically vectorized.
+
+### `digits` (`Ɗ`, `1 -> 1`)
+
+Convert an integer to a list of decimal digits.
 
 This function is automatically vectorized.
 
@@ -858,7 +878,7 @@ If the input is an number, apply the function to each integer from 0 to the inpu
 
 If the function takes no argument, return a list of n copies of the result of the function, where n is the length of the input.
 
-### `mapFirst` (`ᵚ`, `(1 -> 1) -> (2 -> 1) or (m -> 1) -> (m -> 1) where m > 1`)
+### `mapWith` (`ᵚ`, `(1 -> 1) -> (2 -> 1) or (m -> 1) -> (m -> 1) where m > 1`)
 
 Map a binary function over its first argument.
 
@@ -927,5 +947,9 @@ This is different from `iterate` in that it does not return the intermediate res
 ### `lengthWhile` (`ˡ`, `(n -> n) -> (n -> 1)`)
 
 Apply a function zero or more times, until the top value of the stack is Fail, and return the number of times the function was applied.
+
+### `firstInt` (`ᵏ`, `(m -> n) -> (0 -> 1)`)
+
+Find the smallest non-negative integer for which a function does not fail, and return it.
 
 

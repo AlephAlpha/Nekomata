@@ -121,9 +121,9 @@ builtinParticles =
         \If the function takes no argument, return a list of n copies \
         \of the result of the function, where n is the length of the input."
     , BuiltinParticle
-        "mapFirst"
+        "mapWith"
         'ᵚ'
-        mapFirst
+        mapWith
         "(1 -> 1) -> (2 -> 1) \
         \or (m -> 1) -> (m -> 1) where m > 1"
         "Map a binary function over its first argument.\n\
@@ -217,6 +217,13 @@ builtinParticles =
         "Apply a function zero or more times, \
         \until the top value of the stack is Fail, \
         \and return the number of times the function was applied."
+    , BuiltinParticle
+        "firstInt"
+        'ᵏ'
+        firstInt
+        "(m -> n) -> (0 -> 1)"
+        "Find the smallest non-negative integer for which a function \
+        \does not fail, and return it."
     ]
 
 -- | The map of from names to builtin particles
@@ -338,21 +345,21 @@ map' = Particle map''
                         :+ dropStack (m - 1) s
     map'' _ = Nothing
 
-mapFirst :: Particle
-mapFirst = Particle mapFirst'
+mapWith :: Particle
+mapWith = Particle mapWith'
   where
-    mapFirst' (Function (Arity 1 1) f) =
+    mapWith' (Function (Arity 1 1) f) =
         Just . Function (Arity 2 1) $
             \i (x :+ y :+ s) ->
                 let f' i' y' = top $ f i' (x :+ Val y' :+ s)
                  in (y >>= liftList (tryMap f' i) . toTryList) :+ s
-    mapFirst' (Function (Arity m 1) f) | m > 1 =
+    mapWith' (Function (Arity m 1) f) | m > 1 =
         Just . Function (Arity m 1) $
             \i (x :+ y :+ s) ->
                 let f' i' y' = top $ f i' (x :+ Val y' :+ s)
                  in (y >>= liftList (tryMap f' i) . toTryList)
                         :+ dropStack (m - 2) s
-    mapFirst' _ = Nothing
+    mapWith' _ = Nothing
 
 zipWith' :: Particle
 zipWith' = Particle zipWith''
@@ -499,3 +506,19 @@ lengthWhile = Particle lengthWhile'
                     then t $> s' >>= lengthWhile'' (rightId i) f <&> (+ 1)
                     else Val 0
             )
+
+firstInt :: Particle
+firstInt = Particle firstInt'
+  where
+    firstInt' (Function (Arity _ _) f) =
+        Just . Function (Arity 0 1) $
+            \i s ->
+                let f' i' x' = top $ f i' (Val x' :+ s)
+                 in (toTryData . Cut $ \ds -> (ds, firstInt'' ds i f' 0)) :+ s
+    firstInt'' ::
+        Decisions -> Id -> (Id -> DataTry -> TryData) -> Integer -> Try Integer
+    firstInt'' ds i f x =
+        let t = normalForm $ toTryData x >>= f (leftId i)
+         in if hasValue ds t
+                then Val x
+                else firstInt'' ds (rightId i) f (x + 1)

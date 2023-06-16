@@ -5,7 +5,7 @@
 此处总结一下 Code Page 中已有但还没有用上的字符：
 
 ```
-≈&'.VWXY`vwy|
+&'.VWXY`vwy|
 ```
 
 有些是已经确定分配给什么函数的，比如说 `|` 给 `\bitOr`，`&` 给 `\bitAnd`，`X` 给 `\bitXor`。别的都还没想好。
@@ -84,7 +84,6 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 \sort \absDiff \groupBy
 ```
 
-- [ ] `\absDiff`：求两个数的绝对值差；自动向量化。可以考虑拆成 `\sub` 和 `\abs` 两个函数。
 - [ ] `\groupBy`：输入两个列表，其长度必须一致。根据第一个列表的元素，将第二个列表的元素分组。比如输入 `[1, 2, 1, 2]` 和 `[a, b, c, d]`，输出 `[[a, c], [b, d]]`。
 
 其它语言里的 `\groupBy` 一般都是高阶函数，输入的是一个函数和一个列表，而非两个列表。我觉得输入两个列表更方便一些，能更好地利用自动向量化。
@@ -182,17 +181,11 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 ### [Shortest distinguishable slice](https://codegolf.stackexchange.com/q/259707/9288)
 
 ```
-\charToInt \pad \transpose \enumerate \dup \apply2 \anyOf \increment \predicate { \range0 \add \nth \transpose \allUnique } \cons0 \swap \add
+\charToInt \pad \transpose \enumerate \subsequence \nonempty \predicate { \nth \transpose \allUnique } \allValues \shortest \dupDip \first \last \increment \pair
 ```
 
 - [ ] `\pad`：输入一个列表的列表，将每个列表的长度补齐到最长的子列表的长度。比如说 `[[1, 2], [3, 4, 5]]` 补齐成 `[[1, 2, 0], [3, 4, 5]]`。
 - [ ] `\allUnique`：判断一个列表中的元素是否都不相同。
-
-如果 `\subsequence` 的输出是按长度从小到大排序的，那么可以简化为（16 字节）：
-
-```
-\charToInt \pad \transpose \enumerate \subsequence \predicate { \nth \transpose \allUnique } \dupDip \first \last \increment \pair
-```
 
 ### [Find Index of Rational Number in Calkin-Wilf Sequence](https://codegolf.stackexchange.com/q/260472/9288)
 
@@ -230,4 +223,10 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 
 ```
 \map \first \groupBy \anyOf \dup \last \last \minimumBy
+```
+
+### [Halve the falses](https://codegolf.stackexchange.com/q/118597/9288)
+
+```
+\deinterleave \isPositive \interleave \removeFail
 ```
