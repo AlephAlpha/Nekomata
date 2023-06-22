@@ -230,3 +230,11 @@ fghijklmnopqrstuvwxyz{|}~ ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º�
 ```
 \deinterleave \isPositive \interleave \removeFail
 ```
+
+### [Replace all items with their counts](https://codegolf.stackexchange.com/q/224125/9288)
+
+```
+\map \count
+```
+
+- [ ] `\count`: 求一个元素在列表中的出现次数。

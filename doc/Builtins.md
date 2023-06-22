@@ -478,6 +478,14 @@ Compute the least common multiple of two numbers.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+### `divisors` (`Ď`, `1 -> 1`)
+
+Compute the list of divisors of an integer.
+
+Fail when the input is zero.
+
+This function is automatically vectorized.
+
 ### `intPartition` (`Ṗ`, `1 -> 1`)
 
 Partition an integer into a list of integers, whose sum is the original integer.

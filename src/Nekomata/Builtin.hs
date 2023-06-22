@@ -541,6 +541,13 @@ builtins =
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
+        "divisors"
+        'Ď'
+        divisors
+        "Compute the list of divisors of an integer.\n\
+        \Fail when the input is zero.\n\
+        \This function is automatically vectorized."
+    , Builtin
         "intPartition"
         'Ṗ'
         intPartition

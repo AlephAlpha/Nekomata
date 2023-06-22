@@ -5,6 +5,7 @@ import Control.Monad (liftM2)
 import Data.Functor ((<&>))
 import Data.List (sort)
 import Data.Ratio (denominator, numerator, (%))
+import Math.NumberTheory.ArithmeticFunctions (divisorsList)
 import Math.NumberTheory.Primes (Prime (unPrime), factorise, nextPrime)
 import Math.NumberTheory.Primes.Counting (primeCount)
 import Math.NumberTheory.Primes.Testing (isCertifiedPrime)
@@ -422,6 +423,14 @@ lcm' = binaryVecFail lcm''
         Val $
             lcm (numerator x) (numerator y)
                 % gcd (denominator x) (denominator y)
+
+divisors :: Function
+divisors = unaryVec divisors'
+  where
+    divisors' _ (DNumT x) = liftInt divisors_ x
+    divisors' _ _ = Fail
+    divisors_ 0 = Fail
+    divisors_ x = toTryData $ divisorsList x
 
 intPartition :: Function
 intPartition = unaryVec intPartition'

@@ -3,7 +3,7 @@
 ## 0.4.0.0 -- Unreleased
 
 * The language is still incomplete. The code page isn't filled yet. Everything is subject to change.
-* New built-in function: `\absDiff`, `\digits`, `\isNonnegative`.
+* New built-in function: `\absDiff`, `\digits`, `\divisors`, `\isNonnegative`.
 * New particle: `\firstInt`.
 
 ### Breaking changes
