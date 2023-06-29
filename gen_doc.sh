@@ -14,4 +14,4 @@ echo "Generating documentation for codepage..."
 cabal run Nekomata -- --codepage > doc/CodePage.md
 
 echo "Analyzing test cases..."
-python analyze.py
+python analysis/analyze.py

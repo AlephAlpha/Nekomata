@@ -201,6 +201,18 @@ pow = binaryVecFail pow'
 recip' :: Function
 recip' = constant (1 :: Integer) .* swap .* div'
 
+mul2 :: Function
+mul2 = constant (2 :: Integer) .* mul
+
+div2 :: Function
+div2 = constant (2 :: Integer) .* div'
+
+mod2 :: Function
+mod2 = constant (2 :: Integer) .* mod'
+
+powOf2 :: Function
+powOf2 = constant (2 :: Integer) .* pow
+
 numerator' :: Function
 numerator' = unaryVec numerator''
   where

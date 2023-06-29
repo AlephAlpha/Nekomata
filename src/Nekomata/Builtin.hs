@@ -310,8 +310,8 @@ builtins =
         "half"
         '½'
         half
-        "Divide an integer by two.\n\
-        \Fails when the number is odd.\n\
+        "Check if an integer is even, and divide it by 2.\n\
+        \Fails when the integer is odd.\n\
         \This function is automatically vectorized."
     , Builtin
         "pow"
@@ -327,6 +327,33 @@ builtins =
         recip'
         "Reciprocal of a number.\n\
         \Fails when the number is zero.\n\
+        \This function is automatically vectorized."
+    , Builtin
+        "mul2"
+        'Ä'
+        mul2
+        "Multiply a number by 2.\n\
+        \This function is automatically vectorized."
+    , Builtin
+        "div2"
+        'ä'
+        div2
+        "Divide a number by 2.\n\
+        \This is different from `half` in that \
+        \it may return a non-integer.\n\
+        \This function is automatically vectorized."
+    , Builtin
+        "mod2"
+        'Ö'
+        mod2
+        "Modulo a number by 2.\n\
+        \This function is automatically vectorized."
+    , Builtin
+        "powOf2"
+        'Ë'
+        powOf2
+        "Raise 2 to a power.\n\
+        \Fails when the exponent is not an integer.\n\
         \This function is automatically vectorized."
     , Builtin
         "denominator"
@@ -827,6 +854,13 @@ builtins =
         "Check if all elements in a list are equal.\n\
         \If it is, push the equal element, otherwise fail.\n\
         \If the list is empty, this function fails."
+    , Builtin
+        "isUnique"
+        'ů'
+        isUnique
+        "Check if all elements in a list are unique.\n\
+        \If it is, push the list itself, otherwise fail.\n\
+        \The empty list is considered unique."
     , Builtin
         "free"
         'f'

@@ -7,7 +7,7 @@ import Control.Monad (liftM2)
 import Data.Functor ((<&>))
 import Data.Maybe (fromMaybe)
 import Data.Tuple (swap)
-import Nekomata.Builtin.Basic (dup)
+import Nekomata.Builtin.Basic (dup, eq)
 import Nekomata.Data
 import Nekomata.Function
 import Nekomata.NonDet
@@ -455,6 +455,9 @@ allEqual = unary allEqual'
     allEqual' _ _ = Fail
     tryEq' :: (TryEq a) => Id -> a -> a -> Try a
     tryEq' _ x y = tryEq x y >>= \b -> if b then Val x else Fail
+
+isUnique :: Function
+isUnique = dup .* nub .* eq
 
 free :: Function
 free = predicate2 free'

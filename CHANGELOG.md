@@ -3,7 +3,7 @@
 ## 0.4.0.0 -- Unreleased
 
 * The language is still incomplete. The code page isn't filled yet. Everything is subject to change.
-* New built-in function: `\absDiff`, `\digits`, `\divisors`, `\isNonnegative`.
+* New built-in function: `\absDiff`, `\digits`, `\div2`, `\divisors`, `\isNonnegative`, `\isUnique`, `\mod2`, `\mul2`, `\powOf2`.
 * New particle: `\firstInt`.
 
 ### Breaking changes

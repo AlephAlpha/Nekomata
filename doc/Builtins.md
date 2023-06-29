@@ -252,9 +252,9 @@ This function is automatically vectorized and fails when the two lists are of di
 
 ### `half` (`½`, `1 -> 1`)
 
-Divide an integer by two.
+Check if an integer is even, and divide it by 2.
 
-Fails when the number is odd.
+Fails when the integer is odd.
 
 This function is automatically vectorized.
 
@@ -271,6 +271,34 @@ This function is automatically vectorized and fails when the two lists are of di
 Reciprocal of a number.
 
 Fails when the number is zero.
+
+This function is automatically vectorized.
+
+### `mul2` (`Ä`, `1 -> 1`)
+
+Multiply a number by 2.
+
+This function is automatically vectorized.
+
+### `div2` (`ä`, `1 -> 1`)
+
+Divide a number by 2.
+
+This is different from `half` in that it may return a non-integer.
+
+This function is automatically vectorized.
+
+### `mod2` (`Ö`, `1 -> 1`)
+
+Modulo a number by 2.
+
+This function is automatically vectorized.
+
+### `powOf2` (`Ë`, `1 -> 1`)
+
+Raise 2 to a power.
+
+Fails when the exponent is not an integer.
 
 This function is automatically vectorized.
 
@@ -745,6 +773,14 @@ Check if all elements in a list are equal.
 If it is, push the equal element, otherwise fail.
 
 If the list is empty, this function fails.
+
+### `isUnique` (`ů`, `1 -> 1`)
+
+Check if all elements in a list are unique.
+
+If it is, push the list itself, otherwise fail.
+
+The empty list is considered unique.
 
 ### `free` (`f`, `2 -> 1`)
 
