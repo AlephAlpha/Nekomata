@@ -95,14 +95,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 
 - [ ] `\bitxor`：按位异或。
 
-或者：
-
-```
-\range0 \binary \dup \outer { \dip \dup \bitxor \interleave \cons0 2 \recip \fromBaseRev }
-```
-
-- [ ] `\interleave`：将两个列表交错合并。比如说 `[1, 2, 3]` 和 `[4, 5, 6]` 交错合并成 `[1, 4, 2, 5, 3, 6]`。第二个列表可以和第一个列表一样长，也可以比第一个列表少一个元素。
-
 ### [Is it a completely even number?](https://codegolf.stackexchange.com/q/142534/9288)
 
 ```
@@ -150,7 +142,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 ```
 
 - [ ] `\pad`：输入一个列表的列表，将每个列表的长度补齐到最长的子列表的长度。比如说 `[[1, 2], [3, 4, 5]]` 补齐成 `[[1, 2, 0], [3, 4, 5]]`。
-- [ ] `\isUnique`：判断一个列表中的元素是否都不相同。
 
 ### [Find Index of Rational Number in Calkin-Wilf Sequence](https://codegolf.stackexchange.com/q/260472/9288)
 
@@ -190,20 +181,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 \map \first \groupBy \anyOf \dup \last \last \minimumBy
 ```
 
-### [Halve the falses](https://codegolf.stackexchange.com/q/118597/9288)
-
-```
-\deinterleave \isPositive \interleave \removeFail
-```
-
-### [Replace all items with their counts](https://codegolf.stackexchange.com/q/224125/9288)
-
-```
-\map \count
-```
-
-- [ ] `\count`: 求一个元素在列表中的出现次数。
-
 ### [XOR of independent Bernoulli variables](https://codegolf.stackexchange.com/q/262140/9288)
 
 ```
@@ -211,4 +188,11 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 ```
 
 - [ ] `\complement`：1 减去一个数。
-- [ ] `\div2`：除以 2。目前已有一个 `\half` 函数，但它会检查结果是否是整数。`\half` 比 `\div2` 更常用，但有的场合也需要 `\div2`。
+
+### [Generate list of numbers and their negative counterparts](https://codegolf.stackexchange.com/q/203797/9288)
+
+```
+\interval \orNeg
+```
+
+- [ ] `\interval`：输入两个数字，输出这两个数字之间的所有整数。比如输入 `3` 和 `7`，输出 `[3, 4, 5, 6, 7]`。

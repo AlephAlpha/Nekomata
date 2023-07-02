@@ -912,6 +912,11 @@ builtins =
         \Fail if the element does not occur in the list.\n\
         \This function is non-deterministic."
     , Builtin
+        "count"
+        'Ĉ'
+        count
+        "Count the number of occurrences of an element in a list."
+    , Builtin
         "tally"
         'Ţ'
         tally
@@ -940,6 +945,13 @@ builtins =
         \at even positions and a list of elements at odd positions.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1."
+    , Builtin
+        "interleave"
+        'Ĭ'
+        interleave
+        "Interleave two lists or strings.\n\
+        \The length of the first list must be either equal to or one more than \
+        \the length of the second list. Otherwise, this function fails."
     , Builtin
         "minimumBy"
         'ṃ'

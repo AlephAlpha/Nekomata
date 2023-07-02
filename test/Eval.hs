@@ -323,6 +323,20 @@ testEval = describe "Evaluation" $ do
             , ("[20,142]", All ["2"])
             , ("[101,202]", All ["101"])
             ]
+    describe "q77608: All together now" $ do
+        specEval
+            "ĉᵐ≡ů"
+            [ ("[3]", Check True)
+            , ("[5,1]", Check True)
+            , ("[4,4,9,9,9,9,1,1]", Check True)
+            , ("[1,2,3,4,5,6,7,8,9]", Check True)
+            , ("[2,2,2,2,2,2,2,2,2,2,2,2,2,2,2]", Check True)
+            , ("[8,1,8]", Check False)
+            , ("[8,8,8,4,4,4,3,3,3,3,3,3,4]", Check False)
+            , ("[4,5,4,5]", Check False)
+            , ("[5,5,4,5,5,3]", Check False)
+            , ("[1,2,3,4,5,6,7,8,9,1]", Check False)
+            ]
     describe "q79037: Smallest groups in an array" $ do
         specEval
             "ĉş"
@@ -355,7 +369,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q83533: Calculate Euler's totient function" $ do
         specEval
-            "RGŢh"
+            "RG1Ĉ"
             [ ("1", All ["1"])
             , ("2", All ["1"])
             , ("3", All ["2"])
@@ -410,6 +424,15 @@ testEval = describe "Evaluation" $ do
             , ("\"abbb\"", Check False)
             , ("\"bbaa\"", Check False)
             , ("\"bbbb\"", Check False)
+            ]
+    describe "q91154: Sylvester's sequence" $ do
+        specEval
+            "2$ᵑ{:←*→"
+            [ ("0", All ["2"])
+            , ("1", All ["3"])
+            , ("2", All ["7"])
+            , ("3", All ["43"])
+            , ("4", All ["1807"])
             ]
     describe "q91420: Excessive Integers" $ do
         specEval
@@ -570,6 +593,16 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q118597: Halve the falses" $ do
         specEval
+            "ĭZĬ‼"
+            [ ("[1,0,0,1,0,0,1]", All ["[1,0,1,0,1]"])
+            , ("[1,1,0,0,1,1,0,0,1]", All ["[1,1,0,1,1,0,1]"])
+            , ("[1,1,0,0,1,1,1,0,0,1,1]", All ["[1,1,0,1,1,1,0,1,1]"])
+            , ("[1,1,1]", All ["[1,1,1]"])
+            , ("[0,0,1]", All ["[0,1]"])
+            , ("[0,0]", All ["[0]"])
+            , ("[1,1,1,0,0,0,0,1,1,1,1,0,0,1,0,0,1,1,0,0,1,1,1,1,0,0,1,0,0]", All ["[1,1,1,0,0,1,1,1,1,0,1,0,1,1,0,1,1,1,1,0,1,0]"])
+            ]
+        specEval
             "¬∫½ᶻ¿‼"
             [ ("[1,0,0,1,0,0,1]", All ["[1,0,1,0,1]"])
             , ("[1,1,0,0,1,1,0,0,1]", All ["[1,1,0,1,1,0,1]"])
@@ -630,6 +663,21 @@ testEval = describe "Evaluation" $ do
             , ("7", Check False)
             , ("501500", Check False)
             , ("999999", Check False)
+            ]
+        specEval
+            "R∫$Ĩ"
+            [ ("1", Check True)
+            , ("3", Check True)
+            , ("6", Check True)
+            , ("10", Check True)
+            , ("18915", Check True)
+            , ("71253", Check True)
+            , ("2", Check False)
+            , ("4", Check False)
+            , ("5", Check False)
+            , ("7", Check False)
+            , ("4576", Check False)
+            , ("31988", Check False)
             ]
     describe "q122520: Is this relationship creepy?" $ do
         specEval
@@ -832,6 +880,20 @@ testEval = describe "Evaluation" $ do
             , ("[3,1,4]", Check False)
             , ("[5,4,6,2]", Check False)
             , ("[1,2,3,4,5,6]", Check False)
+            ]
+    describe "q150117: Boustrophedonise" $ do
+        specEval
+            "ĭᵐ↔Ĭ"
+            [ ("[\"Here are some lines\",\"of text for you\",\"to make a\",\"boustrophedon\"]", All ["[\"Here are some lines\",\"uoy rof txet fo\",\"to make a\",\"nodehportsuob\"]"])
+            , ("[\"My boustrophedon\"]", All ["[\"My boustrophedon\"]"])
+            , ("[]", All ["[]"])
+            , ("[\"Some text\",\"\",\"More text\",\"\",\"\",\"Last bit of text\"]", All ["[\"Some text\",\"\",\"More text\",\"\",\"\",\"txet fo tib tsaL\"]"])
+            ]
+    describe "q153783: The first n numbers without consecutive equal binary digits" $ do
+        specEval
+            "RË3÷"
+            [ ("1", All ["[0]"])
+            , ("18", All ["[0,1,2,5,10,21,42,85,170,341,682,1365,2730,5461,10922,21845,43690,87381]"])
             ]
     describe "q167573: Consecutive 1-Bits are Incremented" $ do
         specEval
@@ -1038,6 +1100,19 @@ testEval = describe "Evaluation" $ do
             , ("5 [0,0] [1,1]", All ["[0,0,0,0,0]"])
             , ("20 [0,-1,0,1] [0,1,0,-1]", All ["[0,-1,0,1,-2,2,-1,-1,3,-4,3,0,-4,7,-7,3,4,-11,14,-10]"])
             ]
+    describe "q224125: Replace all items with their counts" $ do
+        specEval
+            "ᵐĈ"
+            [ ("[1]", All ["[1]"])
+            , ("[1,2]", All ["[1,1]"])
+            , ("[1,1]", All ["[2,2]"])
+            , ("[1,4,4]", All ["[1,2,2]"])
+            , ("[4,4,2]", All ["[2,2,1]"])
+            , ("[4,4,4,4]", All ["[4,4,4,4]"])
+            , ("[10,20,10,20]", All ["[2,2,2,2]"])
+            , ("[1,2,2,4,4,4,4]", All ["[1,2,2,4,4,4,4]"])
+            , ("[1,2,2,1,4,8,1]", All ["[3,2,2,3,1,1,3]"])
+            ]
     describe "q225203: Delannoy numbers" $ do
         specEval
             "Ṁ→ᵒÇ∏2d"
@@ -1057,12 +1132,6 @@ testEval = describe "Evaluation" $ do
             , ("[1,7]", Count 15)
             , ("[7,0]", Count 1)
             , ("[0,4]", Count 1)
-            ]
-    describe "q252927: Make a Court Transcriber" $ do
-        specEval
-            "ᶠ{JS=}ş"
-            [ ("[\"dictionary\",\"transcriber\"] [\"dic\",\"ion\",\"ary\"]", All ["dictionary"])
-            , ("[\"dictionary\",\"transcriber\"] [\"tra\",\"scr\",\"ber\"]", All ["transcriber"])
             ]
     describe "q226593: Split a list into maximal equal-sum sections" $ do
         specEval
@@ -1226,6 +1295,21 @@ testEval = describe "Evaluation" $ do
             , ("1001", All ["[1000,1001]"])
             , ("4037 ", All ["[1000,2000,3000,4000,4010,4020,4030,4031,4032,4033,4034,4035,4036,4037]"])
             ]
+    describe "q241267: Remove odd indices and double the even indices" $ do
+        specEval
+            "ĭ:Ĭ"
+            [ ("\"abcdef\"", All ["bbddff"])
+            , ("\"umbrella\"", All ["mmrrllaa"])
+            , ("\"looooooooong text\"", All ["ooooooooooggttxx"])
+            , ("\"abc\"", All ["bb"])
+            , ("\"xkcd\"", All ["kkdd"])
+            , ("\"Hello, World!\"", All ["eell,,WWrrdd"])
+            , ("\"D\"", All [""])
+            , ("\"KK\"", All ["KK"])
+            , ("\"Hi\"", All ["ii"])
+            , ("\"odd_length!\"", All ["dd__eegghh"])
+            , ("\"\"", All [""])
+            ]
     describe "q241474: Move to Right and left" $ do
         specEval
             "çç+"
@@ -1367,6 +1451,12 @@ testEval = describe "Evaluation" $ do
             , ("42", All ["[1,2,7,14,21,42]"])
             , ("100", All ["[1,2,4,25,50,100]"])
             ]
+    describe "q252927: Make a Court Transcriber" $ do
+        specEval
+            "ᶠ{JS=}ş"
+            [ ("[\"dictionary\",\"transcriber\"] [\"dic\",\"ion\",\"ary\"]", All ["dictionary"])
+            , ("[\"dictionary\",\"transcriber\"] [\"tra\",\"scr\",\"ber\"]", All ["transcriber"])
+            ]
     describe "q255373: CGAC2022 Day 10: Help Santa sort presents!" $ do
         specEval
             " ˡ{ᵗ≡ĭ?}aṀ"
@@ -1494,6 +1584,20 @@ testEval = describe "Evaluation" $ do
             , ("89", All ["27"])
             , ("100", All ["19"])
             ]
+    describe "q257458: Sum of Consecutive Squares" $ do
+        specEval
+            "qᵗz:∙="
+            [ ("5", Check True)
+            , ("13", Check True)
+            , ("14", Check True)
+            , ("25", Check True)
+            , ("29", Check True)
+            , ("4", Check False)
+            , ("12", Check False)
+            , ("15", Check False)
+            , ("16", Check False)
+            , ("26", Check False)
+            ]
     describe "q257752: Print all pandigital numbers" $ do
         specEval
             "Ňᵖ{*$Bu$L"
@@ -1524,6 +1628,20 @@ testEval = describe "Evaluation" $ do
             , ("[5,3,1,0,0,1]", Check False)
             , ("[5,2,3,0,0,0]", Check False)
             ]
+    describe "q258110: A Fine sequence with fine interpretations" $ do
+        specEval
+            "→ᵉ_rÇ∫µA"
+            [ ("0", All ["1"])
+            , ("1", All ["0"])
+            , ("2", All ["1"])
+            , ("3", All ["2"])
+            , ("4", All ["6"])
+            , ("5", All ["18"])
+            , ("6", All ["57"])
+            , ("7", All ["186"])
+            , ("8", All ["622"])
+            , ("9", All ["2120"])
+            ]
     describe "q258299: Primes with Distinct Prime Digits" $ do
         specEval
             "ƤƊQů¢b"
@@ -1540,20 +1658,6 @@ testEval = describe "Evaluation" $ do
             , ("[-5,-4,-3,-2,-1,0,1,2,3,5,7,10]", First $ Just "4")
             , ("[]", First $ Just "1")
             , ("[-1,-4,-7]", First $ Just "1")
-            ]
-    describe "q258110: A Fine sequence with fine interpretations" $ do
-        specEval
-            "→ᵉ_rÇ∫µA"
-            [ ("0", All ["1"])
-            , ("1", All ["0"])
-            , ("2", All ["1"])
-            , ("3", All ["2"])
-            , ("4", All ["6"])
-            , ("5", All ["18"])
-            , ("6", All ["57"])
-            , ("7", All ["186"])
-            , ("8", All ["622"])
-            , ("9", All ["2120"])
             ]
     describe "q258432: Shortest code to generate all Pythagorean triples up to a given limit" $ do
         specEval
@@ -1793,7 +1897,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q260370: Counting fading" $ do
         specEval
-            "ᵏ{ᵚ{ᵑ{įŋ+}f"
+            "ᵏᵚ{ᵑ{įŋ+}f"
             [ ("[]", All ["0"])
             , ("[[1,1]]", All ["1"])
             , ("[[1,2],[2,1],[2,2],[2,3],[3,2]]", All ["2"])
@@ -1925,4 +2029,17 @@ testEval = describe "Evaluation" $ do
             , ("[[4,5],[1,2],[0,3]]", All ["[[[1,2],[0,3]],[[4,5]]]"])
             , ("[[0,1],[2,5],[3,4]]", All ["[[[2,5],[3,4]],[[0,1]]]"])
             , ("[[0,2],[3,5],[1,4]]", All ["[[[3,5],[1,4]],[[0,2]]]", "[[[0,2],[1,4]],[[3,5]]]"])
+            ]
+    describe "q262347: Reversed Squares" $ do
+        specEval
+            "Ɗ¢dÐ√"
+            [ ("1", Check True)
+            , ("4", Check True)
+            , ("9", Check True)
+            , ("441", Check True)
+            , ("1234567654321", Check True)
+            , ("100", Check True)
+            , ("3", Check False)
+            , ("25", Check False)
+            , ("1784", Check False)
             ]

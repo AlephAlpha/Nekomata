@@ -557,6 +557,17 @@ index = binary index'
         let ns = xs >>= index_ (rightId i) (n + 1) y
          in tryEq x y >>= \b -> if b then Choice (leftId i) (Val n) ns else ns
 
+count :: Function
+count = binary count'
+  where
+    count' _ (DListT xs) y = liftList (count_ y) xs
+    count' _ _ _ = Fail
+    count_ :: (TryEq a) => a -> ListTry (Try a) -> Try Integer
+    count_ _ Nil = Val 0
+    count_ y (Cons x xs) =
+        let n = xs >>= count_ y
+         in x >>= tryEq y >>= \b -> if b then (+ 1) <$> n else n
+
 tally :: Function
 tally = unary2 tally'
   where
@@ -646,6 +657,18 @@ deinterleave = unary2 deinterleave'
     deinterleave_ Nil = Val (Nil, Nil)
     deinterleave_ (Cons x xs) =
         xs >>= deinterleave_ <&> first (Cons x . Val) . swap
+
+interleave :: Function
+interleave = binary interleave'
+  where
+    interleave' _ (DStringT xs) (DStringT ys) =
+        liftString2 (AsString .: interleave_) xs ys
+    interleave' _ (DListT xs) (DListT ys) = liftList2 interleave_ xs ys
+    interleave' _ _ _ = Fail
+    interleave_ :: ListTry a -> ListTry a -> TryList a
+    interleave_ Nil Nil = Val Nil
+    interleave_ Nil _ = Fail
+    interleave_ (Cons x xs) ys = Val $ Cons x (xs >>= interleave_ ys)
 
 minimumBy :: Function
 minimumBy = binary minimumBy'

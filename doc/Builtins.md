@@ -828,6 +828,10 @@ Fail if the element does not occur in the list.
 
 This function is non-deterministic.
 
+### `count` (`Ĉ`, `2 -> 1`)
+
+Count the number of occurrences of an element in a list.
+
 ### `tally` (`Ţ`, `1 -> 2`)
 
 Count the number of occurrences of each element in a list.
@@ -851,6 +855,12 @@ Split a list or a string into a list of chunks of equal elements.
 Deinterleave a list or a string into a list of elements at even positions and a list of elements at odd positions.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
+
+### `interleave` (`Ĭ`, `2 -> 1`)
+
+Interleave two lists or strings.
+
+The length of the first list must be either equal to or one more than the length of the second list. Otherwise, this function fails.
 
 ### `minimumBy` (`ṃ`, `2 -> 1`)
 
