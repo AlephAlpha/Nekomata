@@ -1397,6 +1397,41 @@ testEval = describe "Evaluation" $ do
             [ ("2", All ["[[0,1]]"])
             , ("4", All ["[[2,3],[0,1]]", "[[1,3],[0,2]]", "[[0,3],[1,2]]"])
             ]
+    describe "q250283: Rearrange to a palindrome" $ do
+        specEval
+            "↕:↔="
+            [ ("\"nanas\"", First $ Just "nasan")
+            , ("\"coconutnut\"", First $ Just "conuttunoc")
+            , ("\"apotato\"", First $ Just "aotptoa")
+            , ("\"canadadance\"", First $ Just "canadedanac")
+            , ("\"nananana\"", First $ Just "nanaanan")
+            , ("\"anaan\"", First $ Just "anana")
+            ]
+    describe "q250395: Have you heard of tralindromes?" $ do
+        specEval
+            "p::↔ᵃᶜt$,,="
+            [ ("\"a\"", Check True)
+            , ("\"bb\"", Check True)
+            , ("\"ccc\"", Check True)
+            , ("\"coco\"", Check True)
+            , ("\"mamma\"", Check True)
+            , ("\"uhhuh\"", Check True)
+            , ("\"xyyxxy\"", Check True)
+            , ("\"banaban\"", Check True)
+            , ("\"dottodot\"", Check True)
+            , ("\"dadadadada\"", Check True)
+            , ("\"xy\"", Check False)
+            , ("\"coc\"", Check False)
+            , ("\"faff\"", Check False)
+            , ("\"xyzzy\"", Check False)
+            , ("\"mummy\"", Check False)
+            , ("\"random\"", Check False)
+            , ("\"hotshot\"", Check False)
+            , ("\"tralindrome\"", Check False)
+            , ("\"dadadadadada\"", Check False)
+            , ("\"aabaabaaaabaa\"", Check False)
+            , ("\"abccbacbaabcabc\"", Check False)
+            ]
     describe "q251594: Find the nth Mersenne Prime" $ do
         specEval
             "ŇË←Q"
@@ -1414,6 +1449,31 @@ testEval = describe "Evaluation" $ do
             , ("7", Count 6)
             , ("8", Count 7)
             , ("9", Count 8)
+            ]
+    describe "q251772: Tut-tut-tut-tut-tut" $ do
+        specEval
+            "ʷ{;\"tut-tut\"=ip,}ᵗN"
+            [ ("\"tut-tut\"", Check True)
+            , ("\"tut-tutut-tut\"", Check True)
+            , ("\"tut-tut-tut-tut-tut\"", Check True)
+            , ("\"tut-tutut-tut-tuttut-tut\"", Check True)
+            , ("\"tut-tuttut-tutut-tut-tutut-tut\"", Check True)
+            , ("\"x\"", Check False)
+            , ("\"-tut\"", Check False)
+            , ("\"tut-tutx\"", Check False)
+            , ("\"xtut-tut\"", Check False)
+            , ("\"tut-tutt-tut\"", Check False)
+            , ("\"tut-tuttuttut-tut\"", Check False)
+            , ("\"tut-tututut-tutut-tut\"", Check False)
+            ]
+    describe "q252057: Numbers vs. Strings: Language fitness challenge" $ do
+        specEval
+            "D:×Ṁ"
+            [ ("2 22", All ["2"])
+            , ("2 8", All ["1"])
+            , ("2 15", All ["4"])
+            , ("3 100", All ["6"])
+            , ("10 12345", All ["46"])
             ]
     describe "q252082: Reconstruct Matrix from its diagonals" $ do
         specEval
@@ -1450,6 +1510,13 @@ testEval = describe "Evaluation" $ do
             , ("39", All ["[1,3,5,11,29,39]"])
             , ("42", All ["[1,2,7,14,21,42]"])
             , ("100", All ["[1,2,4,25,50,100]"])
+            ]
+    describe "q252303: Cut along the lines" $ do
+        specEval
+            "ĉJᵐj"
+            [ ("[1,0]", All ["[[1],[0]]", "[[1,0]]"])
+            , ("[1,1,1,1]", All ["[[1,1,1,1]]"])
+            , ("[1,1,0,0,1]", All ["[[1,1],[0,0],[1]]", "[[1,1],[0,0,1]]", "[[1,1,0,0],[1]]", "[[1,1,0,0,1]]"])
             ]
     describe "q252927: Make a Court Transcriber" $ do
         specEval
