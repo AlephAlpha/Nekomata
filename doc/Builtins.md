@@ -386,6 +386,8 @@ Take the convolution of two lists of numbers.
 
 If one of the arguments is a number, it simply multiplies the other argument by that number.
 
+If the arguments are nested lists, it takes the multi-dimensional convolution.
+
 ### `mean` (`µ`, `1 -> 1`)
 
 Take the mean of a list of numbers.
@@ -850,9 +852,9 @@ Get the union of two lists.
 
 Split a list or a string into a list of chunks of equal elements.
 
-### `deinterleave` (`ĭ`, `1 -> 2`)
+### `uninterleave` (`ĭ`, `1 -> 2`)
 
-Deinterleave a list or a string into a list of elements at even positions and a list of elements at odd positions.
+uninterleave a list or a string into a list of elements at even positions and a list of elements at odd positions.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 

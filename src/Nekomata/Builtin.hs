@@ -441,7 +441,9 @@ builtins =
         convolve
         "Take the convolution of two lists of numbers.\n\
         \If one of the arguments is a number, \
-        \it simply multiplies the other argument by that number."
+        \it simply multiplies the other argument by that number.\n\
+        \If the arguments are nested lists, \
+        \it takes the multi-dimensional convolution."
     , Builtin
         "mean"
         'µ'
@@ -938,10 +940,10 @@ builtins =
         chunks
         "Split a list or a string into a list of chunks of equal elements."
     , Builtin
-        "deinterleave"
+        "uninterleave"
         'ĭ'
-        deinterleave
-        "Deinterleave a list or a string into a list of elements \
+        uninterleave
+        "uninterleave a list or a string into a list of elements \
         \at even positions and a list of elements at odd positions.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1."

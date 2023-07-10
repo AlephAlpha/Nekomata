@@ -646,17 +646,17 @@ chunks = unary chunks'
                     then ys >>= spanEq x <&> first (Cons x . Val)
                     else Val (Nil, s)
 
-deinterleave :: Function
-deinterleave = unary2 deinterleave'
+uninterleave :: Function
+uninterleave = unary2 uninterleave'
   where
-    deinterleave' _ (DNumT x) = liftNum12 (deinterleave_ . fromList . range0_) x
-    deinterleave' _ (DStringT xs) =
-        liftString12 (fmap (AsString *** AsString) . deinterleave_) xs
-    deinterleave' _ (DListT xs) = liftList12 deinterleave_ xs
-    deinterleave_ :: ListTry a -> Try (ListTry a, ListTry a)
-    deinterleave_ Nil = Val (Nil, Nil)
-    deinterleave_ (Cons x xs) =
-        xs >>= deinterleave_ <&> first (Cons x . Val) . swap
+    uninterleave' _ (DNumT x) = liftNum12 (uninterleave_ . fromList . range0_) x
+    uninterleave' _ (DStringT xs) =
+        liftString12 (fmap (AsString *** AsString) . uninterleave_) xs
+    uninterleave' _ (DListT xs) = liftList12 uninterleave_ xs
+    uninterleave_ :: ListTry a -> Try (ListTry a, ListTry a)
+    uninterleave_ Nil = Val (Nil, Nil)
+    uninterleave_ (Cons x xs) =
+        xs >>= uninterleave_ <&> first (Cons x . Val) . swap
 
 interleave :: Function
 interleave = binary interleave'

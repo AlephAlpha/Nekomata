@@ -281,6 +281,7 @@ dot = mul .* sum'
 convolve :: Function
 convolve = binary convolve'
   where
+    convolve' i x@(DNumT _) y@(DNumT _) = mul' i x y
     convolve' i x@(DNumT _) y@(DListT _) = mul' i x y
     convolve' i x@(DListT _) y@(DNumT _) = mul' i x y
     convolve' i (DListT xs) (DListT ys) = liftList2 (convolve_ i) xs ys
@@ -292,7 +293,7 @@ convolve = binary convolve'
         zipWithPad
             add'
             (leftId i)
-            (tryMap (\i' x -> y >>= mul' i' x) (leftId (rightId i)) xs)
+            (tryMap (\i' x -> y >>= convolve' i' x) (leftId (rightId i)) xs)
             ( Cons
                 (toTryData (0 :: Integer))
                 (convolve_ (rightId (rightId i)) xs <$> ys)

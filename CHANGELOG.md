@@ -1,6 +1,6 @@
 # Revision history for Nekomata
 
-## 0.4.0.0 -- Unreleased
+## 0.4.0.0 -- 2023-07-10
 
 * The language is still incomplete. The code page isn't filled yet. Everything is subject to change.
 * New built-in function: `\absDiff`, `\count`, `\digits`, `\div2`, `\divisors`, `\interleave`, `\isNonnegative`, `\isUnique`, `\mod2`, `\mul2`, `\powOf2`.
@@ -8,9 +8,10 @@
 
 ### Breaking changes
 
-* Some list functions are now overloaded to work on numbers. When they are used on numbers, they are applied to the range from 0 to the number - 1. These functions are: `\anyOf`, `\deinterleave`, `\extract`, `\permutation`, `\prefix`, `\reverse`, `\rotate`, `\setPartition`, `\split`, `\subsequence`, `\subset`, `\suffix`, `\unconcat`.
-* `\convolve` is also overloaded to work on numbers. When one of the arguments is a number, it simply multiplies the other argument by that number.
+* Some list functions are now overloaded to work on numbers. When they are used on numbers, they are applied to the range from 0 to the number - 1. These functions are: `\anyOf`, `\uninterleave`, `\extract`, `\permutation`, `\prefix`, `\reverse`, `\rotate`, `\setPartition`, `\split`, `\subsequence`, `\subset`, `\suffix`, `\unconcat`.
+* `\convolve` now supports arbitrary-dimensional nested lists. Numbers are treated as 0-dimensional nested lists.
 * `\mapFirst` is renamed to `\mapWith`.
+* `\deinterleave` is renamed to `\uninterleave`.
 
 ## 0.3.5.0 -- 2023-06-12
 

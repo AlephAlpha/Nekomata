@@ -359,6 +359,20 @@ testEval = describe "Evaluation" $ do
             , ("-18/17056", All ["-1", "1", "946", "1", "1", "4"])
             , ("-17056/18", All ["-948", "2", "4"])
             ]
+    describe "q82604: Approximation of e" $ do
+        specEval
+            "rFŗ∑"
+            [ ("1", All ["1"])
+            , ("2", All ["2"])
+            , ("3", All ["5/2"])
+            , ("4", All ["8/3"])
+            , ("5", All ["65/24"])
+            , ("6", All ["163/60"])
+            , ("7", All ["1957/720"])
+            , ("8", All ["685/252"])
+            , ("9", All ["109601/40320"])
+            , ("10", All ["98641/36288"])
+            ]
     describe "q83377: Write a program to elasticize strings" $ do
         specEval
             "#Rᶻřjj"
@@ -1348,6 +1362,18 @@ testEval = describe "Evaluation" $ do
             , ("[4,2,3,1]", Count 5)
             , ("[4,3,2,1]", Count 6)
             ]
+    describe "q247104: Euler characteristic of a binary matrix" $ do
+        specEval
+            "2R:4*Ð×j:1Ĉ$2÷3Ĉ-"
+            [ ("[[1]]", All ["1"])
+            , ("[[1,0,1]]", All ["2"])
+            , ("[[1,0],[0,1]]", All ["1"])
+            , ("[[0,1,0],[0,0,1],[1,1,1]]", All ["1"])
+            , ("[[0,1,1,0],[1,0,1,1],[1,1,0,1],[0,1,1,0]]", All ["-1"])
+            , ("[[0,0,1,1,0],[0,1,1,1,1],[1,1,0,1,1],[0,1,1,0,0]]", All ["0"])
+            , ("[[1,1,1,0,1,1,1],[1,0,1,0,1,0,1],[1,1,1,0,1,1,1]]", All ["0"])
+            , ("[[1,1,1,1,1],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,0,1],[1,1,1,1,1]] ", All ["1"])
+            ]
     describe "q247326: There's more than one way to skin a set" $ do
         specEval
             "S∑a:u∕u"
@@ -1524,9 +1550,17 @@ testEval = describe "Evaluation" $ do
             [ ("[\"dictionary\",\"transcriber\"] [\"dic\",\"ion\",\"ary\"]", All ["dictionary"])
             , ("[\"dictionary\",\"transcriber\"] [\"tra\",\"scr\",\"ber\"]", All ["transcriber"])
             ]
+    describe "q255274: CGAC2022 Day 7: Fen The Wicked" $ do
+        specEval
+            "p↔:#:ËGT∑"
+            [ ("[]", All [])
+            , ("[999]", All ["999"])
+            , ("[3,1,4]", All ["3", "4", "4"])
+            , ("[3,1,4,1,5,9,2,6]", All ["3", "4", "4", "9", "5", "14", "2", "31"])
+            ]
     describe "q255373: CGAC2022 Day 10: Help Santa sort presents!" $ do
         specEval
-            " ˡ{ᵗ≡ĭ?}aṀ"
+            "ˡ{ᵗ≡ĭ?}aṀ"
             [ ("[1]", All ["0"])
             , ("[1,0,1,0,1,0,1]", All ["1"])
             , ("[1,0,1,0,1,1]", All ["3"])
@@ -2109,4 +2143,18 @@ testEval = describe "Evaluation" $ do
             , ("3", Check False)
             , ("25", Check False)
             , ("1784", Check False)
+            ]
+    describe "q262518: Landmine Number I" $ do
+        specEval
+            "ᵉpttᵋ+*:,,$Ĉ"
+            [ ("[1,8,3,7,1] 4", All ["2"])
+            , ("[2,9,2,8,0,6,4] 4", All ["4"])
+            , ("[3,3,3,3,3] 9", All ["6"])
+            , ("[9,9,9,9,9,9,9,9,9,9] 100", All ["0"])
+            , ("[1,2,3,4,5,6,7,8,9,0] 8", All ["4"])
+            , ("[2,2,2,2,2] 4", All ["9"])
+            , ("[0,0,0,0,0,0,0,0,0,0,0,0,0,0] 0", All ["36"])
+            , ("[1,2,9,5,1] 10", All ["4"])
+            , ("[1,2,3,1,2,3,1,2,3,1,2,3] 3", All ["11"])
+            , ("[8,2,8,8,2,8,8,2,8] 16", All ["11"])
             ]
