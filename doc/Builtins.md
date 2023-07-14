@@ -556,6 +556,14 @@ Convert an integer or a list of integers to a string according to Nekomata's cus
 
 Fail when the integer is not in the range 0 to 255.
 
+### `read` (`Ĝ`, `1 -> 1`)
+
+Parse a string as a Nekomata value.
+
+Fail when the string is not a valid Nekomata value.
+
+This function is automatically vectorized.
+
 ### `anyOf` (`~`, `1 -> 1`)
 
 Choose an element from a list or a character from a string.

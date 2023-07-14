@@ -195,4 +195,18 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 \interval \orNeg
 ```
 
-- [ ] `\interval`：输入两个数字，输出这两个数字之间的所有整数。比如输入 `3` 和 `7`，输出 `[3, 4, 5, 6, 7]`。
+- [ ] `\interval`：输入两个数字，输出这两个数字之间的所有整数。比如输入 `3` 和 `7`，输出 `[3, 4, 5, 6, 7]`。目前不清楚如果第一个参数大于第二个参数的话，应该输出什么。
+
+### [How many 1's we get](https://codegolf.stackexchange.com/q/209146/9288)
+
+```
+\interval \digits \concat 1 \count
+```
+
+### [Run Length Decoding](https://codegolf.stackexchange.com/q/12902/9288)
+
+```
+\uninterleave \map \read \unrle \concat
+```
+
+- [ ] `\unrle`：RLE 解码。比如说输入 `["a","b","c"]` 和 `[1,2,3]`，输出 `["a","b","b","c","c","c"]`。

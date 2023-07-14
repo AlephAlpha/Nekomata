@@ -78,6 +78,8 @@ library
     Nekomata.Builtin.List
     Nekomata.Builtin.Math
     Nekomata.Builtin.String
+    Nekomata.Parser.Data
+    Nekomata.Parser.Program
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:

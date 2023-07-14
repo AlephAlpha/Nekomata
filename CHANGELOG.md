@@ -1,9 +1,13 @@
 # Revision history for Nekomata
 
+## 0.4.1.0 -- Unreleased
+
+* New built-in function: `\read`.
+
 ## 0.4.0.0 -- 2023-07-10
 
 * The language is still incomplete. The code page isn't filled yet. Everything is subject to change.
-* New built-in function: `\absDiff`, `\count`, `\digits`, `\div2`, `\divisors`, `\interleave`, `\isNonnegative`, `\isUnique`, `\mod2`, `\mul2`, `\powOf2`.
+* New built-in functions: `\absDiff`, `\count`, `\digits`, `\div2`, `\divisors`, `\interleave`, `\isNonnegative`, `\isUnique`, `\mod2`, `\mul2`, `\powOf2`.
 * New particle: `\firstInt`.
 
 ### Breaking changes

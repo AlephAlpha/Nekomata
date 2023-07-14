@@ -80,6 +80,10 @@ testEval = describe "Evaluation" $ do
             , ("5", All ["5"])
             , ("7", All ["16"])
             ]
+    describe "q12902: Run Length Decoding" $ do
+        specEval
+            "ĭᵐĜᶻřjj"
+            [("\":144,1'1\"", All [":4444,'"])]
     describe "q38325: Minimum excluded number" $ do
         specEval
             "ᵏf"
@@ -494,6 +498,19 @@ testEval = describe "Evaluation" $ do
             , ("5234095123508321", Check False)
             , ("6240911314399072459493765661191058613491863144152352262897351988250431140546660035648795316740212454", Check False)
             ]
+    describe "q94348: Prime counting function" $ do
+        specEval
+            "Fƒ#"
+            [ ("1", All ["0"])
+            , ("2", All ["1"])
+            , ("5", All ["3"])
+            ]
+        specEval
+            "R~Q"
+            [ ("1", Count 0)
+            , ("2", Count 1)
+            , ("5", Count 3)
+            ]
     describe "q95409: 2048-like array shift" $ do
         specEval
             "ĉ~ĭ+↔aj"
@@ -539,6 +556,23 @@ testEval = describe "Evaluation" $ do
             , ("[2,1]", First $ Just "[2,2]")
             , ("[3,1,1]", First $ Just "[3,2,1]")
             , ("[3,4,9,3]", First $ Just "[4,4,9,3]")
+            ]
+    describe "q103624: Find the sum of all numbers below n that are a multiple of some set of numbers" $ do
+        specEval
+            "ᵒ%ᵐ∏¬x∙"
+            [ ("[2] 50", All ["600"])
+            , ("[3,5] 10", All ["23"])
+            , ("[4,2] 28", All ["182"])
+            , ("[7,5] 19", All ["51"])
+            , ("[2,3,5] 50", All ["857"])
+            ]
+        specEval
+            "ᶠ{$~¦}∑"
+            [ ("50 [2]", First $ Just "600")
+            , ("10 [3,5]", First $ Just "23")
+            , ("28 [4,2]", First $ Just "182")
+            , ("19 [7,5]", First $ Just "51")
+            , ("50 [2,3,5]", First $ Just "857")
             ]
     describe "q103756: Big numbers: Ultrafactorials" $ do
         specEval
@@ -864,6 +898,13 @@ testEval = describe "Evaluation" $ do
             , ("[3,4,5,6,7,8,7,5]", Check False)
             , ("[1,2,4,10,18,10,100]", Check False)
             , ("[10,20,30,30,30]", Check False)
+            ]
+    describe "q144233: How many Wazirs can be placed on an N×N Chessboard?" $ do
+        specEval
+            "*äK"
+            [ ("7", All ["25"])
+            , ("8", All ["32"])
+            , ("100", All ["5000"])
             ]
     describe "q145518: Square pyramidal numbers" $ do
         specEval
@@ -2144,6 +2185,10 @@ testEval = describe "Evaluation" $ do
             , ("25", Check False)
             , ("1784", Check False)
             ]
+    describe "q262512: Generate all linked chains" $ do
+        specEval
+            "Ň\"-_\"ᵚ~ĉᵗz\"=\"ᵚcjjt"
+            [("", Truncated ["-=_", "_=-", "--=_", "-=_=-", "-=__", "_=--", "_=-=_", "__=-"])]
     describe "q262518: Landmine Number I" $ do
         specEval
             "ᵉpttᵋ+*:,,$Ĉ"
@@ -2157,4 +2202,33 @@ testEval = describe "Evaluation" $ do
             , ("[1,2,9,5,1] 10", All ["4"])
             , ("[1,2,3,1,2,3,1,2,3,1,2,3] 3", All ["11"])
             , ("[8,2,8,8,2,8,8,2,8] 16", All ["11"])
+            ]
+    describe "q262588: Measure the Diamond Road" $ do
+        specEval
+            "~pᵉloÐũ"
+            [ ("[\"/\",\"\\\\\",\"/\",\"\\\\\"]", Count 2)
+            , ("[\"/\\\\/\",\"\\\\/\\\\\",\"///\"]", Count 8)
+            , ("[\"////\",\"\\\\/\\\\/\",\"/\\\\/\\\\\",\"//\\\\\\\\\"]", Count 12)
+            , ("[\"/\\\\\",\"/\\\\/\",\"/\\\\/\\\\\",\"/\\\\/\\\\/\",\"/\\\\/\\\\/\\\\\",\"/\\\\/\\\\/\\\\/\\\\\"]", Count 8)
+            , ("[\"/\\\\//\\\\//\\\\/\",\"\\\\/\\\\/\\\\\\\\//\\\\\",\"\\\\//\\\\/\\\\/\\\\/\",\"\\\\//\\\\//\\\\//\",\"/\\\\/\\\\/\\\\/\",\"\\\\/\",\"\\\\\\\\\\\\\",\"\\\\//\\\\\",\"\\\\\"]", Count 28)
+            , ("[\"/\"]", Count 1)
+            , ("[\"\\\\\",\"\\\\/\\\\\"]", Count 3)
+            , ("[\"/\\\\\",\"\\\\/\\\\/\\\\/\"]", Count 8)
+            , ("[\"/\\\\\",\"/\",\"\\\\/\\\\\",\"\\\\\"]", Count 5)
+            , ("[\"////////////////////\"]", Count 20)
+            , ("[\"//////////\",\"//////////\"]", Count 10)
+            , ("[\"//////////\",\"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"]", Count 20)
+            , ("[\"\\\\\",\"/\\\\\",\"\\\\/\",\"/\\\\\",\"\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\"]", Count 13)
+            , ("[\"\\\\/\\\\\",\"/\\\\/\",\"//\\\\\",\"\\\\\\\\/\",\"/\\\\\",\"/\\\\\",\"/\",\"\\\\\"]", Count 10)
+            , ("[\"/\\\\\",\"\\\\/\",\"/\\\\\",\"/\\\\\",\"\\\\/\",\"/\\\\\",\"/\\\\\",\"\\\\/\",\"\\\\/\",\"\\\\/\",\"/\\\\\",\"/\\\\\"]", Count 4)
+            , ("[\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"\\\\\",\"/\"]", Count 2)
+            ]
+    describe "q262647: Sum of a range of a sum of a range of a sum of a range of a sum of a range of a sum of" $ do
+        specEval
+            "ᵑ{R∑"
+            [ ("0", All ["0"])
+            , ("1", All ["1"])
+            , ("2", All ["6"])
+            , ("3", All ["231"])
+            , ("4", All ["1186570"])
             ]

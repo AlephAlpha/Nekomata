@@ -11,7 +11,7 @@ import Nekomata.NonDet
 import Nekomata.Parser
 import Nekomata.Particle (ParticleArityError)
 import Nekomata.Program
-import Text.Parsec
+import Text.Parsec (ParseError, parse)
 
 -- | An error that can occur during parsing and evaluation
 data NekomataError

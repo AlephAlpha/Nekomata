@@ -619,6 +619,13 @@ builtins =
         \Nekomata's custom encoding.\n\
         \Fail when the integer is not in the range 0 to 255."
     , Builtin
+        "read"
+        'Ĝ'
+        read'
+        "Parse a string as a Nekomata value.\n\
+        \Fail when the string is not a valid Nekomata value.\n\
+        \This function is automatically vectorized."
+    , Builtin
         "anyOf"
         '~'
         anyOf'

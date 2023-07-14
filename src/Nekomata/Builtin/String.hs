@@ -2,12 +2,15 @@
 
 module Nekomata.Builtin.String where
 
+import Control.Monad ((>=>))
 import Data.Functor ((<&>))
 import Data.List (elemIndex)
 import Nekomata.CodePage (codePage)
 import Nekomata.Data
 import Nekomata.Function
 import Nekomata.NonDet
+import Nekomata.Parser.Data
+import Text.Parsec (parse)
 
 charToInt :: Function
 charToInt = unaryVec charToInt'
@@ -32,3 +35,10 @@ intToChar = unary intToChar'
     intToChar_ x
         | x >= 0 && x < 255 = Val $ codePage !! fromIntegral x
         | otherwise = Fail
+
+read' :: Function
+read' = unaryVec read''
+  where
+    read'' _ (DStringT x) = liftString ((toTry . fmap Det) >=> read_) x
+    read'' _ _ = Fail
+    read_ = either (const Fail) Val . parse parseData ""
