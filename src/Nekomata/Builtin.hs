@@ -404,6 +404,13 @@ builtins =
         "Create a list of integers from 1 to n.\n\
         \This function is automatically vectorized."
     , Builtin
+        "interval"
+        'ï'
+        interval
+        "Create a list of integers from ceil(x) to floor(y).\n\
+        \This function is automatically vectorized \
+        \and fails when the two lists are of different lengths."
+    , Builtin
         "natural"
         'Ň'
         natural

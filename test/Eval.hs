@@ -266,6 +266,19 @@ testEval = describe "Evaluation" $ do
             , ("9", Count 835)
             , ("10", Count 2188)
             ]
+    describe "q68685: The Rien Number" $ do
+        specEval
+            "RtƊjo1c¢b"
+            [ ("1", All ["1"])
+            , ("2", All ["12"])
+            , ("3", All ["123"])
+            , ("7", All ["1234567"])
+            , ("9", All ["123456789"])
+            , ("10", All ["10123456789"])
+            , ("15", All ["101111111223344556789"])
+            , ("34", All ["10001111111111111222222222222223333333334444555666777888999"])
+            , ("42", All ["100001111111111111122222222222222233333333333333444444455556666777788889999"])
+            ]
     describe "q70365: Construct the Identity Matrix" $ do
         specEval
             "ᵒ-¬"
@@ -608,6 +621,16 @@ testEval = describe "Evaluation" $ do
             , ("[3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,-5,100000,13/10,7/5]", All ["3/2"])
             , ("[3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,-5,100000,13/10,7/5]", All ["3/2"])
             ]
+    describe "q106656: Bit run rundown" $ do
+        specEval
+            "ƂĉŞ#"
+            [ ("6", First $ Just "2")
+            , ("16", First $ Just "4")
+            , ("893", First $ Just "5")
+            , ("1337371", First $ Just "6")
+            , ("1", First $ Just "1")
+            , ("9965546", First $ Just "7")
+            ]
     describe "q108675: Is this word Lexically Ordered?" $ do
         specEval
             "oᶜ↔="
@@ -944,6 +967,37 @@ testEval = describe "Evaluation" $ do
             , ("[]", All ["[]"])
             , ("[\"Some text\",\"\",\"More text\",\"\",\"\",\"Last bit of text\"]", All ["[\"Some text\",\"\",\"More text\",\"\",\"\",\"txet fo tib tsaL\"]"])
             ]
+    describe "q152114: Output the hours at 90 degrees" $ do
+        specEval
+            "258Ɗ+12%→"
+            [ ("1", All ["[4,7,10]"])
+            , ("2", All ["[5,8,11]"])
+            , ("3", All ["[6,9,12]"])
+            , ("4", All ["[7,10,1]"])
+            , ("5", All ["[8,11,2]"])
+            , ("6", All ["[9,12,3]"])
+            , ("7", All ["[10,1,4]"])
+            , ("8", All ["[11,2,5]"])
+            , ("9", All ["[12,3,6]"])
+            , ("10", All ["[1,4,7]"])
+            , ("11", All ["[2,5,8]"])
+            , ("12", All ["[3,6,9]"])
+            ]
+        specEval
+            "12Rᶠ{-Z3¦"
+            [ ("1", All ["[4,7,10]"])
+            , ("2", All ["[5,8,11]"])
+            , ("3", All ["[6,9,12]"])
+            , ("4", All ["[1,7,10]"])
+            , ("5", All ["[2,8,11]"])
+            , ("6", All ["[3,9,12]"])
+            , ("7", All ["[1,4,10]"])
+            , ("8", All ["[2,5,11]"])
+            , ("9", All ["[3,6,12]"])
+            , ("10", All ["[1,4,7]"])
+            , ("11", All ["[2,5,8]"])
+            , ("12", All ["[3,6,9]"])
+            ]
     describe "q153783: The first n numbers without consecutive equal binary digits" $ do
         specEval
             "RË3÷"
@@ -1099,6 +1153,12 @@ testEval = describe "Evaluation" $ do
             , ("[1,1]", Check False)
             , ("[10,1]", Check False)
             ]
+    describe "q203797: Generate list of numbers and their negative counterparts" $ do
+        specEval
+            "ïᶜ_"
+            [ ("9 6", All ["[6,7,8,9]", "[-6,-7,-8,-9]"])
+            , ("6 6", All ["[6]", "[-6]"])
+            ]
     describe "q207736: The shortest way to find one unique value when all other values are the same" $ do
         specEval
             "Ţṃ"
@@ -1136,6 +1196,13 @@ testEval = describe "Evaluation" $ do
             [ ("[[1,1,1],[1,1,1],[1,1,1]]", Check False)
             , ("[[0,0,1],[0,0,0],[-1,0,0]]", Check True)
             , ("[[0,-2],[2,0]]", Check True)
+            ]
+    describe "q209146: How many 1's we get" $ do
+        specEval
+            "ïƊj1Ĉ"
+            [ ("100 1", All ["21"])
+            , ("200 11", All ["138"])
+            , ("678 123", All ["182"])
             ]
     describe "q216734: Jelly's Untruth" $ do
         specEval
@@ -1939,7 +2006,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259707: Shortest distinguishable slice" $ do
         specEval
-            "e¥b¥DxqNᵖ{@Ťů}aşᵉhl→Ð"
+            "e:∑ᵚ+xqNᵖ{ᵚ@ů}aşᵉhl→Ð"
             [ ("[\"happy\",\"angry\",\"hungry\"]", First $ Just "[1,2]")
             , ("[\"sheer\",\"shrew\",\"shine\",\"shire\",\"spike\",\"shy\"]", First $ Just "[2,4]")
             , ("[\"snap\",\"crackle\",\"pop\",\"smack\",\"sizzle\",\"whiff\",\"sheen\"]", First $ Just "[0,2]")
@@ -2231,4 +2298,25 @@ testEval = describe "Evaluation" $ do
             , ("2", All ["6"])
             , ("3", All ["231"])
             , ("4", All ["1186570"])
+            ]
+    describe "q262809: Diagonalize a vector" $ do
+        specEval
+            "x:ᵒ-¬*"
+            [ ("[]", All ["[]"])
+            , ("[0]", All ["[[0]]"])
+            , ("[1]", All ["[[1]]"])
+            , ("[1,2,3]", All ["[[1,0,0],[0,2,0],[0,0,3]]"])
+            , ("[1,0,2,3]", All ["[[1,0,0,0],[0,0,0,0],[0,0,2,0],[0,0,0,3]]"])
+            ]
+    describe "q262868: Chamber of Reflection" $ do
+        specEval
+            "Ðᵒ÷u#←"
+            [ ("5 4 11", All ["4"])
+            , ("1 1 10", All ["9"])
+            , ("100 100 1", All ["0"])
+            , ("3 2 9", All ["5"])
+            , ("6 3 18", All ["5"])
+            , ("1 1 100", All ["99"])
+            , ("2398 2308 4", All ["0"])
+            , ("500 10000 502", All ["1"])
             ]

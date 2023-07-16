@@ -117,6 +117,14 @@ range1 = unaryVec range1'
     range1_ :: Rational -> [Integer]
     range1_ = enumFromTo 1 . floor
 
+interval :: Function
+interval = binaryVecFail interval'
+  where
+    interval' _ (DNumT x) (DNumT y) = liftNum2 interval_ x y
+    interval' _ _ _ = Fail
+    interval_ :: Rational -> Rational -> [Integer]
+    interval_ x y = enumFromTo (ceiling x) (floor y)
+
 nth :: Function
 nth = binaryVecArg2 nth'
   where

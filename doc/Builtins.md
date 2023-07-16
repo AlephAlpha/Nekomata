@@ -350,6 +350,12 @@ Create a list of integers from 1 to n.
 
 This function is automatically vectorized.
 
+### `interval` (`ï`, `2 -> 1`)
+
+Create a list of integers from ceil(x) to floor(y).
+
+This function is automatically vectorized and fails when the two lists are of different lengths.
+
 ### `natural` (`Ň`, `0 -> 1`)
 
 Non-deterministically choose a natural number.
