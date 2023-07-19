@@ -633,6 +633,11 @@ builtins =
         \Fail when the string is not a valid Nekomata value.\n\
         \This function is automatically vectorized."
     , Builtin
+        "show"
+        'ĝ'
+        show'
+        "Convert a Nekomata value to a string."
+    , Builtin
         "anyOf"
         '~'
         anyOf'

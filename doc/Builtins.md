@@ -570,6 +570,10 @@ Fail when the string is not a valid Nekomata value.
 
 This function is automatically vectorized.
 
+### `show` (`ĝ`, `1 -> 1`)
+
+Convert a Nekomata value to a string.
+
 ### `anyOf` (`~`, `1 -> 1`)
 
 Choose an element from a list or a character from a string.

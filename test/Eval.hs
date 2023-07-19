@@ -31,6 +31,9 @@ testEval :: Spec
 testEval = describe "Evaluation" $ do
     describe "q69: Golf you a quine for great good!" $ do
         specEval
+            "\"ᵉĝ,\"ᵉĝ,"
+            [("", All ["\"ᵉĝ,\"ᵉĝ,"])]
+        specEval
             "[\":h,\"]:h,"
             [("", All ["[\":h,\"]:h,"])]
     describe "q85: Fibonacci function or sequence" $ do
@@ -121,6 +124,24 @@ testEval = describe "Evaluation" $ do
             , ("14 13", All ["70"])
             , ("19 1", All ["19"])
             , ("63 63", All ["1365"])
+            ]
+    describe "q50472: Check if words are isomorphs" $ do
+        specEval
+            "eŤuŤᵐů"
+            [ ("[\"ESTATE\",\"DUELED\"]", Check True)
+            , ("[\"DUELED\",\"ESTATE\"]", Check True)
+            , ("[\"XXX\",\"YYY\"]", Check True)
+            , ("[\"CBAABC\",\"DEFFED\"]", Check True)
+            , ("[\"RAMBUNCTIOUSLY\",\"THERMODYNAMICS\"]", Check True)
+            , ("[\"DISCRIMINATIVE\",\"SIMPLIFICATION\"]", Check True)
+            , ("[\"SEE\",\"SAW\"]", Check False)
+            , ("[\"ANTS\",\"PANTS\"]", Check False)
+            , ("[\"BANANA\",\"SERENE\"]", Check False)
+            , ("[\"BANANA\",\"SENSES\"]", Check False)
+            , ("[\"AB\",\"CC\"]", Check False)
+            , ("[\"XXY\",\"XYY\"]", Check False)
+            , ("[\"ABCBACCBA\",\"ABCBACCAB\"]", Check False)
+            , ("[\"ABAB\",\"CD\"]", Check False)
             ]
     describe "q55422: \"Hello, World!\"" $ do
         specEval
@@ -511,7 +532,29 @@ testEval = describe "Evaluation" $ do
             , ("5234095123508321", Check False)
             , ("6240911314399072459493765661191058613491863144152352262897351988250431140546660035648795316740212454", Check False)
             ]
+        specEval
+            "Ɗ:Ĭ;ÐŤ∑≡"
+            [ ("1", Check True)
+            , ("6", Check True)
+            , ("11", Check True)
+            , ("141", Check True)
+            , ("1221", Check True)
+            , ("23281453796004414", Check True)
+            , ("523428121656666655655556655656502809745249552466339089702361716477983610754966885128041975406005088", Check True)
+            , ("10", Check False)
+            , ("12", Check False)
+            , ("110", Check False)
+            , ("15421", Check False)
+            , ("5234095123508321", Check False)
+            , ("6240911314399072459493765661191058613491863144152352262897351988250431140546660035648795316740212454", Check False)
+            ]
     describe "q94348: Prime counting function" $ do
+        specEval
+            "ƥ"
+            [ ("1", All ["0"])
+            , ("2", All ["1"])
+            , ("5", All ["3"])
+            ]
         specEval
             "Fƒ#"
             [ ("1", All ["0"])
@@ -1158,6 +1201,15 @@ testEval = describe "Evaluation" $ do
             "ïᶜ_"
             [ ("9 6", All ["[6,7,8,9]", "[-6,-7,-8,-9]"])
             , ("6 6", All ["[6]", "[-6]"])
+            ]
+    describe "q206853: Find the perfect square!" $ do
+        specEval
+            "Ď√‼Ṁ"
+            [ ("4", All ["2"])
+            , ("9", All ["3"])
+            , ("12", All ["2"])
+            , ("13", All ["1"])
+            , ("108", All ["6"])
             ]
     describe "q207736: The shortest way to find one unique value when all other values are the same" $ do
         specEval

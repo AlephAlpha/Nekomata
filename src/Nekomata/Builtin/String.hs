@@ -42,3 +42,9 @@ read' = unaryVec read''
     read'' _ (DStringT x) = liftString ((toTry . fmap Det) >=> read_) x
     read'' _ _ = Fail
     read_ = either (const Fail) Val . parse parseData ""
+
+show' :: Function
+show' = unary show''
+  where
+    show'' :: Id -> DataTry -> TryData
+    show'' _ x = Val $ DStringT (fromValue . show <$> toTry x)

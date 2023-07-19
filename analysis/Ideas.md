@@ -79,13 +79,19 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 
 - [ ] `\sortBy`：输入两个列表，其长度必须一致。将第一个列表中的元素按照第二个列表中的元素的大小进行排序。这要求排序算法是稳定的。
 
+用 `\ordering` 的话会多一个字节：
+
+```
+\logicalNot \ordering \nth
+```
+
+- [ ] `\ordering`：求一个列表的排序索引。比如说 `[3, 1, 2]` 的排序索引是 `[1, 2, 0]`。
+
 ### [How long to carry sort?](https://codegolf.stackexchange.com/q/259167/9288)
 
 ```
 \ordering \enumerate \sub \cons0 \maximum
 ```
-
-- [ ] `\ordering`：求一个列表的排序索引。比如说 `[3, 1, 2]` 的排序索引是 `[1, 2, 0]`。
 
 ### [Make a Custom Bayer Matrix](https://codegolf.stackexchange.com/q/259633/9288)
 
@@ -138,7 +144,7 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 ### [Shortest distinguishable slice](https://codegolf.stackexchange.com/q/259707/9288)
 
 ```
-\charToInt \pad \transpose \enumerate \subsequence \nonempty \predicate { \nth \transpose \isUnique } \allValues \shortest \dupDip \first \last \increment \pair
+\charToInt \pad \enumerate \subsequence \nonempty \predicate { \mapWith \nth \transpose } \allValues \shortest \dupDip \first \last \increment \pair
 ```
 
 - [ ] `\pad`：输入一个列表的列表，将每个列表的长度补齐到最长的子列表的长度。比如说 `[[1, 2], [3, 4, 5]]` 补齐成 `[[1, 2, 0], [3, 4, 5]]`。
@@ -202,3 +208,11 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 ```
 \factor \unrle 1 \bitor \product
 ```
+
+### [Check if words are isomorphs](https://codegolf.stackexchange.com/q/50472/9288)
+
+```
+\transpose \nub \transpose \map \isUnique
+```
+
+当前 `\transpose` 函数还不支持输入是字符串的情况，需要修改。由于这是 breaking change，要等到下一个大版本。

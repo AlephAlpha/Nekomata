@@ -2,7 +2,7 @@
 
 ## 0.4.1.0 -- Unreleased
 
-* New built-in functions: `\interval`, `\read`.
+* New built-in functions: `\interval`, `\read`, `\show`.
 
 ## 0.4.0.0 -- 2023-07-10
 
