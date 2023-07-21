@@ -224,6 +224,18 @@ builtinParticles =
         "(m -> n) -> (0 -> 1)"
         "Find the smallest non-negative integer for which a function \
         \does not fail, and return it."
+    , BuiltinParticle
+        "fold1"
+        'ʳ'
+        fold1
+        "(m -> 1) -> (m - 1 -> 1) where m > 1"
+        "Apply a function to the first two values of a list, \
+        \then apply it to the result and the third value, \
+        \and so on until the end of the list.\n\
+        \If the input is a string, convert it to a list of characters \
+        \before folding.\n\
+        \If the input is an number, convert it to a list of integers \
+        \from 0 to the input minus 1 before folding."
     ]
 
 -- | The map of from names to builtin particles
@@ -522,3 +534,14 @@ firstInt = Particle firstInt'
          in if hasValue ds t
                 then Val x
                 else firstInt'' ds (rightId i) f (x + 1)
+
+fold1 :: Particle
+fold1 = Particle fold1'
+  where
+    fold1' (Function (Arity m 1) f) | m > 1 =
+        Just . Function (Arity (m - 1) 1) $
+            \i (x :+ s) ->
+                let f' i' x' y' = top $ f i' (Val y' :+ Val x' :+ s)
+                 in (x >>= liftList (tryFoldl1 f' i) . toTryList)
+                        :+ dropStack (m - 2) s
+    fold1' _ = Nothing

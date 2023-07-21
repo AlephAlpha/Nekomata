@@ -275,7 +275,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q66851: Motzkin Numbers" $ do
         specEval
-            "ᵐ{3~←}∫Ɔž≥"
+            "3$ŧ←∫Ɔž≥"
             [ ("1", Count 1)
             , ("2", Count 2)
             , ("3", Count 4)
@@ -319,8 +319,8 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q74273: Output all strings" $ do
         specEval
-            "Ň$ᵚ~"
-            [("[\"a\",\"b\"]", Truncated ["[]", "[\"a\"]", "[\"b\"]", "[\"a\",\"a\"]", "[\"a\",\"b\"]", "[\"b\",\"a\"]", "[\"b\",\"b\"]"])]
+            "Ňŧ"
+            [("\"ab\"", Truncated ["", "a", "b", "aa", "ab", "ba", "bb", "aaa", "aab", "aba", "abb"])]
     describe "q77270: Greatest Common Divisor" $ do
         specEval
             "G"
@@ -396,6 +396,17 @@ testEval = describe "Evaluation" $ do
             , ("2/7", All ["0", "3", "2"])
             , ("-18/17056", All ["-1", "1", "946", "1", "1", "4"])
             , ("-17056/18", All ["-948", "2", "4"])
+            ]
+    describe "q82497: Pseudofactorial" $ do
+        specEval
+            "Rʳg"
+            [ ("1", All ["1"])
+            , ("2", All ["2"])
+            , ("3", All ["6"])
+            , ("4", All ["12"])
+            , ("5", All ["60"])
+            , ("6", All ["60"])
+            , ("7", All ["420"])
             ]
     describe "q82604: Approximation of e" $ do
         specEval
@@ -566,6 +577,21 @@ testEval = describe "Evaluation" $ do
             [ ("1", Count 0)
             , ("2", Count 1)
             , ("5", Count 3)
+            ]
+    describe "q94999: Least Common Multiple" $ do
+        specEval
+            "ʳg"
+            [ ("[7,2]", All ["14"])
+            , ("[8,1]", All ["8"])
+            , ("[6,4,8]", All ["24"])
+            , ("[8,2,1,10]", All ["40"])
+            , ("[9,6,2,1,5]", All ["90"])
+            , ("[5,5,7,1,1]", All ["35"])
+            , ("[4,13,8,8,11,1]", All ["1144"])
+            , ("[7,2,2,11,11,8,5]", All ["3080"])
+            , ("[1,6,10,3,4,10,7]", All ["420"])
+            , ("[5,2,9,10,3,4,4,4,7]", All ["1260"])
+            , ("[9,7,10,9,7,8,5,10,1]", All ["2520"])
             ]
     describe "q95409: 2048-like array shift" $ do
         specEval
@@ -1223,7 +1249,7 @@ testEval = describe "Evaluation" $ do
             , ("[8,8,5]", All ["5"])
             ]
         specEval
-            "oĉ~z"
+            "ĕᵖf"
             [ ("[1,1,1,2,1,1]", All ["2"])
             , ("[3,5,5,5,5]", All ["3"])
             , ("[9,2,9,9,9,9,9]", All ["2"])
@@ -1233,7 +1259,7 @@ testEval = describe "Evaluation" $ do
             , ("[8,8,5]", All ["5"])
             ]
         specEval
-            "ĕ$≡¿"
+            "oĉ~z"
             [ ("[1,1,1,2,1,1]", All ["2"])
             , ("[3,5,5,5,5]", All ["3"])
             , ("[9,2,9,9,9,9,9]", All ["2"])
@@ -1544,6 +1570,15 @@ testEval = describe "Evaluation" $ do
             , ("[15,16,7,1,4]", All ["[16,23,20,27]"])
             , ("[1,2,3,4,5]", All ["[3,4,5,6,7,8,9,10,11,12]"])
             ]
+        specEval
+            "Ë→Ƃʳ×2m2Ĩ"
+            [ ("[1]", All [])
+            , ("[4,5,2]", All [])
+            , ("[9,10,11,12]", All ["21"])
+            , ("[2,3,5,6]", All ["5", "8", "11"])
+            , ("[15,16,7,1,4]", All ["16", "20", "23", "27"])
+            , ("[1,2,3,4,5]", All ["3", "4", "5", "6", "7", "8", "9", "10", "11", "12"])
+            ]
     describe "q247398: Alternating sums of multidimensional arrays" $ do
         specEval
             "ʷ{£d"
@@ -1687,7 +1722,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q252189: Carryless factors" $ do
         specEval
-            "Rᶠ{$R~ᵃƂ×ᵈƂ-½"
+            "Rᶠ{$R~ᵃƂ×Ö2d="
             [ ("2", All ["[1,2]"])
             , ("4", All ["[1,2,4]"])
             , ("5", All ["[1,3,5]"])
@@ -1709,6 +1744,24 @@ testEval = describe "Evaluation" $ do
             "ᶠ{JS=}ş"
             [ ("[\"dictionary\",\"transcriber\"] [\"dic\",\"ion\",\"ary\"]", All ["dictionary"])
             , ("[\"dictionary\",\"transcriber\"] [\"tra\",\"scr\",\"ber\"]", All ["transcriber"])
+            ]
+    describe "q254224: Maximum average ord" $ do
+        specEval
+            "eᵐµṀ"
+            [ ("[\"hello\",\"world\",\"bye\"]", All ["552/5"])
+            , ("[\"code\",\"golf\",\"stack\",\"exchange\"]", All ["534/5"])
+            , ("[\"!@#\",\"$%^\",\"&*(\"]", All ["167/3"])
+            , ("[\"qwertyuiop[\",\"asdfghjkl;\",\"zxcvbnm,\"]", All ["1220/11"])
+            ]
+    describe "q254947: Range of ASCII values" $ do
+        specEval
+            "eo:h-l"
+            [ ("\"Hello, World!\"", All ["82"])
+            , ("\"aaaaa\"", All ["0"])
+            , ("\"Code Golf\"", All ["79"])
+            , ("\"Stack Exchange\"", All ["88"])
+            , ("\"ASCII\"", All ["18"])
+            , ("\"eo:h-l\"", All ["66"])
             ]
     describe "q255274: CGAC2022 Day 7: Fen The Wicked" $ do
         specEval
@@ -2306,7 +2359,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q262512: Generate all linked chains" $ do
         specEval
-            "Ň\"-_\"ᵚ~ĉᵗz\"=\"ᵚcjjt"
+            "\"-_\"Ňŧĉᵗz\"=\"ᵚcjjt"
             [("", Truncated ["-=_", "_=-", "--=_", "-=_=-", "-=__", "_=--", "_=-=_", "__=-"])]
     describe "q262518: Landmine Number I" $ do
         specEval
@@ -2372,3 +2425,7 @@ testEval = describe "Evaluation" $ do
             , ("2398 2308 4", All ["0"])
             , ("500 10000 502", All ["1"])
             ]
+    describe "q262985: Numbers that can be negated by reading backwards" $ do
+        specEval
+            "3Ňŧ←1c:↔_=3b"
+            [("", Truncated ["2", "8", "20", "26", "32", "56", "80", "104", "146", "164"])]

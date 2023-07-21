@@ -1007,6 +1007,14 @@ builtins =
         \If there are multiple longest ones, \
         \return any of them non-deterministically.\n\
         \This function is non-deterministic."
+    , Builtin
+        "tuple"
+        'ŧ'
+        tuple
+        "Create a list or a string with length n, \
+        \whose elements are taken from another list or string.\n\
+        \This function is non-deterministic, \
+        \and automatically vectorized on the second argument."
     ]
 
 -- | The map from names to builtin functions

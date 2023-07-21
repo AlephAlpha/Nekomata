@@ -122,14 +122,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 
 支持递归需要对现有的解释器进行大量的修改。一个问题是它会让 arity 变得不确定。可以考虑为不同 arity 的函数分别定义 `\self`，比如说 `\self1`、`\self2`、`\self3` 等等。
 
-### [Pseudofactorial](https://codegolf.stackexchange.com/q/82494/9288)
-
-```
-\range1 \foldl1 \lcm
-```
-
-- [ ] `\foldl1`：从左到右地将一个二元函数应用于一个列表中的所有元素。比如说 `[1, 2, 3] \foldl1 \add` 等价于 `1 2 \add 3 \add`。
-
 ### [Generate a Walsh Matrix](https://codegolf.stackexchange.com/q/162254/9288)
 
 ```
@@ -175,11 +167,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 ```
 
 - [ ] `\nubBy`：输入两个列表，其长度必须一致。根据第二个列表的元素，将第一个列表的元素去重。比如输入 `[a, b, c, d]` 和 `[1, 2, 1, 2]`，输出 `[a, b]`
-### [Least Common Multiple](https://codegolf.stackexchange.com/q/94999/9288)
-
-```
-\foldl1 \lcm
-```
 
 ### [Remove duplicates from my academic transcript](https://codegolf.stackexchange.com/q/256441/9288)
 
@@ -216,3 +203,12 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 ```
 
 当前 `\transpose` 函数还不支持输入是字符串的情况，需要修改。由于这是 breaking change，要等到下一个大版本。
+
+## 关于字符串
+
+当前 Nekomata 对字符串的支持不是很好，有一些设计失误的地方。修改这些问题需要等到下个大版本，先列举出来，以备忘。
+
+- [ ] `\filter` 在输入是字符串时，应该返回字符串而不是列表。
+- [ ] `\transpose` 需要支持输入是字符串的列表的情况。
+- [ ] `\index` 也要支持字符串。可以先只支持查找单个字符在字符串中的位置，不支持子串。
+- [ ] 一些常用的数学函数，可以自动把字符串按 Nekomata 的 code page 转换成数字。

@@ -918,6 +918,12 @@ If there are multiple longest ones, return any of them non-deterministically.
 
 This function is non-deterministic.
 
+### `tuple` (`ŧ`, `2 -> 1`)
+
+Create a list or a string with length n, whose elements are taken from another list or string.
+
+This function is non-deterministic, and automatically vectorized on the second argument.
+
 ## Particles
 
 ### `apply2` (`ᵃ`, `(0 -> n) -> (0 -> 2 * n) or (m -> n) -> (m + 1 -> 2 * n) where m > 0`)
@@ -1025,5 +1031,13 @@ Apply a function zero or more times, until the top value of the stack is Fail, a
 ### `firstInt` (`ᵏ`, `(m -> n) -> (0 -> 1)`)
 
 Find the smallest non-negative integer for which a function does not fail, and return it.
+
+### `fold1` (`ʳ`, `(m -> 1) -> (m - 1 -> 1) where m > 1`)
+
+Apply a function to the first two values of a list, then apply it to the result and the third value, and so on until the end of the list.
+
+If the input is a string, convert it to a list of characters before folding.
+
+If the input is an number, convert it to a list of integers from 0 to the input minus 1 before folding.
 
 

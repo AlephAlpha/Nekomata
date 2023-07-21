@@ -436,8 +436,8 @@ permutation = unary permutation'
     permutation_ :: Id -> ListTry a -> TryList a
     permutation_ _ Nil = Val Nil
     permutation_ i xs =
-        extract_ (leftId i) xs >>= \(xs', x) ->
-            Val $ Cons x (xs' >>= permutation_ (rightId i))
+        extract_ (leftId i) xs <&> \(xs', x) ->
+            Cons x (xs' >>= permutation_ (rightId i))
 
 extract :: Function
 extract = unary2 extract'
@@ -727,3 +727,20 @@ longest = unary longest'
     length'' (DStringT xs) = xs >>= length_
     length'' (DListT xs) = xs >>= length_
     length'' _ = Fail
+
+tuple :: Function
+tuple = binaryVecArg2 tuple'
+  where
+    tuple' i (DNumT x) (DNumT y) =
+        liftNum (\x' -> liftInt (flip (tuple_ i) . fromList $ range0_ x') y) x
+    tuple' i (DStringT xs) (DNumT y) =
+        liftString (\x -> liftInt (AsString . flip (tuple_ i) x) y) xs
+    tuple' i (DListT xs) (DNumT y) =
+        liftList (\x -> liftInt (flip (tuple_ i) x) y) xs
+    tuple' _ _ _ = Fail
+    tuple_ :: Id -> Integer -> ListTry a -> TryList a
+    tuple_ i n xs
+        | n == 0 = Val Nil
+        | n > 0 =
+            anyOf (leftId i) xs <&> \x -> Cons x (tuple_ (rightId i) (n - 1) xs)
+        | otherwise = Fail
