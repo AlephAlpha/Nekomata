@@ -347,6 +347,9 @@ binary' = constant (2 :: Integer) .* toBaseRev
 digits :: Function
 digits = constant (10 :: Integer) .* toBase
 
+fromDigits :: Function
+fromDigits = constant (10 :: Integer) .* fromBase
+
 cumsum :: Function
 cumsum = unary cumsum'
   where

@@ -289,7 +289,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q68685: The Rien Number" $ do
         specEval
-            "RtƊjo1c¢b"
+            "RtƊjo1cɗ"
             [ ("1", All ["1"])
             , ("2", All ["12"])
             , ("3", All ["123"])
@@ -308,6 +308,27 @@ testEval = describe "Evaluation" $ do
             , ("3", All ["[[1,0,0],[0,1,0],[0,0,1]]"])
             , ("4", All ["[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]"])
             ]
+    describe "q70558: Hypercube elements" $ do
+        specEval
+            "→rᵉÇË*"
+            [ ("0", All ["[1]"])
+            , ("1", All ["[1,2]"])
+            , ("3", All ["[1,6,12,8]"])
+            , ("10", All ["[1,20,180,960,3360,8064,13440,15360,11520,5120,1024]"])
+            , ("12", All ["[1,24,264,1760,7920,25344,59136,101376,126720,112640,67584,24576,4096]"])
+            ]
+        specEval
+            "2ᵚR1cʳ×"
+            [ ("0", All ["1"])
+            , ("1", All ["[1,2]"])
+            , ("3", All ["[1,6,12,8]"])
+            , ("10", All ["[1,20,180,960,3360,8064,13440,15360,11520,5120,1024]"])
+            , ("12", All ["[1,24,264,1760,7920,25344,59136,101376,126720,112640,67584,24576,4096]"])
+            ]
+    describe "q70837: Say What You See" $ do
+        specEval
+            "1Uᶦ{ĉᵉᵐ#ᵐhĬ}ɗ"
+            [("", Truncated ["1", "11", "21", "1211", "111221", "312211", "13112221", "1113213211", "31131211131221", "13211311123113112211"])]
     describe "q71833: How even is a number?" $ do
         specEval
             "ˡ½"
@@ -1472,7 +1493,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q238607: Converge to a number" $ do
         specEval
-            "ƊsC↔~c¢b-"
+            "ƊsC↔~cɗ-"
             [ ("4", All ["1", "2", "3", "4"])
             , ("16", All ["10", "11", "12", "13", "14", "15", "16"])
             , ("35", All ["10", "20", "30", "31", "32", "33", "34", "35"])
@@ -1864,7 +1885,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q257631: Time to shortest permutation" $ do
         specEval
-            "↕ᵃ{J¢ᵚb\"∩<\"e<60b}-_Paṁ"
+            "↕ᵃ{Jᵐɗ\"∩<\"e<60b}-_Paṁ"
             [ ("[1,1,4,3]", All ["91"])
             , ("[0,1,0,1]", All ["9"])
             , ("[1,7,3,8]", All ["59"])
@@ -1958,10 +1979,10 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q258299: Primes with Distinct Prime Digits" $ do
         specEval
-            "ƤƊQů¢b"
+            "ƤƊQůɗ"
             [("", Truncated ["2", "3", "5", "7", "23", "37", "53", "73", "257", "523", "2357", "2753", "3257", "3527", "5237", "5273", "7253", "7523"])]
         specEval
-            "¢SQ↕¢bQao"
+            "¢SQ↕ɗQao"
             [("", All ["[2,3,5,7,23,37,53,73,257,523,2357,2753,3257,3527,5237,5273,7253,7523]"])]
     describe "q258335: Shortest Code to Find the Smallest Missing Positive Integer" $ do
         specEval

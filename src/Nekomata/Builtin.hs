@@ -511,6 +511,11 @@ builtins =
         "Convert an integer to a list of decimal digits.\n\
         \This function is automatically vectorized."
     , Builtin
+        "fromDigits"
+        'ɗ'
+        fromDigits
+        "Convert a list of decimal digits to an integer."
+    , Builtin
         "cumsum"
         '∫'
         cumsum

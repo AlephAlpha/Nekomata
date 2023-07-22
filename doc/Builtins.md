@@ -450,6 +450,10 @@ Convert an integer to a list of decimal digits.
 
 This function is automatically vectorized.
 
+### `fromDigits` (`ɗ`, `1 -> 1`)
+
+Convert a list of decimal digits to an integer.
+
 ### `cumsum` (`∫`, `1 -> 1`)
 
 Take the cumulative sum of a list of numbers.
