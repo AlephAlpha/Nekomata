@@ -1,6 +1,6 @@
 # Revision history for Nekomata
 
-## 0.4.1.0 -- Unreleased
+## 0.4.1.0 -- 2023-07-22
 
 * New built-in functions: `\fromDigits`, `\interval`, `\read`, `\show`, `\tuple`.
 * New particle: `\fold1`.
