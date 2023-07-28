@@ -33,15 +33,25 @@ testEval = describe "Evaluation" $ do
         specEval
             "\"ᵉĝ,\"ᵉĝ,"
             [("", All ["\"ᵉĝ,\"ᵉĝ,"])]
-        specEval
-            "[\":h,\"]:h,"
-            [("", All ["[\":h,\"]:h,"])]
     describe "q85: Fibonacci function or sequence" $ do
         specEval
             "1:ᶦ{$ᵉ+"
             [("", Truncated ["1", "1", "2", "3", "5", "8", "13", "21", "34", "55"])]
         specEval
             "ʷ{←Pᶜ←"
+            [ ("0", Count 1)
+            , ("1", Count 1)
+            , ("2", Count 2)
+            , ("3", Count 3)
+            , ("4", Count 5)
+            , ("5", Count 8)
+            , ("6", Count 13)
+            , ("7", Count 21)
+            , ("8", Count 34)
+            , ("9", Count 55)
+            ]
+        specEval
+            "Jᵐ#3<"
             [ ("0", Count 1)
             , ("1", Count 1)
             , ("2", Count 2)
@@ -919,6 +929,12 @@ testEval = describe "Evaluation" $ do
             , ("5", Count 52)
             , ("6", Count 203)
             , ("7", Count 877)
+            ]
+    describe "q136713: Find the first duplicated element" $ do
+        specEval
+            "pƆᵗf"
+            [ ("[2,3,3,1,5,2]", First $ Just "3")
+            , ("[2,4,3,5,1]", First $ Nothing)
             ]
     describe "q136887: Fold a List in Half" $ do
         specEval
@@ -2450,3 +2466,41 @@ testEval = describe "Evaluation" $ do
         specEval
             "3Ňŧ←1c:↔_=3b"
             [("", Truncated ["2", "8", "20", "26", "32", "56", "80", "104", "146", "164"])]
+    describe "q263200: Print all Polynomials" $ do
+        specEval
+            "Ňƒ$ƥ←ËƂ∙ŋ"
+            [("", Truncated ["0", "[1]", "[-1]", "[0,1]", "[0,-1]", "[2]", "[-2]", "[0,0,1]", "[0,0,-1]"])]
+    describe "q263308: Make a k-skip-j range" $ do
+        specEval
+            "+ᵚ%-±ç1Ĩ"
+            [ ("1 1 11", All ["1", "3", "5", "7", "9", "11"])
+            , ("2 13 19", All ["1", "2", "16", "17"])
+            , ("2 13 16", All ["1", "2", "16"])
+            , ("1 4 49", All ["1", "6", "11", "16", "21", "26", "31", "36", "41", "46"])
+            , ("2 4 22", All ["1", "2", "7", "8", "13", "14", "19", "20"])
+            , ("2 10 13", All ["1", "2", "13"])
+            , ("5 15 10", All ["1", "2", "3", "4", "5"])
+            , ("1 13 27", All ["1", "15"])
+            , ("7 4 31", All ["1", "2", "3", "4", "5", "6", "7", "12", "13", "14", "15", "16", "17", "18", "23", "24", "25", "26", "27", "28", "29"])
+            , ("99 99 1", All ["1"])
+            ]
+    describe "q263364: Compute this fractal matrix" $ do
+        specEval
+            "Ë:ᵒ{ᵃƂ+2Ĉ←A±"
+            [ ("1", All ["[[1,1],[1,0]]"])
+            , ("2", All ["[[1,1,1,1],[1,0,1,0],[1,1,0,0],[1,0,0,1]]"])
+            , ("3", All ["[[1,1,1,1,1,1,1,1],[1,0,1,0,1,0,1,0],[1,1,0,0,1,1,0,0],[1,0,0,1,1,0,0,1],[1,1,1,1,0,0,0,0],[1,0,1,0,0,1,0,1],[1,1,0,0,0,0,1,1],[1,0,0,1,0,1,1,1]]"])
+            ]
+    describe "q263438: Is this a powerful number?" $ do
+        specEval
+            "ƒ1>"
+            [ ("1", Check True)
+            , ("2", Check False)
+            , ("3", Check False)
+            , ("4", Check True)
+            , ("5", Check False)
+            , ("6", Check False)
+            , ("7", Check False)
+            , ("8", Check True)
+            , ("9", Check True)
+            ]

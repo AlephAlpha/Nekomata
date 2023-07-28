@@ -212,4 +212,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 - [ ] `\transpose` 需要支持输入是字符串的列表的情况。
 - [ ] `\chunks` 在输入是字符串时，应该返回字符串的列表而不是列表的列表。
 - [ ] `\index` 也要支持字符串。可以先只支持查找单个字符在字符串中的位置，不支持子串。
+- [ ] `\join` 需要重新设计：列表的 join 和字符串的 join 应该是不同的函数。前者会把非列表的元素转换成列表，后者则会把非字符串的元素转换成字符串。这个 breaking change 会影响到很多现有的解答。
 - [ ] 一些常用的数学函数，可以自动把字符串按 Nekomata 的 code page 转换成数字。
+- [ ] 现在的字符串是 `DStringT (TryList (Det Char))`；作为字符的列表，列表本身是 non-deterministic 的，但列表中的每一项不是。要考虑改成 `DStringT (TryList (Try (Det Char)))`。
