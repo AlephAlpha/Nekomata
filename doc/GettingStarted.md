@@ -102,7 +102,9 @@ Nekomata is a non-deterministic programming language. A program can have multipl
 
 This is the default mode. It outputs all possible results of a program, separated by newlines.
 
-In the REPL, you can switch to this mode by typing `\Mode all`.
+When running a program from the command line, you don't need to pass any extra flags to use this mode. But you can use the `-l` option to limit the number of results. For example `-l 10` will only show at most 10 results.
+
+In the REPL, you can switch to this mode by typing `\Mode all`. In this mode, you can limit the number of results by typing `\Limit ` followed by the number of results you want to see.
 
 ### `first`
 

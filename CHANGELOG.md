@@ -1,5 +1,9 @@
 # Revision history for Nekomata
 
+## 0.5.0.0 -- Unreleased
+
+* The interpreter can now limit the number of results to show using the `-l` option.
+
 ## 0.4.1.0 -- 2023-07-22
 
 * New built-in functions: `\fromDigits`, `\interval`, `\read`, `\show`, `\tuple`.

@@ -88,15 +88,28 @@ optMultiple =
         )
         <|> pure False
 
+optLimit :: Parser (Maybe Int)
+optLimit =
+    optional
+        ( option
+            auto
+            ( long "limit"
+                <> short 'l'
+                <> metavar "N"
+                <> help "The maximum number of results to show"
+            )
+        )
+
 data RunOnce = RunOnce
     { code :: Code
     , input :: Input
     , mode :: Mode
     , multiple :: Bool
+    , limit :: Maybe Int
     }
 
 optRunOnce :: Parser RunOnce
-optRunOnce = RunOnce <$> optCode <*> optInput <*> optMode <*> optMultiple
+optRunOnce = RunOnce <$> optCode <*> optInput <*> optMode <*> optMultiple <*> optLimit
 
 data Opts = Opts RunOnce | Repl | DocBuiltin | DocCodePage | Version
 
@@ -150,11 +163,11 @@ main = do
                 Right fun' -> return fun'
             if multiple runOnce
                 then forM_ (lines input') $ \input'' ->
-                    case eval (mode runOnce) Nothing fun input'' of
+                    case eval (mode runOnce) (limit runOnce) fun input'' of
                         Left err -> die $ "Invalid input: " ++ show err
                         Right result ->
                             putStrLn $ input'' ++ " -> " ++ show result
-                else case eval (mode runOnce) Nothing fun input' of
+                else case eval (mode runOnce) (limit runOnce) fun input' of
                     Left err -> die $ "Invalid input: " ++ show err
                     Right result -> putStrLn $ showResult result
         Repl -> runRepl
