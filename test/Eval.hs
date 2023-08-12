@@ -1140,6 +1140,14 @@ testEval = describe "Evaluation" $ do
             , ("[5,2,9,10,3,4,4,4,7]", All ["20"])
             , ("[9,7,10,9,7,8,5,10,1]", All ["63", "90", "70"])
             ]
+    describe "q170695: Construct a line graph / conjugate graph" $ do
+        specEval
+            "Sᵖ{đ∩z}ᵐj"
+            [ ("[]", All [])
+            , ("[[\"0\",\"1\"]]", All [])
+            , ("[[\"0\",\"1\"],[\"1\",\"2\"]]", All ["[\"01\",\"12\"]"])
+            , ("[[\"a\",\"b\"],[\"b\",\"c\"],[\"c\",\"a\"]]", All ["[\"ab\",\"bc\"]", "[\"ab\",\"ca\"]", "[\"bc\",\"ca\"]"])
+            ]
     describe "q177221: String rotation - output string repeatedly moving first character to the end" $ do
         specEval
             ";$N,"
@@ -1198,6 +1206,16 @@ testEval = describe "Evaluation" $ do
             , ("[0,19,2,0,10,10,16,9,19,9,15,0,10,18,0,17,18,18,0,9]", All ["5"])
             , ("[1,19,17,17,0,2,14,10,10,12,5,14,16,7,15,15,18,11,17,7]", All ["5"])
             ]
+    describe "q182305: Return the Closest Prime Number" $ do
+        specEval
+            "Ž-Q"
+            [ ("80", First $ Just "79")
+            , ("100", First $ Just "101")
+            , ("5", First $ Just "5")
+            , ("9", First $ Just "7")
+            , ("532", First $ Just "523")
+            , ("1", First $ Just "2")
+            ]
     describe "q187879: Integer Lists of Noah" $ do
         specEval
             "Ţ≡2="
@@ -1240,6 +1258,14 @@ testEval = describe "Evaluation" $ do
             , ("[\"d\",\"j\"]", All ["g"])
             , ("[\"B\",\"e\"]", All ["S"])
             , ("[\"Z\",\"a\"]", All ["]"])
+            ]
+    describe "q196683: Round up my number" $ do
+        specEval
+            "/K*"
+            [ ("3 1", All ["3"])
+            , ("3 5", All ["6"])
+            , ("3 9", All ["9"])
+            , ("5 12", All ["15"])
             ]
     describe "q199290: Reversed Iota's" $ do
         specEval
@@ -2555,3 +2581,14 @@ testEval = describe "Evaluation" $ do
         specEval
             "Ňᵖ{Rƒᵐ∏Ɔ<"
             [("", Truncated ["1", "4", "8", "16", "32", "64", "128", "144", "216", "288", "432", "864"])]
+    describe "q263774: Round up to a smoother number" $ do
+        specEval
+            "Ň+ᵖ{ʷ½≥"
+            [ ("101 100", First $ Just "102")
+            , ("201 100", First $ Just "204")
+            , ("256 100", First $ Just "256")
+            ]
+    describe "q263910: Evenly spread values" $ do
+        specEval
+            "kŢᵉR→/+j"
+            [("[1/10,2/10,14/10,23/10,24/10,25/10,32/10]", All ["[1/3,2/3,3/2,9/4,5/2,11/4,7/2]"])]

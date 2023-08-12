@@ -4,6 +4,10 @@
 
 * The interpreter can now limit the number of results to show using the `-l` option.
 
+### Breaking changes
+
+* The dependency on `base` becomes `base >=4.15 && <5`. Now GHC 9.0.1 or newer is required to build Nekomata.
+
 ## 0.4.1.0 -- 2023-07-22
 
 * New built-in functions: `\fromDigits`, `\interval`, `\read`, `\show`, `\tuple`.

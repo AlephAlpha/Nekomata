@@ -215,3 +215,4 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 - [ ] `\join` 需要重新设计：列表的 join 和字符串的 join 应该是不同的函数。前者会把非列表的元素转换成列表，后者则会把非字符串的元素转换成字符串。这个 breaking change 会影响到很多现有的解答。
 - [ ] 一些常用的数学函数，可以自动把字符串按 Nekomata 的 code page 转换成数字。
 - [ ] 现在的字符串是 `DStringT (TryList (Det Char))`；作为字符的列表，列表本身是 non-deterministic 的，但列表中的每一项不是。要考虑改成 `DStringT (TryList (Try (Det Char)))`。
+- [ ] 或者干脆不再区分字符串和列表。增加一个字符类型，当一个列表的全部元素都是字符时，就视为一个字符串。字符串和列表只在输入输出时有区别，其它时候都是一样的。这是很大的 breaking change，很多地方都要重写，可能会影响到很多现有的解答。
