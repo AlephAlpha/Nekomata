@@ -252,12 +252,12 @@ floor' = unaryVec floor''
     floor'' _ _ = Fail
 
 natural :: Function
-natural = nullary $
-    \i -> toTryData <$> anyOf i $ fromList [0 :: Integer ..]
+natural = nullary
+    $ \i -> toTryData <$> anyOf i $ fromList [0 :: Integer ..]
 
 integer :: Function
-integer = nullary $
-    \i -> toTryData <$> anyOf i $ fromList integers
+integer = nullary
+    $ \i -> toTryData <$> anyOf i $ fromList integers
   where
     integers = (0 :: Integer) : [y | x <- [1 ..], y <- [x, -x]]
 
@@ -390,10 +390,11 @@ isPrime' = predicateVec isPrime''
     isPrime'' _ _ = Fail
 
 prime :: Function
-prime = nullary $
-    \i ->
+prime = nullary
+    $ \i ->
         toTryData
-            <$> anyOf i . fromList
+            <$> anyOf i
+            . fromList
             $ map unPrime [nextPrime (1 :: Integer) ..]
 
 primePi :: Function
@@ -410,8 +411,9 @@ factor = unary2Vec factor'
     factor' _ _ = (Fail, Fail)
     factor_ 0 = Fail
     factor_ x =
-        Val . unzip $
-            merge (factorInt $ numerator x) (factorInt $ denominator x)
+        Val
+            . unzip
+            $ merge (factorInt $ numerator x) (factorInt $ denominator x)
     factorInt = sort . map (unPrime *** toInteger) . factorise
     merge [] ys = map (second negate) ys
     merge xs [] = xs
@@ -426,9 +428,9 @@ gcd' = binaryVecFail gcd''
     gcd'' _ (DNumT x) (DNumT y) = liftNum2 gcd_ x y
     gcd'' _ _ _ = Fail
     gcd_ x y =
-        Val $
-            gcd (numerator x) (numerator y)
-                % lcm (denominator x) (denominator y)
+        Val
+            $ gcd (numerator x) (numerator y)
+            % lcm (denominator x) (denominator y)
 
 lcm' :: Function
 lcm' = binaryVecFail lcm''
@@ -436,9 +438,9 @@ lcm' = binaryVecFail lcm''
     lcm'' _ (DNumT x) (DNumT y) = liftNum2 lcm_ x y
     lcm'' _ _ _ = Fail
     lcm_ x y =
-        Val $
-            lcm (numerator x) (numerator y)
-                % gcd (denominator x) (denominator y)
+        Val
+            $ lcm (numerator x) (numerator y)
+            % gcd (denominator x) (denominator y)
 
 divisors :: Function
 divisors = unaryVec divisors'
@@ -475,8 +477,8 @@ sqrt' = unaryVec sqrt''
 
 unitVec2 :: Function
 unitVec2 =
-    nullary $
-        \i ->
+    nullary
+        $ \i ->
             Choice
                 i
                 (toTryData ([0, 1] :: [Integer]))

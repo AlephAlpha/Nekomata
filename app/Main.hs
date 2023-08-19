@@ -25,19 +25,19 @@ optCode =
                 <> help "Code to run"
             )
         <|> CodeFile
-            <$> strOption
-                ( long "file"
-                    <> short 'f'
-                    <> metavar "FILE"
-                    <> help "File to run (custom encoding)"
-                )
+        <$> strOption
+            ( long "file"
+                <> short 'f'
+                <> metavar "FILE"
+                <> help "File to run (custom encoding)"
+            )
         <|> CodeFileUtf8
-            <$> strOption
-                ( long "utf8"
-                    <> short 'u'
-                    <> metavar "FILE"
-                    <> help "File to run (UTF-8)"
-                )
+        <$> strOption
+            ( long "utf8"
+                <> short 'u'
+                <> metavar "FILE"
+                <> help "File to run (UTF-8)"
+            )
 
 optInput :: Parser Input
 optInput =
@@ -115,7 +115,8 @@ data Opts = Opts RunOnce | Repl | DocBuiltin | DocCodePage | Version
 
 opts :: Parser Opts
 opts =
-    Opts <$> optRunOnce
+    Opts
+        <$> optRunOnce
         <|> flag' Repl (long "repl" <> short 'r' <> help "Run the REPL")
         <|> flag'
             DocBuiltin
@@ -169,7 +170,7 @@ main = do
                             putStrLn $ input'' ++ " -> " ++ show result
                 else case eval (mode runOnce) (limit runOnce) fun input' of
                     Left err -> die $ "Invalid input: " ++ show err
-                    Right result -> putStrLn $ showResult result
+                    Right result -> mapM_ putStrLn $ showResult result
         Repl -> runRepl
         DocBuiltin -> putStrLn docBuiltins
         DocCodePage -> putStrLn docCodePage

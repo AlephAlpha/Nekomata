@@ -63,6 +63,12 @@ testEval = describe "Evaluation" $ do
             , ("8", Count 34)
             , ("9", Count 55)
             ]
+    describe "q183: Finding \"sub-palindromes\"." $ do
+        specEval
+            "qNᵗz:↔=ũ"
+            [ ("\"12131331\"", All ["121", "131", "313", "1331", "33"])
+            , ("\"3333\"", All ["33", "333", "3333"])
+            ]
     describe "q1294: Determine whether strings are anagrams" $ do
         specEval
             "↕="
@@ -1110,6 +1116,17 @@ testEval = describe "Evaluation" $ do
             [ ("1", All ["[0]"])
             , ("18", All ["[0,1,2,5,10,21,42,85,170,341,682,1365,2730,5461,10922,21845,43690,87381]"])
             ]
+    describe "q164509: Sign-Swapping Sums" $ do
+        specEval
+            "ŋ∑ũ"
+            [ ("[1,2]", Count 4)
+            , ("[1,2,2]", Count 6)
+            , ("[1,1,1]", Count 4)
+            , ("[1,2,27]", Count 8)
+            , ("[1,2,3,4,5,6,7]", Count 29)
+            , ("[3,1,4,1,5,9,2,6,5,3,5]", Count 45)
+            , ("[1,7,2,8,3,1,6,8,10,9]", Count 56)
+            ]
     describe "q167573: Consecutive 1-Bits are Incremented" $ do
         specEval
             "ĉᵐ∫j"
@@ -1715,6 +1732,14 @@ testEval = describe "Evaluation" $ do
             , ("\"dadadadadada\"", Check False)
             , ("\"aabaabaaaabaa\"", Check False)
             , ("\"abccbacbaabcabc\"", Check False)
+            ]
+    describe "q250942: Divisor of a string" $ do
+        specEval
+            "J≡"
+            [ ("\"abcdabcd\"", All ["abcd", "abcdabcd"])
+            , ("\"aaa\"", All ["a", "aaa"])
+            , ("\"aaaaaaaa\"", All ["a", "aa", "aaaa", "aaaaaaaa"])
+            , ("\"abcdef\"", All ["abcdef"])
             ]
     describe "q251594: Find the nth Mersenne Prime" $ do
         specEval
@@ -2592,3 +2617,25 @@ testEval = describe "Evaluation" $ do
         specEval
             "kŢᵉR→/+j"
             [("[1/10,2/10,14/10,23/10,24/10,25/10,32/10]", All ["[1/3,2/3,3/2,9/4,5/2,11/4,7/2]"])]
+    describe "q264102: Iterate over all non-equivalent strings" $ do
+        specEval
+            "r:,↕ũ∆Zç∫:ux=¿97+H"
+            [ ("2", All ["abab"])
+            , ("3", All ["abcabc", "abcacb", "abcbac", "abcbca", "abacbc"])
+            ]
+    describe "q264166: Count N-Rich Permutations of an Integer Sequence" $ do
+        specEval
+            "↕∆±ĉᵐ∑çṀ→="
+            [ ("[1,2,3,4,5] 1", Count 1)
+            , ("[1,2,3,4,5] 2", Count 69)
+            , ("[1,2,3,4,5] 3", Count 41)
+            , ("[1,2,3,4,5] 4", Count 8)
+            , ("[1,2,3,4,5] 5", Count 1)
+            , ("[1,2,2,3,3,4,5] 1", Count 4)
+            , ("[1,2,2,3,3,4,5] 2", Count 2612)
+            , ("[1,2,2,3,3,4,5] 3", Count 2064)
+            , ("[1,2,2,3,3,4,5] 4", Count 336)
+            , ("[1,2,2,3,3,4,5] 5", Count 24)
+            , ("[1,2,2,3,3,4,5] 6", Count 0)
+            , ("[1,2,2,3,3,4,5] 7", Count 0)
+            ]

@@ -62,8 +62,8 @@ zipWithFail ::
     TryList (Try c)
 zipWithFail _ _ Nil Nil = Val Nil
 zipWithFail f i (Cons x xs) (Cons y ys) =
-    Val $
-        Cons
+    Val
+        $ Cons
             (liftJoinM2 (f (leftId i)) x y)
             (liftJoinM2 (zipWithFail f (rightId i)) xs ys)
 zipWithFail _ _ _ _ = Fail
@@ -81,8 +81,8 @@ zipWithTrunc ::
 zipWithTrunc _ _ Nil _ = Val Nil
 zipWithTrunc _ _ _ Nil = Val Nil
 zipWithTrunc f i (Cons x xs) (Cons y ys) =
-    Val $
-        Cons
+    Val
+        $ Cons
             (liftJoinM2 (f (leftId i)) x y)
             (liftJoinM2 (zipWithTrunc f (rightId i)) xs ys)
 
@@ -361,8 +361,8 @@ liftString2 ::
     (ListTry Char -> ListTry Char -> a) ->
     (TryList (Det Char) -> TryList (Det Char) -> TryData)
 liftString2 f x y =
-    toTryData $
-        liftM2 f (fmap unDet <$> x) (fmap unDet <$> y)
+    toTryData
+        $ liftM2 f (fmap unDet <$> x) (fmap unDet <$> y)
 
 -- | Lift a unary string function that returns two values to @TryData@
 liftString12 ::

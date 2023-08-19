@@ -38,11 +38,11 @@ codePageMarkdown =
             [ "|**"
                 ++ d
                 : "_**|"
-                ++ concat
-                    [ '`' : escape c ++ "`|"
-                    | j <- [0 .. 15]
-                    , let c = codePage !! (i * 16 + j)
-                    ]
+                    ++ concat
+                        [ '`' : escape c ++ "`|"
+                        | j <- [0 .. 15]
+                        , let c = codePage !! (i * 16 + j)
+                        ]
             | (i, d) <- zip [0 ..] hexDigits
             ]
   where

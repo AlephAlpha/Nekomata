@@ -2,7 +2,6 @@ module Nekomata.Eval where
 
 import Control.Arrow (left)
 import Control.Monad ((>=>))
-import Data.List (intercalate)
 import Data.Maybe (fromMaybe)
 import Nekomata.CodePage (CodePageError, checkCodePage)
 import Nekomata.Data (Data (..), TryData)
@@ -28,9 +27,12 @@ instance Show NekomataError where
 -- | Compile a Nekomata program string into a function
 compile :: String -> Either NekomataError Function
 compile =
-    left CodePageError . checkCodePage
-        >=> left ParseError . parse parseProgram ""
-        >=> left ParticleArityError . compileProgram
+    left CodePageError
+        . checkCodePage
+        >=> left ParseError
+        . parse parseProgram ""
+        >=> left ParticleArityError
+        . compileProgram
 
 -- | Nekomata's runtime state
 data Runtime = Runtime {choiceId :: Id, stack :: Stack}
@@ -90,17 +92,17 @@ instance Show Result where
     show (Check b) = show b
 
 -- | Show a Nekomata result separated by newlines
-showResult :: Result -> String
-showResult (All xs) = intercalate "\n" xs
-showResult (Truncated xs) = unlines xs ++ "..."
-showResult (First x) = fromMaybe "" x
-showResult (Count n) = show n
-showResult (Check b) = show b
+showResult :: Result -> [String]
+showResult (All xs) = xs
+showResult (Truncated xs) = xs
+showResult (First x) = [fromMaybe "" x]
+showResult (Count n) = [show n]
+showResult (Check b) = [show b]
 
 -- | Truncate a list of strings to a given length
 truncate' :: Int -> [String] -> Result
 truncate' n xs =
-    let (ys, zs) = splitAt n xs in if null zs then All ys else Truncated ys
+    let (ys, zs) = splitAt n xs in Truncated $ ys ++ ["..." | not (null zs)]
 
 -- | Get the result of a Nekomata evaluation according to the mode
 toResult :: Mode -> Maybe Int -> TryData -> Result
@@ -113,5 +115,8 @@ toResult CheckExistence _ = Check . checkResult
 -- | Evaluate a Nekomata program according to the mode
 eval :: Mode -> Maybe Int -> Function -> String -> Either NekomataError Result
 eval mode limit fun input =
-    toResult mode limit . snd . runFunction fun . initRuntime
+    toResult mode limit
+        . snd
+        . runFunction fun
+        . initRuntime
         <$> readInput input

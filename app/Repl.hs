@@ -139,7 +139,7 @@ repl state = handleInterrupt (outputStrLn "Cancelled." >> repl state) $ do
                     let (rt, result) = runFunction function' (runtime state)
                     let result' =
                             toResult (mode state) (Just $ limit state) result
-                    outputStrLn $ showResult result'
+                    mapM_ outputStrLn $ showResult result'
                     repl state{runtime = rt}
 
 replCommandCompletion :: String -> [Completion]
