@@ -4,7 +4,7 @@ import Control.Arrow (left)
 import Control.Monad ((>=>))
 import Data.Maybe (fromMaybe)
 import Nekomata.CodePage (CodePageError, checkCodePage)
-import Nekomata.Data (Data (..), TryData)
+import Nekomata.Data (Data (..), TryData, asString)
 import Nekomata.Function
 import Nekomata.NonDet
 import Nekomata.Parser
@@ -56,8 +56,7 @@ data Mode = AllValues | FirstValue | CountValues | CheckExistence
 
 -- | Show a Nekomata value
 showData :: Data -> String
-showData (DString s) = s
-showData x = show x
+showData x = fromMaybe (show x) $ asString x
 
 -- | Get all results of a Nekomata evaluation as a list of strings
 allResults :: TryData -> [String]

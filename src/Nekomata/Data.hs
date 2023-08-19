@@ -1,4 +1,3 @@
-{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE FlexibleInstances #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -121,7 +120,7 @@ tryMap2 ::
     a ->
     ListTry (Try b) ->
     ListTry (Try c)
-tryMap2 f i x = tryMap (flip f x) i
+tryMap2 f i x = tryMap (`f` x) i
 
 -- | Map a non-deterministic function that returns two values over a @TryList@
 tryUnzipWith ::
@@ -206,21 +205,35 @@ instance (NonDet a) => NonDet (ListTry a) where
 -- | Nekomata's data type (deterministic)
 data Data
     = DNum Rational
-    | DString String
+    | DChar Char
     | DList [Data]
     deriving (Eq, Ord)
+
+-- | Check if a @Data@ is a nonempty String, and return the String if it is
+asString :: Data -> Maybe String
+asString (DList []) = Nothing
+asString (DList xs) = mapM asChar xs
+  where
+    asChar (DChar x) = Just x
+    asChar _ = Nothing
+asString _ = Nothing
 
 instance Show Data where
     show (DNum x) =
         if denominator x == 1
             then show (numerator x)
             else show (numerator x) ++ "/" ++ show (denominator x)
-    show (DString x) = "\"" ++ x ++ "\""
-    show (DList x) = show x
+    show (DChar x) = show x
+    show (DList x) = maybe (show x) quote $ asString (DList x)
+      where
+        quote s = "\"" ++ concatMap escape s ++ "\""
+        escape '"' = "\\\""
+        escape '\\' = "\\\\"
+        escape c = [c]
 
 data DataTry
     = DNumT (Try (Det Rational))
-    | DStringT (TryList (Det Char))
+    | DCharT (Try (Det Char))
     | DListT (TryList TryData)
 
 -- | Nekomata's data type (non-deterministic)
@@ -229,10 +242,10 @@ type TryData = Try DataTry
 instance NonDet DataTry where
     type Value DataTry = Data
     fromValue (DNum x) = DNumT $ fromValue x
-    fromValue (DString x) = DStringT $ fromValue x
+    fromValue (DChar x) = DCharT $ fromValue x
     fromValue (DList x) = DListT $ fromValue x
     toTry (DNumT t) = DNum <$> toTry t
-    toTry (DStringT t) = DString <$> toTry t
+    toTry (DCharT t) = DChar <$> toTry t
     toTry (DListT t) = DList <$> toTry t
 
 {- | Convert any @DataTry@ to a @TryList TryData@
@@ -247,7 +260,7 @@ toTryList (DNumT x) =
   where
     range0_ :: Rational -> [Integer]
     range0_ x' = enumFromTo 0 . floor $ x' - 1
-toTryList (DStringT xs) = fmap (Val . DStringT . Val . singleton) <$> xs
+toTryList (DCharT _) = Fail
 
 -- | Convert a @Rational@ to a @Try Integer@
 toTryInt :: Rational -> Try Integer
@@ -262,9 +275,6 @@ toTryInt' x = x >>= toTryInt . unDet
 -- | A helper class for lifting functions to @TryData@
 class ToTryData a where
     toTryData :: a -> TryData
-
--- | A wrapper to avoid overlapping instances
-newtype AsString a = AsString {fromAsString :: a}
 
 instance (ToTryData a) => ToTryData (Det a) where
     toTryData = toTryData . unDet
@@ -282,19 +292,7 @@ instance ToTryData Rational where
     toTryData = Val . DNumT . Val . Det
 
 instance ToTryData Char where
-    toTryData = Val . DStringT . Val . singleton . Det
-
-instance ToTryData (AsString String) where
-    toTryData = Val . DStringT . fromValue . fromAsString
-
-instance ToTryData (AsString (ListTry Char)) where
-    toTryData = Val . DStringT . Val . fmap Det . fromAsString
-
-instance (ToTryData (AsString a)) => ToTryData (AsString (Try a)) where
-    toTryData = toTryData . fmap AsString . fromAsString
-
-instance (ToTryData (AsString a)) => ToTryData (AsString (Maybe a)) where
-    toTryData = toTryData . fmap AsString . fromAsString
+    toTryData = Val . DCharT . Val . Det
 
 instance (ToTryData a) => ToTryData [a] where
     toTryData = Val . DListT . Val . fromList . map toTryData
@@ -348,30 +346,16 @@ liftInt2 ::
     (Try (Det Rational) -> Try (Det Rational) -> TryData)
 liftInt2 f x y = toTryData $ liftM2 f (toTryInt' x) (toTryInt' y)
 
--- | Lift a unary string function to @TryData@
-liftString ::
-    (ToTryData a) =>
-    (ListTry Char -> a) ->
-    (TryList (Det Char) -> TryData)
-liftString f = toTryData . fmap (f . fmap unDet)
+-- | Lift a unary char function to @TryData@
+liftChar :: (ToTryData a) => (Char -> a) -> (Try (Det Char) -> TryData)
+liftChar f = toTryData . fmap f . toTry
 
--- | Lift a binary string function to @TryData@
-liftString2 ::
+-- | Lift a binary char function to @TryData@
+liftChar2 ::
     (ToTryData a) =>
-    (ListTry Char -> ListTry Char -> a) ->
-    (TryList (Det Char) -> TryList (Det Char) -> TryData)
-liftString2 f x y =
-    toTryData
-        $ liftM2 f (fmap unDet <$> x) (fmap unDet <$> y)
-
--- | Lift a unary string function that returns two values to @TryData@
-liftString12 ::
-    (ToTryData a, ToTryData b) =>
-    (ListTry Char -> Try (a, b)) ->
-    (TryList (Det Char) -> (TryData, TryData))
-liftString12 f x =
-    let y = x >>= f . fmap unDet
-     in (toTryData $ fst <$> y, toTryData $ snd <$> y)
+    (Char -> Char -> a) ->
+    (Try (Det Char) -> Try (Det Char) -> TryData)
+liftChar2 f x y = toTryData $ liftM2 f (toTry x) (toTry y)
 
 -- | Lift a unary list function to @TryData@
 liftList ::
@@ -499,7 +483,7 @@ instance (TryEq a) => TryEq (ListTry a) where
 
 instance TryEq DataTry where
     tryEq (DNumT x) (DNumT y) = tryEq x y
-    tryEq (DStringT x) (DStringT y) = tryEq x y
+    tryEq (DCharT x) (DCharT y) = tryEq x y
     tryEq (DListT x) (DListT y) = tryEq x y
     tryEq _ _ = Val False
 
@@ -549,12 +533,12 @@ instance (TryOrd a) => TryOrd (ListTry a) where
 
 instance TryOrd DataTry where
     tryCmp (DNumT x) (DNumT y) = tryCmp x y
-    tryCmp (DStringT x) (DStringT y) = tryCmp x y
+    tryCmp (DCharT x) (DCharT y) = tryCmp x y
     tryCmp (DListT x) (DListT y) = tryCmp x y
     tryCmp (DNumT _) _ = Val LT
     tryCmp _ (DNumT _) = Val GT
-    tryCmp (DStringT _) _ = Val LT
-    tryCmp _ (DStringT _) = Val GT
+    tryCmp (DCharT _) _ = Val LT
+    tryCmp _ (DCharT _) = Val GT
 
 -- | A helper type for ordering by a key
 data OrdBy a b = OrdBy {ordKey :: a, ordVal :: b}

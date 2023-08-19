@@ -5,7 +5,7 @@
 此处总结一下 Code Page 中已有但还没有用上的字符：
 
 ```
-&'.VWXY`vwy|
+&.VWXY`vwy|
 ```
 
 有些是已经确定分配给什么函数的，比如说 `|` 给 `\bitOr`，`&` 给 `\bitAnd`，`X` 给 `\bitXor`。别的都还没想好。
@@ -196,23 +196,31 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 \factor \unrle 1 \bitor \product
 ```
 
-### [Check if words are isomorphs](https://codegolf.stackexchange.com/q/50472/9288)
+### [String Comparison](https://codegolf.stackexchange.com/q/259987/9288)
 
 ```
-\transpose \nub \transpose \map \isUnique
+\reverse \apply2 \concat \listLess
 ```
 
-当前 `\transpose` 函数还不支持输入是字符串的情况，需要修改。由于这是 breaking change，要等到下一个大版本。
+- [ ] `\listLess`：不向量化的 `\less`
 
 ## 关于字符串
 
 当前 Nekomata 对字符串的支持不是很好，有一些设计失误的地方。修改这些问题需要等到下个大版本，先列举出来，以备忘。
 
-- [ ] `\filter` 在输入是字符串时，应该返回字符串而不是列表。
-- [ ] `\transpose` 需要支持输入是字符串的列表的情况。
-- [ ] `\chunks` 在输入是字符串时，应该返回字符串的列表而不是列表的列表。
-- [ ] `\index` 也要支持字符串。可以先只支持查找单个字符在字符串中的位置，不支持子串。
-- [ ] `\join` 需要重新设计：列表的 join 和字符串的 join 应该是不同的函数。前者会把非列表的元素转换成列表，后者则会把非字符串的元素转换成字符串。这个 breaking change 会影响到很多现有的解答。
+- [x] `\filter` 在输入是字符串时，应该返回字符串而不是列表。
+- [x] `\transpose` 需要支持输入是字符串的列表的情况。
+- [x] `\chunks` 在输入是字符串时，应该返回字符串的列表而不是列表的列表。
+- [x] `\index` 也要支持字符串。可以先只支持查找单个字符在字符串中的位置，不支持子串。
 - [ ] 一些常用的数学函数，可以自动把字符串按 Nekomata 的 code page 转换成数字。
-- [ ] 现在的字符串是 `DStringT (TryList (Det Char))`；作为字符的列表，列表本身是 non-deterministic 的，但列表中的每一项不是。要考虑改成 `DStringT (TryList (Try (Det Char)))`。
-- [ ] 或者干脆不再区分字符串和列表。增加一个字符类型，当一个列表的全部元素都是字符时，就视为一个字符串。字符串和列表只在输入输出时有区别，其它时候都是一样的。这是很大的 breaking change，很多地方都要重写，可能会影响到很多现有的解答。
+- [x] 现在的字符串是 `DStringT (TryList (Det Char))`；作为字符的列表，列表本身是 non-deterministic 的，但列表中的每一项不是。要考虑改成 `DStringT (TryList (Try (Det Char)))`。
+
+或者干脆不再区分字符串和列表。增加一个字符类型，当一个列表的全部元素都是字符时，就视为一个字符串。字符串和列表只在输入输出时有区别，其它时候都是一样的。这样一来，前面所说的大部分问题都可以直接解决。
+
+但这会带来以下的新问题：
+
+- [x] 这是很大的 breaking change，很多地方都要重写，可能会影响到很多现有的解答。经查，只有一个解答变得不再成立。
+- [x] 文档也要重写。
+- [ ] 一些函数会自动把输入的数字或字符串转换成列表。数字会转换成 range。但如果增加字符类型的话，单个字符不知道该转换成什么。暂时先定为 Fail，以后可能会改成单个字符的列表，或者按 code page 转换成数字再 range。
+- [ ] 空集和空字符串无法区分。应该输出 `[]` 还是 `""`？暂时先输出 `[]`。
+- [ ] 现有的 `<`、`>` 是向量化的，无法用于比较字符串。需要增加非向量化的版本。

@@ -7,6 +7,8 @@
 ### Breaking changes
 
 * The dependency on `base` becomes `base >=4.15 && <5`. Now GHC 9.0.1 or newer is required to build Nekomata.
+* The string type is removed, and a new character type is added. Now strings are represented as lists of characters. Many built-in functions are changed accordingly.
+* `\join` and `concat` no longer convert their arguments to strings. Now they convert numbers and characters to singleton lists.
 
 ## 0.4.1.0 -- 2023-07-22
 

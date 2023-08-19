@@ -36,7 +36,7 @@ Remove duplicate values from a non-deterministic object.
 
 Convert a non-deterministic object to the normal form.
 
-I haven't given a formal definition for the normal form. This function basically lifts all the non-determinism in lists and strings to the top level.
+I haven't given a formal definition for the normal form. This function basically lifts all the non-determinism in lists to the top level.
 
 ### `if` (`I`, `2 -> 1`)
 
@@ -78,9 +78,9 @@ If they are not, push the first value, otherwise fail.
 
 ### `nonempty` (`N`, `1 -> 1`)
 
-Check if a list or string is non-empty.
+Check if a list is non-empty.
 
-If it is, push the list or string itself, otherwise fail.
+If it is, push the list itself, otherwise fail.
 
 ### `nonzero` (`Z`, `1 -> 1`)
 
@@ -316,13 +316,13 @@ This function is automatically vectorized.
 
 ### `min` (`m`, `2 -> 1`)
 
-Get the minimum of two numbers or two strings.
+Get the minimum of two numbers or two chars.
 
 This function is automatically vectorized with padding.
 
 ### `max` (`M`, `2 -> 1`)
 
-Get the maximum of two numbers or two strings.
+Get the maximum of two numbers or two chars.
 
 This function is automatically vectorized with padding.
 
@@ -556,31 +556,29 @@ When the input is a list, each element is optionally negated independently.
 
 ### `charToInt` (`e`, `1 -> 1`)
 
-Convert a string to a list of integers according to Nekomata's custom encoding.
+Convert a char to an integer according to Nekomata's custom encoding.
 
 This function is automatically vectorized.
 
 ### `intToChar` (`H`, `1 -> 1`)
 
-Convert an integer or a list of integers to a string according to Nekomata's custom encoding.
+Convert an integer to a char according to Nekomata's custom encoding.
 
-Fail when the integer is not in the range 0 to 255.
+Fail when the integer is not in the range 0 to 255.This function is automatically vectorized.
 
 ### `read` (`Ĝ`, `1 -> 1`)
 
-Parse a string as a Nekomata value.
+Parse a string (a list of chars) or a single char as a Nekomata value.
 
 Fail when the string is not a valid Nekomata value.
 
-This function is automatically vectorized.
-
 ### `show` (`ĝ`, `1 -> 1`)
 
-Convert a Nekomata value to a string.
+Convert a Nekomata value to a string (a list of chars).
 
 ### `anyOf` (`~`, `1 -> 1`)
 
-Choose an element from a list or a character from a string.
+Choose an element from a list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
@@ -616,27 +614,27 @@ Remove failed items from a list.
 
 ### `length` (`#`, `1 -> 1`)
 
-Get the length of a list or a string.
+Get the length of a list.
 
 ### `lengthIs` (`L`, `2 -> 1`)
 
-Check if the length of a list or a string is equal to a given integer.
+Check if the length of a list is equal to a given integer.
 
-If it is, push the list or string itself, otherwise fail.
+If it is, push the list itself, otherwise fail.
 
 ### `nth` (`@`, `2 -> 1`)
 
-Get the nth element of a list or a string.
+Get the nth element of a list.
 
 This function is automatically vectorized on the second argument.
 
 ### `head` (`h`, `1 -> 1`)
 
-Get the first element of a list or a string.
+Get the first element of a list.
 
 ### `tail` (`t`, `1 -> 1`)
 
-Remove the first element of a list or a string.
+Remove the first element of a list.
 
 ### `cons` (`c`, `2 -> 1`)
 
@@ -644,15 +642,15 @@ Prepend an element to a list.
 
 ### `uncons` (`C`, `1 -> 2`)
 
-Get the first element and the rest of a list or a string.
+Get the first element and the rest of a list.
 
 ### `last` (`l`, `1 -> 1`)
 
-Get the last element of a list or a string.
+Get the last element of a list.
 
 ### `init` (`i`, `1 -> 1`)
 
-Remove the last element of a list or a string.
+Remove the last element of a list.
 
 ### `snoc` (`ɔ`, `2 -> 1`)
 
@@ -660,7 +658,7 @@ Append an element to a list.
 
 ### `unsnoc` (`Ɔ`, `1 -> 2`)
 
-Get the last element and the rest of a list or a string.
+Get the last element and the rest of a list.
 
 ### `cons0` (`ç`, `1 -> 1`)
 
@@ -668,13 +666,13 @@ Prepend a zero to a list.
 
 ### `reverse` (`↔`, `1 -> 1`)
 
-Reverse a list or a string.
+Reverse a list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
 ### `prefix` (`p`, `1 -> 1`)
 
-Get a prefix of a list or a string.
+Get a prefix of a list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
@@ -682,7 +680,7 @@ This function is non-deterministic.
 
 ### `suffix` (`s`, `1 -> 1`)
 
-Get a suffix of a list or a string.
+Get a suffix of a list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
@@ -690,13 +688,13 @@ This function is non-deterministic.
 
 ### `take` (`T`, `2 -> 1`)
 
-Get the first n elements of a list or a string.
+Get the first n elements of a list.
 
 This function is automatically vectorized on the second argument.
 
 ### `subset` (`S`, `1 -> 1`)
 
-Get a finite subset of a list or a string.
+Get a finite subset of a list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
@@ -704,7 +702,7 @@ This function is non-deterministic.
 
 ### `subsequence` (`q`, `1 -> 1`)
 
-Get a finite contiguous subsequence of a list or a string.
+Get a finite contiguous subsequence of a list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
@@ -712,13 +710,13 @@ This function is non-deterministic.
 
 ### `join` (`,`, `2 -> 1`)
 
-Concatenate two lists or two strings.
+Concatenate two lists.
 
-If one of the arguments is a string, the other argument is converted to a string as well.
+If one of the arguments is a number or a char, it is converted to a singleton list before concatenation.
 
 ### `split` (`;`, `1 -> 2`)
 
-Split a list or a string into two parts.
+Split a list into two parts.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
@@ -738,7 +736,7 @@ If there are multiple minimums, return the first one.
 
 Fail when the list is empty.
 
-The order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or strings.
+The order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or chars.
 
 ### `maximum` (`Ṁ`, `1 -> 1`)
 
@@ -748,17 +746,17 @@ If there are multiple maximums, return the first one.
 
 Fail when the list is empty.
 
-The order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or strings.
+The order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or chars.
 
 ### `concat` (`j`, `1 -> 1`)
 
-Concatenate a list of lists or a list of strings.
+Concatenate a list of lists or a list.
 
-If one item in the list is a string, the other items are converted to strings as well.
+If one item in the list is a number or a char, it is converted to a singleton list before concatenation.
 
 ### `unconcat` (`J`, `1 -> 1`)
 
-Split a list or a string into a list of lists or a list of strings.
+Split a list into a list of lists.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
@@ -766,15 +764,15 @@ This function is non-deterministic.
 
 ### `nub` (`u`, `1 -> 1`)
 
-Remove duplicate elements from a list or a string.
+Remove duplicate elements from a list.
 
 ### `sort` (`o`, `1 -> 1`)
 
-Sort a list or a string.
+Sort a list.
 
 ### `permutation` (`↕`, `1 -> 1`)
 
-Get a permutation of a list or a string.
+Get a permutation of a list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
@@ -782,11 +780,11 @@ This function is non-deterministic.
 
 ### `extract` (`ĕ`, `1 -> 2`)
 
-Extract an element from a list or a character from a string.
+Extract an element from a list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
-Returns the element and the rest of the list or string.
+Returns the element and the rest of the list.
 
 This function is non-deterministic.
 
@@ -810,7 +808,7 @@ The empty list is considered unique.
 
 Check if a list is free of a given element.
 
-This means that the element does not occur in the list, its sublists, or its subsublists, etc.
+This means that the list is not equal to the element, and recursively, every item of the list if free of that element.
 
 If it is, push the list itself, otherwise fail.
 
@@ -820,7 +818,7 @@ Push a list of integers from 0 to the length of the argument minus 1 without pop
 
 ### `rotate` (`Ř`, `2 -> 1`)
 
-Rotate a list or a string by a given number of positions.
+Rotate a list by a given number of positions.
 
 If the first argument is a number, it is converted to a range from 0 to that number minus 1.
 
@@ -872,17 +870,17 @@ Get the union of two lists.
 
 ### `chunks` (`ĉ`, `1 -> 1`)
 
-Split a list or a string into a list of chunks of equal elements.
+Split a list into a list of chunks of equal elements.
 
 ### `uninterleave` (`ĭ`, `1 -> 2`)
 
-uninterleave a list or a string into a list of elements at even positions and a list of elements at odd positions.
+uninterleave a list into a list of elements at even positions and a list of elements at odd positions.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
 ### `interleave` (`Ĭ`, `2 -> 1`)
 
-Interleave two lists or strings.
+Interleave two lists.
 
 The length of the first list must be either equal to or one more than the length of the second list. Otherwise, this function fails.
 
@@ -908,7 +906,7 @@ This function is non-deterministic.
 
 ### `shortest` (`ş`, `1 -> 1`)
 
-Get the shortest one in a list of lists or strings.
+Get the shortest one in a list of lists.
 
 If there are multiple shortest ones, return any of them non-deterministically.
 
@@ -916,7 +914,7 @@ This function is non-deterministic.
 
 ### `longest` (`Ş`, `1 -> 1`)
 
-Get the longest one in a list of lists or strings.
+Get the longest one in a list of lists.
 
 If there are multiple longest ones, return any of them non-deterministically.
 
@@ -924,7 +922,7 @@ This function is non-deterministic.
 
 ### `tuple` (`ŧ`, `2 -> 1`)
 
-Create a list or a string with length n, whose elements are taken from another list or string.
+Create a list with length n, whose elements are taken from another list.
 
 This function is non-deterministic, and automatically vectorized on the second argument.
 

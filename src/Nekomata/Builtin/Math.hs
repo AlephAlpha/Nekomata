@@ -44,28 +44,28 @@ less :: Function
 less = predicateVec2 less'
   where
     less' _ (DNumT x) (DNumT y) = tryLt x y
-    less' _ (DStringT x) (DStringT y) = tryLt x y
+    less' _ (DCharT x) (DCharT y) = tryLt x y
     less' _ _ _ = Fail
 
 lessEq :: Function
 lessEq = predicateVec2 lessEq'
   where
     lessEq' _ (DNumT x) (DNumT y) = tryLe x y
-    lessEq' _ (DStringT x) (DStringT y) = tryLe x y
+    lessEq' _ (DCharT x) (DCharT y) = tryLe x y
     lessEq' _ _ _ = Fail
 
 greater :: Function
 greater = predicateVec2 greater'
   where
     greater' _ (DNumT x) (DNumT y) = tryGt x y
-    greater' _ (DStringT x) (DStringT y) = tryGt x y
+    greater' _ (DCharT x) (DCharT y) = tryGt x y
     greater' _ _ _ = Fail
 
 greaterEq :: Function
 greaterEq = predicateVec2 greaterEq'
   where
     greaterEq' _ (DNumT x) (DNumT y) = tryGe x y
-    greaterEq' _ (DStringT x) (DStringT y) = tryGe x y
+    greaterEq' _ (DCharT x) (DCharT y) = tryGe x y
     greaterEq' _ _ _ = Fail
 
 neg1 :: Function
@@ -229,14 +229,14 @@ min' :: Function
 min' = binaryVecPad min''
   where
     min'' _ (DNumT x) (DNumT y) = liftNum2 tryMin x y
-    min'' _ (DStringT x) (DStringT y) = liftString2 (AsString .: tryMin) x y
+    min'' _ (DCharT x) (DCharT y) = liftChar2 tryMin x y
     min'' _ _ _ = Fail
 
 max' :: Function
 max' = binaryVecPad max''
   where
     max'' _ (DNumT x) (DNumT y) = liftInt2 tryMax x y
-    max'' _ (DStringT x) (DStringT y) = liftString2 (AsString .: tryMax) x y
+    max'' _ (DCharT x) (DCharT y) = liftChar2 tryMax x y
     max'' _ _ _ = Fail
 
 ceil :: Function
@@ -489,5 +489,5 @@ orNeg = unaryVec orNeg'
   where
     orNeg' i (DNumT x) = liftNum (orNeg_ i) x
     orNeg' _ _ = Fail
-    orNeg_ _ 0 = Val $ 0
-    orNeg_ i x = Choice i (Val $ x) (Val $ -x)
+    orNeg_ _ 0 = Val 0
+    orNeg_ i x = Choice i (Val x) (Val $ -x)

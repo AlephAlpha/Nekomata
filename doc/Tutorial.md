@@ -64,17 +64,33 @@ Numbers in lists are written as normal, e.g., `[-1, -2, -3/4]`. When taking inpu
 
 When you want to push two or more integers onto the stack, you can separate them with spaces. For example, `1 2 3` pushes the integers `1`, `2`, and `3` onto the stack. `123` pushes the integer `123`.
 
-### Strings
+### Chars
 
-Strings are delimited by double quotes. For example, `"Hello, World!"` is a string.
+Chars are single characters.
 
-When the output is a string, the quotes are not printed. For example, `"Hello, World!"` is printed as `Hello, World!`. However, if the output is a list, the quotes are printed. For example, `["Hello, World!"]` is printed as `["Hello, World!"]`.
+When you want to push a char onto the stack, you prefix it with a single quote. For example, `'a` pushes the char `a` onto the stack.
+
+Chars in lists can be written either with a single quote on the left, or both on the left and on the right. For example, `['a', 'b', 'c']` and `['a, 'b, 'c]` are equivalent. The same applies to chars in input.
+
+Chars are always outputted with both single quotes. For example, `'a` is printed as `'a'`.
+
+Nekomata only supports characters in Nekomata's custom code page. You can see the code page in [CodePage.md](CodePage.md).
 
 ### Lists
 
-Lists may contain any data types. For example, `[1, "Hello, World!", [2, 3]]` is a list that contains an integer, a string, and another list.
+Lists may contain any data types. For example, `[1, 'a', "Hello, World!", [2, 3]]` is a list that contains an integer, a char, a string (a list of chars), and a list of integers.
 
-Strings and lists in Nekomata are lazy, so you can create infinite lists or strings. However, the interpreter does not support outputting infinite lists or strings, because it is impossible to find all possible values of a non-deterministic infinite list. Infinite lists or strings can only be used as intermediate results.
+Lists in Nekomata are lazy, so you can create infinite lists or strings. However, the interpreter does not support outputting infinite lists or strings, because it is impossible to find all possible values of a non-deterministic infinite list. Infinite lists or strings can only be used as intermediate results.
+
+### Strings
+
+Nekomata does not have a string type. Strings are simply lists of chars. When all items in a list are chars, the list is printed as a string. You can also type a string directly in the code or in the input, and it will be parsed as a list of chars.
+
+For example, `['H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!']` and `"Hello, World!"` are equivalent.
+
+As a special case, Nekomata does not distinguish between an empty list and an empty string. It can be written as `[]` or `""`. But when outputting an empty list, it is always printed as `[]`.
+
+When the output is a nonempty string, the quotes are not printed. For example, `"Hello, World!"` is printed as `Hello, World!`. However, if the output is a list, the quotes are printed. For example, `["Hello, World!"]` is printed as `["Hello, World!"]`.
 
 ## Built-in Functions
 

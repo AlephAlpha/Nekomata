@@ -55,7 +55,7 @@ parseNum' = try parseRational' <|> fromInteger <$> parsePositive <?> "number"
 
 -- | Parse an escape character
 parseEscape :: Parser Char
-parseEscape = char '\\' >> oneOf "\"\\"
+parseEscape = char '\\' >> oneOf "\"\\'"
 
 -- | Parse a string literal
 parseString :: Parser String
@@ -65,6 +65,14 @@ parseString =
         (char '"')
         (many $ try parseEscape <|> noneOf "\"")
         <?> "string"
+
+-- | Parse a char literal
+parseChar :: Parser Char
+parseChar = between (char '\'') (optional $ char '\'') anyChar <?> "char"
+
+-- | Parse a char literal, but without the right single quote
+parseChar' :: Parser Char
+parseChar' = char '\'' >> anyChar <?> "char"
 
 -- | Parse a list of Nekomata data
 parseList :: Parser [Data]
@@ -80,7 +88,8 @@ parseData :: Parser Data
 parseData =
     choice
         [ DNum <$> parseNum
-        , DString <$> parseString
+        , DChar <$> parseChar
+        , DList . map DChar <$> parseString
         , DList <$> parseList
         ]
         <?> "Nekomata data"
@@ -90,7 +99,8 @@ parseData' :: Parser Data
 parseData' =
     choice
         [ DNum <$> parseNum'
-        , DString <$> parseString
+        , DChar <$> parseChar'
+        , DList . map DChar <$> parseString
         , DList <$> parseList
         ]
         <?> "Nekomata data"

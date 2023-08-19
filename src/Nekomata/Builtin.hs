@@ -101,7 +101,7 @@ builtins =
         "Convert a non-deterministic object to the normal form.\n\
         \I haven't given a formal definition for the normal form. \
         \This function basically lifts all the non-determinism \
-        \in lists and strings to the top level."
+        \in lists to the top level."
     , Builtin
         "if"
         'I'
@@ -137,8 +137,8 @@ builtins =
         "nonempty"
         'N'
         nonempty'
-        "Check if a list or string is non-empty.\n\
-        \If it is, push the list or string itself, otherwise fail."
+        "Check if a list is non-empty.\n\
+        \If it is, push the list itself, otherwise fail."
     , Builtin
         "nonzero"
         'Z'
@@ -371,13 +371,13 @@ builtins =
         "min"
         'm'
         min'
-        "Get the minimum of two numbers or two strings.\n\
+        "Get the minimum of two numbers or two chars.\n\
         \This function is automatically vectorized with padding."
     , Builtin
         "max"
         'M'
         max'
-        "Get the maximum of two numbers or two strings.\n\
+        "Get the maximum of two numbers or two chars.\n\
         \This function is automatically vectorized with padding."
     , Builtin
         "ceil"
@@ -620,33 +620,34 @@ builtins =
         "charToInt"
         'e'
         charToInt
-        "Convert a string to a list of integers according to Nekomata's \
-        \custom encoding.\n\
+        "Convert a char to an integer according to Nekomata's custom \
+        \encoding.\n\
         \This function is automatically vectorized."
     , Builtin
         "intToChar"
         'H'
         intToChar
-        "Convert an integer or a list of integers to a string according to \
-        \Nekomata's custom encoding.\n\
-        \Fail when the integer is not in the range 0 to 255."
+        "Convert an integer to a char according to Nekomata's custom \
+        \encoding.\n\
+        \Fail when the integer is not in the range 0 to 255.\
+        \This function is automatically vectorized."
     , Builtin
         "read"
         'Ĝ'
         read'
-        "Parse a string as a Nekomata value.\n\
-        \Fail when the string is not a valid Nekomata value.\n\
-        \This function is automatically vectorized."
+        "Parse a string (a list of chars) or a single char \
+        \as a Nekomata value.\n\
+        \Fail when the string is not a valid Nekomata value."
     , Builtin
         "show"
         'ĝ'
         show'
-        "Convert a Nekomata value to a string."
+        "Convert a Nekomata value to a string (a list of chars)."
     , Builtin
         "anyOf"
         '~'
         anyOf'
-        "Choose an element from a list or a character from a string.\n\
+        "Choose an element from a list.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
@@ -686,30 +687,29 @@ builtins =
         "length"
         '#'
         length'
-        "Get the length of a list or a string."
+        "Get the length of a list."
     , Builtin
         "lengthIs"
         'L'
         lengthIs
-        "Check if the length of a list or a string is equal to a given \
-        \integer.\n\
-        \If it is, push the list or string itself, otherwise fail."
+        "Check if the length of a list is equal to a given integer.\n\
+        \If it is, push the list itself, otherwise fail."
     , Builtin
         "nth"
         '@'
         nth
-        "Get the nth element of a list or a string.\n\
+        "Get the nth element of a list.\n\
         \This function is automatically vectorized on the second argument."
     , Builtin
         "head"
         'h'
         head'
-        "Get the first element of a list or a string."
+        "Get the first element of a list."
     , Builtin
         "tail"
         't'
         tail'
-        "Remove the first element of a list or a string."
+        "Remove the first element of a list."
     , Builtin
         "cons"
         'c'
@@ -719,17 +719,17 @@ builtins =
         "uncons"
         'C'
         uncons
-        "Get the first element and the rest of a list or a string."
+        "Get the first element and the rest of a list."
     , Builtin
         "last"
         'l'
         last'
-        "Get the last element of a list or a string."
+        "Get the last element of a list."
     , Builtin
         "init"
         'i'
         init'
-        "Remove the last element of a list or a string."
+        "Remove the last element of a list."
     , Builtin
         "snoc"
         'ɔ'
@@ -739,7 +739,7 @@ builtins =
         "unsnoc"
         'Ɔ'
         unsnoc
-        "Get the last element and the rest of a list or a string."
+        "Get the last element and the rest of a list."
     , Builtin
         "cons0"
         'ç'
@@ -749,14 +749,14 @@ builtins =
         "reverse"
         '↔'
         reverse'
-        "Reverse a list or a string.\n\
+        "Reverse a list.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1."
     , Builtin
         "prefix"
         'p'
         prefix
-        "Get a prefix of a list or a string.\n\
+        "Get a prefix of a list.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
@@ -764,7 +764,7 @@ builtins =
         "suffix"
         's'
         suffix
-        "Get a suffix of a list or a string.\n\
+        "Get a suffix of a list.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
@@ -772,13 +772,13 @@ builtins =
         "take"
         'T'
         take'
-        "Get the first n elements of a list or a string.\n\
+        "Get the first n elements of a list.\n\
         \This function is automatically vectorized on the second argument."
     , Builtin
         "subset"
         'S'
         subset
-        "Get a finite subset of a list or a string.\n\
+        "Get a finite subset of a list.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
@@ -786,7 +786,7 @@ builtins =
         "subsequence"
         'q'
         subsequence
-        "Get a finite contiguous subsequence of a list or a string.\n\
+        "Get a finite contiguous subsequence of a list.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
@@ -794,14 +794,14 @@ builtins =
         "join"
         ','
         join'
-        "Concatenate two lists or two strings.\n\
-        \If one of the arguments is a string, \
-        \the other argument is converted to a string as well."
+        "Concatenate two lists.\n\
+        \If one of the arguments is a number or a char, \
+        \it is converted to a singleton list before concatenation."
     , Builtin
         "split"
         ';'
         split
-        "Split a list or a string into two parts.\n\
+        "Split a list into two parts.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
@@ -820,7 +820,7 @@ builtins =
         \Fail when the list is empty.\n\
         \The order used in this function is different from the one \
         \used in min and max. It can compare two arbitrary values, \
-        \not just numbers or strings."
+        \not just numbers or chars."
     , Builtin
         "maximum"
         'Ṁ'
@@ -830,19 +830,19 @@ builtins =
         \Fail when the list is empty.\n\
         \The order used in this function is different from the one \
         \used in min and max. It can compare two arbitrary values, \
-        \not just numbers or strings."
+        \not just numbers or chars."
     , Builtin
         "concat"
         'j'
         concat'
-        "Concatenate a list of lists or a list of strings.\n\
-        \If one item in the list is a string, \
-        \the other items are converted to strings as well."
+        "Concatenate a list of lists or a list.\n\
+        \If one item in the list is a number or a char, \
+        \it is converted to a singleton list before concatenation."
     , Builtin
         "unconcat"
         'J'
         unconcat
-        "Split a list or a string into a list of lists or a list of strings.\n\
+        "Split a list into a list of lists.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
@@ -850,17 +850,17 @@ builtins =
         "nub"
         'u'
         nub
-        "Remove duplicate elements from a list or a string."
+        "Remove duplicate elements from a list."
     , Builtin
         "sort"
         'o'
         sort
-        "Sort a list or a string."
+        "Sort a list."
     , Builtin
         "permutation"
         '↕'
         permutation
-        "Get a permutation of a list or a string.\n\
+        "Get a permutation of a list.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
@@ -868,10 +868,10 @@ builtins =
         "extract"
         'ĕ'
         extract
-        "Extract an element from a list or a character from a string.\n\
+        "Extract an element from a list.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
-        \Returns the element and the rest of the list or string.\n\
+        \Returns the element and the rest of the list.\n\
         \This function is non-deterministic."
     , Builtin
         "allEqual"
@@ -892,8 +892,8 @@ builtins =
         'f'
         free
         "Check if a list is free of a given element.\n\
-        \This means that the element does not occur in the list, \
-        \its sublists, or its subsublists, etc.\n\
+        \This means that the list is not equal to the element, \
+        \and recursively, every item of the list if free of that element.\n\
         \If it is, push the list itself, otherwise fail."
     , Builtin
         "enumerate"
@@ -905,7 +905,7 @@ builtins =
         "rotate"
         'Ř'
         rotate
-        "Rotate a list or a string by a given number of positions.\n\
+        "Rotate a list by a given number of positions.\n\
         \If the first argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is automatically vectorized on the second argument."
@@ -962,12 +962,12 @@ builtins =
         "chunks"
         'ĉ'
         chunks
-        "Split a list or a string into a list of chunks of equal elements."
+        "Split a list into a list of chunks of equal elements."
     , Builtin
         "uninterleave"
         'ĭ'
         uninterleave
-        "uninterleave a list or a string into a list of elements \
+        "uninterleave a list into a list of elements \
         \at even positions and a list of elements at odd positions.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1."
@@ -975,7 +975,7 @@ builtins =
         "interleave"
         'Ĭ'
         interleave
-        "Interleave two lists or strings.\n\
+        "Interleave two lists.\n\
         \The length of the first list must be either equal to or one more than \
         \the length of the second list. Otherwise, this function fails."
     , Builtin
@@ -1000,7 +1000,7 @@ builtins =
         "shortest"
         'ş'
         shortest
-        "Get the shortest one in a list of lists or strings.\n\
+        "Get the shortest one in a list of lists.\n\
         \If there are multiple shortest ones, \
         \return any of them non-deterministically.\n\
         \This function is non-deterministic."
@@ -1008,7 +1008,7 @@ builtins =
         "longest"
         'Ş'
         longest
-        "Get the longest one in a list of lists or strings.\n\
+        "Get the longest one in a list of lists.\n\
         \If there are multiple longest ones, \
         \return any of them non-deterministically.\n\
         \This function is non-deterministic."
@@ -1016,8 +1016,8 @@ builtins =
         "tuple"
         'ŧ'
         tuple
-        "Create a list or a string with length n, \
-        \whose elements are taken from another list or string.\n\
+        "Create a list with length n, \
+        \whose elements are taken from another list.\n\
         \This function is non-deterministic, \
         \and automatically vectorized on the second argument."
     ]

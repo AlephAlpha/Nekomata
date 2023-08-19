@@ -101,7 +101,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q12902: Run Length Decoding" $ do
         specEval
-            "ĭᵐĜᶻřjj"
+            "ĭᵐĜᶻřj"
             [("\":144,1'1\"", All [":4444,'"])]
     describe "q38325: Minimum excluded number" $ do
         specEval
@@ -143,7 +143,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q50472: Check if words are isomorphs" $ do
         specEval
-            "eŤuŤᵐů"
+            "ŤuŤᵐů"
             [ ("[\"ESTATE\",\"DUELED\"]", Check True)
             , ("[\"DUELED\",\"ESTATE\"]", Check True)
             , ("[\"XXX\",\"YYY\"]", Check True)
@@ -218,7 +218,7 @@ testEval = describe "Evaluation" $ do
             "ᵃp=al"
             [ ("\"global\" \"glossary\"", All ["glo"])
             , ("\"department\" \"depart\"", All ["depart"])
-            , ("\"glove\" \"dove\"", All [""])
+            , ("\"glove\" \"dove\"", All ["[]"])
             ]
     describe "q63999: Parenthifiable Binary Numbers" $ do
         specEval
@@ -357,7 +357,7 @@ testEval = describe "Evaluation" $ do
     describe "q74273: Output all strings" $ do
         specEval
             "Ňŧ"
-            [("\"ab\"", Truncated ["", "a", "b", "aa", "ab", "ba", "bb", "aaa", "aab", "aba", "abb"])]
+            [("\"ab\"", Truncated ["[]", "a", "b", "aa", "ab", "ba", "bb", "aaa", "aab", "aba", "abb"])]
     describe "q77270: Greatest Common Divisor" $ do
         specEval
             "G"
@@ -461,7 +461,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q83377: Write a program to elasticize strings" $ do
         specEval
-            "#Rᶻřjj"
+            "#Rᶻřj"
             [ ("\"Why\"", All ["Whhyyy"])
             , ("\"SKype\"", All ["SKKyyyppppeeeee"])
             , ("\"LobbY\"", All ["LoobbbbbbbYYYYY"])
@@ -512,7 +512,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q85994: Count of \"a\"s and \"b\"s must be equal. Did you get it computer?" $ do
         specEval
-            "Ne;<"
+            "N;<"
             [ ("\"ab\"", Check True)
             , ("\"aaabbb\"", Check True)
             , ("\"aaaaabbbbb\"", Check True)
@@ -870,8 +870,8 @@ testEval = describe "Evaluation" $ do
     describe "q125104: Cartesian product of two lists" $ do
         specEval
             "ᵐ~"
-            [ ("[\"abc\",\"123\"]", All ["[\"a\",\"1\"]", "[\"a\",\"2\"]", "[\"a\",\"3\"]", "[\"b\",\"1\"]", "[\"b\",\"2\"]", "[\"b\",\"3\"]", "[\"c\",\"1\"]", "[\"c\",\"2\"]", "[\"c\",\"3\"]"])
-            , ("[\"aa\",\"aba\"]", All ["[\"a\",\"a\"]", "[\"a\",\"b\"]", "[\"a\",\"a\"]", "[\"a\",\"a\"]", "[\"a\",\"b\"]", "[\"a\",\"a\"]"])
+            [ ("[\"abc\",\"123\"]", All ["a1", "a2", "a3", "b1", "b2", "b3", "c1", "c2", "c3"])
+            , ("[\"aa\",\"aba\"]", All ["aa", "ab", "aa", "aa", "ab", "aa"])
             ]
     describe "q126373: Am I a Fibonacci Number?" $ do
         specEval
@@ -1077,7 +1077,7 @@ testEval = describe "Evaluation" $ do
             [ ("[\"Here are some lines\",\"of text for you\",\"to make a\",\"boustrophedon\"]", All ["[\"Here are some lines\",\"uoy rof txet fo\",\"to make a\",\"nodehportsuob\"]"])
             , ("[\"My boustrophedon\"]", All ["[\"My boustrophedon\"]"])
             , ("[]", All ["[]"])
-            , ("[\"Some text\",\"\",\"More text\",\"\",\"\",\"Last bit of text\"]", All ["[\"Some text\",\"\",\"More text\",\"\",\"\",\"txet fo tib tsaL\"]"])
+            , ("[\"Some text\",[],\"More text\",[],[],\"Last bit of text\"]", All ["[\"Some text\",[],\"More text\",[],[],\"txet fo tib tsaL\"]"])
             ]
     describe "q152114: Output the hours at 90 degrees" $ do
         specEval
@@ -1584,11 +1584,11 @@ testEval = describe "Evaluation" $ do
             , ("\"abc\"", All ["bb"])
             , ("\"xkcd\"", All ["kkdd"])
             , ("\"Hello, World!\"", All ["eell,,WWrrdd"])
-            , ("\"D\"", All [""])
+            , ("\"D\"", All ["[]"])
             , ("\"KK\"", All ["KK"])
             , ("\"Hi\"", All ["ii"])
             , ("\"odd_length!\"", All ["dd__eegghh"])
-            , ("\"\"", All [""])
+            , ("\"\"", All ["[]"])
             ]
     describe "q241474: Move to Right and left" $ do
         specEval
@@ -2240,7 +2240,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259987: String Comparison" $ do
         specEval
-            "↔ᵃj<"
+            "↔ᵃjÐ:o="
             [ ("[\"a\",\"b\"]", Check True)
             , ("[\"ac\",\"a\"]", Check False)
             , ("[\"bekcka\",\"kwnfoe\"]", Check True)
@@ -2447,7 +2447,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q262512: Generate all linked chains" $ do
         specEval
-            "\"-_\"Ňŧĉᵗz\"=\"ᵚcjjt"
+            "\"-_\"Ňŧĉᵗz'=ᵚcjt"
             [("", Truncated ["-=_", "_=-", "--=_", "-=_=-", "-=__", "_=--", "_=-=_", "__=-"])]
     describe "q262518: Landmine Number I" $ do
         specEval
