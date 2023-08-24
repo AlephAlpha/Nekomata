@@ -134,6 +134,22 @@ builtins =
         "Check if two values are not equal.\n\
         \If they are not, push the first value, otherwise fail."
     , Builtin
+        "lt"
+        'Ļ'
+        lt
+        "Check if the first value is less than the second.\n\
+        \If it is, push the first value, otherwise fail.\n\
+        \Unlike `less`, this function does not automatically vectorize, \
+        \so you can use it to compare two lists."
+    , Builtin
+        "gt"
+        'Ģ'
+        gt
+        "Check if the first value is greater than the second.\n\
+        \If it is, push the first value, otherwise fail.\n\
+        \Unlike `greater`, this function does not automatically vectorize, \
+        \so you can use it to compare two lists."
+    , Builtin
         "nonempty"
         'N'
         nonempty'
@@ -145,6 +161,8 @@ builtins =
         nonzero
         "Check if a number is non-zero.\n\
         \If it is, push the number itself, otherwise fail.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "isPositive"
@@ -152,6 +170,8 @@ builtins =
         isPositive
         "Check if a number is positive.\n\
         \If it is, push the number itself, otherwise fail.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "isNonnegative"
@@ -159,6 +179,8 @@ builtins =
         isNonnegative
         "Check if a number is non-negative.\n\
         \If it is, push the number itself, otherwise fail.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "isZero"
@@ -166,6 +188,8 @@ builtins =
         isZero
         "Check if a number is zero.\n\
         \If it is, push the number itself, otherwise fail.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "less"
@@ -173,6 +197,9 @@ builtins =
         less
         "Check if the first number is less than the second.\n\
         \If it is, push the first number, otherwise fail.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page \
+        \before comparison, but the result is still a char.\n\
         \This function is automatically vectorized."
     , Builtin
         "lessEq"
@@ -180,6 +207,9 @@ builtins =
         lessEq
         "Check if the first number is less than or equal to the second.\n\
         \If it is, push the first number, otherwise fail.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page \
+        \before comparison, but the result is still a char.\n\
         \This function is automatically vectorized."
     , Builtin
         "greater"
@@ -187,6 +217,9 @@ builtins =
         greater
         "Check if the first number is greater than the second.\n\
         \If it is, push the first number, otherwise fail.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page \
+        \before comparison, but the result is still a char.\n\
         \This function is automatically vectorized."
     , Builtin
         "greaterEq"
@@ -194,6 +227,9 @@ builtins =
         greaterEq
         "Check if the first number is greater than or equal to the second.\n\
         \If it is, push the first number, otherwise fail.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page \
+        \before comparison, but the result is still a char.\n\
         \This function is automatically vectorized."
     , Builtin
         "neg1"
@@ -215,30 +251,40 @@ builtins =
         '_'
         neg
         "Negate a number.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "abs"
         'A'
         abs'
         "Absolute value of a number.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "increment"
         '→'
         increment
         "Increment a number.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "decrement"
         '←'
         decrement
         "Decrement a number.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "logicalNot"
         '¬'
         logicalNot
         "Takes a number and returns 1 if it is 0, and 0 otherwise.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "sign"
@@ -246,30 +292,40 @@ builtins =
         sign
         "Returns -1 if the argument is negative, 0 if it is zero, \
         \and 1 if it is positive.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "add"
         '+'
         add
         "Add two numbers.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized with padding zeros."
     , Builtin
         "sub"
         '-'
         sub
         "Subtract two numbers.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized with padding zeros."
     , Builtin
         "absDiff"
         '≈'
         absDiff
         "Absolute difference of two numbers.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized with padding zeros."
     , Builtin
         "mul"
         '*'
         mul
         "Multiply two numbers.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
@@ -278,6 +334,8 @@ builtins =
         div'
         "Division of two numbers.\n\
         \Fails when the divisor is zero.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
@@ -287,6 +345,8 @@ builtins =
         "Integer division of two numbers. \
         \Result is rounded towards negative infinity.\n\
         \Fails when the divisor is zero.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
@@ -295,6 +355,8 @@ builtins =
         mod'
         "Modulo two numbers.\n\
         \Fails when the divisor is zero.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
@@ -304,6 +366,8 @@ builtins =
         "Divide two numbers.\n\
         \Fails when the divisor is zero or \
         \the result is not an integer.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
@@ -312,13 +376,19 @@ builtins =
         half
         "Check if an integer is even, and divide it by 2.\n\
         \Fails when the integer is odd.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "pow"
         'E'
         pow
         "Raise a number to a power.\n\
+        \The first argument is the exponent, \
+        \the second argument is the base.\n\
         \Fails when the exponent is not an integer.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
@@ -327,12 +397,16 @@ builtins =
         recip'
         "Reciprocal of a number.\n\
         \Fails when the number is zero.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "mul2"
         'Ä'
         mul2
         "Multiply a number by 2.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "div2"
@@ -341,12 +415,16 @@ builtins =
         "Divide a number by 2.\n\
         \This is different from `half` in that \
         \it may return a non-integer.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "mod2"
         'Ö'
         mod2
         "Modulo a number by 2.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "powOf2"
@@ -354,18 +432,24 @@ builtins =
         powOf2
         "Raise 2 to a power.\n\
         \Fails when the exponent is not an integer.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "denominator"
         'ḍ'
         denominator'
         "Get the denominator of a number.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "numerator"
         'ṇ'
         numerator'
         "Get the numerator of a number.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "min"
@@ -384,12 +468,16 @@ builtins =
         'K'
         ceil
         "Round a number up to the nearest integer.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "floor"
         'k'
         floor'
         "Round a number down to the nearest integer.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "range0"
@@ -427,19 +515,25 @@ builtins =
         '∑'
         sum'
         "Take the sum of a list of numbers.\n\
-        \The addition is automatically vectorized with padding zeros."
+        \The addition is automatically vectorized with padding zeros.\n\
+        \If some of the elements are chars, \
+        \they are converted to numbers according to Nekomata's code page."
     , Builtin
         "product"
         '∏'
         product'
         "Take the product of a list of numbers.\n\
         \The multiplication is automatically vectorized \
-        \and fails when the two lists are of different lengths."
+        \and fails when the two lists are of different lengths.\n\
+        \If some of the elements are chars, \
+        \they are converted to numbers according to Nekomata's code page."
     , Builtin
         "dot"
         '∙'
         dot
         "Take the dot product of two lists of numbers.\n\
+        \If some of the elements are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \The current implementation is simply a composition of \
         \mul and sum."
     , Builtin
@@ -450,12 +544,16 @@ builtins =
         \If one of the arguments is a number, \
         \it simply multiplies the other argument by that number.\n\
         \If the arguments are nested lists, \
-        \it takes the multi-dimensional convolution."
+        \it takes the multi-dimensional convolution.\n\
+        \If some of the elements are chars, \
+        \they are converted to numbers according to Nekomata's code page."
     , Builtin
         "mean"
         'µ'
         mean
-        "Take the mean of a list of numbers."
+        "Take the mean of a list of numbers.\n\
+        \If some of the elements are chars, \
+        \they are converted to numbers according to Nekomata's code page."
     , Builtin
         "fromBase"
         'b'
@@ -464,6 +562,8 @@ builtins =
         \The first argument is the list of digits, \
         \the second argument is the base.\n\
         \This does not require the digits and the base to be integers.\n\
+        \If the base is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized over the base."
     , Builtin
         "fromBaseRev"
@@ -473,6 +573,8 @@ builtins =
         \The first argument is the list of digits, \
         \the second argument is the base.\n\
         \This does not require the digits and the base to be integers.\n\
+        \If the base is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized over the base."
     , Builtin
         "toBase"
@@ -483,6 +585,8 @@ builtins =
         \the second argument is the base.\n\
         \Fails when the inputs are not integers, \
         \or the base is less than 2.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized over both arguments. \
         \If both arguments are lists, \
         \the result is a list of lists of digits."
@@ -495,6 +599,8 @@ builtins =
         \the second argument is the base.\n\
         \Fails when the inputs are not integers, \
         \or the base is less than 2.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized over both arguments. \
         \If both arguments are lists, \
         \the result is a list of lists of digits."
@@ -503,36 +609,48 @@ builtins =
         'Ƃ'
         binary'
         "Convert an integer to a list of binary digits in reverse order.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "digits"
         'Ɗ'
         digits
         "Convert an integer to a list of decimal digits.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "fromDigits"
         'ɗ'
         fromDigits
-        "Convert a list of decimal digits to an integer."
+        "Convert a list of decimal digits to an integer.\n\
+        \If some of the elements are chars, \
+        \they are converted to numbers according to Nekomata's code page."
     , Builtin
         "cumsum"
         '∫'
         cumsum
         "Take the cumulative sum of a list of numbers.\n\
-        \The addition is automatically vectorized with padding zeros."
+        \The addition is automatically vectorized with padding zeros.\n\
+        \If some of the elements are chars, \
+        \they are converted to numbers according to Nekomata's code page."
     , Builtin
         "delta"
         '∆'
         delta
         "Take the difference between adjacent elements of a list of numbers.\n\
-        \The subtraction is automatically vectorized with padding zeros."
+        \The subtraction is automatically vectorized with padding zeros.\n\
+        \If some of the elements are chars, \
+        \they are converted to numbers according to Nekomata's code page."
     , Builtin
         "binomial"
         'Ç'
         binomial
         "Compute the binomial coefficient.\n\
         \The second argument must be an integer.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
@@ -540,12 +658,16 @@ builtins =
         'F'
         factorial
         "Compute the factorial of an integer.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "isPrime"
         'Q'
         isPrime'
         "Check if an integer is prime.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "prime"
@@ -558,6 +680,8 @@ builtins =
         'ƥ'
         primePi
         "Compute the number of primes less than or equal to an integer.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "factor"
@@ -566,12 +690,16 @@ builtins =
         "Factorize a rational number, \
         \and return a list of prime factors and a list of exponents.\n\
         \Fails when the input is zero.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "gcd"
         'G'
         gcd'
         "Compute the greatest common divisor of two numbers.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
@@ -579,6 +707,8 @@ builtins =
         'g'
         lcm'
         "Compute the least common multiple of two numbers.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
@@ -587,6 +717,8 @@ builtins =
         divisors
         "Compute the list of divisors of an integer.\n\
         \Fail when the input is zero.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "intPartition"
@@ -594,6 +726,8 @@ builtins =
         intPartition
         "Partition an integer into a list of integers, \
         \whose sum is the original integer.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is non-deterministic and automatically vectorized."
     , Builtin
         "sqrt"
@@ -601,6 +735,8 @@ builtins =
         sqrt'
         "Compute the square root of a rational number.\n\
         \Fails when the argument is not a perfect square.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "unitVec2"
@@ -613,22 +749,22 @@ builtins =
         'ŋ'
         orNeg
         "Optionally negate a number.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
         \This function is non-deterministic and automatically vectorized.\n\
         \When the input is a list, \
         \each element is optionally negated independently."
     , Builtin
         "charToInt"
         'e'
-        charToInt
-        "Convert a char to an integer according to Nekomata's custom \
-        \encoding.\n\
+        charToInt'
+        "Convert a char to an integer according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
         "intToChar"
         'H'
-        intToChar
-        "Convert an integer to a char according to Nekomata's custom \
-        \encoding.\n\
+        intToChar'
+        "Convert an integer to a char according to Nekomata's code page.\n\
         \Fail when the integer is not in the range 0 to 255.\
         \This function is automatically vectorized."
     , Builtin

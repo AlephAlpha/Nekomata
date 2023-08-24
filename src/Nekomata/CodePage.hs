@@ -19,12 +19,22 @@ codePage =
         ++ "pqrstuvwxyz{|}~\n"
         ++ "ᵃᶜᵈᵉᵋᶠᶦᵏˡᵐᵚᵑᵒᵖʳᵗ"
         ++ "ʷˣᶻ�������������"
-        ++ "ÄƂÇĈĎÐƊËĜĨĬṀṂŇÖØ"
-        ++ "ƆƤṖŘŞŢŤŬŽ�������"
+        ++ "ÄƂÇĈĎÐƊËĜĢĨĬĻṀṂŇ"
+        ++ "ÖØƆƤṖŘŞŢŤŬŽ�����"
         ++ "äçĉđḍɗĕƒĝïĭįṁṃňŋ"
         ++ "ṇɔƥŗřşŧũůž������"
         ++ "����������������"
         ++ "����������������"
+
+-- | Convert a character to a number.
+charToInt :: (Num a) => Char -> Maybe a
+charToInt = fmap fromIntegral . (`elemIndex` codePage)
+
+-- | Convert an integer to a character.
+intToChar :: (Integral a) => a -> Maybe Char
+intToChar x
+    | x >= 0 && x < 255 = Just $ codePage !! fromIntegral x
+    | otherwise = Nothing
 
 -- A Markdown table of the code page
 codePageMarkdown :: String
@@ -71,11 +81,7 @@ fromBytes = map $ (codePage !!) . fromIntegral
 toBytes :: String -> Either CodePageError [Word8]
 toBytes = zipWithM toByte [0 ..]
   where
-    toByte i x =
-        maybe
-            (Left $ CodePageError x i)
-            (Right . fromIntegral)
-            $ elemIndex x codePage
+    toByte i x = maybe (Left $ CodePageError x i) Right $ charToInt x
 
 -- | Check if a string is in Nekomata's code page.
 checkCodePage :: String -> Either CodePageError String

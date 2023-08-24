@@ -166,3 +166,43 @@ When the predicate returns 'True', the first argument is returned.
 predicateVec2 :: (Id -> DataTry -> DataTry -> Try Bool) -> Function
 predicateVec2 f = binaryVecFail
     $ \i x y -> f i x y >>= \b -> if b then Val x else Fail
+
+-- | Convert and vectorize a unary numeric function
+unaryNum :: (ToTryData a) => (Id -> Rational -> a) -> Function
+unaryNum f = unaryVec f'
+  where
+    f' i x = liftNum (f i) (toTryNum x)
+
+-- | Convert and vectorize a binary numeric function with padding
+binaryNumPad :: (ToTryData a) => (Id -> Rational -> Rational -> a) -> Function
+binaryNumPad f = binaryVecPad f'
+  where
+    f' i x y = liftNum2 (f i) (toTryNum x) (toTryNum y)
+
+{- | Convert and vectorize a binary numeric function
+with failure on mismatched lengths
+-}
+binaryNumFail :: (ToTryData a) => (Id -> Rational -> Rational -> a) -> Function
+binaryNumFail f = binaryVecFail f'
+  where
+    f' i x y = liftNum2 (f i) (toTryNum x) (toTryNum y)
+
+-- | Convert and vectorize a unary integer function
+unaryInt :: (ToTryData a) => (Id -> Integer -> a) -> Function
+unaryInt f = unaryVec f'
+  where
+    f' i x = liftInt (f i) (toTryNum x)
+
+-- | Convert and vectorize a binary integer function with padding
+binaryIntPad :: (ToTryData a) => (Id -> Integer -> Integer -> a) -> Function
+binaryIntPad f = binaryVecPad f'
+  where
+    f' i x y = liftInt2 (f i) (toTryNum x) (toTryNum y)
+
+{- | Convert and vectorize a binary integer function
+with failure on mismatched lengths
+-}
+binaryIntFail :: (ToTryData a) => (Id -> Integer -> Integer -> a) -> Function
+binaryIntFail f = binaryVecFail f'
+  where
+    f' i x y = liftInt2 (f i) (toTryNum x) (toTryNum y)

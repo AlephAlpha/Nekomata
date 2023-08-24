@@ -7,6 +7,7 @@ module Nekomata.Data where
 import Control.Monad (join, liftM2)
 import Data.Functor ((<&>))
 import Data.Ratio (denominator, numerator)
+import Nekomata.CodePage (charToInt)
 import Nekomata.NonDet
 
 -- | A helper function to lift a binary function to a monad
@@ -271,6 +272,12 @@ toTryInt x
 -- | Convert a @Try (Det Rational)@ to a @Try Integer@
 toTryInt' :: Try (Det Rational) -> Try Integer
 toTryInt' x = x >>= toTryInt . unDet
+
+-- | Convert any @DataTry@ to a @Try (Det Rational)@
+toTryNum :: DataTry -> Try (Det Rational)
+toTryNum (DNumT x) = x
+toTryNum (DCharT x) = toTry x >>= maybe Fail (Val . Det) . charToInt
+toTryNum (DListT _) = Fail
 
 -- | A helper class for lifting functions to @TryData@
 class ToTryData a where

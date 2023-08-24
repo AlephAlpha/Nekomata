@@ -76,6 +76,22 @@ Check if two values are not equal.
 
 If they are not, push the first value, otherwise fail.
 
+### `lt` (`Ļ`, `2 -> 1`)
+
+Check if the first value is less than the second.
+
+If it is, push the first value, otherwise fail.
+
+Unlike `less`, this function does not automatically vectorize, so you can use it to compare two lists.
+
+### `gt` (`Ģ`, `2 -> 1`)
+
+Check if the first value is greater than the second.
+
+If it is, push the first value, otherwise fail.
+
+Unlike `greater`, this function does not automatically vectorize, so you can use it to compare two lists.
+
 ### `nonempty` (`N`, `1 -> 1`)
 
 Check if a list is non-empty.
@@ -88,6 +104,8 @@ Check if a number is non-zero.
 
 If it is, push the number itself, otherwise fail.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `isPositive` (`P`, `1 -> 1`)
@@ -95,6 +113,8 @@ This function is automatically vectorized.
 Check if a number is positive.
 
 If it is, push the number itself, otherwise fail.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
 
@@ -104,6 +124,8 @@ Check if a number is non-negative.
 
 If it is, push the number itself, otherwise fail.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `isZero` (`ž`, `1 -> 1`)
@@ -111,6 +133,8 @@ This function is automatically vectorized.
 Check if a number is zero.
 
 If it is, push the number itself, otherwise fail.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
 
@@ -120,6 +144,8 @@ Check if the first number is less than the second.
 
 If it is, push the first number, otherwise fail.
 
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page before comparison, but the result is still a char.
+
 This function is automatically vectorized.
 
 ### `lessEq` (`≤`, `2 -> 1`)
@@ -127,6 +153,8 @@ This function is automatically vectorized.
 Check if the first number is less than or equal to the second.
 
 If it is, push the first number, otherwise fail.
+
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page before comparison, but the result is still a char.
 
 This function is automatically vectorized.
 
@@ -136,6 +164,8 @@ Check if the first number is greater than the second.
 
 If it is, push the first number, otherwise fail.
 
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page before comparison, but the result is still a char.
+
 This function is automatically vectorized.
 
 ### `greaterEq` (`≥`, `2 -> 1`)
@@ -143,6 +173,8 @@ This function is automatically vectorized.
 Check if the first number is greater than or equal to the second.
 
 If it is, push the first number, otherwise fail.
+
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page before comparison, but the result is still a char.
 
 This function is automatically vectorized.
 
@@ -162,11 +194,15 @@ The constant 256.
 
 Negate a number.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `abs` (`A`, `1 -> 1`)
 
 Absolute value of a number.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
 
@@ -174,11 +210,15 @@ This function is automatically vectorized.
 
 Increment a number.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `decrement` (`←`, `1 -> 1`)
 
 Decrement a number.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
 
@@ -186,11 +226,15 @@ This function is automatically vectorized.
 
 Takes a number and returns 1 if it is 0, and 0 otherwise.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `sign` (`±`, `1 -> 1`)
 
 Returns -1 if the argument is negative, 0 if it is zero, and 1 if it is positive.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
 
@@ -198,11 +242,15 @@ This function is automatically vectorized.
 
 Add two numbers.
 
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
+
 This function is automatically vectorized with padding zeros.
 
 ### `sub` (`-`, `2 -> 1`)
 
 Subtract two numbers.
+
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized with padding zeros.
 
@@ -210,11 +258,15 @@ This function is automatically vectorized with padding zeros.
 
 Absolute difference of two numbers.
 
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
+
 This function is automatically vectorized with padding zeros.
 
 ### `mul` (`*`, `2 -> 1`)
 
 Multiply two numbers.
+
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
@@ -224,6 +276,8 @@ Division of two numbers.
 
 Fails when the divisor is zero.
 
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
+
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
 ### `divInt` (`÷`, `2 -> 1`)
@@ -231,6 +285,8 @@ This function is automatically vectorized and fails when the two lists are of di
 Integer division of two numbers. Result is rounded towards negative infinity.
 
 Fails when the divisor is zero.
+
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
@@ -240,6 +296,8 @@ Modulo two numbers.
 
 Fails when the divisor is zero.
 
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
+
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
 ### `divExact` (`¦`, `2 -> 1`)
@@ -247,6 +305,8 @@ This function is automatically vectorized and fails when the two lists are of di
 Divide two numbers.
 
 Fails when the divisor is zero or the result is not an integer.
+
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
@@ -256,13 +316,19 @@ Check if an integer is even, and divide it by 2.
 
 Fails when the integer is odd.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `pow` (`E`, `2 -> 1`)
 
 Raise a number to a power.
 
+The first argument is the exponent, the second argument is the base.
+
 Fails when the exponent is not an integer.
+
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
@@ -272,11 +338,15 @@ Reciprocal of a number.
 
 Fails when the number is zero.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `mul2` (`Ä`, `1 -> 1`)
 
 Multiply a number by 2.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
 
@@ -286,11 +356,15 @@ Divide a number by 2.
 
 This is different from `half` in that it may return a non-integer.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `mod2` (`Ö`, `1 -> 1`)
 
 Modulo a number by 2.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
 
@@ -300,17 +374,23 @@ Raise 2 to a power.
 
 Fails when the exponent is not an integer.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `denominator` (`ḍ`, `1 -> 1`)
 
 Get the denominator of a number.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `numerator` (`ṇ`, `1 -> 1`)
 
 Get the numerator of a number.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
 
@@ -330,11 +410,15 @@ This function is automatically vectorized with padding.
 
 Round a number up to the nearest integer.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `floor` (`k`, `1 -> 1`)
 
 Round a number down to the nearest integer.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
 
@@ -374,15 +458,21 @@ Take the sum of a list of numbers.
 
 The addition is automatically vectorized with padding zeros.
 
+If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
+
 ### `product` (`∏`, `1 -> 1`)
 
 Take the product of a list of numbers.
 
 The multiplication is automatically vectorized and fails when the two lists are of different lengths.
 
+If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
+
 ### `dot` (`∙`, `2 -> 1`)
 
 Take the dot product of two lists of numbers.
+
+If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
 
 The current implementation is simply a composition of mul and sum.
 
@@ -394,9 +484,13 @@ If one of the arguments is a number, it simply multiplies the other argument by 
 
 If the arguments are nested lists, it takes the multi-dimensional convolution.
 
+If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
+
 ### `mean` (`µ`, `1 -> 1`)
 
 Take the mean of a list of numbers.
+
+If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
 
 ### `fromBase` (`b`, `2 -> 1`)
 
@@ -405,6 +499,8 @@ Convert a list of digits to a number.
 The first argument is the list of digits, the second argument is the base.
 
 This does not require the digits and the base to be integers.
+
+If the base is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized over the base.
 
@@ -416,6 +512,8 @@ The first argument is the list of digits, the second argument is the base.
 
 This does not require the digits and the base to be integers.
 
+If the base is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized over the base.
 
 ### `toBase` (`D`, `2 -> 1`)
@@ -425,6 +523,8 @@ Convert an integer to a list of digits.
 The first argument is the integer, the second argument is the base.
 
 Fails when the inputs are not integers, or the base is less than 2.
+
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized over both arguments. If both arguments are lists, the result is a list of lists of digits.
 
@@ -436,11 +536,15 @@ The first argument is the integer, the second argument is the base.
 
 Fails when the inputs are not integers, or the base is less than 2.
 
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
+
 This function is automatically vectorized over both arguments. If both arguments are lists, the result is a list of lists of digits.
 
 ### `binary` (`Ƃ`, `1 -> 1`)
 
 Convert an integer to a list of binary digits in reverse order.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
 
@@ -448,11 +552,15 @@ This function is automatically vectorized.
 
 Convert an integer to a list of decimal digits.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `fromDigits` (`ɗ`, `1 -> 1`)
 
 Convert a list of decimal digits to an integer.
+
+If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
 
 ### `cumsum` (`∫`, `1 -> 1`)
 
@@ -460,11 +568,15 @@ Take the cumulative sum of a list of numbers.
 
 The addition is automatically vectorized with padding zeros.
 
+If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
+
 ### `delta` (`∆`, `1 -> 1`)
 
 Take the difference between adjacent elements of a list of numbers.
 
 The subtraction is automatically vectorized with padding zeros.
+
+If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
 
 ### `binomial` (`Ç`, `2 -> 1`)
 
@@ -472,17 +584,23 @@ Compute the binomial coefficient.
 
 The second argument must be an integer.
 
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
+
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
 ### `factorial` (`F`, `1 -> 1`)
 
 Compute the factorial of an integer.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `isPrime` (`Q`, `1 -> 1`)
 
 Check if an integer is prime.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
 
@@ -496,6 +614,8 @@ This function is non-deterministic.
 
 Compute the number of primes less than or equal to an integer.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `factor` (`ƒ`, `1 -> 2`)
@@ -504,17 +624,23 @@ Factorize a rational number, and return a list of prime factors and a list of ex
 
 Fails when the input is zero.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `gcd` (`G`, `2 -> 1`)
 
 Compute the greatest common divisor of two numbers.
 
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
+
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
 ### `lcm` (`g`, `2 -> 1`)
 
 Compute the least common multiple of two numbers.
+
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
@@ -524,11 +650,15 @@ Compute the list of divisors of an integer.
 
 Fail when the input is zero.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is automatically vectorized.
 
 ### `intPartition` (`Ṗ`, `1 -> 1`)
 
 Partition an integer into a list of integers, whose sum is the original integer.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is non-deterministic and automatically vectorized.
 
@@ -537,6 +667,8 @@ This function is non-deterministic and automatically vectorized.
 Compute the square root of a rational number.
 
 Fails when the argument is not a perfect square.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
 
@@ -550,19 +682,21 @@ This function is non-deterministic.
 
 Optionally negate a number.
 
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
 This function is non-deterministic and automatically vectorized.
 
 When the input is a list, each element is optionally negated independently.
 
 ### `charToInt` (`e`, `1 -> 1`)
 
-Convert a char to an integer according to Nekomata's custom encoding.
+Convert a char to an integer according to Nekomata's code page.
 
 This function is automatically vectorized.
 
 ### `intToChar` (`H`, `1 -> 1`)
 
-Convert an integer to a char according to Nekomata's custom encoding.
+Convert an integer to a char according to Nekomata's code page.
 
 Fail when the integer is not in the range 0 to 255.This function is automatically vectorized.
 

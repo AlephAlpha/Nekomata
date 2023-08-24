@@ -19,54 +19,42 @@ import Nekomata.NonDet
 nonzero :: Function
 nonzero = predicateVec nonzero'
   where
-    nonzero' _ (DNumT x) = (/= 0) . unDet <$> x
-    nonzero' _ _ = Fail
+    nonzero' _ x = (/= 0) . unDet <$> toTryNum x
 
 isPositive :: Function
 isPositive = predicateVec isPositive'
   where
-    isPositive' _ (DNumT x) = (> 0) . unDet <$> x
-    isPositive' _ _ = Fail
+    isPositive' _ x = (> 0) . unDet <$> toTryNum x
 
 isNonnegative :: Function
 isNonnegative = predicateVec isNonnegative'
   where
-    isNonnegative' _ (DNumT x) = (>= 0) . unDet <$> x
-    isNonnegative' _ _ = Fail
+    isNonnegative' _ x = (>= 0) . unDet <$> toTryNum x
 
 isZero :: Function
 isZero = predicateVec isZero'
   where
-    isZero' _ (DNumT x) = (== 0) . unDet <$> x
-    isZero' _ _ = Fail
+    isZero' _ x = (== 0) . unDet <$> toTryNum x
 
 less :: Function
 less = predicateVec2 less'
   where
-    less' _ (DNumT x) (DNumT y) = tryLt x y
-    less' _ (DCharT x) (DCharT y) = tryLt x y
-    less' _ _ _ = Fail
+    less' _ x y = tryLt (toTryNum x) (toTryNum y)
 
 lessEq :: Function
 lessEq = predicateVec2 lessEq'
   where
-    lessEq' _ (DNumT x) (DNumT y) = tryLe x y
-    lessEq' _ (DCharT x) (DCharT y) = tryLe x y
-    lessEq' _ _ _ = Fail
+    lessEq' _ x y = tryLe (toTryNum x) (toTryNum y)
 
 greater :: Function
 greater = predicateVec2 greater'
   where
-    greater' _ (DNumT x) (DNumT y) = tryGt x y
-    greater' _ (DCharT x) (DCharT y) = tryGt x y
-    greater' _ _ _ = Fail
+    greater' _ x y = tryGt (toTryNum x) (toTryNum y)
 
 greaterEq :: Function
 greaterEq = predicateVec2 greaterEq'
   where
-    greaterEq' _ (DNumT x) (DNumT y) = tryGe x y
-    greaterEq' _ (DCharT x) (DCharT y) = tryGe x y
-    greaterEq' _ _ _ = Fail
+    greaterEq' _ x y = tryGe (toTryNum x) (toTryNum y)
 
 neg1 :: Function
 neg1 = constant (-1 :: Integer)
@@ -78,43 +66,26 @@ octet :: Function
 octet = constant (256 :: Integer)
 
 neg :: Function
-neg = unaryVec neg'
-  where
-    neg' _ (DNumT x) = liftNum negate x
-    neg' _ _ = Fail
+neg = unaryNum $ const negate
 
 abs' :: Function
-abs' = unaryVec abs''
-  where
-    abs'' _ (DNumT x) = liftNum abs x
-    abs'' _ _ = Fail
+abs' = unaryNum $ const abs
 
 increment :: Function
-increment = unaryVec increment'
-  where
-    increment' _ (DNumT x) = liftNum (+ 1) x
-    increment' _ _ = Fail
+increment = unaryNum $ const (+ 1)
 
 decrement :: Function
-decrement = unaryVec decrement'
-  where
-    decrement' _ (DNumT x) = liftNum (subtract 1) x
-    decrement' _ _ = Fail
+decrement = unaryNum $ const (subtract 1)
 
 logicalNot :: Function
-logicalNot = unaryVec logicalNot'
+logicalNot = unaryNum $ const logicalNot_
   where
-    logicalNot' _ (DNumT x) = liftNum logicalNot_ x
-    logicalNot' _ _ = Fail
     logicalNot_ :: Rational -> Rational
     logicalNot_ 0 = 1
     logicalNot_ _ = 0
 
 sign :: Function
-sign = unaryVec sign'
-  where
-    sign' _ (DNumT x) = liftNum signum x
-    sign' _ _ = Fail
+sign = unaryNum $ const signum
 
 add :: Function
 add = binary add'
@@ -122,8 +93,7 @@ add = binary add'
 add' :: Id -> DataTry -> DataTry -> TryData
 add' = vec2Pad add''
   where
-    add'' _ (DNumT x) (DNumT y) = liftNum2 (+) x y
-    add'' _ _ _ = Fail
+    add'' _ x y = liftNum2 (+) (toTryNum x) (toTryNum y)
 
 sub :: Function
 sub = binary sub'
@@ -132,8 +102,7 @@ sub' :: Id -> DataTry -> DataTry -> TryData
 sub' i x y = neg' (leftId i) y >>= add' (rightId i) x
   where
     neg' = vec1 neg''
-    neg'' _ (DNumT x') = liftNum negate x'
-    neg'' _ _ = Fail
+    neg'' _ x' = liftNum negate (toTryNum x')
 
 absDiff :: Function
 absDiff = sub .* abs'
@@ -144,56 +113,43 @@ mul = binary mul'
 mul' :: Id -> DataTry -> DataTry -> TryData
 mul' = vec2Fail mul''
   where
-    mul'' _ (DNumT x) (DNumT y) = liftNum2 (*) x y
-    mul'' _ _ _ = Fail
+    mul'' _ x y = liftNum2 (*) (toTryNum x) (toTryNum y)
 
 div' :: Function
-div' = binaryVecFail div''
+div' = binaryNumFail $ const div_
   where
-    div'' _ (DNumT x) (DNumT y) = liftNum2 div_ x y
-    div'' _ _ _ = Fail
     div_ _ 0 = Fail
     div_ x y = Val $ x / y
 
 divInt :: Function
-divInt = binaryVecFail divInt'
+divInt = binaryNumFail $ const divInt_
   where
-    divInt' _ (DNumT x) (DNumT y) = liftNum2 div_ x y
-    divInt' _ _ _ = Fail
-    div_ :: Rational -> Rational -> Try Rational
-    div_ _ 0 = Fail
-    div_ x y = Val . fromInteger . floor $ x / y
+    divInt_ :: Rational -> Rational -> Try Rational
+    divInt_ _ 0 = Fail
+    divInt_ x y = Val . fromInteger . floor $ x / y
 
 mod' :: Function
-mod' = binaryVecFail mod''
+mod' = binaryNumFail $ const mod_
   where
-    mod'' _ (DNumT x) (DNumT y) = liftNum2 mod_ x y
-    mod'' _ _ _ = Fail
     mod_ _ 0 = Fail
     mod_ x y = Val $ x - y * fromInteger (floor $ x / y)
 
 divExact :: Function
-divExact = binaryVecFail divExact'
+divExact = binaryNumFail $ const divExact_
   where
-    divExact' _ (DNumT x) (DNumT y) = liftNum2 divExact_ x y
-    divExact' _ _ _ = Fail
     divExact_ _ 0 = Fail
     divExact_ x y =
         let q = x / y in if denominator q == 1 then Val $ numerator q else Fail
 
 half :: Function
-half = unaryVec half'
+half = unaryInt $ const half'
   where
-    half' _ (DNumT x) = liftInt half_ x
-    half' _ _ = Fail
-    half_ x = if even x then Val $ x `div` 2 else Fail
+    half' x = if even x then Val $ x `div` 2 else Fail
 
 pow :: Function
-pow = binaryVecFail pow'
+pow = binaryNumFail $ const pow''
   where
-    pow' _ (DNumT x) (DNumT y) = liftNum2 pow'' y x
-    pow' _ _ _ = Fail
-    pow'' x y = toTryInt y <&> pow_ x
+    pow'' x y = toTryInt x <&> pow_ y
     pow_ x y | y >= 0 = Val $ x ^ y
     pow_ 0 _ = Fail
     pow_ x y = Val $ 1 / (x ^ (-y))
@@ -214,16 +170,10 @@ powOf2 :: Function
 powOf2 = constant (2 :: Integer) .* pow
 
 numerator' :: Function
-numerator' = unaryVec numerator''
-  where
-    numerator'' _ (DNumT x) = liftNum numerator x
-    numerator'' _ _ = Fail
+numerator' = unaryNum $ const numerator
 
 denominator' :: Function
-denominator' = unaryVec denominator''
-  where
-    denominator'' _ (DNumT x) = liftNum denominator x
-    denominator'' _ _ = Fail
+denominator' = unaryNum $ const denominator
 
 min' :: Function
 min' = binaryVecPad min''
@@ -240,16 +190,10 @@ max' = binaryVecPad max''
     max'' _ _ _ = Fail
 
 ceil :: Function
-ceil = unaryVec ceil'
-  where
-    ceil' _ (DNumT x) = liftNum (ceiling :: Rational -> Integer) x
-    ceil' _ _ = Fail
+ceil = unaryNum $ const (ceiling :: Rational -> Integer)
 
 floor' :: Function
-floor' = unaryVec floor''
-  where
-    floor'' _ (DNumT x) = liftNum (floor :: Rational -> Integer) x
-    floor'' _ _ = Fail
+floor' = unaryNum $ const (floor :: Rational -> Integer)
 
 natural :: Function
 natural = nullary
@@ -261,18 +205,24 @@ integer = nullary
   where
     integers = (0 :: Integer) : [y | x <- [1 ..], y <- [x, -x]]
 
+zero :: DataTry
+zero = DNumT . Val $ Det 0
+
+one :: DataTry
+one = DNumT . Val $ Det 1
+
 sum' :: Function
 sum' = unary sum''
   where
     sum'' i (DListT xs) =
-        liftList (tryFoldl add' i . DNumT . Val $ Det 0) xs
+        liftList (tryFoldl add' i zero) xs
     sum'' _ _ = Fail
 
 product' :: Function
 product' = unary product''
   where
     product'' i (DListT xs) =
-        liftList (tryFoldl mul' i . DNumT . Val $ Det 1) xs
+        liftList (tryFoldl mul' i one) xs
     product'' _ _ = Fail
 
 dot :: Function
@@ -281,11 +231,8 @@ dot = mul .* sum'
 convolve :: Function
 convolve = binary convolve'
   where
-    convolve' i x@(DNumT _) y@(DNumT _) = mul' i x y
-    convolve' i x@(DNumT _) y@(DListT _) = mul' i x y
-    convolve' i x@(DListT _) y@(DNumT _) = mul' i x y
     convolve' i (DListT xs) (DListT ys) = liftList2 (convolve_ i) xs ys
-    convolve' _ _ _ = Fail
+    convolve' i x y = mul' i x y
     convolve_ :: Id -> ListTry TryData -> ListTry TryData -> ListTry TryData
     convolve_ _ Nil _ = Nil
     convolve_ _ _ Nil = Nil
@@ -305,20 +252,20 @@ mean = dup .* sum' .* swap .* length' .* div'
 fromBase :: Function
 fromBase = binaryVecArg2 fromBase'
   where
-    fromBase' i (DListT xs) (DNumT b) =
-        liftList (\x -> liftNum (\b' -> fromBase_ i b' x) b) xs
+    fromBase' i (DListT xs) b =
+        liftList (\x -> liftNum (\b' -> fromBase_ i b' x) (toTryNum b)) xs
     fromBase' _ _ _ = Fail
-    fromBase_ i b = tryFoldl (mulAdd b) i (DNumT . Val $ Det 0)
+    fromBase_ i b = tryFoldl (mulAdd b) i zero
     mulAdd b i x y =
         toTryData b >>= mul' (leftId i) x >>= add' (rightId i) y
 
 fromBaseRev :: Function
 fromBaseRev = binaryVecArg2 fromBase'
   where
-    fromBase' i (DListT xs) (DNumT b) =
-        liftList (\x -> liftNum (\b' -> fromBase_ i b' x) b) xs
+    fromBase' i (DListT xs) b =
+        liftList (\x -> liftNum (\b' -> fromBase_ i b' x) (toTryNum b)) xs
     fromBase' _ _ _ = Fail
-    fromBase_ i b = tryFoldr (mulAdd b) i (DNumT . Val $ Det 0)
+    fromBase_ i b = tryFoldr (mulAdd b) i zero
     mulAdd b i x y =
         toTryData b >>= mul' (leftId i) y >>= add' (rightId i) x
 
@@ -326,8 +273,7 @@ toBaseRev :: Function
 toBaseRev = binaryVecOuter toBaseRev'
 
 toBaseRev' :: Id -> DataTry -> DataTry -> TryData
-toBaseRev' _ (DNumT x) (DNumT b) = liftInt2 toBaseRev_ x b
-toBaseRev' _ _ _ = Fail
+toBaseRev' _ x b = liftInt2 toBaseRev_ (toTryNum x) (toTryNum b)
 
 toBaseRev_ :: Integer -> Integer -> TryList Integer
 toBaseRev_ _ b | b < 1 = Fail
@@ -365,20 +311,16 @@ delta = unary delta'
     delta_ i s@(Cons _ xs) = xs >>= flip (zipWithTrunc sub' i) s
 
 binomial :: Function
-binomial = binaryVecFail binomial'
+binomial = binaryNumFail $ const binomial'
   where
-    binomial' _ (DNumT n) (DNumT k) = liftNum2 binomial'' n k
-    binomial' _ _ _ = Fail
-    binomial'' n k = binomial_ n <$> toTryInt k
+    binomial' n k = binomial_ n <$> toTryInt k
     binomial_ n k =
         product [n + 1 - fromInteger i | i <- [1 .. k]]
             / fromInteger (product [1 .. k])
 
 factorial :: Function
-factorial = unaryVec factorial'
+factorial = unaryNum $ const factorial_
   where
-    factorial' _ (DNumT x) = liftInt factorial_ x
-    factorial' _ _ = Fail
     factorial_ x
         | x < 0 = Fail
         | otherwise = Val $ product [1 .. x]
@@ -386,8 +328,7 @@ factorial = unaryVec factorial'
 isPrime' :: Function
 isPrime' = predicateVec isPrime''
   where
-    isPrime'' _ (DNumT x) = isCertifiedPrime <$> toTryInt' x
-    isPrime'' _ _ = Fail
+    isPrime'' _ x = isCertifiedPrime <$> toTryInt' (toTryNum x)
 
 prime :: Function
 prime = nullary
@@ -398,17 +339,14 @@ prime = nullary
             $ map unPrime [nextPrime (1 :: Integer) ..]
 
 primePi :: Function
-primePi = unaryVec primePi'
+primePi = unaryNum $ const primePi_
   where
-    primePi' _ (DNumT x) = liftInt primePi_ x
-    primePi' _ _ = Fail
-    primePi_ x = Val $ primeCount x
+    primePi_ = Val . primeCount . floor
 
 factor :: Function
 factor = unary2Vec factor'
   where
-    factor' _ (DNumT x) = liftNum12 factor_ x
-    factor' _ _ = (Fail, Fail)
+    factor' _ x = liftNum12 factor_ $ toTryNum x
     factor_ 0 = Fail
     factor_ x =
         Val
@@ -423,52 +361,42 @@ factor = unary2Vec factor'
         | otherwise = (q, m) : merge xs ys'
 
 gcd' :: Function
-gcd' = binaryVecFail gcd''
+gcd' = binaryNumFail $ const gcd_
   where
-    gcd'' _ (DNumT x) (DNumT y) = liftNum2 gcd_ x y
-    gcd'' _ _ _ = Fail
     gcd_ x y =
         Val
             $ gcd (numerator x) (numerator y)
             % lcm (denominator x) (denominator y)
 
 lcm' :: Function
-lcm' = binaryVecFail lcm''
+lcm' = binaryNumFail $ const lcm_
   where
-    lcm'' _ (DNumT x) (DNumT y) = liftNum2 lcm_ x y
-    lcm'' _ _ _ = Fail
     lcm_ x y =
         Val
             $ lcm (numerator x) (numerator y)
             % gcd (denominator x) (denominator y)
 
 divisors :: Function
-divisors = unaryVec divisors'
+divisors = unaryInt $ const divisors_
   where
-    divisors' _ (DNumT x) = liftInt divisors_ x
-    divisors' _ _ = Fail
     divisors_ 0 = Fail
     divisors_ x = toTryData $ divisorsList x
 
 intPartition :: Function
-intPartition = unaryVec intPartition'
+intPartition = unaryInt $ intPartition_ 1
   where
-    intPartition' i (DNumT x) = liftInt (intPartition_ i 1) x
-    intPartition' _ _ = Fail
-    intPartition_ :: Id -> Integer -> Integer -> Try [Integer]
+    intPartition_ :: Integer -> Id -> Integer -> Try [Integer]
     intPartition_ _ _ 0 = Val []
-    intPartition_ i x y
+    intPartition_ x i y
         | x > y = Fail
         | otherwise = do
             x' <- anyOf' (leftId i) [x .. y]
-            p <- intPartition_ (rightId i) x' (y - x')
+            p <- intPartition_ x' (rightId i) (y - x')
             return $ x' : p
 
 sqrt' :: Function
-sqrt' = unaryVec sqrt''
+sqrt' = unaryNum $ const sqrt_
   where
-    sqrt'' _ (DNumT x) = liftNum sqrt_ x
-    sqrt'' _ _ = Fail
     sqrt_ x =
         liftM2
             (%)
@@ -485,9 +413,7 @@ unitVec2 =
                 (toTryData ([1, 0] :: [Integer]))
 
 orNeg :: Function
-orNeg = unaryVec orNeg'
+orNeg = unaryNum orNeg_
   where
-    orNeg' i (DNumT x) = liftNum (orNeg_ i) x
-    orNeg' _ _ = Fail
     orNeg_ _ 0 = Val 0
     orNeg_ i x = Choice i (Val x) (Val $ -x)

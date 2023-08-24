@@ -1253,6 +1253,44 @@ testEval = describe "Evaluation" $ do
             , ("[2,23,34,4]", Check False)
             , ("[2,23,3,3,34,4]", Check False)
             ]
+        specEval
+            "oĉŤđ"
+            [ ("[7,13,9,2,10,2,4,10,7,13,4,9]", Check True)
+            , ("[1,2,3,1,2,3]", Check True)
+            , ("[10,100,1000,1,100,10,1000,1]", Check True)
+            , ("[123,123]", Check True)
+            , ("[8,22,57189,492,22,57188,8,492,57188,57189,1,1]", Check True)
+            , ("[6,4,4,6,4,7,4,7]", Check False)
+            , ("[2,2,2,2,2,2]", Check False)
+            , ("[5,1,4,5,1,1,4]", Check False)
+            , ("[77,31,5,31,80,77,5,8,8]", Check False)
+            , ("[1,2,3,2,1]", Check False)
+            , ("[44,4,4]", Check False)
+            , ("[500,30,1]", Check False)
+            , ("[1,2,1,1]", Check False)
+            , ("[2,4,6,4,4,4]", Check False)
+            , ("[2,23,34,4]", Check False)
+            , ("[2,23,3,3,34,4]", Check False)
+            ]
+        specEval
+            "oĭu="
+            [ ("[7,13,9,2,10,2,4,10,7,13,4,9]", Check True)
+            , ("[1,2,3,1,2,3]", Check True)
+            , ("[10,100,1000,1,100,10,1000,1]", Check True)
+            , ("[123,123]", Check True)
+            , ("[8,22,57189,492,22,57188,8,492,57188,57189,1,1]", Check True)
+            , ("[6,4,4,6,4,7,4,7]", Check False)
+            , ("[2,2,2,2,2,2]", Check False)
+            , ("[5,1,4,5,1,1,4]", Check False)
+            , ("[77,31,5,31,80,77,5,8,8]", Check False)
+            , ("[1,2,3,2,1]", Check False)
+            , ("[44,4,4]", Check False)
+            , ("[500,30,1]", Check False)
+            , ("[1,2,1,1]", Check False)
+            , ("[2,4,6,4,4,4]", Check False)
+            , ("[2,23,34,4]", Check False)
+            , ("[2,23,3,3,34,4]", Check False)
+            ]
     describe "q189358: Is it double speak?" $ do
         specEval
             "ĭ="
@@ -1269,7 +1307,7 @@ testEval = describe "Evaluation" $ do
             [("[4,4,4,7,7,9,9,9,9,2,2,2,4,4]", All ["1", "1", "1", "2", "2", "3", "3", "3", "3", "4", "4", "4", "5", "5"])]
     describe "q195592: Average Two Letters" $ do
         specEval
-            "eµkH"
+            "µkH"
             [ ("[\"A\",\"C\"]", All ["B"])
             , ("[\"a\",\"z\"]", All ["m"])
             , ("[\"d\",\"j\"]", All ["g"])
@@ -1835,7 +1873,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q254224: Maximum average ord" $ do
         specEval
-            "eᵐµṀ"
+            "ᵐµṀ"
             [ ("[\"hello\",\"world\",\"bye\"]", All ["552/5"])
             , ("[\"code\",\"golf\",\"stack\",\"exchange\"]", All ["534/5"])
             , ("[\"!@#\",\"$%^\",\"&*(\"]", All ["167/3"])
@@ -1843,7 +1881,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q254947: Range of ASCII values" $ do
         specEval
-            "eo:h-l"
+            "o:h-l"
             [ ("\"Hello, World!\"", All ["82"])
             , ("\"aaaaa\"", All ["0"])
             , ("\"Code Golf\"", All ["79"])
@@ -1925,7 +1963,7 @@ testEval = describe "Evaluation" $ do
             [("[\"Hello, world\",\"Hello, world\",\"I just got to say it, hello world\",\"Goodbye, world\",\"Goodbye, world\",\"Goodbye\"]", All ["Hello, world"])]
     describe "q256814: Knight to fork!" $ do
         specEval
-            "eᵐ{į→ŋ+}≡H"
+            "ᵐ{į→ŋ+}≡H"
             [ ("[\"d6\",\"f6\",\"g3\"]", All ["e4"])
             , ("[\"d4\",\"d6\",\"e7\"]", All ["f5"])
             , ("[\"c3\",\"f2\",\"b2\"]", All ["d1"])
@@ -1952,7 +1990,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q257631: Time to shortest permutation" $ do
         specEval
-            "↕ᵃ{Jᵐɗ\"∩<\"e<60b}-_Paṁ"
+            "↕ᵃ{Jᵐɗ\"∩<\"<60b}-_Paṁ"
             [ ("[1,1,4,3]", All ["91"])
             , ("[0,1,0,1]", All ["9"])
             , ("[1,7,3,8]", All ["59"])
@@ -2074,7 +2112,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q258511: Longest Valid Parentheses" $ do
         specEval
-            "qe£E→∫x>çƆᵖLaṀ"
+            "q£E→∫x>çƆᵖLaṀ"
             [ ("\"(()())\"", All ["6"])
             , ("\")()())\"", All ["4"])
             , ("\"()(())\"", All ["6"])
@@ -2199,7 +2237,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259707: Shortest distinguishable slice" $ do
         specEval
-            "e:∑ᵚ+xqNᵖ{ᵚ@ů}aşᵉhl→Ð"
+            "∑ᵚ+xqNᵖ{ᵚ@ů}aşᵉhl→Ð"
             [ ("[\"happy\",\"angry\",\"hungry\"]", First $ Just "[1,2]")
             , ("[\"sheer\",\"shrew\",\"shine\",\"shire\",\"spike\",\"shy\"]", First $ Just "[2,4]")
             , ("[\"snap\",\"crackle\",\"pop\",\"smack\",\"sizzle\",\"whiff\",\"sheen\"]", First $ Just "[0,2]")
@@ -2240,7 +2278,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259987: String Comparison" $ do
         specEval
-            "↔ᵃjÐ:o="
+            "↔ᵃjĻ"
             [ ("[\"a\",\"b\"]", Check True)
             , ("[\"ac\",\"a\"]", Check False)
             , ("[\"bekcka\",\"kwnfoe\"]", Check True)
@@ -2639,3 +2677,32 @@ testEval = describe "Evaluation" $ do
             , ("[1,2,2,3,3,4,5] 6", Count 0)
             , ("[1,2,2,3,3,4,5] 7", Count 0)
             ]
+    describe "q264409: First odd then even indices" $ do
+        specEval
+            "ᶦ{ĭ,ᵖ≠"
+            [ ("[1,2,3]", Count 2)
+            , ("[1,2,3,4,3,2,1]", Count 3)
+            , ("[1,2,3,4,5,6,7,8,9,10]", Count 6)
+            , ("[1,2,3,4,5,6,7,8,9,10,11]", Count 10)
+            , ("\"abab\"", Count 2)
+            , ("\"Hello, World!\"", Count 12)
+            , ("[1,0,1,1,0,0,0,1,1,1]", Count 6)
+            , ("[1,0,0,1,1,1,0,0,0,0,1]", Count 10)
+            , ("[1,1,1,1,1,1,1]", Count 1)
+            ]
+    describe "q264502: Otteretto Classic game scoring method" $ do
+        specEval
+            "pNᵉ#ĉ#*"
+            [ ("\"A\"", All ["1"])
+            , ("\"ABA\"", All ["1", "4", "9"])
+            , ("\"DDDD\"", All ["1", "2", "3", "4"])
+            , ("\"AABAA\"", All ["1", "2", "6", "12", "15"])
+            , ("\"CABAC\"", All ["1", "4", "9", "16", "25"])
+            , ("\"EBBBE\"", All ["1", "4", "6", "8", "15"])
+            , ("\"DEBBBE\"", All ["1", "4", "9", "12", "15", "24"])
+            , ("\"CCAABBA\"", All ["1", "2", "6", "8", "15", "18", "28"])
+            ]
+    describe "q264505: Repeat your program to print Fibonacci numbers" $ do
+        specEval
+            "ˣ+1I"
+            [("", All ["1"])]

@@ -56,3 +56,9 @@ eq = predicate2 $ \_ x y -> tryEq x y
 
 ne :: Function
 ne = predicate2 $ \_ x y -> tryNe x y
+
+lt :: Function
+lt = predicate2 $ \_ x y -> tryLt x y
+
+gt :: Function
+gt = predicate2 $ \_ x y -> tryGt x y
