@@ -13,7 +13,7 @@ import Nekomata.Function
 import Nekomata.NonDet
 
 range0_ :: Rational -> [Integer]
-range0_ x = enumFromTo 0 . floor $ x - 1
+range0_ x = enumFromTo 0 $ ceiling x - 1
 
 nonempty' :: Function
 nonempty' = predicate nonempty''
@@ -39,6 +39,10 @@ singleton' = unary . const $ Val . singleton_
 
 singleton_ :: DataTry -> DataTry
 singleton_ = DListT . Val . singleton . Val
+
+orSingleton :: DataTry -> TryList TryData
+orSingleton (DListT xs) = xs
+orSingleton x = Val . singleton $ Val x
 
 unsingleton :: Function
 unsingleton = unary unsingleton'
@@ -154,8 +158,7 @@ tail' = unary tail''
 cons :: Function
 cons = binary cons'
   where
-    cons' _ (DListT xs) y = liftList (Cons (Val y) . Val) xs
-    cons' i x y = cons' i (singleton_ x) y
+    cons' _ x y = liftList (Cons (Val y) . Val) $ orSingleton x
 
 uncons :: Function
 uncons = unary2 uncons'
@@ -295,10 +298,7 @@ join' :: Function
 join' = binary (const join'')
 
 join'' :: DataTry -> DataTry -> TryData
-join'' (DListT xs) (DListT ys) = liftList2 join_ xs ys
-join'' x@(DListT _) y = join'' x (singleton_ y)
-join'' x y@(DListT _) = join'' (singleton_ x) y
-join'' x y = join'' (singleton_ x) (singleton_ y)
+join'' x y = liftList2 join_ (orSingleton x) (orSingleton y)
 
 join_ :: ListTry a -> ListTry a -> TryList a
 join_ Nil ys = Val ys
@@ -343,10 +343,8 @@ maximum' = unary maximum''
 concat' :: Function
 concat' = unary concat''
   where
-    concat'' i (DListT xs) = xs >>= concat_ i
+    concat'' i (DListT xs) = xs >>= tryFoldr (const join'') i (DListT $ Val Nil)
     concat'' _ _ = Fail
-    concat_ _ Nil = Val . DListT $ Val Nil
-    concat_ i (Cons x xs) = liftJoinM2 (tryFoldl (const join'') i) x xs
 
 unconcat :: Function
 unconcat = unary unconcat'

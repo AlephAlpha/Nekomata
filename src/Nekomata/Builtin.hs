@@ -483,7 +483,7 @@ builtins =
         "range0"
         'r'
         range0
-        "Create a list of integers from 0 to n-1.\n\
+        "Create a list of integers from 0 to ceil(n)-1.\n\
         \This function is automatically vectorized."
     , Builtin
         "range1"
@@ -612,6 +612,13 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+    , Builtin
+        "fromBinary"
+        'ƃ'
+        fromBinary
+        "Convert a list of binary digits in reverse order to an integer.\n\
+        \If some of the elements are chars, \
+        \they are converted to numbers according to Nekomata's code page."
     , Builtin
         "digits"
         'Ɗ'
@@ -754,6 +761,31 @@ builtins =
         \This function is non-deterministic and automatically vectorized.\n\
         \When the input is a list, \
         \each element is optionally negated independently."
+    , Builtin
+        "bitAnd"
+        '&'
+        bitAnd
+        "Bitwise AND of two integers.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
+        \This function is automatically vectorized \
+        \and fails when the two lists are of different lengths."
+    , Builtin
+        "bitOr"
+        '|'
+        bitOr
+        "Bitwise OR of two integers.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
+        \This function is automatically vectorized with padding."
+    , Builtin
+        "bitXor"
+        'X'
+        bitXor
+        "Bitwise XOR of two integers.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
+        \This function is automatically vectorized with padding."
     , Builtin
         "charToInt"
         'e'

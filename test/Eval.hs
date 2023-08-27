@@ -127,7 +127,7 @@ testEval = describe "Evaluation" $ do
             [("", Truncated ["2", "3", "5", "11", "23", "29", "41", "53", "83", "89"])]
     describe "q50240: XOR multiplication" $ do
         specEval
-            "ᵃƂ×Ö2d"
+            "ᵃƂ×Öƃ"
             [ ("0 1", All ["0"])
             , ("1 2", All ["2"])
             , ("9 0", All ["0"])
@@ -144,6 +144,23 @@ testEval = describe "Evaluation" $ do
     describe "q50472: Check if words are isomorphs" $ do
         specEval
             "ŤuŤᵐů"
+            [ ("[\"ESTATE\",\"DUELED\"]", Check True)
+            , ("[\"DUELED\",\"ESTATE\"]", Check True)
+            , ("[\"XXX\",\"YYY\"]", Check True)
+            , ("[\"CBAABC\",\"DEFFED\"]", Check True)
+            , ("[\"RAMBUNCTIOUSLY\",\"THERMODYNAMICS\"]", Check True)
+            , ("[\"DISCRIMINATIVE\",\"SIMPLIFICATION\"]", Check True)
+            , ("[\"SEE\",\"SAW\"]", Check False)
+            , ("[\"ANTS\",\"PANTS\"]", Check False)
+            , ("[\"BANANA\",\"SERENE\"]", Check False)
+            , ("[\"BANANA\",\"SENSES\"]", Check False)
+            , ("[\"AB\",\"CC\"]", Check False)
+            , ("[\"XXY\",\"XYY\"]", Check False)
+            , ("[\"ABCBACCBA\",\"ABCBACCAB\"]", Check False)
+            , ("[\"ABAB\",\"CD\"]", Check False)
+            ]
+        specEval
+            "ᶻᵒ-¬≡"
             [ ("[\"ESTATE\",\"DUELED\"]", Check True)
             , ("[\"DUELED\",\"ESTATE\"]", Check True)
             , ("[\"XXX\",\"YYY\"]", Check True)
@@ -266,7 +283,7 @@ testEval = describe "Evaluation" $ do
             , ("9", All ["4862"])
             ]
         specEval
-            "Ä1Dŋ∫çƆž≥"
+            "Äřŋ∫çƆž≥"
             [ ("0", Count 1)
             , ("1", Count 1)
             , ("2", Count 2)
@@ -527,13 +544,8 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q91154: Sylvester's sequence" $ do
         specEval
-            "2$ᵑ{:←*→"
-            [ ("0", All ["2"])
-            , ("1", All ["3"])
-            , ("2", All ["7"])
-            , ("3", All ["43"])
-            , ("4", All ["1807"])
-            ]
+            "2ᶦ{:←*→"
+            [("", Truncated ["2", "3", "7", "43", "1807", "3263443", "10650056950807"])]
     describe "q91420: Excessive Integers" $ do
         specEval
             "ƒ←∑"
@@ -643,15 +655,15 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q98730: Count trailing truths" $ do
         specEval
-            "sP∑"
-            [ ("[]", First $ Just "0")
-            , ("[0]", First $ Just "0")
-            , ("[1]", First $ Just "1")
-            , ("[0,1,1,0,0]", First $ Just "0")
-            , ("[1,1,1,0,1]", First $ Just "1")
-            , ("[1,1,0,1,1]", First $ Just "2")
-            , ("[0,0,1,1,1]", First $ Just "3")
-            , ("[1,1,1,1,1,1]", First $ Just "6")
+            "sNP"
+            [ ("[]", Count 0)
+            , ("[0]", Count 0)
+            , ("[1]", Count 1)
+            , ("[0,1,1,0,0]", Count 0)
+            , ("[1,1,1,0,1]", Count 1)
+            , ("[1,1,0,1,1]", Count 2)
+            , ("[0,0,1,1,1]", Count 3)
+            , ("[1,1,1,1,1,1]", Count 6)
             ]
         specEval
             "çĉl∑"
@@ -940,7 +952,7 @@ testEval = describe "Evaluation" $ do
         specEval
             "pƆᵗf"
             [ ("[2,3,3,1,5,2]", First $ Just "3")
-            , ("[2,4,3,5,1]", First $ Nothing)
+            , ("[2,4,3,5,1]", First Nothing)
             ]
     describe "q136887: Fold a List in Half" $ do
         specEval
@@ -995,6 +1007,18 @@ testEval = describe "Evaluation" $ do
     describe "q142534: Is it a completely even number?" $ do
         specEval
             "←Ƃ≡"
+            [ ("2", Check True)
+            , ("4", Check True)
+            , ("16", Check True)
+            , ("128", Check True)
+            , ("10", Check False)
+            , ("12", Check False)
+            , ("14", Check False)
+            , ("18", Check False)
+            , ("1", Check False)
+            ]
+        specEval
+            "←X<"
             [ ("2", Check True)
             , ("4", Check True)
             , ("16", Check True)
@@ -1116,6 +1140,13 @@ testEval = describe "Evaluation" $ do
             [ ("1", All ["[0]"])
             , ("18", All ["[0,1,2,5,10,21,42,85,170,341,682,1365,2730,5461,10922,21845,43690,87381]"])
             ]
+    describe "q162254: Generate a Walsh Matrix" $ do
+        specEval
+            "Ë:ᵒ{&Ƃ∑£E"
+            [ ("0", All ["[[1]]"])
+            , ("1", All ["[[1,1],[1,-1]]"])
+            , ("2", All ["[[1,1,1,1],[1,-1,1,-1],[1,1,-1,-1],[1,-1,-1,1]]"])
+            ]
     describe "q164509: Sign-Swapping Sums" $ do
         specEval
             "ŋ∑ũ"
@@ -1223,6 +1254,19 @@ testEval = describe "Evaluation" $ do
             , ("[0,19,2,0,10,10,16,9,19,9,15,0,10,18,0,17,18,18,0,9]", All ["5"])
             , ("[1,19,17,17,0,2,14,10,10,12,5,14,16,7,15,15,18,11,17,7]", All ["5"])
             ]
+        specEval
+            "Ţ~1>"
+            [ ("[1,10,16,4,8,10,9,19,2,15,18,19,10,9,17,15,19,5,13,20]", Count 4)
+            , ("[11,8,6,15,9,19,2,2,4,19,14,19,13,12,16,13,0,5,0,8]", Count 5)
+            , ("[9,7,8,16,3,9,20,19,15,6,8,4,18,14,19,12,12,16,11,19]", Count 5)
+            , ("[10,17,17,7,2,18,7,13,3,10,1,5,15,4,6,0,19,4,17,0]", Count 5)
+            , ("[12,7,17,13,5,3,4,15,20,15,5,18,18,18,4,8,15,13,11,13]", Count 5)
+            , ("[0,3,6,1,5,2,16,1,6,3,12,1,16,5,4,5,6,17,4,8]", Count 6)
+            , ("[11,19,2,3,11,15,19,8,2,12,12,20,13,18,1,11,19,7,11,2]", Count 4)
+            , ("[6,4,11,14,17,3,17,11,2,16,14,1,2,1,15,15,12,10,11,13]", Count 6)
+            , ("[0,19,2,0,10,10,16,9,19,9,15,0,10,18,0,17,18,18,0,9]", Count 5)
+            , ("[1,19,17,17,0,2,14,10,10,12,5,14,16,7,15,15,18,11,17,7]", Count 5)
+            ]
     describe "q182305: Return the Closest Prime Number" $ do
         specEval
             "Ž-Q"
@@ -1232,6 +1276,16 @@ testEval = describe "Evaluation" $ do
             , ("9", First $ Just "7")
             , ("532", First $ Just "523")
             , ("1", First $ Just "2")
+            ]
+    describe "q186881: First occurrence in the Sixers sequence" $ do
+        specEval
+            "¥ÄR6*ƊjĭÐɗ$Ĩ"
+            [ ("0", First $ Just "241")
+            , ("17", First $ Just "297")
+            , ("36", First $ Just "80")
+            , ("55", First $ Just "128")
+            , ("82", First $ Just "2")
+            , ("95", First $ Just "557")
             ]
     describe "q187879: Integer Lists of Noah" $ do
         specEval
@@ -1433,7 +1487,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q225203: Delannoy numbers" $ do
         specEval
-            "Ṁ→ᵒÇ∏2d"
+            "Ṁ→ᵒÇ∏ƃ"
             [ ("[5,8]", All ["13073"])
             , ("[5,7]", All ["7183"])
             , ("[3,9]", All ["1159"])
@@ -1848,7 +1902,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q252189: Carryless factors" $ do
         specEval
-            "Rᶠ{$R~ᵃƂ×Ö2d="
+            "Rᶠ{$R~ᵃƂ×Öƃ="
             [ ("2", All ["[1,2]"])
             , ("4", All ["[1,2,4]"])
             , ("5", All ["[1,3,5]"])
@@ -2011,7 +2065,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q257372: Smallest Bit Rotation" $ do
         specEval
-            "ƂxŘ2dṁ"
+            "ƂxŘƃṁ"
             [ ("177", All ["27"])
             , ("1", All ["1"])
             , ("12", All ["3"])
@@ -2657,7 +2711,7 @@ testEval = describe "Evaluation" $ do
             [("[1/10,2/10,14/10,23/10,24/10,25/10,32/10]", All ["[1/3,2/3,3/2,9/4,5/2,11/4,7/2]"])]
     describe "q264102: Iterate over all non-equivalent strings" $ do
         specEval
-            "r:,↕ũ∆Zç∫:ux=¿97+H"
+            "r:,↕ũ∆Zç∫:ux=¿'a+H"
             [ ("2", All ["abab"])
             , ("3", All ["abcabc", "abcacb", "abcbac", "abcbca", "abacbc"])
             ]
@@ -2706,3 +2760,25 @@ testEval = describe "Evaluation" $ do
         specEval
             "ˣ+1I"
             [("", All ["1"])]
+    describe "q264589: Multiply multivariate polynomials" $ do
+        specEval
+            "×"
+            [ ("[1,1,1] [1,1,1]", All ["[1,2,3,2,1]"])
+            , ("[[0,1],[1]] [[0,1],[1]]", All ["[[0,0,1],[0,2],[1]]"])
+            , ("[[[0,1],[1]],[[1]]] [[[0,1],[-1]],[[1]]]", All ["[[[0,0,1],[0,0],[-1]],[[0,2],[0]],[[1]]]"])
+            , ("[[],[[[[[[[[[1]]]]]]]]]] [[],[[[[[[[[[1]]]]]]]]]]", All ["[[],[],[[[[[[[[[1]]]]]]]]]]"])
+            ]
+    describe "q264624: Is it a canonical elementary CA rule number?" $ do
+        specEval
+            "¥+Ƃi:↔¬?:Jĭ,Ťđ,?ƃa≤"
+            [ ("11", Check True)
+            , ("62", Check True)
+            , ("74", Check True)
+            , ("76", Check True)
+            , ("108", Check True)
+            , ("39", Check False)
+            , ("91", Check False)
+            , ("103", Check False)
+            , ("143", Check False)
+            , ("151", Check False)
+            ]

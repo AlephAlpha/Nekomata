@@ -3,7 +3,7 @@
 ## 0.5.0.0 -- Unreleased
 
 * The interpreter can now limit the number of results to show using the `-l` option.
-* New built-in functions: `\gt`, `\lt`.
+* New built-in functions: `\bitAnd`, `\bitOr`, `\bitXor`, `\fromBinary`, `\gt`, `\lt`.
 
 ### Breaking changes
 
@@ -11,6 +11,7 @@
 * The string type is removed, and a new character type is added. Now strings are represented as lists of characters. Many built-in functions are changed accordingly.
 * `\join` and `concat` no longer convert their arguments to strings. Now they convert numbers and characters to singleton lists.
 * Many numeric functions now convert chars to their code points before operating on them.
+* `\range0` now generates a range from 0 to `ceil(n)-1` instead of `floor(n)-1`.
 
 ## 0.4.1.0 -- 2023-07-22
 

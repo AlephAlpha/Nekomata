@@ -5,10 +5,8 @@
 此处总结一下 Code Page 中已有但还没有用上的字符：
 
 ```
-&.VWXY`vwy|
+.VWY`vwy
 ```
-
-有些是已经确定分配给什么函数的，比如说 `|` 给 `\bitOr`，`&` 给 `\bitAnd`，`X` 给 `\bitXor`。别的都还没想好。
 
 如果 CodePage 中的 256 个字符都用完了，可以考虑用像 05AB1E 那样，用 `.` 开头的字符来表示双字节的内置函数。现在的 CodePage 还远远没有用完，先不考虑这个问题，但 `.` 也先不要用掉。
 
@@ -20,7 +18,7 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 
 * 最常用的一个字符是 `{`，用来开启一个 block。
 * 单个字符中，排第二、第三的分别是 `$`（`\swap`）和 `:`（`\dup`），都是常见的栈操作。其它 stack-based 的 golfing 语言中，这两个操作也排名很靠前。
-* 四到七名分别是 `∑`（`\sum`）、`+`（`\add`）、`=`（`\equal`）、`←`（`\decrement`）。这些也都是常见的操作。
+* 四到七名分别是 `∑`（`\sum`）、`+`（`\add`）、`=`（`\eq`）、`←`（`\decrement`）。这些也都是常见的操作。
 * `}` 排到并列第七，出现次数不到 `{` 的一半。看来代码结尾可以省略 `}` 的设计是正确的。
 * `a`（`\allValues`）排第九。这是 non-deterministic 语言特有的操作，算是 Nekomata 的特色之一。
 * `ç`（`\cons0`）能排到第十。这个完全出乎我的意料，因为很多别的 golfing 语言中根本没有这个操作。它的作用是给列表加一个 0，通常是配合 `\head`、`\last`、`\minimum`、`\maximum` 等函数使用，来处理空列表的特殊情况。需要看一看其它语言是怎么处理空列表的。
@@ -93,20 +91,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 \ordering \enumerate \sub \cons0 \maximum
 ```
 
-### [Make a Custom Bayer Matrix](https://codegolf.stackexchange.com/q/259633/9288)
-
-```
-\range0 \binary \dup \outer { \dip \dup \bitxor \mul2 \add \cons0 4 \recip \fromBaseRev }
-```
-
-- [ ] `\bitxor`：按位异或。
-
-### [Is it a completely even number?](https://codegolf.stackexchange.com/q/142534/9288)
-
-```
-\decrement \bitxor \less
-```
-
 ### [Gödel encoding - Part I](https://codegolf.stackexchange.com/q/259960/9288)
 
 目前完全无法解答，除非支持递归。
@@ -128,7 +112,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 \powOf2 \dup \outer \bitand \popcount \neg1 \pow
 ```
 
-- [ ] `\bitand`：按位与。
 - [ ] `\popcount`：求一个数的二进制表示中 1 的个数。
 
 位运算还是很有用的。
@@ -196,22 +179,54 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 \factor \unrle 1 \bitor \product
 ```
 
+### [Say What You See](https://codegolf.stackexchange.com/q/70837/9288)
+
+```
+1 \singleton \iterate { \rle \swap \interleave } \fromDigits
+```
+
+- [ ] `rle`：RLE 编码。比如说输入 `["a","b","b","c","c","c"]`，输出 `["a","b","c"]` 和 `[1,2,3]`。
+
+### [All together now](https://codegolf.stackexchange.com/q/77608/9288)
+
+```
+\tally \unrle \eq
+```
+
 ## 关于字符串
 
-当前 Nekomata 对字符串的支持不是很好，有一些设计失误的地方。修改这些问题需要等到下个大版本，先列举出来，以备忘。
+从 v0.5.0.0 开始，Nekomata 将不再区分字符串和列表，增加了一个字符类型，当一个列表的全部元素都是字符时，就视为一个字符串。字符串和列表只在输入输出时有区别，其它时候都是一样的。
 
-- [x] `\filter` 在输入是字符串时，应该返回字符串而不是列表。
-- [x] `\transpose` 需要支持输入是字符串的列表的情况。
-- [x] `\chunks` 在输入是字符串时，应该返回字符串的列表而不是列表的列表。
-- [x] `\index` 也要支持字符串。可以先只支持查找单个字符在字符串中的位置，不支持子串。
-- [x] 一些常用的数学函数，可以自动把字符串按 Nekomata 的 code page 转换成数字。
+此外，一些常用的数学函数会自动把字符串按 Nekomata 的 code page 转换成数字。
 
-或者干脆不再区分字符串和列表。增加一个字符类型，当一个列表的全部元素都是字符时，就视为一个字符串。字符串和列表只在输入输出时有区别，其它时候都是一样的。这样一来，前面所说的大部分问题都可以直接解决。
+但这带来了以下的新问题：
 
-但这会带来以下的新问题：
-
-- [x] 这是很大的 breaking change，很多地方都要重写，可能会影响到很多现有的解答。经查，只有一个解答变得不再成立。
-- [x] 文档也要重写。
 - [ ] 一些函数会自动把输入的数字或字符串转换成列表。数字会转换成 range。但如果增加字符类型的话，单个字符不知道该转换成什么。暂时先定为 Fail，以后可能会改成单个字符的列表，或者按 code page 转换成数字再 range。
 - [ ] 空集和空字符串无法区分。应该输出 `[]` 还是 `""`？暂时先输出 `[]`。
 - [x] 现有的 `<`、`>` 是向量化的，无法用于比较字符串。需要增加非向量化的版本。
+
+等以后的版本再考虑这些问题。
+
+## 关于 arity
+
+当前，Nekomata 中的助词会检查它修饰的函数的 arity，如果不匹配就报错。这严格限制了函数的使用方式，比如说 `\map` 只能用于 arity 为 `n -> 1` 的函数。而且 arity 本身也有一些不太清晰的地方。
+
+目前，一个函数的 arity 由两部分组成：输入的个数和输出的个数。比如说 `\add` 的 arity 是 `2 -> 1`。但作为 stack-based 的语言，一个 arity 为 `m -> n` 的函数其实也可以看作是 arity 为 `m + e -> n + e` 的函数，其中 e 为任意非负整数。但当前的实现中，arity 是固定的，因此只能在不同的  `m + e -> n + e` 中指定一个。这带来一些问题：比如说 `dup`，复制栈顶元素，它的 arity 是 `1 -> 2`。但栈顶原本的元素其实没有变化，因此它的 arity 也可以看作是 `0 -> 1`。到底该选 `1 -> 2` 还是 `0 -> 1`？
+
+也许可以考虑把 arity 改成三个数，`(m,n,p)`，其中 `m>=n`。计算时，读取栈顶的 `m` 个元素，但只弹出 `n` 个元素，剩下的 `m-n` 个元素不变；计算完毕后，再把 `p` 个元素压入栈顶。比如说 `\add` 的 arity 是 `(2,2,1)`，而 `dup` 的 arity 是 `(1,0,1)`。
+
+然后考虑两个函数的复合。设两个函数 `f` 和 `g` 的 arity 分别是 `(m1,n1,p1)` 和 `(m2,n2,p2)`。先计算 `f`，再计算 `g`。复合后的函数的 arity 是 `(max(m1,m2+n1-p1),max(n1,n1+n2-p1),max(p1+p2-n2,p2))`。
+
+由此可以计算出，如果是多个函数的复合，比如说 `k` 个函数的 arity 分别是 `(m_1,n_1,p_1)`、`(m_2,n_2,p_2)`、……、`(m_k,n_k,p_k)`，那么复合后的函数的 arity 是 `(max(m_1,m_2+n_1-p_1,m_3+n_1+n_2-p_1-p_2,...,m_k+n_1+...+n_{k-1}-p_1-…-p_{k-1}),max(n_1,n_1+n_2-p_1,n_1+n_3+n_2-p_1-p_2,...,n_1+...+n_k-p_1-…-p_{k-1}),max(p_1+...+p_k-n_2-...-n_k,p_2+...+p_k-n_3-...-n_k,...,p_k))`。
+
+然后助词 `\map` 的 arity check 就可以改成：
+
+- 如果输入函数的 arity 是 `(m,n,1)`，`m > 0`，则输出函数的 arity 是 `(m,n,1)`。
+- 如果输入函数的 arity 是 `(0,0,1)`，这是常值函数，此时 `\map` 被重载为将一个列表的每个元素都映射到这个常值，输出函数的 arity 是 `(1,1,1)`。
+- 以后可以考虑增加对 `(m,n,p)`，`p>1` 的支持。此时，如果 `m > 0`，则输出函数的 arity 是 `(m,n,p)`；如果 `m = n = 0`，则输出函数的 arity 是 `(1,1,p)`。
+
+更多情况还需进一步考虑。这是比较大的改动，需要仔细斟酌。留到以后的版本再说。
+
+## 其它问题
+
+- [ ] 当前 `\concat` 不支持无限列表。背后的原因比较复杂，要改的话需要大量的修改。关键是有些函数还不够 lazy。

@@ -424,7 +424,7 @@ This function is automatically vectorized.
 
 ### `range0` (`r`, `1 -> 1`)
 
-Create a list of integers from 0 to n-1.
+Create a list of integers from 0 to ceil(n)-1.
 
 This function is automatically vectorized.
 
@@ -547,6 +547,12 @@ Convert an integer to a list of binary digits in reverse order.
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+### `fromBinary` (`ƃ`, `1 -> 1`)
+
+Convert a list of binary digits in reverse order to an integer.
+
+If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
 
 ### `digits` (`Ɗ`, `1 -> 1`)
 
@@ -687,6 +693,30 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 This function is non-deterministic and automatically vectorized.
 
 When the input is a list, each element is optionally negated independently.
+
+### `bitAnd` (`&`, `2 -> 1`)
+
+Bitwise AND of two integers.
+
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
+
+This function is automatically vectorized and fails when the two lists are of different lengths.
+
+### `bitOr` (`|`, `2 -> 1`)
+
+Bitwise OR of two integers.
+
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
+
+This function is automatically vectorized with padding.
+
+### `bitXor` (`X`, `2 -> 1`)
+
+Bitwise XOR of two integers.
+
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
+
+This function is automatically vectorized with padding.
 
 ### `charToInt` (`e`, `1 -> 1`)
 

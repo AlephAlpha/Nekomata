@@ -2,6 +2,7 @@ module Nekomata.Builtin.Math where
 
 import Control.Arrow (second, (***))
 import Control.Monad (liftM2)
+import Data.Bits (xor, (.&.), (.|.))
 import Data.Functor ((<&>))
 import Data.List (sort)
 import Data.Ratio (denominator, numerator, (%))
@@ -290,6 +291,9 @@ toBase = binaryVecOuter toBase'
 binary' :: Function
 binary' = constant (2 :: Integer) .* toBaseRev
 
+fromBinary :: Function
+fromBinary = constant (2 :: Integer) .* fromBaseRev
+
 digits :: Function
 digits = constant (10 :: Integer) .* toBase
 
@@ -417,3 +421,12 @@ orNeg = unaryNum orNeg_
   where
     orNeg_ _ 0 = Val 0
     orNeg_ i x = Choice i (Val x) (Val $ -x)
+
+bitAnd :: Function
+bitAnd = binaryIntFail $ const (.&.)
+
+bitOr :: Function
+bitOr = binaryIntPad $ const (.|.)
+
+bitXor :: Function
+bitXor = binaryIntPad $ const xor
