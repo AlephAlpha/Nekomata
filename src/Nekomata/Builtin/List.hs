@@ -6,7 +6,6 @@ import Control.Arrow (first)
 import Control.Monad (liftM2)
 import Data.Functor ((<&>))
 import Data.Maybe (fromMaybe)
-import Data.Tuple (swap)
 import Nekomata.Builtin.Basic (dup, eq)
 import Nekomata.Data
 import Nekomata.Function
@@ -156,9 +155,9 @@ tail' = unary tail''
     tail_ (Cons _ xs) = xs
 
 cons :: Function
-cons = binary cons'
+cons = Function (Arity 2 1) $ \_ (x :+ y :+ s) -> cons' y x :+ s
   where
-    cons' _ x y = liftList (Cons (Val y) . Val) $ orSingleton x
+    cons' x y = toTryData $ Cons y (x >>= orSingleton)
 
 uncons :: Function
 uncons = unary2 uncons'
@@ -295,14 +294,14 @@ subsequence = unary subsequence'
         Choice (leftId i) (Val s) (xs >>= suffix' (rightId i))
 
 join' :: Function
-join' = binary (const join'')
+join' = Function (Arity 2 1) $ \_ (x :+ y :+ s) -> join'' y x :+ s
 
-join'' :: DataTry -> DataTry -> TryData
-join'' x y = liftList2 join_ (orSingleton x) (orSingleton y)
+join'' :: TryData -> TryData -> TryData
+join'' x y = toTryData $ x >>= orSingleton >>= join_ (y >>= orSingleton)
 
-join_ :: ListTry a -> ListTry a -> TryList a
-join_ Nil ys = Val ys
-join_ (Cons x xs) ys = Val . Cons x $ liftJoinM2 join_ xs (Val ys)
+join_ :: TryList a -> ListTry a -> TryList a
+join_ ys Nil = ys
+join_ ys (Cons x xs) = Val . Cons x $ xs >>= join_ ys
 
 split :: Function
 split = unary2 split'
@@ -343,8 +342,11 @@ maximum' = unary maximum''
 concat' :: Function
 concat' = unary concat''
   where
-    concat'' i (DListT xs) = xs >>= tryFoldr (const join'') i (DListT $ Val Nil)
+    concat'' _ (DListT xs) = liftList concat_ xs
     concat'' _ _ = Fail
+    concat_ :: ListTry TryData -> TryList TryData
+    concat_ Nil = Val Nil
+    concat_ (Cons x xs) = x >>= orSingleton >>= join_ (xs >>= concat_)
 
 unconcat :: Function
 unconcat = unary unconcat'
@@ -472,7 +474,7 @@ rotate = binaryVecArg2 rotate'
     rotate_ _ Nil = Val Nil
     rotate_ n s@(Cons x xs)
         | n > 0 =
-            xs >>= flip join_ (singleton x) >>= rotate_ (n - 1)
+            xs >>= join_ (Val $ singleton x) >>= rotate_ (n - 1)
         | n < 0 = reverse_ Nil s >>= rotate_ (-n) >>= reverse_ Nil
         | otherwise = Val s
 
@@ -623,13 +625,15 @@ chunks = unary chunks'
 uninterleave :: Function
 uninterleave = unary2 uninterleave'
   where
-    uninterleave' _ (DNumT x) = liftNum12 (uninterleave_ . fromList . range0_) x
-    uninterleave' _ (DListT xs) = liftList12 uninterleave_ xs
+    uninterleave' _ (DNumT x) =
+        liftNum12 (Val . uninterleave_ . fromList . range0_) x
+    uninterleave' _ (DListT xs) = liftList12 (Val . uninterleave_) xs
     uninterleave' _ _ = (Fail, Fail)
-    uninterleave_ :: ListTry a -> Try (ListTry a, ListTry a)
-    uninterleave_ Nil = Val (Nil, Nil)
+    uninterleave_ :: ListTry a -> (TryList a, TryList a)
+    uninterleave_ Nil = (Val Nil, Val Nil)
     uninterleave_ (Cons x xs) =
-        xs >>= uninterleave_ <&> first (Cons x . Val) . swap
+        let xs' = uninterleave_ <$> xs
+         in (Val . Cons x $ xs' >>= snd, xs' >>= fst)
 
 interleave :: Function
 interleave = binary interleave'

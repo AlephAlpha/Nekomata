@@ -1279,7 +1279,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q186881: First occurrence in the Sixers sequence" $ do
         specEval
-            "¥ÄR6*ƊjĭÐɗ$Ĩ"
+            "Ň6*ƊajĭÐɗ$Ĩ"
             [ ("0", First $ Just "241")
             , ("17", First $ Just "297")
             , ("36", First $ Just "80")
@@ -2781,4 +2781,17 @@ testEval = describe "Evaluation" $ do
             , ("103", Check False)
             , ("143", Check False)
             , ("151", Check False)
+            ]
+    describe "q264733: Convert a Gaussian integer to its positive form" $ do
+        specEval
+            "±đZ≠¿↔$IA"
+            [ ("[0,0]", All ["[0,0]"])
+            , ("[5,0]", All ["[5,0]"])
+            , ("[0,2]", All ["[2,0]"])
+            , ("[1,1]", All ["[1,1]"])
+            , ("[1,-1]", All ["[1,1]"])
+            , ("[3,-5]", All ["[5,3]"])
+            , ("[-3,5]", All ["[5,3]"])
+            , ("[3,5]", All ["[3,5]"])
+            , ("[-3,-5]", All ["[3,5]"])
             ]
