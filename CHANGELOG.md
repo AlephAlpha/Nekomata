@@ -1,6 +1,6 @@
 # Revision history for Nekomata
 
-## 0.5.0.0 -- Unreleased
+## 0.5.0.0 -- 2023-09-02
 
 * The interpreter can now limit the number of results to show using the `-l` option.
 * New built-in functions: `\bitAnd`, `\bitOr`, `\bitXor`, `\fromBinary`, `\gt`, `\lt`.
@@ -12,8 +12,8 @@
 * `\join` and `concat` no longer convert their arguments to strings. Now they convert numbers and characters to singleton lists.
 * Many numeric functions now convert chars to their code points before operating on them.
 * `\range0` now generates a range from 0 to `ceil(n)-1` instead of `floor(n)-1`.
-* `\join`, `\concat`, `\cons` and `\snoc` are now lazier. Joining a non-failing list with a failing list no longer fails immediately. Instead, it only fails when the failing part is actually used.
-* `\uninterleave` is now lazier. It can now uninterleave infinite lists.
+* `\join`, `\concat`, `\cons` and `\snoc` are now lazier. Joining a non-failing list with a failing list no longer fails immediately. Instead, it only fails when the failing part is actually used. `\concat` can now concatenate an infinite list of lists.
+* `\uninterleave` is now lazier. It can now uninterleave an infinite list.
 
 ## 0.4.1.0 -- 2023-07-22
 

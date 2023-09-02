@@ -575,6 +575,15 @@ testEval = describe "Evaluation" $ do
             , ("\"PPCG\"", All ["PPCGGCPPPPCGGCPP"])
             , ("\"42\"", All ["4224"])
             ]
+    describe "q94028: Find the largest number that's adjacent to a zero" $ do
+        specEval
+            "qᵗZđ+aṀ"
+            [ ("[1,4,3,6,0,3,7,0]", All ["7"])
+            , ("[9,4,9,0,9,0,9,15,-2]", All ["9"])
+            , ("[-4,-6,-2,0,-9]", All ["-2"])
+            , ("[-11,0,0,0,0,0,-12,10]", All ["0"])
+            , ("[0,20]", All ["20"])
+            ]
     describe "q94291: Is it a balanced number?" $ do
         specEval
             "Ɗ;ᶜtᶻ-∑ž"
@@ -2272,7 +2281,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259576: All of the Boards" $ do
         specEval
-            "į1:ÐÐ3~ᵑᵐç3~ᵑçaᵐᶜ{0*}∑2<"
+            "į3ƂÐ3~ᵑᵐç3~ᵑçaᵐᶜ{0*}∑2<"
             [ ("", Count 215)
             , ("", Truncated ["[[0,1,0,1],[1,1,1,1],[0,1,0,1],[1,1,1,1]]", "[[0,1,0,1],[1,1,1,1],[0,1,1,0],[1,1,1,1]]"])
             ]
@@ -2784,7 +2793,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q264733: Convert a Gaussian integer to its positive form" $ do
         specEval
-            "±đZ≠¿↔$IA"
+            "±đZ≠nŘA"
             [ ("[0,0]", All ["[0,0]"])
             , ("[5,0]", All ["[5,0]"])
             , ("[0,2]", All ["[2,0]"])
