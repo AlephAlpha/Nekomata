@@ -1036,6 +1036,20 @@ Get the union of two lists.
 
 Split a list into a list of chunks of equal elements.
 
+### `rle` (`Y`, `1 -> 2`)
+
+Run-length encode a list.
+
+Returns a list of elements and a list of lengths.
+
+### `unrle` (`y`, `2 -> 1`)
+
+Run-length decode a list.
+
+The first argument is a list of elements, the second argument is a list of lengths.
+
+Fails when the two lists are of different lengths.
+
 ### `uninterleave` (`ĭ`, `1 -> 2`)
 
 uninterleave a list into a list of elements at even positions and a list of elements at odd positions.

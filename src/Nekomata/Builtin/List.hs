@@ -319,13 +319,15 @@ split = unary2 split'
 
 replicate' :: Function
 replicate' = binaryVecArg2 replicate''
-  where
-    replicate'' _ x (DNumT y) = liftInt (replicate_ x) y
-    replicate'' _ _ _ = Fail
-    replicate_ :: a -> Integer -> TryList a
-    replicate_ _ 0 = Val Nil
-    replicate_ x n | n > 0 = Val $ Cons x (replicate_ x (n - 1))
-    replicate_ _ _ = Fail
+
+replicate'' :: Id -> DataTry -> DataTry -> TryData
+replicate'' _ x (DNumT y) = liftInt (replicate_ x) y
+replicate'' _ _ _ = Fail
+
+replicate_ :: a -> Integer -> TryList a
+replicate_ _ 0 = Val Nil
+replicate_ x n | n > 0 = Val $ Cons x (replicate_ x (n - 1))
+replicate_ _ _ = Fail
 
 minimum' :: Function
 minimum' = unary minimum''
@@ -344,9 +346,10 @@ concat' = unary concat''
   where
     concat'' _ (DListT xs) = liftList concat_ xs
     concat'' _ _ = Fail
-    concat_ :: ListTry TryData -> TryList TryData
-    concat_ Nil = Val Nil
-    concat_ (Cons x xs) = x >>= orSingleton >>= join_ (xs >>= concat_)
+
+concat_ :: ListTry TryData -> TryList TryData
+concat_ Nil = Val Nil
+concat_ (Cons x xs) = x >>= orSingleton >>= join_ (xs >>= concat_)
 
 unconcat :: Function
 unconcat = unary unconcat'
@@ -550,6 +553,12 @@ count = binary count'
         let n = xs >>= count_ y
          in x >>= tryEq y >>= \b -> if b then (+ 1) <$> n else n
 
+unzip' :: ListTry (a, b) -> (ListTry a, ListTry b)
+unzip' Nil = (Nil, Nil)
+unzip' (Cons x xs) =
+    let ys = unzip' <$> xs
+     in (Cons (fst x) (fst <$> ys), Cons (snd x) (snd <$> ys))
+
 tally :: Function
 tally = unary2 tally'
   where
@@ -558,11 +567,6 @@ tally = unary2 tally'
     tally_ ::
         (TryEq a) => Id -> ListTry (Try a) -> Try (ListTry a, ListTry Integer)
     tally_ i xs = unzip' <$> tryFoldl insertCount i Nil xs
-    unzip' :: ListTry (a, b) -> (ListTry a, ListTry b)
-    unzip' Nil = (Nil, Nil)
-    unzip' (Cons x xs) =
-        let ys = unzip' <$> xs
-         in (Cons (fst x) (fst <$> ys), Cons (snd x) (snd <$> ys))
     insertCount _ Nil x = Val $ singleton (x, 1)
     insertCount i (Cons (y, n) ys) x =
         tryEq x y
@@ -602,6 +606,15 @@ union = binary union'
                 then xs >>= flip union_ ys
                 else Val $ Cons x (xs >>= flip union_ ys)
 
+spanEq :: (TryEq a) => a -> ListTry a -> Try (ListTry a, ListTry a)
+spanEq _ Nil = Val (Nil, Nil)
+spanEq x s@(Cons y ys) =
+    tryEq x y
+        >>= \b ->
+            if b
+                then ys >>= spanEq x <&> first (Cons x . Val)
+                else Val (Nil, s)
+
 chunks :: Function
 chunks = unary chunks'
   where
@@ -613,14 +626,33 @@ chunks = unary chunks'
         xs
             >>= spanEq x
             <&> \(ys, zs) -> Cons (Val $ Cons x (Val ys)) (chunks_ zs)
-    spanEq :: (TryEq a) => a -> ListTry a -> Try (ListTry a, ListTry a)
-    spanEq _ Nil = Val (Nil, Nil)
-    spanEq x s@(Cons y ys) =
-        tryEq x y
-            >>= \b ->
-                if b
-                    then ys >>= spanEq x <&> first (Cons x . Val)
-                    else Val (Nil, s)
+
+rle :: Function
+rle = unary2 rle'
+  where
+    rle' _ (DListT xs) = liftList12 rle'' xs
+    rle' _ _ = (Fail, Fail)
+    rle'' ::
+        (TryEq a) =>
+        ListTry (Try a) ->
+        Try (ListTry (Try a), ListTry (Try Integer))
+    rle'' xs = unzip' <$> rle_ xs
+    rle_ :: (TryEq a) => ListTry (Try a) -> TryList (Try a, Try Integer)
+    rle_ Nil = Val Nil
+    rle_ (Cons x xs) =
+        xs
+            >>= spanEq x
+            <&> \(ys, zs) ->
+                Cons (x, (+ 1) <$> length_ ys) (rle_ zs)
+
+unrle :: Function
+unrle = binary unrle'
+  where
+    unrle' i (DListT xs) (DListT ys) = liftList2 (unrle_ i) xs ys
+    unrle' _ _ _ = Fail
+    unrle_ :: Id -> ListTry TryData -> ListTry TryData -> TryList TryData
+    unrle_ i xs ys =
+        zipWithFail replicate'' (leftId i) xs ys >>= concat_
 
 uninterleave :: Function
 uninterleave = unary2 uninterleave'

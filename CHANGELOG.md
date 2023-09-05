@@ -1,5 +1,9 @@
 # Revision history for Nekomata
 
+## 0.5.1.0 -- Unreleased
+
+* New built-in functions: `\rle`, `\unrle`.
+
 ## 0.5.0.0 -- 2023-09-02
 
 * The interpreter can now limit the number of results to show using the `-l` option.

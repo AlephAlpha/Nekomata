@@ -5,7 +5,7 @@
 此处总结一下 Code Page 中已有但还没有用上的字符：
 
 ```
-.VWY`vwy
+.VW`vw
 ```
 
 如果 CodePage 中的 256 个字符都用完了，可以考虑用像 05AB1E 那样，用 `.` 开头的字符来表示双字节的内置函数。现在的 CodePage 还远远没有用完，先不考虑这个问题，但 `.` 也先不要用掉。
@@ -164,34 +164,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 ```
 
 - [ ] `\complement`：1 减去一个数。
-
-### [Run Length Decoding](https://codegolf.stackexchange.com/q/12902/9288)
-
-```
-\uninterleave \map \read \unrle \concat
-```
-
-- [ ] `\unrle`：RLE 解码。比如说输入 `["a","b","c"]` 和 `[1,2,3]`，输出 `["a","b","b","c","c","c"]`。
-
-### [Replace twos with threes](https://codegolf.stackexchange.com/q/118982/9288)
-
-```
-\factor \unrle 1 \bitor \product
-```
-
-### [Say What You See](https://codegolf.stackexchange.com/q/70837/9288)
-
-```
-1 \singleton \iterate { \rle \swap \interleave } \fromDigits
-```
-
-- [ ] `rle`：RLE 编码。比如说输入 `["a","b","b","c","c","c"]`，输出 `["a","b","c"]` 和 `[1,2,3]`。
-
-### [All together now](https://codegolf.stackexchange.com/q/77608/9288)
-
-```
-\tally \unrle \eq
-```
 
 ## 关于字符串
 

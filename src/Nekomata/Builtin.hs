@@ -1132,6 +1132,20 @@ builtins =
         chunks
         "Split a list into a list of chunks of equal elements."
     , Builtin
+        "rle"
+        'Y'
+        rle
+        "Run-length encode a list.\n\
+        \Returns a list of elements and a list of lengths."
+    , Builtin
+        "unrle"
+        'y'
+        unrle
+        "Run-length decode a list.\n\
+        \The first argument is a list of elements, \
+        \the second argument is a list of lengths.\n\
+        \Fails when the two lists are of different lengths."
+    , Builtin
         "uninterleave"
         'ĭ'
         uninterleave

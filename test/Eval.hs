@@ -101,7 +101,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q12902: Run Length Decoding" $ do
         specEval
-            "ĭᵐĜᶻřj"
+            "ĭᵐĜy"
             [("\":144,1'1\"", All [":4444,'"])]
     describe "q38325: Minimum excluded number" $ do
         specEval
@@ -360,7 +360,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q70837: Say What You See" $ do
         specEval
-            "1Uᶦ{ĉᵉᵐ#ᵐhĬ}ɗ"
+            "1Uᶦ{Y$Ĭ}ɗ"
             [("", Truncated ["1", "11", "21", "1211", "111221", "312211", "13112221", "1113213211", "31131211131221", "13211311123113112211"])]
     describe "q71833: How even is a number?" $ do
         specEval
@@ -417,7 +417,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q77608: All together now" $ do
         specEval
-            "ĉᵐ≡ů"
+            "Y$ů"
             [ ("[3]", Check True)
             , ("[5,1]", Check True)
             , ("[4,4,9,9,9,9,1,1]", Check True)
@@ -478,7 +478,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q83377: Write a program to elasticize strings" $ do
         specEval
-            "#Rᶻřj"
+            "#Ry"
             [ ("\"Why\"", All ["Whhyyy"])
             , ("\"SKype\"", All ["SKKyyyppppeeeee"])
             , ("\"LobbY\"", All ["LoobbbbbbbYYYYY"])
@@ -750,13 +750,13 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q106656: Bit run rundown" $ do
         specEval
-            "ƂĉŞ#"
-            [ ("6", First $ Just "2")
-            , ("16", First $ Just "4")
-            , ("893", First $ Just "5")
-            , ("1337371", First $ Just "6")
-            , ("1", First $ Just "1")
-            , ("9965546", First $ Just "7")
+            "ƂYṀ"
+            [ ("6", All ["2"])
+            , ("16", All ["4"])
+            , ("893", All ["5"])
+            , ("1337371", All ["6"])
+            , ("1", All ["1"])
+            , ("9965546", All ["7"])
             ]
     describe "q108675: Is this word Lexically Ordered?" $ do
         specEval
@@ -823,6 +823,20 @@ testEval = describe "Evaluation" $ do
             , ("[[8,8],[8,8],[8,9],[8,9]]", Check False)
             , ("[[1,2],[1,3],[1,4]]", Check False)
             , ("[[1,2],[1,3],[2,3],[2,4]]", Check False)
+            ]
+    describe "q118982: Replace twos with threes" $ do
+        specEval
+            "ƒy1|∏"
+            [ ("1", All ["1"])
+            , ("2", All ["3"])
+            , ("3", All ["3"])
+            , ("4", All ["9"])
+            , ("5", All ["5"])
+            , ("6", All ["9"])
+            , ("7", All ["7"])
+            , ("8", All ["27"])
+            , ("9", All ["9"])
+            , ("10", All ["15"])
             ]
     describe "q119854: Raise integer x to power x, without exponentiation built-ins" $ do
         specEval
@@ -1665,7 +1679,7 @@ testEval = describe "Evaluation" $ do
             , ("4037 ", All ["1000", "2000", "3000", "4000", "4010", "4020", "4030", "4031", "4032", "4033", "4034", "4035", "4036", "4037"])
             ]
         specEval
-            "¢Bx¢E$ᶻřj↔∫"
+            "¢Bx¢E$y↔∫"
             [ ("4", All ["[1,2,3,4]"])
             , ("16", All ["[10,11,12,13,14,15,16]"])
             , ("35", All ["[10,20,30,31,32,33,34,35]"])
@@ -2505,7 +2519,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q262032: Vertices of a regular dodecahedron" $ do
         specEval
-            "1 3ř89\\55:ŗÐçxŘ~?ŋ"
+            "7Ƃ89\\55:ŗÐçxŘ~?ŋ"
             [ ("", Truncated ["[1,1,1]", "[1,1,-1]", "[1,-1,1]", "[1,-1,-1]"])
             , ("", Count 20)
             ]
