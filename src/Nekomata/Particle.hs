@@ -136,6 +136,19 @@ builtinParticles =
         zipWith'
         "(m -> 1) -> (m -> 1) where m > 1"
         "Zip two lists and apply a function to each pair of values.\n\
+        \Fail if the lists have different lengths.\n\
+        \If one of the input is a string, apply the function to each \
+        \character.\n\
+        \If one of the input is an number, apply the function to each \
+        \integer from 0 to the input minus 1."
+    , BuiltinParticle
+        "zipWithTrunc"
+        'ᶾ'
+        zipWithTrunc'
+        "(m -> 1) -> (m -> 1) where m > 1"
+        "Zip two lists and apply a function to each pair of values.\n\
+        \If the lists have different lengths, truncate the longer list \
+        \to the length of the shorter list.\n\
         \If one of the input is a string, apply the function to each \
         \character.\n\
         \If one of the input is an number, apply the function to each \
@@ -301,14 +314,16 @@ apply2 :: Particle
 apply2 = Particle apply2'
   where
     apply2' (Function (Arity 0 n) f) =
-        Just . Function (Arity 0 (2 * n)) $
-            \i s ->
+        Just
+            . Function (Arity 0 (2 * n))
+            $ \i s ->
                 prepend
                     (takeStack n $ f (leftId i) s)
                     (f (rightId i) s)
     apply2' (Function (Arity m n) f) =
-        Just . Function (Arity (m + 1) (2 * n)) $
-            \i (x :+ y :+ s) ->
+        Just
+            . Function (Arity (m + 1) (2 * n))
+            $ \i (x :+ y :+ s) ->
                 prepend
                     (takeStack n $ f (leftId i) (x :+ s))
                     (f (rightId i) (y :+ s))
@@ -317,41 +332,47 @@ noPop :: Particle
 noPop = Particle noPop'
   where
     noPop' (Function (Arity m n) f) =
-        Just . Function (Arity m (m + n)) $
-            \i s -> prepend (takeStack n $ f i s) s
+        Just
+            . Function (Arity m (m + n))
+            $ \i s -> prepend (takeStack n $ f i s) s
 
 dip :: Particle
 dip = Particle dip'
   where
     dip' (Function (Arity m n) f) =
-        Just . Function (Arity (m + 1) (n + 1)) $
-            \i (x :+ s) -> x :+ f i s
+        Just
+            . Function (Arity (m + 1) (n + 1))
+            $ \i (x :+ s) -> x :+ f i s
 
 dupDip :: Particle
 dupDip = Particle dupDip'
   where
     dupDip' (Function (Arity m n) f) =
-        Just . Function (Arity m (n + 1)) $
-            \i (x :+ s) -> x :+ f i (x :+ s)
+        Just
+            . Function (Arity m (n + 1))
+            $ \i (x :+ s) -> x :+ f i (x :+ s)
 
 dupDip2 :: Particle
 dupDip2 = Particle dupDip2'
   where
     dupDip2' (Function (Arity m n) f) =
-        Just . Function (Arity m (n + 2)) $
-            \i (x :+ y :+ s) -> x :+ y :+ f i (x :+ y :+ s)
+        Just
+            . Function (Arity m (n + 2))
+            $ \i (x :+ y :+ s) -> x :+ y :+ f i (x :+ y :+ s)
 
 map' :: Particle
 map' = Particle map''
   where
     map'' (Function (Arity 0 1) f) =
-        Just . Function (Arity 1 1) $
-            \i (x :+ s) ->
+        Just
+            . Function (Arity 1 1)
+            $ \i (x :+ s) ->
                 let f' i' x' = top $ f i' (Val x' :+ s)
                  in (x >>= liftList (tryMap f' i) . toTryList) :+ s
     map'' (Function (Arity m 1) f) | m > 0 =
-        Just . Function (Arity m 1) $
-            \i (x :+ s) ->
+        Just
+            . Function (Arity m 1)
+            $ \i (x :+ s) ->
                 let f' i' x' = top $ f i' (Val x' :+ s)
                  in (x >>= liftList (tryMap f' i) . toTryList)
                         :+ dropStack (m - 1) s
@@ -361,13 +382,15 @@ mapWith :: Particle
 mapWith = Particle mapWith'
   where
     mapWith' (Function (Arity 1 1) f) =
-        Just . Function (Arity 2 1) $
-            \i (x :+ y :+ s) ->
+        Just
+            . Function (Arity 2 1)
+            $ \i (x :+ y :+ s) ->
                 let f' i' y' = top $ f i' (x :+ Val y' :+ s)
                  in (y >>= liftList (tryMap f' i) . toTryList) :+ s
     mapWith' (Function (Arity m 1) f) | m > 1 =
-        Just . Function (Arity m 1) $
-            \i (x :+ y :+ s) ->
+        Just
+            . Function (Arity m 1)
+            $ \i (x :+ y :+ s) ->
                 let f' i' y' = top $ f i' (x :+ Val y' :+ s)
                  in (y >>= liftList (tryMap f' i) . toTryList)
                         :+ dropStack (m - 2) s
@@ -377,8 +400,9 @@ zipWith' :: Particle
 zipWith' = Particle zipWith''
   where
     zipWith'' (Function (Arity m 1) f) | m > 1 =
-        Just . Function (Arity m 1) $
-            \i (x :+ y :+ s) ->
+        Just
+            . Function (Arity m 1)
+            $ \i (x :+ y :+ s) ->
                 let f' i' x' y' = top $ f i' (Val x' :+ Val y' :+ s)
                     f'' x' y' =
                         liftList2
@@ -388,12 +412,29 @@ zipWith' = Particle zipWith''
                  in liftJoinM2 f'' x y :+ dropStack (m - 2) s
     zipWith'' _ = Nothing
 
+zipWithTrunc' :: Particle
+zipWithTrunc' = Particle zipWithTrunc''
+  where
+    zipWithTrunc'' (Function (Arity m 1) f) | m > 1 =
+        Just
+            . Function (Arity m 1)
+            $ \i (x :+ y :+ s) ->
+                let f' i' x' y' = top $ f i' (Val x' :+ Val y' :+ s)
+                    f'' x' y' =
+                        liftList2
+                            (zipWithTrunc f' i)
+                            (toTryList x')
+                            (toTryList y')
+                 in liftJoinM2 f'' x y :+ dropStack (m - 2) s
+    zipWithTrunc'' _ = Nothing
+
 outer :: Particle
 outer = Particle outer'
   where
     outer' (Function (Arity m 1) f) | m > 1 =
-        Just . Function (Arity m 1) $
-            \i (x :+ y :+ s) ->
+        Just
+            . Function (Arity m 1)
+            $ \i (x :+ y :+ s) ->
                 let f' i' x' y' = top $ f i' (Val x' :+ Val y' :+ s)
                     f'' x' y' =
                         liftList2
@@ -407,8 +448,9 @@ predicate' :: Particle
 predicate' = Particle predicate''
   where
     predicate'' (Function (Arity _ _) f) =
-        Just . Function (Arity 1 1) $
-            \i (x :+ s) ->
+        Just
+            . Function (Arity 1 1)
+            $ \i (x :+ s) ->
                 let f' i' x' = top $ f i' (Val x' :+ s)
                  in (normalForm x >>= (\x' -> normalForm (f' i x') $> x')) :+ s
 
@@ -416,8 +458,9 @@ predicateNot' :: Particle
 predicateNot' = Particle predicateNot''
   where
     predicateNot'' (Function (Arity _ _) f) =
-        Just . Function (Arity 1 1) $
-            \i (x :+ s) ->
+        Just
+            . Function (Arity 1 1)
+            $ \i (x :+ s) ->
                 let f' i' x' = top $ f i' (Val x' :+ s)
                  in (normalForm x >>= predicateNot_ (f' i)) :+ s
     predicateNot_ f x =
@@ -427,8 +470,9 @@ filter' :: Particle
 filter' = Particle filter''
   where
     filter'' (Function (Arity _ _) f) =
-        Just . Function (Arity 1 1) $
-            \i (x :+ s) ->
+        Just
+            . Function (Arity 1 1)
+            $ \i (x :+ s) ->
                 let f' i' x' = top $ f i' (Val x' :+ s)
                     f'' i' x' = normalForm (f' i' x') $> x'
                  in (x >>= liftList (filterTry . tryMap f'' i) . toTryList)
@@ -438,8 +482,9 @@ orApply :: Particle
 orApply = Particle orApply'
   where
     orApply' (Function (Arity m n) f) | m == n =
-        Just . Function (Arity m n) $
-            \i s ->
+        Just
+            . Function (Arity m n)
+            $ \i s ->
                 prepend
                     (takeStack n . tryStack $ orApply_ i f s)
                     (dropStack m s)
@@ -450,8 +495,9 @@ iterate' :: Particle
 iterate' = Particle iterate''
   where
     iterate'' (Function (Arity m n) f) | m == n =
-        Just . Function (Arity m n) $
-            \i s ->
+        Just
+            . Function (Arity m n)
+            $ \i s ->
                 prepend
                     (takeStack n . tryStack $ iterate_ i f s)
                     (dropStack m s)
@@ -468,8 +514,9 @@ nTimes :: Particle
 nTimes = Particle nTimes'
   where
     nTimes' (Function (Arity m n) f) | m == n =
-        Just . Function (Arity (m + 1) n) $
-            \i (x :+ s) ->
+        Just
+            . Function (Arity (m + 1) n)
+            $ \i (x :+ s) ->
                 prepend
                     (takeStack n . tryStack $ x >>= nTimes'' i f s)
                     (dropStack m s)
@@ -484,8 +531,9 @@ while :: Particle
 while = Particle while'
   where
     while' (Function (Arity m n) f) | m == n =
-        Just . Function (Arity m n) $
-            \i s ->
+        Just
+            . Function (Arity m n)
+            $ \i s ->
                 prepend
                     (takeStack n . tryStack $ while'' i f s)
                     (dropStack m s)
@@ -505,8 +553,9 @@ lengthWhile :: Particle
 lengthWhile = Particle lengthWhile'
   where
     lengthWhile' (Function (Arity m n) f) | m == n =
-        Just . Function (Arity m 1) $
-            \i s -> toTryData (lengthWhile'' i f s) :+ dropStack m s
+        Just
+            . Function (Arity m 1)
+            $ \i s -> toTryData (lengthWhile'' i f s) :+ dropStack m s
     lengthWhile' _ = Nothing
     lengthWhile'' :: Id -> (Id -> Stack -> Stack) -> Stack -> Try Integer
     lengthWhile'' i f s =
@@ -523,8 +572,9 @@ firstInt :: Particle
 firstInt = Particle firstInt'
   where
     firstInt' (Function (Arity _ _) f) =
-        Just . Function (Arity 0 1) $
-            \i s ->
+        Just
+            . Function (Arity 0 1)
+            $ \i s ->
                 let f' i' x' = top $ f i' (Val x' :+ s)
                  in (toTryData . Cut $ \ds -> (ds, firstInt'' ds i f' 0)) :+ s
     firstInt'' ::
@@ -539,8 +589,9 @@ fold1 :: Particle
 fold1 = Particle fold1'
   where
     fold1' (Function (Arity m 1) f) | m > 1 =
-        Just . Function (Arity (m - 1) 1) $
-            \i (x :+ s) ->
+        Just
+            . Function (Arity (m - 1) 1)
+            $ \i (x :+ s) ->
                 let f' i' x' y' = top $ f i' (Val y' :+ Val x' :+ s)
                  in (x >>= liftList (tryFoldl1 f' i) . toTryList)
                         :+ dropStack (m - 2) s

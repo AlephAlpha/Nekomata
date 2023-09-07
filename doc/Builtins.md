@@ -1166,6 +1166,18 @@ If the function is unary, return a list of n copies of the result of applying th
 
 Zip two lists and apply a function to each pair of values.
 
+Fail if the lists have different lengths.
+
+If one of the input is a string, apply the function to each character.
+
+If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
+
+### `zipWithTrunc` (`ᶾ`, `(m -> 1) -> (m -> 1) where m > 1`)
+
+Zip two lists and apply a function to each pair of values.
+
+If the lists have different lengths, truncate the longer list to the length of the shorter list.
+
 If one of the input is a string, apply the function to each character.
 
 If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
