@@ -1004,6 +1004,13 @@ testEval = describe "Evaluation" $ do
             , ("10", All ["1"])
             , ("2521", All ["10"])
             ]
+    describe "q139804: Undo a Range of Numbers" $ do
+        specEval
+            "ᵏ{ᵐĝj="
+            [ ("\"0123\"", All ["4"])
+            , ("\"0\"", All ["1"])
+            , ("\"012345678910111213141516171819202122232425262728293031323334353637383940\"", All ["41"])
+            ]
     describe "q141949: Count edits accounting for grace period" $ do
         specEval
             "ˡ{C4+>‼"
@@ -1165,7 +1172,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q162254: Generate a Walsh Matrix" $ do
         specEval
-            "Ë:ᵒ{&Ƃ∑£E"
+            "Ë:ᵒ&Þ£E"
             [ ("0", All ["[[1]]"])
             , ("1", All ["[[1,1],[1,-1]]"])
             , ("2", All ["[[1,1,1,1],[1,-1,1,-1],[1,1,-1,-1],[1,-1,-1,1]]"])
@@ -1190,7 +1197,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q169724: Is this number evil?" $ do
         specEval
-            "Ƃ∑½"
+            "Þ½"
             [ ("3", Check True)
             , ("11", Check False)
             , ("777", Check True)
@@ -1476,6 +1483,23 @@ testEval = describe "Evaluation" $ do
             [ ("100 1", All ["21"])
             , ("200 11", All ["138"])
             , ("678 123", All ["182"])
+            ]
+    describe "q210162: Is it almost-prime?" $ do
+        specEval
+            "ƒz"
+            [ ("2", Check True)
+            , ("3", Check True)
+            , ("8", Check True)
+            , ("27", Check True)
+            , ("1331", Check True)
+            , ("4913", Check True)
+            , ("40353607", Check True)
+            , ("6", Check False)
+            , ("36", Check False)
+            , ("54", Check False)
+            , ("1938", Check False)
+            , ("175560", Check False)
+            , ("17294403", Check False)
             ]
     describe "q216734: Jelly's Untruth" $ do
         specEval
@@ -1974,6 +1998,22 @@ testEval = describe "Evaluation" $ do
             , ("[3,1,4]", All ["3", "4", "4"])
             , ("[3,1,4,1,5,9,2,6]", All ["3", "4", "4", "9", "5", "14", "2", "31"])
             ]
+        specEval
+            "x:→&xï@ᵐ∑"
+            [ ("[]", All ["[]"])
+            , ("[999]", All ["[999]"])
+            , ("[3,1,4]", All ["[3,4,4]"])
+            , ("[3,1,4,1,5,9,2,6]", All ["[3,4,4,9,5,14,2,31]"])
+            ]
+    describe "q255344: CGAC2022 Day 9: Playing with bits" $ do
+        specEval
+            "Ňᵖ{:ÄXÞ½="
+            [ ("1", Truncated ["1", "2", "3", "4", "6", "7", "8", "12", "14", "15"])
+            , ("2", Truncated ["5", "9", "10", "11", "13", "17", "18", "19", "20", "22"])
+            , ("3", Truncated ["21", "37", "41", "42", "43", "45", "53", "69", "73", "74"])
+            , ("4", Truncated ["85", "149", "165", "169", "170", "171", "173", "181", "213", "277"])
+            , ("5", Truncated ["341", "597", "661", "677", "681", "682", "683", "685", "693", "725"])
+            ]
     describe "q255373: CGAC2022 Day 10: Help Santa sort presents!" $ do
         specEval
             "ˡ{ᵗ≡ĭ?}aṀ"
@@ -2421,7 +2461,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q260472: Find Index of Rational Number in Calkin-Wilf Sequence" $ do
         specEval
-            "ˡ{ŗ:KÄ$-←"
+            "ˡ{ŗ←£þ+_"
             [ ("1", All ["1"])
             , ("1/3", All ["4"])
             , ("4/3", All ["9"])
@@ -2652,7 +2692,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q263364: Compute this fractal matrix" $ do
         specEval
-            "Ë:ᵒ{ᵃƂ+2Ĉ←A±"
+            "Ë:ᵒ&Þ←A±"
             [ ("1", All ["[[1,1],[1,0]]"])
             , ("2", All ["[[1,1,1,1],[1,0,1,0],[1,1,0,0],[1,0,0,1]]"])
             , ("3", All ["[[1,1,1,1,1,1,1,1],[1,0,1,0,1,0,1,0],[1,1,0,0,1,1,0,0],[1,0,0,1,1,0,0,1],[1,1,1,1,0,0,0,0],[1,0,1,0,0,1,0,1],[1,1,0,0,0,0,1,1],[1,0,0,1,0,1,1,1]]"])

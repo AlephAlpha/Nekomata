@@ -553,12 +553,6 @@ count = binary count'
         let n = xs >>= count_ y
          in x >>= tryEq y >>= \b -> if b then (+ 1) <$> n else n
 
-unzip' :: ListTry (a, b) -> (ListTry a, ListTry b)
-unzip' Nil = (Nil, Nil)
-unzip' (Cons x xs) =
-    let ys = unzip' <$> xs
-     in (Cons (fst x) (fst <$> ys), Cons (snd x) (snd <$> ys))
-
 tally :: Function
 tally = unary2 tally'
   where
@@ -566,7 +560,7 @@ tally = unary2 tally'
     tally' _ _ = (Fail, Fail)
     tally_ ::
         (TryEq a) => Id -> ListTry (Try a) -> Try (ListTry a, ListTry Integer)
-    tally_ i xs = unzip' <$> tryFoldl insertCount i Nil xs
+    tally_ i xs = unzipF <$> tryFoldl insertCount i Nil xs
     insertCount _ Nil x = Val $ singleton (x, 1)
     insertCount i (Cons (y, n) ys) x =
         tryEq x y
@@ -636,7 +630,7 @@ rle = unary2 rle'
         (TryEq a) =>
         ListTry (Try a) ->
         Try (ListTry (Try a), ListTry (Try Integer))
-    rle'' xs = unzip' <$> rle_ xs
+    rle'' xs = unzipF <$> rle_ xs
     rle_ :: (TryEq a) => ListTry (Try a) -> TryList (Try a, Try Integer)
     rle_ Nil = Val Nil
     rle_ (Cons x xs) =

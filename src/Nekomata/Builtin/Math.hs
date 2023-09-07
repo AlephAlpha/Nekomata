@@ -2,7 +2,7 @@ module Nekomata.Builtin.Math where
 
 import Control.Arrow (second, (***))
 import Control.Monad (liftM2)
-import Data.Bits (xor, (.&.), (.|.))
+import Data.Bits (popCount, xor, (.&.), (.|.))
 import Data.Functor ((<&>))
 import Data.List (sort)
 import Data.Ratio (denominator, numerator, (%))
@@ -141,6 +141,14 @@ divExact = binaryNumFail $ const divExact_
     divExact_ _ 0 = Fail
     divExact_ x y =
         let q = x / y in if denominator q == 1 then Val $ numerator q else Fail
+
+divMod' :: Function
+divMod' = binary2NumFail $ const divMod_
+  where
+    divMod_ _ 0 = Fail
+    divMod_ x y =
+        let q = fromInteger . floor $ x / y
+         in Val (q, x - y * q)
 
 half :: Function
 half = unaryInt $ const half'
@@ -312,7 +320,7 @@ delta = unary delta'
     delta' i (DListT xs) = liftList (delta_ i) xs
     delta' _ _ = Fail
     delta_ _ Nil = Fail
-    delta_ i s@(Cons _ xs) = xs >>= flip (zipWithTrunc sub' i) s
+    delta_ i s@(Cons _ xs) = xs >>= flip (Val .: zipWithTrunc sub' i) s
 
 binomial :: Function
 binomial = binaryNumFail $ const binomial'
@@ -348,9 +356,8 @@ primePi = unaryNum $ const primePi_
     primePi_ = Val . primeCount . floor
 
 factor :: Function
-factor = unary2Vec factor'
+factor = unary2Num $ const factor_
   where
-    factor' _ x = liftNum12 factor_ $ toTryNum x
     factor_ 0 = Fail
     factor_ x =
         Val
@@ -430,3 +437,6 @@ bitOr = binaryIntPad $ const (.|.)
 
 bitXor :: Function
 bitXor = binaryIntPad $ const xor
+
+popCount' :: Function
+popCount' = unaryInt $ const (toInteger . popCount)

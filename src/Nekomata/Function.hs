@@ -155,6 +155,12 @@ and vectorize the second argument
 binaryVecArg2 :: (Id -> DataTry -> DataTry -> TryData) -> Function
 binaryVecArg2 = binary . vec2Arg2
 
+{- | Convert and vectorize a binary function that returns two values
+with failure on mismatched lengths
+-}
+binary2VecFail :: (Id -> DataTry -> DataTry -> (TryData, TryData)) -> Function
+binary2VecFail = binary2 . vec22Fail
+
 -- | Convert and vectorize a predicate to a Nekomata function
 predicateVec :: (Id -> DataTry -> Try Bool) -> Function
 predicateVec f = unaryVec $ \i x -> f i x >>= \b -> if b then Val x else Fail
@@ -173,6 +179,15 @@ unaryNum f = unaryVec f'
   where
     f' i x = liftNum (f i) (toTryNum x)
 
+-- | Convert and vectorize a unary numeric function that returns two values
+unary2Num ::
+    (ToTryData a, ToTryData b) =>
+    (Id -> Rational -> Try (a, b)) ->
+    Function
+unary2Num f = unary2Vec f'
+  where
+    f' i x = liftNum12 (f i) (toTryNum x)
+
 -- | Convert and vectorize a binary numeric function with padding
 binaryNumPad :: (ToTryData a) => (Id -> Rational -> Rational -> a) -> Function
 binaryNumPad f = binaryVecPad f'
@@ -186,6 +201,17 @@ binaryNumFail :: (ToTryData a) => (Id -> Rational -> Rational -> a) -> Function
 binaryNumFail f = binaryVecFail f'
   where
     f' i x y = liftNum2 (f i) (toTryNum x) (toTryNum y)
+
+{- | Convert and vectorize a binary numeric function that returns two values
+with failure on mismatched lengths
+-}
+binary2NumFail ::
+    (ToTryData a, ToTryData b) =>
+    (Id -> Rational -> Rational -> Try (a, b)) ->
+    Function
+binary2NumFail f = binary2VecFail f'
+  where
+    f' i x y = liftNum22 (f i) (toTryNum x) (toTryNum y)
 
 -- | Convert and vectorize a unary integer function
 unaryInt :: (ToTryData a) => (Id -> Integer -> a) -> Function

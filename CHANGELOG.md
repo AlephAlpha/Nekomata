@@ -2,7 +2,7 @@
 
 ## 0.5.1.0 -- Unreleased
 
-* New built-in functions: `\rle`, `\unrle`.
+* New built-in functions: `\divMod`, `\popCount`, `\rle`, `\unrle`.
 
 ## 0.5.0.0 -- 2023-09-02
 

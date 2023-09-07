@@ -124,17 +124,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 
 - [ ] `\pad`：输入一个列表的列表，将每个列表的长度补齐到最长的子列表的长度。比如说 `[[1, 2], [3, 4, 5]]` 补齐成 `[[1, 2, 0], [3, 4, 5]]`。
 
-### [Find Index of Rational Number in Calkin-Wilf Sequence](https://codegolf.stackexchange.com/q/260472/9288)
-
-需要 `-n` flag。
-
-
-```
-\iterate { \recip \decrement \neg1 \divMod \add \neg \nonZero }
-```
-
-- [ ] `\divMod`：同时求商和余数。由于有两个返回值，还不知道怎么向量化。
-
 ### [Is it a brainfuck instruction?](https://codegolf.stackexchange.com/q/203330/9288)
 
 ```
@@ -164,6 +153,22 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 ```
 
 - [ ] `\complement`：1 减去一个数。
+
+### [How many trailing zeros in the hyperfactorial?](https://codegolf.stackexchange.com/q/263597/9288)
+
+```
+\range1 \dup 5 \valuation \dot
+```
+
+- [ ] `\valuation`：一个数的 p 进赋值。
+
+### [Number of bits needed to represent the product of the first primes](https://codegolf.stackexchange.com/q/263531/9288)
+
+```
+\range1 \nthPrime \product \binary \length
+```
+
+- [ ] `\nthPrime`：求第 n 个质数。
 
 ## 关于字符串
 

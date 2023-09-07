@@ -5,6 +5,7 @@
 module Nekomata.Data where
 
 import Control.Monad (join, liftM2)
+import Data.Bifunctor (bimap)
 import Data.Functor ((<&>))
 import Data.Ratio (denominator, numerator)
 import Nekomata.CodePage (charToInt)
@@ -17,6 +18,10 @@ liftJoinM2 f x y = join $ liftM2 f x y
 -- | A helper function to compose a unary function with a binary function
 (.:) :: (c -> d) -> (a -> b -> c) -> a -> b -> d
 (.:) = (.) . (.)
+
+-- | A helper function to unzip a functor of pairs
+unzipF :: (Functor f) => f (a, b) -> (f a, f b)
+unzipF xs = (fst <$> xs, snd <$> xs)
 
 data ListTry a = Nil | Cons a (TryList a)
 
@@ -39,10 +44,7 @@ are padded to the result.
 -}
 zipWithPad ::
     (Id -> a -> a -> Try a) ->
-    Id ->
-    ListTry (Try a) ->
-    ListTry (Try a) ->
-    ListTry (Try a)
+    (Id -> ListTry (Try a) -> ListTry (Try a) -> ListTry (Try a))
 zipWithPad _ _ Nil xs = xs
 zipWithPad _ _ xs Nil = xs
 zipWithPad f i (Cons x xs) (Cons y ys) =
@@ -56,10 +58,7 @@ Fail if the lists have different lengths.
 -}
 zipWithFail ::
     (Id -> a -> b -> Try c) ->
-    Id ->
-    ListTry (Try a) ->
-    ListTry (Try b) ->
-    TryList (Try c)
+    (Id -> ListTry (Try a) -> ListTry (Try b) -> TryList (Try c))
 zipWithFail _ _ Nil Nil = Val Nil
 zipWithFail f i (Cons x xs) (Cons y ys) =
     Val
@@ -74,17 +73,26 @@ Truncate the result to the length of the shorter list.
 -}
 zipWithTrunc ::
     (Id -> a -> b -> Try c) ->
-    Id ->
-    ListTry (Try a) ->
-    ListTry (Try b) ->
-    TryList (Try c)
-zipWithTrunc _ _ Nil _ = Val Nil
-zipWithTrunc _ _ _ Nil = Val Nil
+    (Id -> ListTry (Try a) -> ListTry (Try b) -> ListTry (Try c))
+zipWithTrunc _ _ Nil _ = Nil
+zipWithTrunc _ _ _ Nil = Nil
 zipWithTrunc f i (Cons x xs) (Cons y ys) =
-    Val
-        $ Cons
-            (liftJoinM2 (f (leftId i)) x y)
-            (liftJoinM2 (zipWithTrunc f (rightId i)) xs ys)
+    Cons
+        (liftJoinM2 (f (leftId i)) x y)
+        (liftM2 (zipWithTrunc f (rightId i)) xs ys)
+
+{- | Zip two @TryList@s with a binary function
+
+Fail if the lists have different lengths.
+-}
+zipWithFail2 ::
+    (Id -> a -> b -> Try (c, d)) ->
+    ( Id ->
+      ListTry (Try a) ->
+      ListTry (Try b) ->
+      Try (ListTry (Try c), ListTry (Try d))
+    )
+zipWithFail2 f i xs ys = unzipF . fmap unzipF <$> zipWithFail f i xs ys
 
 -- | Choose an element from a @TryList@
 anyOf :: Id -> ListTry a -> Try a
@@ -101,70 +109,58 @@ singleton :: a -> ListTry a
 singleton x = Cons x (Val Nil)
 
 -- | Map a non-deterministic function over a @TryList@
-tryMap :: (Id -> a -> Try b) -> Id -> ListTry (Try a) -> ListTry (Try b)
+tryMap :: (Id -> a -> Try b) -> (Id -> ListTry (Try a) -> ListTry (Try b))
 tryMap _ _ Nil = Nil
 tryMap f i (Cons x xs) = Cons (x >>= f (leftId i)) (tryMap f (rightId i) <$> xs)
 
 -- | Map over the first argument of a binary function
 tryMap1 ::
     (Id -> a -> b -> Try c) ->
-    Id ->
-    b ->
-    ListTry (Try a) ->
-    ListTry (Try c)
+    (Id -> b -> ListTry (Try a) -> ListTry (Try c))
 tryMap1 f i y = tryMap (\i' x -> f i' x y) i
 
 -- | Map over the second argument of a binary function
 tryMap2 ::
     (Id -> a -> b -> Try c) ->
-    Id ->
-    a ->
-    ListTry (Try b) ->
-    ListTry (Try c)
+    (Id -> a -> ListTry (Try b) -> ListTry (Try c))
 tryMap2 f i x = tryMap (`f` x) i
 
 -- | Map a non-deterministic function that returns two values over a @TryList@
 tryUnzipWith ::
     (Id -> a -> Try (b, c)) ->
-    Id ->
-    ListTry (Try a) ->
-    (ListTry (Try b), ListTry (Try c))
-tryUnzipWith _ _ Nil = (Nil, Nil)
-tryUnzipWith f i (Cons x xs) =
-    let y = x >>= f (leftId i)
-        ys = tryUnzipWith f (rightId i) <$> xs
-     in (Cons (fst <$> y) (fst <$> ys), Cons (snd <$> y) (snd <$> ys))
+    (Id -> ListTry (Try a) -> (ListTry (Try b), ListTry (Try c)))
+tryUnzipWith f i xs = unzipF $ unzipF <$> tryMap f i xs
 
 -- | Fold a non-deterministic function over a @TryList@ from right to left
-tryFoldr :: (Id -> a -> b -> Try b) -> Id -> b -> ListTry (Try a) -> Try b
+tryFoldr :: (Id -> a -> b -> Try b) -> (Id -> b -> ListTry (Try a) -> Try b)
 tryFoldr _ _ b Nil = Val b
 tryFoldr f i b (Cons x xs) =
     liftJoinM2 (f (leftId i)) x (xs >>= tryFoldr f (rightId i) b)
 
 -- | Fold a non-deterministic function over a @TryList@ from right to left
-tryFoldr1 :: (Id -> a -> a -> Try a) -> Id -> ListTry (Try a) -> Try a
+tryFoldr1 :: (Id -> a -> a -> Try a) -> (Id -> ListTry (Try a) -> Try a)
 tryFoldr1 _ _ Nil = Fail
 tryFoldr1 f i (Cons x xs) = liftJoinM2 (tryFoldr f i) x xs
 
 -- | Fold a non-deterministic function over a @TryList@ from left to right
-tryFoldl :: (Id -> b -> a -> Try b) -> Id -> b -> ListTry (Try a) -> Try b
+tryFoldl :: (Id -> b -> a -> Try b) -> (Id -> b -> ListTry (Try a) -> Try b)
 tryFoldl _ _ b Nil = Val b
 tryFoldl f i b (Cons x xs) =
     liftJoinM2 (tryFoldl f (leftId i)) (x >>= f (rightId i) b) xs
 
 -- | Fold a non-deterministic function over a @TryList@ from left to right
-tryFoldl1 :: (Id -> a -> a -> Try a) -> Id -> ListTry (Try a) -> Try a
+tryFoldl1 :: (Id -> a -> a -> Try a) -> (Id -> ListTry (Try a) -> Try a)
 tryFoldl1 _ _ Nil = Fail
 tryFoldl1 f i (Cons x xs) = liftJoinM2 (tryFoldl f i) x xs
 
 -- | Scan a non-deterministic function over a @TryList@ from left to right
-tryScanl :: (Id -> b -> a -> Try b) -> Id -> b -> ListTry (Try a) -> ListTry b
+tryScanl :: (Id -> b -> a -> Try b) -> (Id -> b -> ListTry (Try a) -> ListTry b)
 tryScanl _ _ b Nil = singleton b
 tryScanl f i b (Cons x xs) =
     Cons b (liftM2 (tryScanl f (leftId i)) (x >>= f (rightId i) b) xs)
 
 -- | Scan a non-deterministic function over a @TryList@ from left to right
-tryScanl1 :: (Id -> a -> a -> Try a) -> Id -> ListTry (Try a) -> TryList a
+tryScanl1 :: (Id -> a -> a -> Try a) -> (Id -> ListTry (Try a) -> TryList a)
 tryScanl1 _ _ Nil = Val Nil
 tryScanl1 f i (Cons x xs) = liftM2 (tryScanl f i) x xs
 
@@ -173,14 +169,11 @@ return a @ListTry@ of @TryList@s
 -}
 tryOuter ::
     (Id -> a -> b -> Try c) ->
-    Id ->
-    ListTry (Try a) ->
-    ListTry (Try b) ->
-    ListTry (TryList (Try c))
+    (Id -> ListTry (Try a) -> ListTry (Try b) -> ListTry (TryList (Try c)))
 tryOuter f i xs = tryMap (\i' y -> Val $ tryMap (\i'' x -> f i'' x y) i' xs) i
 
 -- | Filter a @TryList@
-tryFilter :: (Id -> a -> Try Bool) -> Id -> ListTry a -> TryList a
+tryFilter :: (Id -> a -> Try Bool) -> (Id -> ListTry a -> TryList a)
 tryFilter _ _ Nil = Val Nil
 tryFilter f i (Cons x xs) =
     f (leftId i) x >>= \b ->
@@ -339,8 +332,15 @@ liftNum12 ::
     (Rational -> Try (a, b)) ->
     (Try (Det Rational) -> (TryData, TryData))
 liftNum12 f x =
-    let y = x >>= f . unDet
-     in (toTryData $ fst <$> y, toTryData $ snd <$> y)
+    bimap toTryData toTryData . unzipF $ toTry x >>= f
+
+-- | Lift a binary numeric function that returns two values to @TryData@
+liftNum22 ::
+    (ToTryData a, ToTryData b) =>
+    (Rational -> Rational -> Try (a, b)) ->
+    (Try (Det Rational) -> Try (Det Rational) -> (TryData, TryData))
+liftNum22 f x y =
+    bimap toTryData toTryData . unzipF $ liftJoinM2 f (toTry x) (toTry y)
 
 -- | Lift a unary integer function to @TryData@
 liftInt :: (ToTryData a) => (Integer -> a) -> (Try (Det Rational) -> TryData)
@@ -383,21 +383,24 @@ liftList12 ::
     (ToTryData a, ToTryData b) =>
     (ListTry TryData -> Try (a, b)) ->
     (TryList TryData -> (TryData, TryData))
-liftList12 f x =
-    let y = x >>= f in (toTryData $ fst <$> y, toTryData $ snd <$> y)
+liftList12 f x = bimap toTryData toTryData . unzipF $ x >>= f
+
+-- | Lift a binary list function that returns two values to @TryData@
+liftList22 ::
+    (ToTryData a, ToTryData b) =>
+    (ListTry TryData -> ListTry TryData -> Try (a, b)) ->
+    (TryList TryData -> TryList TryData -> (TryData, TryData))
+liftList22 f x y = bimap toTryData toTryData . unzipF $ liftJoinM2 f x y
 
 -- | Vectorize a unary function
-vec1 :: (Id -> DataTry -> TryData) -> Id -> DataTry -> TryData
+vec1 :: (Id -> DataTry -> TryData) -> (Id -> DataTry -> TryData)
 vec1 f i (DListT xs) = liftList (tryMap (vec1 f) i) xs
 vec1 f i x = f i x
 
 -- | Vectorize a binary function with padding
 vec2Pad ::
     (Id -> DataTry -> DataTry -> TryData) ->
-    Id ->
-    DataTry ->
-    DataTry ->
-    TryData
+    (Id -> DataTry -> DataTry -> TryData)
 vec2Pad f i (DListT xs) (DListT ys) = liftList2 (zipWithPad (vec2Pad f) i) xs ys
 vec2Pad f i (DListT xs) y = liftList (tryMap1 (vec2Pad f) i y) xs
 vec2Pad f i x (DListT ys) = liftList (tryMap2 (vec2Pad f) i x) ys
@@ -406,10 +409,7 @@ vec2Pad f i x y = f i x y
 -- | Vectorize a binary function with failure on mismatched lengths
 vec2Fail ::
     (Id -> DataTry -> DataTry -> TryData) ->
-    Id ->
-    DataTry ->
-    DataTry ->
-    TryData
+    (Id -> DataTry -> DataTry -> TryData)
 vec2Fail f i (DListT xs) (DListT ys) =
     liftList2 (zipWithFail (vec2Fail f) i) xs ys
 vec2Fail f i (DListT xs) y = liftList (tryMap1 (vec2Fail f) i y) xs
@@ -419,10 +419,7 @@ vec2Fail f i x y = f i x y
 -- | Vectorize a binary function with outer product
 vec2Outer ::
     (Id -> DataTry -> DataTry -> TryData) ->
-    Id ->
-    DataTry ->
-    DataTry ->
-    TryData
+    (Id -> DataTry -> DataTry -> TryData)
 vec2Outer f i (DListT xs) (DListT ys) =
     liftList2 (tryOuter (vec2Outer f) i) xs ys
 vec2Outer f i (DListT xs) y = liftList (tryMap1 (vec2Outer f) i y) xs
@@ -432,31 +429,37 @@ vec2Outer f i x y = f i x y
 -- | Vectorize the first argument of a binary function
 vec2Arg1 ::
     (Id -> DataTry -> DataTry -> TryData) ->
-    Id ->
-    DataTry ->
-    DataTry ->
-    TryData
+    (Id -> DataTry -> DataTry -> TryData)
 vec2Arg1 f i (DListT xs) y = liftList (tryMap1 (vec2Arg1 f) i y) xs
 vec2Arg1 f i x y = f i x y
 
 -- | Vectorize the second argument of a binary function
 vec2Arg2 ::
     (Id -> DataTry -> DataTry -> TryData) ->
-    Id ->
-    DataTry ->
-    DataTry ->
-    TryData
+    (Id -> DataTry -> DataTry -> TryData)
 vec2Arg2 f i x (DListT ys) = liftList (tryMap2 (vec2Arg2 f) i x) ys
 vec2Arg2 f i x y = f i x y
 
 -- | Vectorize a unary function that returns two values
 vec12 ::
     (Id -> DataTry -> (TryData, TryData)) ->
-    Id ->
-    DataTry ->
-    (TryData, TryData)
+    (Id -> DataTry -> (TryData, TryData))
 vec12 f i (DListT xs) = liftList12 (Val . tryUnzipWith (Val .: vec12 f) i) xs
 vec12 f i x = f i x
+
+{- | Vectorize a binary function that returns two values
+with failure on mismatched lengths
+-}
+vec22Fail ::
+    (Id -> DataTry -> DataTry -> (TryData, TryData)) ->
+    (Id -> DataTry -> DataTry -> (TryData, TryData))
+vec22Fail f i (DListT xs) (DListT ys) =
+    liftList22 (zipWithFail2 ((Val .) .: vec22Fail f) i) xs ys
+vec22Fail f i (DListT xs) y =
+    liftList12 (Val . tryUnzipWith (\i' x -> Val $ vec22Fail f i' x y) i) xs
+vec22Fail f i x (DListT ys) =
+    liftList12 (Val . tryUnzipWith (\i' y -> Val $ vec22Fail f i' x y) i) ys
+vec22Fail f i x y = f i x y
 
 -- | A helper class for checking for equality
 class TryEq a where

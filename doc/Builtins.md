@@ -310,6 +310,16 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+### `divMod` (`þ`, `2 -> 2`)
+
+Divide two numbers and return both the quotient and the remainder.
+
+Fails when the divisor is zero.
+
+If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
+
+This function is automatically vectorized and fails when the two lists are of different lengths.
+
 ### `half` (`½`, `1 -> 1`)
 
 Check if an integer is even, and divide it by 2.
@@ -717,6 +727,14 @@ Bitwise XOR of two integers.
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized with padding.
+
+### `popCount` (`Þ`, `1 -> 1`)
+
+Count the number of 1s in the binary digits of an integer.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
+This function is automatically vectorized.
 
 ### `charToInt` (`e`, `1 -> 1`)
 

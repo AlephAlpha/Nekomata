@@ -371,6 +371,16 @@ builtins =
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
     , Builtin
+        "divMod"
+        'þ'
+        divMod'
+        "Divide two numbers and return both the quotient and the remainder.\n\
+        \Fails when the divisor is zero.\n\
+        \If one or both of the arguments are chars, \
+        \they are converted to numbers according to Nekomata's code page.\n\
+        \This function is automatically vectorized \
+        \and fails when the two lists are of different lengths."
+    , Builtin
         "half"
         '½'
         half
@@ -786,6 +796,14 @@ builtins =
         \If one or both of the arguments are chars, \
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized with padding."
+    , Builtin
+        "popCount"
+        'Þ'
+        popCount'
+        "Count the number of 1s in the binary digits of an integer.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
+        \This function is automatically vectorized."
     , Builtin
         "charToInt"
         'e'
