@@ -996,7 +996,7 @@ If it is, push the list itself, otherwise fail.
 
 ### `enumerate` (`x`, `1 -> 2`)
 
-Push a list of integers from 0 to the length of the argument minus 1 without popping the argument.
+Push a list of integers from 0 to the length of the argument minus 1 without popping the original argument.
 
 ### `rotate` (`Ř`, `2 -> 1`)
 
@@ -1121,6 +1121,10 @@ This function is non-deterministic.
 Create a list with length n, whose elements are taken from another list.
 
 This function is non-deterministic, and automatically vectorized on the second argument.
+
+### `bifurcate` (`ƀ`, `1 -> 2`)
+
+Push the reverse of a list without popping the original list.
 
 ## Particles
 

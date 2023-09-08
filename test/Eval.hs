@@ -65,7 +65,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q183: Finding \"sub-palindromes\"." $ do
         specEval
-            "qNᵗz:↔=ũ"
+            "qNᵗzƀ=ũ"
             [ ("\"12131331\"", All ["121", "131", "313", "1331", "33"])
             , ("\"3333\"", All ["33", "333", "3333"])
             ]
@@ -1839,7 +1839,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q250283: Rearrange to a palindrome" $ do
         specEval
-            "↕:↔="
+            "↕ƀ="
             [ ("\"nanas\"", First $ Just "nasan")
             , ("\"coconutnut\"", First $ Just "conuttunoc")
             , ("\"apotato\"", First $ Just "aotptoa")
@@ -1849,7 +1849,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q250395: Have you heard of tralindromes?" $ do
         specEval
-            "p::↔ᵃᶜt$,,="
+            "p:ƀᵃᶜt$,,="
             [ ("\"a\"", Check True)
             , ("\"bb\"", Check True)
             , ("\"ccc\"", Check True)
@@ -2670,7 +2670,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q262985: Numbers that can be negated by reading backwards" $ do
         specEval
-            "3Ňŧ←1c:↔_=3b"
+            "3Ňŧ←1cƀ_=3b"
             [("", Truncated ["2", "8", "20", "26", "32", "56", "80", "104", "146", "164"])]
     describe "q263200: Print all Polynomials" $ do
         specEval
@@ -2833,7 +2833,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q264624: Is it a canonical elementary CA rule number?" $ do
         specEval
-            "¥+Ƃi:↔¬?:Jĭ,Ťđ,?ƃa≤"
+            "¥+Ƃiƀ¬?:Jĭ,Ťđ,?ƃa≤"
             [ ("11", Check True)
             , ("62", Check True)
             , ("74", Check True)

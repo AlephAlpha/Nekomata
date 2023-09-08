@@ -1086,7 +1086,7 @@ builtins =
         'x'
         enumerate
         "Push a list of integers from 0 to the length of the argument minus 1 \
-        \without popping the argument."
+        \without popping the original argument."
     , Builtin
         "rotate"
         'Ř'
@@ -1220,6 +1220,11 @@ builtins =
         \whose elements are taken from another list.\n\
         \This function is non-deterministic, \
         \and automatically vectorized on the second argument."
+    , Builtin
+        "bifurcate"
+        'ƀ'
+        bifurcate
+        "Push the reverse of a list without popping the original list."
     ]
 
 -- | The map from names to builtin functions

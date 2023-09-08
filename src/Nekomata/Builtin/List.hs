@@ -733,3 +733,6 @@ tuple = binaryVecArg2 tuple'
         | n > 0 =
             anyOf (leftId i) xs <&> \x -> Cons x (tuple_ (rightId i) (n - 1) xs)
         | otherwise = Fail
+
+bifurcate :: Function
+bifurcate = dup .* reverse'
