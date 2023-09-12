@@ -5,7 +5,7 @@
 此处总结一下 Code Page 中已有但还没有用上的字符：
 
 ```
-.VW`vw
+.VW`w
 ```
 
 如果 CodePage 中的 256 个字符都用完了，可以考虑用像 05AB1E 那样，用 `.` 开头的字符来表示双字节的内置函数。现在的 CodePage 还远远没有用完，先不考虑这个问题，但 `.` 也先不要用掉。
@@ -164,6 +164,14 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 ```
 
 - [ ] `\nthPrime`：求第 n 个质数。
+
+### [Hypercube elements](https://codegolf.stackexchange.com/q/70558/9288)
+
+```
+2 \range1 \swap \polyPow
+```
+
+- [ ] `\polyPow`：将一个列表视为多项式的系数，求多项式的 n 次幂。感觉不会太常用。
 
 ## 关于字符串
 

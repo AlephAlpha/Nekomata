@@ -113,14 +113,32 @@ builtins =
         andThen
         "Take two values, \n\
         \and return the first one if the second one doesn't fail."
-    , Builtin "drop" '^' drop' "Drop the top value of the stack."
-    , Builtin "dup" ':' dup "Duplicate the top value of the stack."
-    , Builtin "swap" '$' swap "Swap the top two values of the stack."
+    , Builtin
+        "drop"
+        '^'
+        drop'
+        "Drop the top value of the stack: `a ... -> ...`."
+    , Builtin
+        "dup"
+        ':'
+        dup
+        "Duplicate the top value of the stack: `a ... -> a a ...`."
+    , Builtin
+        "swap"
+        '$'
+        swap
+        "Swap the top two values of the stack: `a b ... -> b a ...`."
     , Builtin
         "rot3"
         '§'
         rot3
-        "Rotate the top three values of the stack."
+        "Swap the top two values of the stack: `a b c ... -> c b a ...`."
+    , Builtin
+        "over"
+        'v'
+        over
+        "Duplicate the second value of the stack, \
+        \and put it on top of the stack: `a b ... -> b a b ...`."
     , Builtin
         "eq"
         '='

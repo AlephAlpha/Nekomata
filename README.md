@@ -30,3 +30,5 @@ Nekomata is influenced by the following languages:
 ## Online interpreter
 
 Nekomata is now on [Attempt This Online!](https://ato.pxeger.com/run?1=m70iLzU7PzexJHHBgqWlJWm6FguWFCclF8M4UBoA)
+
+The version on ATO is not always up-to-date. [You can check the version by passing the `-h` flag.](https://ato.pxeger.com/run?1=m70iLzU7PzexJHFZtJJuhlLsgqWlJWm6FguWFCclF8M4UBoA)

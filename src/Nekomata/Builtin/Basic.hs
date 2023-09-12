@@ -51,6 +51,9 @@ swap = Function (Arity 2 2) $ \_ (x :+ y :+ s) -> y :+ x :+ s
 rot3 :: Function
 rot3 = Function (Arity 3 3) $ \_ (x :+ y :+ z :+ s) -> z :+ x :+ y :+ s
 
+over :: Function
+over = Function (Arity 2 3) $ \_ (x :+ y :+ s) -> y :+ x :+ y :+ s
+
 eq :: Function
 eq = predicate2 $ \_ x y -> tryEq x y
 

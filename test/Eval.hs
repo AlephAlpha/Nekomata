@@ -1220,7 +1220,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q170695: Construct a line graph / conjugate graph" $ do
         specEval
-            "Sᵖ{đ∩z}ᵐj"
+            "S:đ∩z¿ᵐj"
             [ ("[]", All [])
             , ("[[\"0\",\"1\"]]", All [])
             , ("[[\"0\",\"1\"],[\"1\",\"2\"]]", All ["[\"01\",\"12\"]"])
@@ -2341,7 +2341,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259633: Make a Custom Bayer Matrix" $ do
         specEval
-            "ᵒ{ᵃƂᵈ:≈Ä+ç4ŗd"
+            "ᵒ{ᵃƂv≈Ä+ç4ŗd"
             [ ("1", All ["[[0]]"])
             , ("2", All ["[[0,1/2],[3/4,1/4]]"])
             , ("4", All ["[[0,1/2,1/8,5/8],[3/4,1/4,7/8,3/8],[3/16,11/16,1/16,9/16],[15/16,7/16,13/16,5/16]]"])
@@ -2796,7 +2796,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q264409: First odd then even indices" $ do
         specEval
-            "ᶦ{ĭ,ᵖ≠"
+            "ᶦ{ĭ,v≠"
             [ ("[1,2,3]", Count 2)
             , ("[1,2,3,4,3,2,1]", Count 3)
             , ("[1,2,3,4,5,6,7,8,9,10]", Count 6)
@@ -2903,4 +2903,14 @@ testEval = describe "Evaluation" $ do
             , ("8", All ["[2]"])
             , ("9", All ["[3]"])
             , ("10", All ["[]"])
+            ]
+    describe "q265088: Longest Consecutive Sequence" $ do
+        specEval
+            "ˡ{N→v∩"
+            [ ("[100,4,200,1,3,2]", All ["4"])
+            , ("[1,2,3,4,5]", All ["5"])
+            , ("[10,9,8,7,6,5]", All ["6"])
+            , ("[1,1,1,2,3]", All ["3"])
+            , ("[5]", All ["1"])
+            , ("[7,3,9,5,4,2,8]", All ["4"])
             ]

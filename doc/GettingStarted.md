@@ -40,11 +40,15 @@ Nekomata -c '+' -i '1 2'
 
 Programs can also be read from a file. Nekomata supports reading codes either in UTF-8 or Nekomata's own encoding. You can pass the path to a UTF-8 file using the `-u` option, or a file with Nekomata's encoding using the `-f` option.
 
+You can take multiple inputs separated by newlines by passing the `-m` option. This is useful for testing code golf submissions.
+
 You can see a list of command-line options by running:
 
 ```bash
 Nekomata -h
 ```
+
+[*Attempt This Online!*](https://ato.pxeger.com/run?1=m70iLzU7PzexJHFZtJJuhlLsgqWlJWm6FguWFCclF8M4UBoA)
 
 If you didn't install Nekomata, you can replace `Nekomata` with `cabal run Nekomata --` in the above commands.
 
@@ -133,3 +137,5 @@ In the REPL, you can switch to this mode by typing `\Mode exists`.
 ## Online interpreter
 
 Nekomata is now on [Attempt This Online!](https://ato.pxeger.com/run?1=m70iLzU7PzexJHHBgqWlJWm6FguWFCclF8M4UBoA)
+
+The version on ATO is not always up-to-date. [You can check the version by passing the `-h` flag.](https://ato.pxeger.com/run?1=m70iLzU7PzexJHFZtJJuhlLsgqWlJWm6FguWFCclF8M4UBoA)

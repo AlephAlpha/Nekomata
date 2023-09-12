@@ -50,19 +50,23 @@ and return the first one if the second one doesn't fail.
 
 ### `drop` (`^`, `1 -> 0`)
 
-Drop the top value of the stack.
+Drop the top value of the stack: `a ... -> ...`.
 
 ### `dup` (`:`, `1 -> 2`)
 
-Duplicate the top value of the stack.
+Duplicate the top value of the stack: `a ... -> a a ...`.
 
 ### `swap` (`$`, `2 -> 2`)
 
-Swap the top two values of the stack.
+Swap the top two values of the stack: `a b ... -> b a ...`.
 
 ### `rot3` (`§`, `3 -> 3`)
 
-Rotate the top three values of the stack.
+Swap the top two values of the stack: `a b c ... -> c b a ...`.
+
+### `over` (`v`, `2 -> 3`)
+
+Duplicate the second value of the stack, and put it on top of the stack: `a b ... -> b a b ...`.
 
 ### `eq` (`=`, `2 -> 1`)
 
