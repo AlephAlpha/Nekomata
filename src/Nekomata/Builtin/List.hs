@@ -14,14 +14,14 @@ import Nekomata.NonDet
 range0_ :: Rational -> [Integer]
 range0_ x = enumFromTo 0 $ ceiling x - 1
 
-nonempty' :: Function
-nonempty' = predicate nonempty''
+isNonempty :: Function
+isNonempty = predicate isNonempty'
   where
-    nonempty'' _ (DListT x) = nonempty_ <$> x
-    nonempty'' _ _ = Fail
-    nonempty_ :: ListTry a -> Bool
-    nonempty_ (Cons _ _) = True
-    nonempty_ Nil = False
+    isNonempty' _ (DListT x) = isNonempty_ <$> x
+    isNonempty' _ _ = Fail
+    isNonempty_ :: ListTry a -> Bool
+    isNonempty_ (Cons _ _) = True
+    isNonempty_ Nil = False
 
 anyOf' :: Function
 anyOf' = unary anyOf''
@@ -736,3 +736,9 @@ tuple = binaryVecArg2 tuple'
 
 bifurcate :: Function
 bifurcate = dup .* reverse'
+
+flatten :: Function
+flatten = unary flatten'
+  where
+    flatten' i (DListT xs) = DListT . concat_ . tryMap flatten' i <$> xs
+    flatten' _ x = Val $ singleton_ x

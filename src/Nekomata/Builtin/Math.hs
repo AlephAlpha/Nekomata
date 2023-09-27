@@ -12,15 +12,15 @@ import Math.NumberTheory.Primes.Counting (primeCount)
 import Math.NumberTheory.Primes.Testing (isCertifiedPrime)
 import Math.NumberTheory.Roots (exactSquareRoot)
 import Nekomata.Builtin.Basic (dup, swap)
-import Nekomata.Builtin.List (length', reverse'')
+import Nekomata.Builtin.List (flatten, length', reverse'')
 import Nekomata.Data
 import Nekomata.Function
 import Nekomata.NonDet
 
-nonzero :: Function
-nonzero = predicateVec nonzero'
+isNonzero :: Function
+isNonzero = predicateVec isNonzero'
   where
-    nonzero' _ x = (/= 0) . unDet <$> toTryNum x
+    isNonzero' _ x = (/= 0) . unDet <$> toTryNum x
 
 isPositive :: Function
 isPositive = predicateVec isPositive'
@@ -36,6 +36,16 @@ isZero :: Function
 isZero = predicateVec isZero'
   where
     isZero' _ x = (== 0) . unDet <$> toTryNum x
+
+isBig :: Function
+isBig = predicateVec isBig'
+  where
+    isBig' _ x = (> 1) . abs . unDet <$> toTryNum x
+
+isSmall :: Function
+isSmall = predicateVec isSmall'
+  where
+    isSmall' _ x = (<= 1) . abs . unDet <$> toTryNum x
 
 less :: Function
 less = predicateVec2 less'
@@ -440,3 +450,6 @@ bitXor = binaryIntPad $ const xor
 
 popCount' :: Function
 popCount' = unaryInt $ const (toInteger . popCount)
+
+histogram :: Function
+histogram = flatten .* powOf2 .* binary' .* sum'

@@ -1,9 +1,14 @@
 # Revision history for Nekomata
 
-## 0.5.1.0 -- Unreleased
+## 0.5.1.0 -- 2023-09-27
 
-* New built-in functions: `\bifurcate`, `\divMod`, `\over`, `\popCount`, `\rle`, `\unrle`.
+* New built-in functions: `\bifurcate`, `\divMod`, `\flatten`, `\histogram`, `\isBig`, `\isSmall`, `\over`, `\popCount`, `\rle`, `\unrle`.
 * New particle: `\zipWithTrunc`.
+
+### Breaking changes
+
+* `\nonzero` is renamed to `\isNonzero`.
+* `\nonempty` is renamed to `\isNonempty`.
 
 ## 0.5.0.0 -- 2023-09-02
 

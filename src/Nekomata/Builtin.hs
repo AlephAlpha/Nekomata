@@ -168,15 +168,15 @@ builtins =
         \Unlike `greater`, this function does not automatically vectorize, \
         \so you can use it to compare two lists."
     , Builtin
-        "nonempty"
+        "isNonempty"
         'N'
-        nonempty'
+        isNonempty
         "Check if a list is non-empty.\n\
         \If it is, push the list itself, otherwise fail."
     , Builtin
-        "nonzero"
+        "isNonzero"
         'Z'
-        nonzero
+        isNonzero
         "Check if a number is non-zero.\n\
         \If it is, push the number itself, otherwise fail.\n\
         \If the argument is a char, \
@@ -205,6 +205,25 @@ builtins =
         'ž'
         isZero
         "Check if a number is zero.\n\
+        \If it is, push the number itself, otherwise fail.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
+        \This function is automatically vectorized."
+    , Builtin
+        "isBig"
+        'Ƶ'
+        isBig
+        "Check if the absolute value of a number is greater than 1.\n\
+        \If it is, push the number itself, otherwise fail.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
+        \This function is automatically vectorized."
+    , Builtin
+        "isSmall"
+        'ƶ'
+        isSmall
+        "Check if the absolute value of a number is \n\
+        \less than or equal to than 1.\n\
         \If it is, push the number itself, otherwise fail.\n\
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
@@ -823,6 +842,22 @@ builtins =
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
     , Builtin
+        "histogram"
+        'Ħ'
+        histogram
+        "Compute the histogram of a list of integers.\n\
+        \The result is a list, \
+        \whose length is the maximum of the input list, \
+        \and whose nth element is the number of occurrences \
+        \of n in the input.\n\
+        \If the input is a ragged list, \
+        \it is flattened before computation.\n\
+        \If the input is a single integer, \
+        \it is treated as a singleton list.\n\
+        \If the input is a single char, \
+        \it is converted to a number according to Nekomata's code page, \
+        \and then treated as a singleton list."
+    , Builtin
         "charToInt"
         'e'
         charToInt'
@@ -1243,6 +1278,13 @@ builtins =
         'ƀ'
         bifurcate
         "Push the reverse of a list without popping the original list."
+    , Builtin
+        "flatten"
+        'V'
+        flatten
+        "Flatten a nested list.\n\
+        \If the argument is a number or a char, \
+        \it is converted to a singleton list."
     ]
 
 -- | The map from names to builtin functions

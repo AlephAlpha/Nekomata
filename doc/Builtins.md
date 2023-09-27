@@ -96,13 +96,13 @@ If it is, push the first value, otherwise fail.
 
 Unlike `greater`, this function does not automatically vectorize, so you can use it to compare two lists.
 
-### `nonempty` (`N`, `1 -> 1`)
+### `isNonempty` (`N`, `1 -> 1`)
 
 Check if a list is non-empty.
 
 If it is, push the list itself, otherwise fail.
 
-### `nonzero` (`Z`, `1 -> 1`)
+### `isNonzero` (`Z`, `1 -> 1`)
 
 Check if a number is non-zero.
 
@@ -135,6 +135,28 @@ This function is automatically vectorized.
 ### `isZero` (`ž`, `1 -> 1`)
 
 Check if a number is zero.
+
+If it is, push the number itself, otherwise fail.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
+This function is automatically vectorized.
+
+### `isBig` (`Ƶ`, `1 -> 1`)
+
+Check if the absolute value of a number is greater than 1.
+
+If it is, push the number itself, otherwise fail.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
+This function is automatically vectorized.
+
+### `isSmall` (`ƶ`, `1 -> 1`)
+
+Check if the absolute value of a number is 
+
+less than or equal to than 1.
 
 If it is, push the number itself, otherwise fail.
 
@@ -740,6 +762,18 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+### `histogram` (`Ħ`, `1 -> 1`)
+
+Compute the histogram of a list of integers.
+
+The result is a list, whose length is the maximum of the input list, and whose nth element is the number of occurrences of n in the input.
+
+If the input is a ragged list, it is flattened before computation.
+
+If the input is a single integer, it is treated as a singleton list.
+
+If the input is a single char, it is converted to a number according to Nekomata's code page, and then treated as a singleton list.
+
 ### `charToInt` (`e`, `1 -> 1`)
 
 Convert a char to an integer according to Nekomata's code page.
@@ -1129,6 +1163,12 @@ This function is non-deterministic, and automatically vectorized on the second a
 ### `bifurcate` (`ƀ`, `1 -> 2`)
 
 Push the reverse of a list without popping the original list.
+
+### `flatten` (`V`, `1 -> 1`)
+
+Flatten a nested list.
+
+If the argument is a number or a char, it is converted to a singleton list.
 
 ## Particles
 

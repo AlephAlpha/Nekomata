@@ -93,7 +93,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q12177: Collatz Conjecture (OEIS A006577)" $ do
         specEval
-            "ˡ{1>ᵉ½3*→I"
+            "ˡ{Ƶᵉ½3*→I"
             [ ("2", All ["1"])
             , ("16", All ["4"])
             , ("5", All ["5"])
@@ -687,7 +687,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q101389: Increment an Array" $ do
         specEval
-            "Ṁ←ɔ:ṁĨËƂ+"
+            "Ṁ←ɔ:ṁĨĦ+"
             [ ("[1]", First $ Just "[1,1]")
             , ("[2]", First $ Just "[2,1]")
             , ("[1,1]", First $ Just "[1,1,1]")
@@ -776,6 +776,25 @@ testEval = describe "Evaluation" $ do
             [ ("1", All ["[1]"])
             , ("2", All ["[[2,2],[2,2]]"])
             , ("3", All ["[[[3,3,3],[3,3,3],[3,3,3]],[[3,3,3],[3,3,3],[3,3,3]],[[3,3,3],[3,3,3],[3,3,3]]]"])
+            ]
+    describe "q113238: Is it true? Ask Jelly!" $ do
+        specEval
+            "NZ"
+            [ ("[1]", Check True)
+            , ("[10]", Check True)
+            , ("[[]]", Check True)
+            , ("[[[[1]]]]", Check True)
+            , ("[[],[1],[1,2]]", Check True)
+            , ("[[1],[1,[2]],[1,[2,[3]]]]", Check True)
+            , ("[[8],[8,[9]],[8,[9,[10]]]]", Check True)
+            , ("[]", Check False)
+            , ("[0]", Check False)
+            , ("[0,-1]", Check False)
+            , ("[-1,0]", Check False)
+            , ("[[[[0]]]]", Check False)
+            , ("[[0],[1,2],[3,4,5]]", Check False)
+            , ("[[8],[8,[9]],[8,[9,[1,0]]]]", Check False)
+            , ("[-1,0,0,0]", Check False)
             ]
     describe "q118444: Stay away from zero" $ do
         specEval
@@ -1061,21 +1080,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q143278: Am I an insignificant array?" $ do
         specEval
-            "∆A2<"
-            [ ("[1,2,3,4,3,4,5,5,5,4]", Check True)
-            , ("[1,2,3,4,5,6,7,8,9,8]", Check True)
-            , ("[3,3,3,3,3,3,3]", Check True)
-            , ("[3,4,4,4,3,3,3,4,4,4]", Check True)
-            , ("[1,2,3,4]", Check True)
-            , ("[5,4,3,2]", Check True)
-            , ("[1,3,5,7,9,7,5,3,1]", Check False)
-            , ("[1,1,1,2,3,4,5,6,19]", Check False)
-            , ("[3,4,5,6,7,8,7,5]", Check False)
-            , ("[1,2,4,10,18,10,100]", Check False)
-            , ("[10,20,30,30,30]", Check False)
-            ]
-        specEval
-            "∆:±="
+            "∆ƶ"
             [ ("[1,2,3,4,3,4,5,5,5,4]", Check True)
             , ("[1,2,3,4,5,6,7,8,9,8]", Check True)
             , ("[3,3,3,3,3,3,3]", Check True)
@@ -1285,7 +1290,7 @@ testEval = describe "Evaluation" $ do
             , ("[1,19,17,17,0,2,14,10,10,12,5,14,16,7,15,15,18,11,17,7]", All ["5"])
             ]
         specEval
-            "Ţ~1>"
+            "Ţ~Ƶ"
             [ ("[1,10,16,4,8,10,9,19,2,15,18,19,10,9,17,15,19,5,13,20]", Count 4)
             , ("[11,8,6,15,9,19,2,2,4,19,14,19,13,12,16,13,0,5,0,8]", Count 5)
             , ("[9,7,8,16,3,9,20,19,15,6,8,4,18,14,19,12,12,16,11,19]", Count 5)
@@ -1503,7 +1508,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q216734: Jelly's Untruth" $ do
         specEval
-            "ËƂ∑±"
+            "Ħ±"
             [ ("[0,2,4,5]", All ["[1,0,1,0,1,1]"])
             , ("[4]", All ["[0,0,0,0,1]"])
             , ("[1,0,0,1]", All ["[1,1]"])
@@ -1816,6 +1821,14 @@ testEval = describe "Evaluation" $ do
         specEval
             "į→ŋ"
             [("", All ["[1,2]", "[1,-2]", "[-1,2]", "[-1,-2]", "[2,1]", "[2,-1]", "[-2,1]", "[-2,-1]"])]
+    describe "q248245: Make a list flat" $ do
+        specEval
+            "V"
+            [ ("[[3],[3,[[6]]]]", All ["[3,3,6]"])
+            , ("[]", All ["[]"])
+            , ("[[],[]]", All ["[]"])
+            , ("[[1,4,6],[1,[2,67,[5,7]]]]", All ["[1,4,6,1,2,67,5,7]"])
+            ]
     describe "q248445: Print the power set of the power set ... of an empty set" $ do
         specEval
             "Øᶦ{Sa"
@@ -2335,7 +2348,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259576: All of the Boards" $ do
         specEval
-            "į3ƂÐ3~ᵑᵐç3~ᵑçaᵐᶜ{0*}∑2<"
+            "į3ƂÐ3~ᵑᵐç3~ᵑçaᵐᶜ{0*}∑ƶ"
             [ ("", Count 215)
             , ("", Truncated ["[[0,1,0,1],[1,1,1,1],[0,1,0,1],[1,1,1,1]]", "[[0,1,0,1],[1,1,1,1],[0,1,1,0],[1,1,1,1]]"])
             ]
@@ -2432,7 +2445,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q260266: The number of solutions to Hertzsprung's Problem" $ do
         specEval
-            "↕∆A1>"
+            "↕∆Ƶ"
             [ ("1", Count 1)
             , ("2", Count 0)
             , ("3", Count 0)
@@ -2674,7 +2687,7 @@ testEval = describe "Evaluation" $ do
             [("", Truncated ["2", "8", "20", "26", "32", "56", "80", "104", "146", "164"])]
     describe "q263200: Print all Polynomials" $ do
         specEval
-            "Ňƒ$ƥ←ËƂ∙ŋ"
+            "Ňƒ$ƥ←$yĦŋ"
             [("", Truncated ["0", "[1]", "[-1]", "[0,1]", "[0,-1]", "[2]", "[-2]", "[0,0,1]", "[0,0,-1]"])]
     describe "q263308: Make a k-skip-j range" $ do
         specEval
@@ -2699,7 +2712,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q263438: Is this a powerful number?" $ do
         specEval
-            "ƒ1>"
+            "ƒƵ"
             [ ("1", Check True)
             , ("2", Check False)
             , ("3", Check False)
@@ -2892,7 +2905,7 @@ testEval = describe "Evaluation" $ do
             , ("10", All ["[]"])
             ]
         specEval
-            "←ᶠ{1>B:o±="
+            "←ᶠ{ƵBƶ:o="
             [ ("1", All ["[]"])
             , ("2", All ["[]"])
             , ("3", All ["[]"])
