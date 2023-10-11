@@ -1,5 +1,10 @@
 # Revision history for Nekomata
 
+## 0.5.2.0 -- Unreleased
+
+* Updated some dependencies.
+* Fixed a bug in printing truncated results.
+
 ## 0.5.1.0 -- 2023-09-27
 
 * New built-in functions: `\bifurcate`, `\divMod`, `\flatten`, `\histogram`, `\isBig`, `\isSmall`, `\over`, `\popCount`, `\rle`, `\unrle`.

@@ -76,24 +76,21 @@ checkResult = hasValue initDecisions
 
 -- | The result of a Nekomata evaluation, to be shown to the user
 data Result
-    = All [String]
-    | Truncated [String]
+    = All Bool [String]
     | First (Maybe String)
     | Count Integer
     | Check Bool
     deriving (Eq)
 
 instance Show Result where
-    show (All xs) = unwords xs
-    show (Truncated xs) = unwords xs ++ " ..."
+    show (All truncated xs) = unwords xs ++ if truncated then "..." else ""
     show (First x) = fromMaybe "" x
     show (Count n) = show n
     show (Check b) = show b
 
 -- | Show a Nekomata result separated by newlines
 showResult :: Result -> [String]
-showResult (All xs) = xs
-showResult (Truncated xs) = xs
+showResult (All truncated xs) = xs ++ ["..." | truncated]
 showResult (First x) = [fromMaybe "" x]
 showResult (Count n) = [show n]
 showResult (Check b) = [show b]
@@ -101,11 +98,11 @@ showResult (Check b) = [show b]
 -- | Truncate a list of strings to a given length
 truncate' :: Int -> [String] -> Result
 truncate' n xs =
-    let (ys, zs) = splitAt n xs in Truncated $ ys ++ ["..." | not (null zs)]
+    let (ys, zs) = splitAt n xs in All (not $ null zs) ys
 
 -- | Get the result of a Nekomata evaluation according to the mode
 toResult :: Mode -> Maybe Int -> TryData -> Result
-toResult AllValues Nothing = All . allResults
+toResult AllValues Nothing = All False . allResults
 toResult AllValues (Just n) = truncate' n . allResults
 toResult FirstValue _ = First . firstResult
 toResult CountValues _ = Count . countResults

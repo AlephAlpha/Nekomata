@@ -152,12 +152,12 @@ completionFromMap m f prefix = completing ++ completed
     completing =
         [ completing' name' short'
         | name' <- Map.keys m
-        , tail prefix `isPrefixOf` name'
+        , drop 1 prefix `isPrefixOf` name'
         , let short' = [f $ m ! name']
         ]
     completed =
         if not (null prefix) && last prefix == ' '
-            then case Map.lookup (tail $ init prefix) m of
+            then case Map.lookup (drop 1 $ init prefix) m of
                 Nothing -> []
                 Just b -> [completed' [f b]]
             else []

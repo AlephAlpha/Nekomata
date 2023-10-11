@@ -117,7 +117,7 @@ executable Nekomata
   -- Other library packages from which modules are imported.
   build-depends:
     , base                  >=4.15 && <5
-    , bytestring            ^>=0.11
+    , bytestring            ^>=0.12
     , containers            ^>=0.6
     , haskeline             ^>=0.8
     , Nekomata
@@ -154,5 +154,5 @@ test-suite Nekomata-test
   -- Test dependencies.
   build-depends:
     , base      >=4.15 && <5
-    , hspec     ^>=2.10
+    , hspec     ^>=2.11
     , Nekomata
