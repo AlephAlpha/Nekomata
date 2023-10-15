@@ -83,7 +83,7 @@ data Result
     deriving (Eq)
 
 instance Show Result where
-    show (All truncated xs) = unwords xs ++ if truncated then "..." else ""
+    show (All truncated xs) = unwords xs ++ if truncated then " ..." else ""
     show (First x) = fromMaybe "" x
     show (Count n) = show n
     show (Check b) = show b
