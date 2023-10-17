@@ -33,6 +33,12 @@ all_ = All False
 truncate_ :: [String] -> Result
 truncate_ = All True
 
+first_ :: String -> Result
+first_ = First . Just
+
+nothing_ :: Result
+nothing_ = First Nothing
+
 testEval :: Spec
 testEval = describe "Evaluation" $ do
     describe "q69: Golf you a quine for great good!" $ do
@@ -368,6 +374,18 @@ testEval = describe "Evaluation" $ do
         specEval
             "1Uᶦ{Y$Ĭ}ɗ"
             [("", truncate_ ["1", "11", "21", "1211", "111221", "312211", "13112221", "1113213211", "31131211131221", "13211311123113112211"])]
+    describe "q71476: Determine the depth of an array" $ do
+        specEval
+            "ˡ∑"
+            [ ("[1]", all_ ["1"])
+            , ("[1,2,3]", all_ ["1"])
+            , ("[[1,2,3]]", all_ ["2"])
+            , ("[3,[3,[3],3],3]", all_ ["3"])
+            , ("[[[[1],2],[3,[4]]]]", all_ ["4"])
+            , ("[1,[[3]],[5,6],[[[[8]]]],1]", all_ ["5"])
+            , ("[1,[[2,3,[[4],5],6,[7,8]],9,[10,[[[11]]]],12,13],14]", all_ ["6"])
+            , ("[[[[[[[3]]]]]]]", all_ ["7"])
+            ]
     describe "q71833: How even is a number?" $ do
         specEval
             "ˡ½"
@@ -694,14 +712,14 @@ testEval = describe "Evaluation" $ do
     describe "q101389: Increment an Array" $ do
         specEval
             "Ṁ←ɔ:ṁĨĦ+"
-            [ ("[1]", First $ Just "[1,1]")
-            , ("[2]", First $ Just "[2,1]")
-            , ("[1,1]", First $ Just "[1,1,1]")
-            , ("[3,3,3,3,3]", First $ Just "[3,3,3,3,3,1]")
-            , ("[1,2]", First $ Just "[2,2]")
-            , ("[2,1]", First $ Just "[2,2]")
-            , ("[3,1,1]", First $ Just "[3,2,1]")
-            , ("[3,4,9,3]", First $ Just "[4,4,9,3]")
+            [ ("[1]", first_ "[1,1]")
+            , ("[2]", first_ "[2,1]")
+            , ("[1,1]", first_ "[1,1,1]")
+            , ("[3,3,3,3,3]", first_ "[3,3,3,3,3,1]")
+            , ("[1,2]", first_ "[2,2]")
+            , ("[2,1]", first_ "[2,2]")
+            , ("[3,1,1]", first_ "[3,2,1]")
+            , ("[3,4,9,3]", first_ "[4,4,9,3]")
             ]
     describe "q103624: Find the sum of all numbers below n that are a multiple of some set of numbers" $ do
         specEval
@@ -714,11 +732,11 @@ testEval = describe "Evaluation" $ do
             ]
         specEval
             "ᶠ{$~¦}∑"
-            [ ("50 [2]", First $ Just "600")
-            , ("10 [3,5]", First $ Just "23")
-            , ("28 [4,2]", First $ Just "182")
-            , ("19 [7,5]", First $ Just "51")
-            , ("50 [2,3,5]", First $ Just "857")
+            [ ("50 [2]", first_ "600")
+            , ("10 [3,5]", first_ "23")
+            , ("28 [4,2]", first_ "182")
+            , ("19 [7,5]", first_ "51")
+            , ("50 [2,3,5]", first_ "857")
             ]
     describe "q103756: Big numbers: Ultrafactorials" $ do
         specEval
@@ -801,6 +819,16 @@ testEval = describe "Evaluation" $ do
             , ("[[0],[1,2],[3,4,5]]", Check False)
             , ("[[8],[8,[9]],[8,[9,[1,0]]]]", Check False)
             , ("[-1,0,0,0]", Check False)
+            ]
+    describe "q117774: Moving modest minimum" $ do
+        specEval
+            "ĕ^ṁ"
+            [ ("[4,3,2,5]", all_ ["2", "2", "3", "2"])
+            , ("[4,2,2,5]", all_ ["2", "2", "2", "2"])
+            , ("[6,3,5,5,8]", all_ ["3", "5", "3", "3", "3"])
+            , ("[7,1]", all_ ["1", "7"])
+            , ("[9,9]", all_ ["9", "9"])
+            , ("[9,8,9]", all_ ["8", "9", "8"])
             ]
     describe "q118444: Stay away from zero" $ do
         specEval
@@ -999,8 +1027,8 @@ testEval = describe "Evaluation" $ do
     describe "q136713: Find the first duplicated element" $ do
         specEval
             "pƆᵗf"
-            [ ("[2,3,3,1,5,2]", First $ Just "3")
-            , ("[2,4,3,5,1]", First Nothing)
+            [ ("[2,3,3,1,5,2]", first_ "3")
+            , ("[2,4,3,5,1]", nothing_)
             ]
     describe "q136887: Fold a List in Half" $ do
         specEval
@@ -1311,22 +1339,22 @@ testEval = describe "Evaluation" $ do
     describe "q182305: Return the Closest Prime Number" $ do
         specEval
             "Ž-Q"
-            [ ("80", First $ Just "79")
-            , ("100", First $ Just "101")
-            , ("5", First $ Just "5")
-            , ("9", First $ Just "7")
-            , ("532", First $ Just "523")
-            , ("1", First $ Just "2")
+            [ ("80", first_ "79")
+            , ("100", first_ "101")
+            , ("5", first_ "5")
+            , ("9", first_ "7")
+            , ("532", first_ "523")
+            , ("1", first_ "2")
             ]
     describe "q186881: First occurrence in the Sixers sequence" $ do
         specEval
             "Ň6*ƊajĭÐɗ$Ĩ"
-            [ ("0", First $ Just "241")
-            , ("17", First $ Just "297")
-            , ("36", First $ Just "80")
-            , ("55", First $ Just "128")
-            , ("82", First $ Just "2")
-            , ("95", First $ Just "557")
+            [ ("0", first_ "241")
+            , ("17", first_ "297")
+            , ("36", first_ "80")
+            , ("55", first_ "128")
+            , ("82", first_ "2")
+            , ("95", first_ "557")
             ]
     describe "q187879: Integer Lists of Noah" $ do
         specEval
@@ -1400,6 +1428,18 @@ testEval = describe "Evaluation" $ do
         specEval
             "pNĉ#"
             [("[4,4,4,7,7,9,9,9,9,2,2,2,4,4]", all_ ["1", "1", "1", "2", "2", "3", "3", "3", "3", "4", "4", "4", "5", "5"])]
+    describe "q190949: Count the number of triangles" $ do
+        specEval
+            "SƆ$đ+<"
+            [ ("[1,2,3]", Count 0)
+            , ("[1,1,1]", Count 1)
+            , ("[1,1,1,1]", Count 4)
+            , ("[1,2,3,4]", Count 1)
+            , ("[3,4,5,7]", Count 3)
+            , ("[1,42,69,666,1000000]", Count 0)
+            , ("[12,23,34,45,56,67,78,89]", Count 34)
+            , ("[1,2,3,4,5,6,7,8,9,10]", Count 50)
+            ]
     describe "q195592: Average Two Letters" $ do
         specEval
             "µkH"
@@ -1424,6 +1464,23 @@ testEval = describe "Evaluation" $ do
         specEval
             "RpN↔"
             [("4", all_ ["[1]", "[2,1]", "[3,2,1]", "[4,3,2,1]"])]
+    describe "q199353: Is this a triangle?" $ do
+        specEval
+            "∑ä<"
+            [ ("[1,1,1]", Check True)
+            , ("[1,2,3]", Check False)
+            , ("[2,1,3]", Check False)
+            , ("[1,3,2]", Check False)
+            , ("[3,2,1]", Check False)
+            , ("[3,1,2]", Check False)
+            , ("[2,2,2]", Check True)
+            , ("[3,4,5]", Check True)
+            , ("[3,5,4]", Check True)
+            , ("[5,3,4]", Check True)
+            , ("[5,4,3]", Check True)
+            , ("[10,9,3]", Check True)
+            , ("[100,10,10]", Check False)
+            ]
     describe "q199409: Is it a doubling sequence?" $ do
         specEval
             "∆$i≥"
@@ -1738,6 +1795,13 @@ testEval = describe "Evaluation" $ do
             , ("1001", all_ ["[1000,1001]"])
             , ("4037 ", all_ ["[1000,2000,3000,4000,4010,4020,4030,4031,4032,4033,4034,4035,4036,4037]"])
             ]
+    describe "q240187: Repeating slices of an array incrementally" $ do
+        specEval
+            "Jᵖ{ix→ᶻL"
+            [ ("[1,2,3,4,5,6,7,8,9,10]", first_ "[[1],[2,3],[4,5,6],[7,8,9,10]]")
+            , ("[10,20,30,40]", first_ "[[10],[20,30],[40]]")
+            , ("[100,200,300,400,500]", first_ "[[100],[200,300],[400,500]]")
+            ]
     describe "q241267: Remove odd indices and double the even indices" $ do
         specEval
             "ĭ:Ĭ"
@@ -1872,12 +1936,12 @@ testEval = describe "Evaluation" $ do
     describe "q250283: Rearrange to a palindrome" $ do
         specEval
             "↕ƀ="
-            [ ("\"nanas\"", First $ Just "nasan")
-            , ("\"coconutnut\"", First $ Just "conuttunoc")
-            , ("\"apotato\"", First $ Just "aotptoa")
-            , ("\"canadadance\"", First $ Just "canadedanac")
-            , ("\"nananana\"", First $ Just "nanaanan")
-            , ("\"anaan\"", First $ Just "anana")
+            [ ("\"nanas\"", first_ "nasan")
+            , ("\"coconutnut\"", first_ "conuttunoc")
+            , ("\"apotato\"", first_ "aotptoa")
+            , ("\"canadadance\"", first_ "canadedanac")
+            , ("\"nananana\"", first_ "nanaanan")
+            , ("\"anaan\"", first_ "anana")
             ]
     describe "q250395: Have you heard of tralindromes?" $ do
         specEval
@@ -2241,12 +2305,12 @@ testEval = describe "Evaluation" $ do
     describe "q258335: Shortest Code to Find the Smallest Missing Positive Integer" $ do
         specEval
             "ŇPᵖf"
-            [ ("[1,2,3]", First $ Just "4")
-            , ("[3,4,-1,1]", First $ Just "2")
-            , ("[7,8,9,11,12]", First $ Just "1")
-            , ("[-5,-4,-3,-2,-1,0,1,2,3,5,7,10]", First $ Just "4")
-            , ("[]", First $ Just "1")
-            , ("[-1,-4,-7]", First $ Just "1")
+            [ ("[1,2,3]", first_ "4")
+            , ("[3,4,-1,1]", first_ "2")
+            , ("[7,8,9,11,12]", first_ "1")
+            , ("[-5,-4,-3,-2,-1,0,1,2,3,5,7,10]", first_ "4")
+            , ("[]", first_ "1")
+            , ("[-1,-4,-7]", first_ "1")
             ]
     describe "q258432: Shortest code to generate all Pythagorean triples up to a given limit" $ do
         specEval
@@ -2387,9 +2451,9 @@ testEval = describe "Evaluation" $ do
     describe "q259707: Shortest distinguishable slice" $ do
         specEval
             "∑ᵚ+xqNᵖ{ᵚ@ů}aşᵉhl→Ð"
-            [ ("[\"happy\",\"angry\",\"hungry\"]", First $ Just "[1,2]")
-            , ("[\"sheer\",\"shrew\",\"shine\",\"shire\",\"spike\",\"shy\"]", First $ Just "[2,4]")
-            , ("[\"snap\",\"crackle\",\"pop\",\"smack\",\"sizzle\",\"whiff\",\"sheen\"]", First $ Just "[0,2]")
+            [ ("[\"happy\",\"angry\",\"hungry\"]", first_ "[1,2]")
+            , ("[\"sheer\",\"shrew\",\"shine\",\"shire\",\"spike\",\"shy\"]", first_ "[2,4]")
+            , ("[\"snap\",\"crackle\",\"pop\",\"smack\",\"sizzle\",\"whiff\",\"sheen\"]", first_ "[0,2]")
             ]
     describe "q259881: The Jaccard Index" $ do
         specEval
@@ -2578,16 +2642,16 @@ testEval = describe "Evaluation" $ do
     describe "q261908: Last odd digit of power of 2" $ do
         specEval
             "Ë¢BÖ1Ĩ"
-            [ ("1", First Nothing)
-            , ("2", First Nothing)
-            , ("3", First Nothing)
-            , ("4", First $ Just "1")
-            , ("5", First $ Just "1")
-            , ("6", First Nothing)
-            , ("7", First $ Just "2")
-            , ("8", First $ Just "1")
-            , ("9", First $ Just "1")
-            , ("10", First $ Just "3")
+            [ ("1", nothing_)
+            , ("2", nothing_)
+            , ("3", nothing_)
+            , ("4", first_ "1")
+            , ("5", first_ "1")
+            , ("6", nothing_)
+            , ("7", first_ "2")
+            , ("8", first_ "1")
+            , ("9", first_ "1")
+            , ("10", first_ "3")
             ]
     describe "q262032: Vertices of a regular dodecahedron" $ do
         specEval
@@ -2796,9 +2860,9 @@ testEval = describe "Evaluation" $ do
     describe "q263774: Round up to a smoother number" $ do
         specEval
             "Ň+ᵖ{ʷ½≥"
-            [ ("101 100", First $ Just "102")
-            , ("201 100", First $ Just "204")
-            , ("256 100", First $ Just "256")
+            [ ("101 100", first_ "102")
+            , ("201 100", first_ "204")
+            , ("256 100", first_ "256")
             ]
     describe "q263910: Evenly spread values" $ do
         specEval
@@ -2946,6 +3010,15 @@ testEval = describe "Evaluation" $ do
             , ("[5]", all_ ["1"])
             , ("[7,3,9,5,4,2,8]", all_ ["4"])
             ]
+    describe "q265382: Find the largest sum such that no two elements are touching" $ do
+        specEval
+            "Jĭ?∑haṀ"
+            [ ("[1,2,3,4]", all_ ["6"])
+            , ("[1,2,3,4,5]", all_ ["9"])
+            , ("[2,2,1,1,2,1,1,2]", all_ ["7"])
+            , ("[3,1,4,1,5,9,2]", all_ ["16"])
+            , ("[9,8,7,9,9,8]", all_ ["26"])
+            ]
     describe "q265768: Transpose a multidimensional array" $ do
         specEval
             "ʷ∑→ᵉbD"
@@ -2982,4 +3055,13 @@ testEval = describe "Evaluation" $ do
             , ("7", Count 3)
             , ("8", Count 15)
             , ("9", Count 7)
+            ]
+    describe "q266049: How many umbrellas to cover the beach?" $ do
+        specEval
+            "Jᵐ{x:ᵒ≈>~}aş#"
+            [ ("[9,2,1,3,2,4,2,1] 1", first_ "1")
+            , ("[1,1,1,1,1,1,1,1] 1", first_ "8")
+            , ("[2,1,4,1,4,1,1,3,1] 1", first_ "2")
+            , ("[5,1,3,1,3,1,1,1,6] 1", first_ "2")
+            , ("[4,1,1,3,1,1] 1", first_ "2")
             ]
