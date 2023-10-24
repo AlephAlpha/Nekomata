@@ -72,7 +72,7 @@ parseTerm =
         ]
         <?> "Nekomata term"
 
--- | Parse a Nekomata program
+-- | Parse a Nekomata code block
 parseBlock :: Parser Program
 parseBlock = Program <$> parseTerm `endBy` spaces <?> "Nekomata block"
 

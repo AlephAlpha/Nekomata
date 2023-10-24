@@ -709,6 +709,19 @@ testEval = describe "Evaluation" $ do
             , ("[0,0,1,1,1]", all_ ["3"])
             , ("[1,1,1,1,1,1]", all_ ["6"])
             ]
+    describe "q100205: Do Matrix Multiplication!" $ do
+        specEval
+            "ᵐ∙"
+            [ ("[[1,2],[3,4],[5,6]] [[1,2,3,4,5],[6,7,8,9,10]]", all_ ["[[13,16,19,22,25],[27,34,41,48,55],[41,52,63,74,85]]"])
+            , ("[[2,3],[3,4]] [[3,5],[3,1]]", all_ ["[[15,13],[21,19]]"])
+            , ("[[5,3],[1,3],[9,3],[1,-1000]] [[1,3],[2,4]]", all_ ["[[11,27],[7,15],[15,39],[-1999,-3997]]"])
+            ]
+        specEval
+            "ᵐ*ᵐ∑"
+            [ ("[[1,2],[3,4],[5,6]] [[1,2,3,4,5],[6,7,8,9,10]]", all_ ["[[13,16,19,22,25],[27,34,41,48,55],[41,52,63,74,85]]"])
+            , ("[[2,3],[3,4]] [[3,5],[3,1]]", all_ ["[[15,13],[21,19]]"])
+            , ("[[5,3],[1,3],[9,3],[1,-1000]] [[1,3],[2,4]]", all_ ["[[11,27],[7,15],[15,39],[-1999,-3997]]"])
+            ]
     describe "q101389: Increment an Array" $ do
         specEval
             "Ṁ←ɔ:ṁĨĦ+"
@@ -977,6 +990,15 @@ testEval = describe "Evaluation" $ do
             , ("3", all_ ["[[1,0,1],[0,1,0],[1,0,1]]"])
             , ("4", all_ ["[[1,0,1,0],[0,1,0,1],[1,0,1,0],[0,1,0,1]]"])
             ]
+    describe "q129773: Is it a Lynch-Bell number?" $ do
+        specEval
+            "Ɗ¦ů"
+            [ ("7", Check True)
+            , ("126", Check True)
+            , ("54", Check False)
+            , ("55", Check False)
+            , ("3915", Check True)
+            ]
     describe "q130390: Is it a super-prime?" $ do
         specEval
             "QƥQ"
@@ -1209,6 +1231,17 @@ testEval = describe "Evaluation" $ do
             [ ("1", all_ ["[0]"])
             , ("18", all_ ["[0,1,2,5,10,21,42,85,170,341,682,1365,2730,5461,10922,21845,43690,87381]"])
             ]
+    describe "q154363: Check if all non-zero elements in a matrix are connected" $ do
+        specEval
+            "ᵗ{±1Ĩ$BaOđᵒ{≈∑Ƶ"
+            [ ("[0] 1", Check True)
+            , ("[0,0] 2", Check True)
+            , ("[1,1,1,0,0,0] 3", Check True)
+            , ("[1,0,0,1,1,1,0,0,1] 3", Check True)
+            , ("[0,1,1,0] 2", Check False)
+            , ("[1,1,1,0,0,0,0,2,0,0,0,5] 4", Check False)
+            , ("[0,0,5,2,1,2,0,0,5,3,2,1,5,7,3,2] 4", Check False)
+            ]
     describe "q162254: Generate a Walsh Matrix" $ do
         specEval
             "Ë:ᵒ&Þ£E"
@@ -1439,6 +1472,22 @@ testEval = describe "Evaluation" $ do
             , ("[1,42,69,666,1000000]", Count 0)
             , ("[12,23,34,45,56,67,78,89]", Count 34)
             , ("[1,2,3,4,5,6,7,8,9,10]", Count 50)
+            ]
+    describe "q194929: Is it a circumfix?" $ do
+        specEval
+            "≠;sᵃN,="
+            [ ("\"apply\" \"appreciably\"", Check True)
+            , ("\"rake\" \"racket by the lake\"", Check True)
+            , ("\"bring\" \"brought him a gong\"", Check False)
+            , ("\"falcon\" \"false conundrum\"", Check False)
+            , ("\"pale\" \"pale ale\"", Check True)
+            , ("\"b\" \"barb\"", Check False)
+            , ("\"abba\" \"aba\"", Check False)
+            , ("\"friend\" \"friend\"", Check False)
+            , ("\"\" \"\"", Check False)
+            , ("\"Twin Sister\" \"Twister\"", Check False)
+            , ("\"case\" \"Castle\"", Check False)
+            , ("\"<<@ 23|>\" \"<<@23??|> 23|>\"", Check True)
             ]
     describe "q195592: Average Two Letters" $ do
         specEval
@@ -1802,6 +1851,22 @@ testEval = describe "Evaluation" $ do
             , ("[10,20,30,40]", first_ "[[10],[20,30],[40]]")
             , ("[100,200,300,400,500]", first_ "[[100],[200,300],[400,500]]")
             ]
+    describe "q241156: Array depth of a ragged list" $ do
+        specEval
+            "Uˡ{Ťj"
+            [ ("[1]", all_ ["1"])
+            , ("[1,2,3]", all_ ["1"])
+            , ("[[1,2,3]]", all_ ["2"])
+            , ("[3,[3,[3],3],3]", all_ ["1"])
+            , ("[[[[1],2],[3,[4]]]]", all_ ["3"])
+            , ("[[1,2,3],[4,5,6]]", all_ ["2"])
+            , ("[[1,2,[3]],[4,[5],[6,[7]]]]", all_ ["2"])
+            , ("[[1,2],[3,4,5],[6,7,8,9]]", all_ ["1"])
+            , ("[[[1,2]],[[3,4],[5,6]]]", all_ ["1"])
+            , ("[[1,[2]],[[[3]],[[[4]]]]]", all_ ["2"])
+            , ("[[[1],[2]],[[3,4],[5,6]]]", all_ ["2"])
+            , ("[[[[[[[3]]]]]]]", all_ ["7"])
+            ]
     describe "q241267: Remove odd indices and double the even indices" $ do
         specEval
             "ĭ:Ĭ"
@@ -1932,6 +1997,17 @@ testEval = describe "Evaluation" $ do
             "O2ᵚL"
             [ ("2", all_ ["[[0,1]]"])
             , ("4", all_ ["[[2,3],[0,1]]", "[[1,3],[0,2]]", "[[0,3],[1,2]]"])
+            ]
+    describe "q250213: Generate an arbitrary half of a string" $ do
+        specEval
+            "↕;="
+            [ ("\"aaaabbbb\"", first_ "aabb")
+            , ("\"abab\"", first_ "ab")
+            , ("\"aabbaa\"", first_ "aab")
+            , ("\"aabbaaaa\"", first_ "aaba")
+            , ("\"baccba\"", first_ "bac")
+            , ("\"aabbcc\"", first_ "abc")
+            , ("\"abcabc\"", first_ "abc")
             ]
     describe "q250283: Rearrange to a palindrome" $ do
         specEval
@@ -3064,4 +3140,18 @@ testEval = describe "Evaluation" $ do
             , ("[2,1,4,1,4,1,1,3,1] 1", first_ "2")
             , ("[5,1,3,1,3,1,1,1,6] 1", first_ "2")
             , ("[4,1,1,3,1,1] 1", first_ "2")
+            ]
+    describe "q266185: Expected number of rounds for this labeling scheme" $ do
+        specEval
+            "→r$ÇƆ/←ŗ0ɔ$ᵑ∆"
+            [ ("1 1", all_ ["[1]"])
+            , ("4 2", all_ ["[19/5]"])
+            , ("6 2", all_ ["[97/14]"])
+            , ("7 4", all_ ["[257/68]"])
+            , ("7 7", all_ ["[1]"])
+            , ("8 1", all_ ["[761/35]"])
+            , ("8 5", all_ ["[951/275]"])
+            , ("10 3", all_ ["[8241679/911064]"])
+            , ("12 7", all_ ["[69968/16611]"])
+            , ("20 2", all_ ["[645315821032049/18278449721532]"])
             ]

@@ -94,7 +94,7 @@ parseData =
         ]
         <?> "Nekomata data"
 
--- | Parse a Nekomata data
+-- | Parse a Nekomata data literal in a program
 parseData' :: Parser Data
 parseData' =
     choice
@@ -105,6 +105,7 @@ parseData' =
         ]
         <?> "Nekomata data"
 
+-- | Parse a Nekomata input
 parseInput :: Parser [Data]
 parseInput =
     parseData
