@@ -1,6 +1,8 @@
 module Nekomata.Parser.Data where
 
 import Data.Ratio ((%))
+import Data.Word (Word8)
+import Nekomata.CodePage (charToInt)
 import Nekomata.Data
 import Text.Parsec
 import Text.Parsec.String (Parser)
@@ -57,22 +59,36 @@ parseNum' = try parseRational' <|> fromInteger <$> parsePositive <?> "number"
 parseEscape :: Parser Char
 parseEscape = char '\\' >> oneOf "\"\\'"
 
+checkCodePage' :: Char -> Parser Word8
+checkCodePage' c = case charToInt c of
+    Just x' -> return x'
+    Nothing ->
+        parserFail
+            $ "Character '"
+            ++ [c]
+            ++ "' is not in Nekomata's code page."
+
 -- | Parse a string literal
-parseString :: Parser String
+parseString :: Parser [Word8]
 parseString =
     between
         (char '"')
         (char '"')
-        (many $ try parseEscape <|> noneOf "\"")
+        (many (try parseEscape <|> noneOf "\"") >>= mapM checkCodePage')
         <?> "string"
 
 -- | Parse a char literal
-parseChar :: Parser Char
-parseChar = between (char '\'') (optional $ char '\'') anyChar <?> "char"
+parseChar :: Parser Word8
+parseChar =
+    between
+        (char '\'')
+        (optional $ char '\'')
+        (anyChar >>= checkCodePage')
+        <?> "char"
 
 -- | Parse a char literal, but without the right single quote
-parseChar' :: Parser Char
-parseChar' = char '\'' >> anyChar <?> "char"
+parseChar' :: Parser Word8
+parseChar' = char '\'' >> (anyChar >>= checkCodePage') <?> "char"
 
 -- | Parse a list of Nekomata data
 parseList :: Parser [Data]

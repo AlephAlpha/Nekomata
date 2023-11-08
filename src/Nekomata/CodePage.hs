@@ -36,6 +36,10 @@ intToChar x
     | x >= 0 && x < 255 = Just $ codePage !! fromIntegral x
     | otherwise = Nothing
 
+-- | Convert a byte to a character.
+byteToChar :: Word8 -> Char
+byteToChar = (codePage !!) . fromIntegral
+
 -- A Markdown table of the code page
 codePageMarkdown :: String
 codePageMarkdown =

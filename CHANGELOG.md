@@ -4,6 +4,11 @@
 
 * Updated some dependencies. Now Nekomata can be built with GHC 9.8.1.
 * Fixed a bug in printing truncated results.
+* Now characters are internally represented as `Word8`s instead of `Char`s.
+
+### Breaking changes
+
+* Fixed a bug in comparing characters. Now characters are compared by their code points in Nekomata's custom code page instead of Unicode.
 
 ## 0.5.1.0 -- 2023-09-27
 

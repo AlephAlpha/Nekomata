@@ -42,7 +42,11 @@ initRuntime :: [Data] -> Runtime
 initRuntime = Runtime initId . initStack . map fromValue
 
 readInput :: String -> Either NekomataError [Data]
-readInput = left ParseError . parse parseInput ""
+readInput =
+    left CodePageError
+        . checkCodePage
+        >=> left ParseError
+        . parse parseInput ""
 
 -- | Run a Nekomata function with the given runtime state
 runFunction :: Function -> Runtime -> (Runtime, TryData)

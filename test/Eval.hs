@@ -3155,3 +3155,45 @@ testEval = describe "Evaluation" $ do
             , ("12 7", all_ ["[69968/16611]"])
             , ("20 2", all_ ["[645315821032049/18278449721532]"])
             ]
+    describe "q266332: Compute the conjugate of a partition" $ do
+        specEval
+            "1D∑"
+            [ ("[5,2,1]", all_ ["[3,2,1,1,1]"])
+            , ("[4,3,1]", all_ ["[3,2,2,1]"])
+            , ("[4,2,2]", all_ ["[3,3,1,1]"])
+            , ("[3,3,2]", all_ ["[3,3,2]"])
+            ]
+        specEval
+            "rjŢ"
+            [ ("[5,2,1]", all_ ["[3,2,1,1,1]"])
+            , ("[4,3,1]", all_ ["[3,2,2,1]"])
+            , ("[4,2,2]", all_ ["[3,3,1,1]"])
+            , ("[3,3,2]", all_ ["[3,3,2]"])
+            ]
+    describe "q266479: Find the fairest partition of a list" $ do
+        specEval
+            "ŋ∑Aaṁ"
+            [ ("[1,2,3]", all_ ["0"])
+            , ("[2,3,5,7,11]", all_ ["0"])
+            , ("[13,17,19,23]", all_ ["0"])
+            , ("[1,2,3,4]", all_ ["0"])
+            , ("[2,2,2,3,3]", all_ ["0"])
+            , ("[1,2,3,4,5]", all_ ["1"])
+            , ("[1,2,3,4,5,6]", all_ ["1"])
+            , ("[1,1,2,5]", all_ ["1"])
+            , ("[1,3,9,27]", all_ ["14"])
+            ]
+    describe "q266561: aaabbabbc" $ do
+        specEval
+            "ĕ3¦¿ĭÐŤʳXH\"c\"I"
+            [ ("\"cbbbaab\"", all_ ["aa"])
+            , ("\"bbbaabc\"", all_ ["aa"])
+            , ("\"baaacbb\"", all_ ["ab"])
+            , ("\"bbcaaba\"", all_ ["ab"])
+            , ("\"bbcabaa\"", all_ ["ba"])
+            , ("\"abcaabb\"", all_ ["ba"])
+            , ("\"bacaaab\"", all_ ["bb"])
+            , ("\"aacabba\"", all_ ["bb"])
+            , ("\"bbabaaba\"", all_ ["c"])
+            , ("\"aaabbabb\"", all_ ["c"])
+            ]

@@ -1,4 +1,5 @@
 {-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE InstanceSigs #-}
 {-# LANGUAGE LambdaCase #-}
 {-# LANGUAGE TypeFamilies #-}
 
@@ -8,7 +9,8 @@ import Control.Monad (join, liftM2)
 import Data.Bifunctor (bimap)
 import Data.Functor ((<&>))
 import Data.Ratio (denominator, numerator)
-import Nekomata.CodePage (charToInt)
+import Data.Word (Word8)
+import Nekomata.CodePage (byteToChar, charToInt)
 import Nekomata.NonDet
 
 -- | A helper function to lift a binary function to a monad
@@ -199,7 +201,7 @@ instance (NonDet a) => NonDet (ListTry a) where
 -- | Nekomata's data type (deterministic)
 data Data
     = DNum Rational
-    | DChar Char
+    | DChar Word8
     | DList [Data]
     deriving (Eq, Ord)
 
@@ -208,7 +210,7 @@ asString :: Data -> Maybe String
 asString (DList []) = Nothing
 asString (DList xs) = mapM asChar xs
   where
-    asChar (DChar x) = Just x
+    asChar (DChar x) = Just $ byteToChar x
     asChar _ = Nothing
 asString _ = Nothing
 
@@ -217,7 +219,7 @@ instance Show Data where
         if denominator x == 1
             then show (numerator x)
             else show (numerator x) ++ "/" ++ show (denominator x)
-    show (DChar x) = show x
+    show (DChar x) = show (byteToChar x)
     show (DList x) = maybe (show x) quote $ asString (DList x)
       where
         quote s = "\"" ++ concatMap escape s ++ "\""
@@ -227,7 +229,7 @@ instance Show Data where
 
 data DataTry
     = DNumT (Try (Det Rational))
-    | DCharT (Try (Det Char))
+    | DCharT (Try (Det Word8))
     | DListT (TryList TryData)
 
 -- | Nekomata's data type (non-deterministic)
@@ -269,7 +271,7 @@ toTryInt' x = x >>= toTryInt . unDet
 -- | Convert any @DataTry@ to a @Try (Det Rational)@
 toTryNum :: DataTry -> Try (Det Rational)
 toTryNum (DNumT x) = x
-toTryNum (DCharT x) = toTry x >>= maybe Fail (Val . Det) . charToInt
+toTryNum (DCharT x) = toTry x >>= Val . Det . fromIntegral
 toTryNum (DListT _) = Fail
 
 -- | A helper class for lifting functions to @TryData@
@@ -291,8 +293,11 @@ instance ToTryData Integer where
 instance ToTryData Rational where
     toTryData = Val . DNumT . Val . Det
 
-instance ToTryData Char where
+instance ToTryData Word8 where
     toTryData = Val . DCharT . Val . Det
+
+instance ToTryData Char where
+    toTryData = maybe Fail (Val . DCharT . Val . Det) . charToInt
 
 instance (ToTryData a) => ToTryData [a] where
     toTryData = Val . DListT . Val . fromList . map toTryData
@@ -354,14 +359,14 @@ liftInt2 ::
 liftInt2 f x y = toTryData $ liftM2 f (toTryInt' x) (toTryInt' y)
 
 -- | Lift a unary char function to @TryData@
-liftChar :: (ToTryData a) => (Char -> a) -> (Try (Det Char) -> TryData)
+liftChar :: (ToTryData a) => (Word8 -> a) -> (Try (Det Word8) -> TryData)
 liftChar f = toTryData . fmap f . toTry
 
 -- | Lift a binary char function to @TryData@
 liftChar2 ::
     (ToTryData a) =>
-    (Char -> Char -> a) ->
-    (Try (Det Char) -> Try (Det Char) -> TryData)
+    (Word8 -> Word8 -> a) ->
+    (Try (Det Word8) -> Try (Det Word8) -> TryData)
 liftChar2 f x y = toTryData $ liftM2 f (toTry x) (toTry y)
 
 -- | Lift a unary list function to @TryData@
@@ -473,7 +478,7 @@ instance TryEq Integer where
 instance TryEq Rational where
     tryEq x y = Val $ x == y
 
-instance TryEq Char where
+instance TryEq Word8 where
     tryEq x y = Val $ x == y
 
 instance (Eq a) => TryEq (Det a) where
@@ -525,7 +530,8 @@ instance TryOrd Integer where
 instance TryOrd Rational where
     tryCmp x y = Val $ compare x y
 
-instance TryOrd Char where
+instance TryOrd Word8 where
+    tryCmp :: Word8 -> Word8 -> Try Ordering
     tryCmp x y = Val $ compare x y
 
 instance (Ord a) => TryOrd (Det a) where
