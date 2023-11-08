@@ -1233,7 +1233,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q154363: Check if all non-zero elements in a matrix are connected" $ do
         specEval
-            "ᵗ{±1Ĩ$BaOđᵒ{≈∑Ƶ"
+            "ᵗ{±1Ĩ$þÐaOđᵒ{≈∑Ƶ"
             [ ("[0] 1", Check True)
             , ("[0,0] 2", Check True)
             , ("[1,1,1,0,0,0] 3", Check True)
@@ -1818,6 +1818,12 @@ testEval = describe "Evaluation" $ do
             , ("[1,3]", Check False)
             , ("[1,2,1,3,2,1,4,1]", Check False)
             , ("[1,3,1,5,3,1,7,5]", Check False)
+            ]
+    describe "q237085: Swap every two elements in a list" $ do
+        specEval
+            "ĭ$Ĭ"
+            [ ("[1,2,3,4,5,6]", all_ ["[2,1,4,3,6,5]"])
+            , ("[0,1,0,1]", all_ ["[1,0,1,0]"])
             ]
     describe "q238607: Converge to a number" $ do
         specEval
@@ -3185,7 +3191,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q266561: aaabbabbc" $ do
         specEval
-            "ĕ3¦¿ĭÐŤʳXH\"c\"I"
+            "ĕ<ĭÐŤʳXH\"c\"I"
             [ ("\"cbbbaab\"", all_ ["aa"])
             , ("\"bbbaabc\"", all_ ["aa"])
             , ("\"baaacbb\"", all_ ["ab"])

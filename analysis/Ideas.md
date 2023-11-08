@@ -168,10 +168,10 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 ### [Hypercube elements](https://codegolf.stackexchange.com/q/70558/9288)
 
 ```
-2 \range1 \swap \polyPow
+2 \range1 \swap \polPow
 ```
 
-- [ ] `\polyPow`：将一个列表视为多项式的系数，求多项式的 n 次幂。感觉不会太常用。
+- [ ] `\polPow`：将一个列表视为多项式的系数，求多项式的 n 次幂。感觉不会太常用。
 
 ## 关于字符串
 
