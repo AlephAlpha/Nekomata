@@ -1172,7 +1172,7 @@ If the argument is a number or a char, it is converted to a singleton list.
 
 ## Particles
 
-### `apply2` (`ᵃ`, `(0 -> n) -> (0 -> 2 * n) or (m -> n) -> (m + 1 -> 2 * n) where m > 0`)
+### `onBoth` (`ᵃ`, `(0 -> n) -> (0 -> 2 * n) or (m -> n) -> (m + 1 -> 2 * n) where m > 0`)
 
 Apply a function to the top two values of the stack.
 
@@ -1198,8 +1198,6 @@ Apply a function to the stack, and then push the original top two values back.
 
 Apply a function to each value in a list.
 
-If the input is a string, apply the function to each character.
-
 If the input is an number, apply the function to each integer from 0 to the input minus 1.
 
 If the function takes no argument, return a list of n copies of the result of the function, where n is the length of the input.
@@ -1216,8 +1214,6 @@ Zip two lists and apply a function to each pair of values.
 
 Fail if the lists have different lengths.
 
-If one of the input is a string, apply the function to each character.
-
 If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
 
 ### `zipWithTrunc` (`ᶾ`, `(m -> 1) -> (m -> 1) where m > 1`)
@@ -1226,15 +1222,11 @@ Zip two lists and apply a function to each pair of values.
 
 If the lists have different lengths, truncate the longer list to the length of the shorter list.
 
-If one of the input is a string, apply the function to each character.
-
 If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
 
 ### `outer` (`ᵒ`, `(m -> 1) -> (m -> 1) where m > 1`)
 
 Apply a function to every possible pair of values in two lists and return a list of lists.
-
-If one of the input is a string, apply the function to each character.
 
 If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
 
@@ -1257,8 +1249,6 @@ Otherwise, do nothing.
 ### `filter` (`ᶠ`, `(m -> n) -> (1 -> 1)`)
 
 For each value in a list, check if a function would succeed without actually applying it, and remove the value if it fails.
-
-If the input is a string, convert it to a list of characters before filtering.
 
 If the input is an number, convert it to a list of integers from 0 to the input minus 1 before filtering.
 
@@ -1293,8 +1283,6 @@ Find the smallest non-negative integer for which a function does not fail, and r
 ### `fold1` (`ʳ`, `(m -> 1) -> (m - 1 -> 1) where m > 1`)
 
 Apply a function to the first two values of a list, then apply it to the result and the third value, and so on until the end of the list.
-
-If the input is a string, convert it to a list of characters before folding.
 
 If the input is an number, convert it to a list of integers from 0 to the input minus 1 before folding.
 

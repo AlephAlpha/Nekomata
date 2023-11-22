@@ -109,8 +109,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 
 支持递归需要对现有的解释器进行大量的修改。一个问题是它会让 arity 变得不确定。可以考虑为不同 arity 的函数分别定义 `\self`，比如说 `\self1`、`\self2`、`\self3` 等等。
 
-位运算还是很有用的。
-
 ### [Shortest distinguishable slice](https://codegolf.stackexchange.com/q/259707/9288)
 
 ```
@@ -172,6 +170,22 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 ```
 
 - [ ] `\polPow`：将一个列表视为多项式的系数，求多项式的 n 次幂。感觉不会太常用。
+
+### [Monotone sequence beatitude](https://codegolf.stackexchange.com/q/266705/9288)
+
+```
+\delta \sign \minMax \add
+```
+
+- [ ] `\minMax`：求一个列表的最小值和最大值。
+
+### [Ways to add 1 to lists of lists](https://codegolf.stackexchange.com/q/237377/9288)
+
+```
+\onAny { \swap \cons }
+```
+
+- [ ] `\onAny`：助词，将一个函数应用到列表的任意一个元素上。比如说 `[1,2,3] \onAny \increment` 有三种可能的结果：`[2,2,3]`、`[1,3,3]`、`[1,2,4]`。
 
 ## 关于字符串
 

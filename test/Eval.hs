@@ -1298,6 +1298,15 @@ testEval = describe "Evaluation" $ do
             , ("[[\"0\",\"1\"],[\"1\",\"2\"]]", all_ ["[\"01\",\"12\"]"])
             , ("[[\"a\",\"b\"],[\"b\",\"c\"],[\"c\",\"a\"]]", all_ ["[\"ab\",\"bc\"]", "[\"ab\",\"ca\"]", "[\"bc\",\"ca\"]"])
             ]
+    describe "q175248: Count the contiguous submatrices" $ do
+        specEval
+            "qŤqŤ="
+            [ ("[[3,1],[1,4]] [[1,4],[3,1]]", Count 0)
+            , ("[[3,1,4,0,5],[6,3,1,0,4],[5,6,3,0,1]] [[1,4],[3,1]]", Count 1)
+            , ("[[3,1,4,5],[6,3,1,4],[5,6,3,1]] [[1,4],[3,1]]", Count 2)
+            , ("[[3,1,4,5],[6,3,1,4],[5,6,3,1]] [[3]]", Count 3)
+            , ("[[3,1,3,1,3,1,3,1,3]] [[3,1,3]]", Count 4)
+            ]
     describe "q177221: String rotation - output string repeatedly moving first character to the end" $ do
         specEval
             ";$N,"
@@ -1309,7 +1318,7 @@ testEval = describe "Evaluation" $ do
             [ ("\"john\"", all_ ["[\"njoh\",\"hnjo\",\"ohnj\",\"john\"]"])
             , ("\"heehee\"", all_ ["[\"eheehe\",\"eeheeh\",\"heehee\",\"eheehe\",\"eeheeh\",\"heehee\"]"])
             ]
-    describe "q175248: The inverse Collatz Conjecture" $ do
+    describe "q178173: The inverse Collatz Conjecture" $ do
         specEval
             "ᶦ{Z:←½$3*→I"
             [ ("0", all_ ["0"])
@@ -1824,6 +1833,15 @@ testEval = describe "Evaluation" $ do
             "ĭ$Ĭ"
             [ ("[1,2,3,4,5,6]", all_ ["[2,1,4,3,6,5]"])
             , ("[0,1,0,1]", all_ ["[1,0,1,0]"])
+            ]
+    describe "q237377: Ways to add 1 to lists of lists" $ do
+        specEval
+            "ᵈ;ᵈCcc,"
+            [ ("9 []", all_ [])
+            , ("9 [[]]", all_ ["[[9]]"])
+            , ("10 [[1,2,3]]", all_ ["[[10,1,2,3]]"])
+            , ("7 [[1,2],[3,4],[5],[]]", all_ ["[[7,1,2],[3,4],[5],[]]", "[[1,2],[7,3,4],[5],[]]", "[[1,2],[3,4],[7,5],[]]", "[[1,2],[3,4],[5],[7]]"])
+            , ("2 [[1,2],[2,2],[2]]", all_ ["[[2,1,2],[2,2],[2]]", "[[1,2],[2,2,2],[2]]", "[[1,2],[2,2],[2,2]]"])
             ]
     describe "q238607: Converge to a number" $ do
         specEval
@@ -3202,4 +3220,13 @@ testEval = describe "Evaluation" $ do
             , ("\"aacabba\"", all_ ["bb"])
             , ("\"bbabaaba\"", all_ ["c"])
             , ("\"aaabbabb\"", all_ ["c"])
+            ]
+    describe "q266705: Monotone sequence beatitude" $ do
+        specEval
+            "∆±uÄµ"
+            [ ("[7,4,3,2]", all_ ["-2"])
+            , ("[6,5,5]", all_ ["-1"])
+            , ("[0,0,0]", all_ ["0"])
+            , ("[-1,2,2,2,4]", all_ ["1"])
+            , ("[0,1,2]", all_ ["2"])
             ]

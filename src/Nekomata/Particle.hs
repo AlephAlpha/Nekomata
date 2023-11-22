@@ -74,9 +74,9 @@ infoByName name' =
 builtinParticles :: [BuiltinParticle]
 builtinParticles =
     [ BuiltinParticle
-        "apply2"
+        "onBoth"
         'ᵃ'
-        apply2
+        onBoth
         "(0 -> n) -> (0 -> 2 * n) \
         \or (m -> n) -> (m + 1 -> 2 * n) where m > 0"
         "Apply a function to the top two values of the stack.\n\
@@ -115,7 +115,6 @@ builtinParticles =
         "(0 -> 1) -> (1 -> 1) \
         \or (m -> 1) -> (m -> 1) where m > 0"
         "Apply a function to each value in a list.\n\
-        \If the input is a string, apply the function to each character.\n\
         \If the input is an number, apply the function to each integer \
         \from 0 to the input minus 1.\n\
         \If the function takes no argument, return a list of n copies \
@@ -137,8 +136,6 @@ builtinParticles =
         "(m -> 1) -> (m -> 1) where m > 1"
         "Zip two lists and apply a function to each pair of values.\n\
         \Fail if the lists have different lengths.\n\
-        \If one of the input is a string, apply the function to each \
-        \character.\n\
         \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
     , BuiltinParticle
@@ -149,8 +146,6 @@ builtinParticles =
         "Zip two lists and apply a function to each pair of values.\n\
         \If the lists have different lengths, truncate the longer list \
         \to the length of the shorter list.\n\
-        \If one of the input is a string, apply the function to each \
-        \character.\n\
         \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
     , BuiltinParticle
@@ -160,8 +155,6 @@ builtinParticles =
         "(m -> 1) -> (m -> 1) where m > 1"
         "Apply a function to every possible pair of values in two lists \
         \and return a list of lists.\n\
-        \If one of the input is a string, apply the function to each \
-        \character.\n\
         \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
     , BuiltinParticle
@@ -187,8 +180,6 @@ builtinParticles =
         "(m -> n) -> (1 -> 1)"
         "For each value in a list, check if a function would succeed \
         \without actually applying it, and remove the value if it fails.\n\
-        \If the input is a string, convert it to a list of characters \
-        \before filtering.\n\
         \If the input is an number, convert it to a list of integers \
         \from 0 to the input minus 1 before filtering."
     , BuiltinParticle
@@ -245,8 +236,6 @@ builtinParticles =
         "Apply a function to the first two values of a list, \
         \then apply it to the result and the third value, \
         \and so on until the end of the list.\n\
-        \If the input is a string, convert it to a list of characters \
-        \before folding.\n\
         \If the input is an number, convert it to a list of integers \
         \from 0 to the input minus 1 before folding."
     ]
@@ -310,17 +299,17 @@ applyParticle p f = maybe (Left message) Right $ runParticle (particle p) f
             , functionArity = show $ Function.arity f
             }
 
-apply2 :: Particle
-apply2 = Particle apply2'
+onBoth :: Particle
+onBoth = Particle onBoth'
   where
-    apply2' (Function (Arity 0 n) f) =
+    onBoth' (Function (Arity 0 n) f) =
         Just
             . Function (Arity 0 (2 * n))
             $ \i s ->
                 prepend
                     (takeStack n $ f (leftId i) s)
                     (f (rightId i) s)
-    apply2' (Function (Arity m n) f) =
+    onBoth' (Function (Arity m n) f) =
         Just
             . Function (Arity (m + 1) (2 * n))
             $ \i (x :+ y :+ s) ->
