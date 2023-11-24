@@ -439,7 +439,7 @@ testEval = describe "Evaluation" $ do
             , ("[20,142]", all_ ["2"])
             , ("[101,202]", all_ ["101"])
             ]
-    describe "q77608: all_ together now" $ do
+    describe "q77608: All together now" $ do
         specEval
             "Y$ů"
             [ ("[3]", Check True)
@@ -686,6 +686,10 @@ testEval = describe "Evaluation" $ do
             , ("[1024,1024,512,512,256,256]", all_ ["[2048,1024,512]"])
             , ("[3,3,3,1,1,7,5,5,5,5]", all_ ["[3,6,2,7,10,10]"])
             ]
+    describe "q96923: Find the maximum deviation" $ do
+        specEval
+            "q$Lɱ≈aṀ"
+            [("[6,9,4,7,4,1] 3", all_ ["6"])]
     describe "q98730: Count trailing truths" $ do
         specEval
             "sNP"
@@ -1100,6 +1104,13 @@ testEval = describe "Evaluation" $ do
             , ("[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20]", all_ ["5"])
             , ("[0,1,4,5,9,11,12,14,16,18,23,24,26,28,29,30]", all_ ["6"])
             ]
+    describe "q142037: Matrix with 1 to L(n), in all n columns" $ do
+        specEval
+            "RḞŤ"
+            [ ("[3,5,2,1,6]", all_ ["[[1,1,1,1,1],[2,2,2,0,2],[3,3,0,0,3],[0,4,0,0,4],[0,5,0,0,5],[0,0,0,0,6]]"])
+            , ("[1]", all_ ["[[1]]"])
+            , ("[1,2,3,4,3,2,1]", all_ ["[[1,1,1,1,1,1,1],[0,2,2,2,2,2,0],[0,0,3,3,3,0,0],[0,0,0,4,0,0,0]]"])
+            ]
     describe "q142071: Find the sum of the divisors of N" $ do
         specEval
             "Ď∑"
@@ -1241,6 +1252,16 @@ testEval = describe "Evaluation" $ do
             , ("[0,1,1,0] 2", Check False)
             , ("[1,1,1,0,0,0,0,2,0,0,0,5] 4", Check False)
             , ("[0,0,5,2,1,2,0,0,5,3,2,1,5,7,3,2] 4", Check False)
+            ]
+    describe "q154553: Column-wise summation of overlapping slices" $ do
+        specEval
+            "xq§LaĦ*"
+            [ ("[1,3,12,100,23] 4", all_ ["[1,6,24,200,23]"])
+            , ("[3,-6,-9,19,2,0] 2", all_ ["[3,-12,-18,38,4,0]"])
+            , ("[5,6,7,8,2,-4,7] 3", all_ ["[5,12,21,24,6,-8,7]"])
+            , ("[1,2,3,4,5,6,7,8,9] 3", all_ ["[1,4,9,12,15,18,21,16,9]"])
+            , ("[1,1,1,1,1,1,1] 6", all_ ["[1,2,2,2,2,2,1]"])
+            , ("[1,2,3,4,5,6,7,8,9] 6", all_ ["[1,4,9,16,20,24,21,16,9]"])
             ]
     describe "q162254: Generate a Walsh Matrix" $ do
         specEval
@@ -1564,6 +1585,13 @@ testEval = describe "Evaluation" $ do
             , ("12", all_ ["2"])
             , ("13", all_ ["1"])
             , ("108", all_ ["6"])
+            ]
+    describe "q206967: Sum the array times n, except the last" $ do
+        specEval
+            "Ɔᵈ∙+"
+            [ ("[3,1,4,1,5] 10", all_ ["95"])
+            , ("[3,1,4,1,5] 1", all_ ["14"])
+            , ("[1] 999", all_ ["1"])
             ]
     describe "q207736: The shortest way to find one unique value when all other values are the same" $ do
         specEval
@@ -2531,10 +2559,8 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259576: all_ of the Boards" $ do
         specEval
-            "į3ƂÐ3~ᵑᵐç3~ᵑçaᵐᶜ{0*}∑ƶ"
-            [ ("", Count 215)
-            , ("", truncate_ ["[[0,1,0,1],[1,1,1,1],[0,1,0,1],[1,1,1,1]]", "[[0,1,0,1],[1,1,1,1],[0,1,1,0],[1,1,1,1]]"])
-            ]
+            "į3ƂÐ3~ᵑᵐç3~ᵑçaḞS∑ƶ"
+            [("", Count 215)]
     describe "q259633: Make a Custom Bayer Matrix" $ do
         specEval
             "ᵒ{ᵃƂv≈Ä+ç4ŗd"
@@ -2550,7 +2576,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259707: Shortest distinguishable slice" $ do
         specEval
-            "∑ᵚ+xqNᵖ{ᵚ@ů}aşᵉhl→Ð"
+            "ḞŤxqNᵖ{@Ťů}aşᵉhl→Ð"
             [ ("[\"happy\",\"angry\",\"hungry\"]", first_ "[1,2]")
             , ("[\"sheer\",\"shrew\",\"shine\",\"shire\",\"spike\",\"shy\"]", first_ "[2,4]")
             , ("[\"snap\",\"crackle\",\"pop\",\"smack\",\"sizzle\",\"whiff\",\"sheen\"]", first_ "[0,2]")
@@ -3223,10 +3249,24 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q266705: Monotone sequence beatitude" $ do
         specEval
-            "∆±uÄµ"
+            "∆±ɱ+"
             [ ("[7,4,3,2]", all_ ["-2"])
             , ("[6,5,5]", all_ ["-1"])
             , ("[0,0,0]", all_ ["0"])
             , ("[-1,2,2,2,4]", all_ ["1"])
             , ("[0,1,2]", all_ ["2"])
+            ]
+    describe "q266993: Rudin-Shapiro sequence" $ do
+        specEval
+            "Ä&Þ£E"
+            [ ("0", all_ ["1"])
+            , ("1", all_ ["1"])
+            , ("2", all_ ["1"])
+            , ("3", all_ ["-1"])
+            , ("4", all_ ["1"])
+            , ("5", all_ ["1"])
+            , ("6", all_ ["-1"])
+            , ("7", all_ ["1"])
+            , ("8", all_ ["1"])
+            , ("9", all_ ["1"])
             ]

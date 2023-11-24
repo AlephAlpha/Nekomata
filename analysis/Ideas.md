@@ -109,14 +109,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 
 支持递归需要对现有的解释器进行大量的修改。一个问题是它会让 arity 变得不确定。可以考虑为不同 arity 的函数分别定义 `\self`，比如说 `\self1`、`\self2`、`\self3` 等等。
 
-### [Shortest distinguishable slice](https://codegolf.stackexchange.com/q/259707/9288)
-
-```
-\charToInt \pad \enumerate \subsequence \nonempty \predicate { \mapWith \nth \transpose } \allValues \shortest \dupDip \first \last \increment \pair
-```
-
-- [ ] `\pad`：输入一个列表的列表，将每个列表的长度补齐到最长的子列表的长度。比如说 `[[1, 2], [3, 4, 5]]` 补齐成 `[[1, 2, 0], [3, 4, 5]]`。
-
 ### [Is it a brainfuck instruction?](https://codegolf.stackexchange.com/q/203330/9288)
 
 ```
@@ -171,14 +163,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 
 - [ ] `\polPow`：将一个列表视为多项式的系数，求多项式的 n 次幂。感觉不会太常用。
 
-### [Monotone sequence beatitude](https://codegolf.stackexchange.com/q/266705/9288)
-
-```
-\delta \sign \minMax \add
-```
-
-- [ ] `\minMax`：求一个列表的最小值和最大值。
-
 ### [Ways to add 1 to lists of lists](https://codegolf.stackexchange.com/q/237377/9288)
 
 ```
@@ -186,6 +170,12 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 ```
 
 - [ ] `\onAny`：助词，将一个函数应用到列表的任意一个元素上。比如说 `[1,2,3] \onAny \increment` 有三种可能的结果：`[2,2,3]`、`[1,3,3]`、`[1,2,4]`。
+
+### [Matrix with 1 to L(n), in all n columns](https://codegolf.stackexchange.com/q/142037/9288)
+
+```
+\range1 \pad \transpose
+```
 
 ## 关于字符串
 
@@ -226,4 +216,8 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 - 如果输入函数的 arity 是 `(0,0,1)`，这是常值函数，此时 `\map` 被重载为将一个列表的每个元素都映射到这个常值，输出函数的 arity 是 `(1,1,1)`。
 - 以后可以考虑增加对 `(m,n,p)`，`p>1` 的支持。此时，如果 `m > 0`，则输出函数的 arity 是 `(m,n,p)`；如果 `m = n = 0`，则输出函数的 arity 是 `(1,1,p)`。
 
-更多情况还需进一步考虑。这是比较大的改动，需要仔细斟酌。留到以后的版本再说。
+更多情况还需进一步考虑。这是比较大的改动，需要仔细斟酌。也许还有其它更好的方案。以后再说。
+
+## 文档
+
+目前的文档还很不完善。需要增加更多的例子，以及更详细的说明。

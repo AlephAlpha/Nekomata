@@ -7,6 +7,7 @@ import qualified Data.Map.Strict as Map
 import Data.Version (showVersion)
 import Nekomata.Builtin (Builtin (short), builtinMap, infoByName)
 import Nekomata.Eval
+import Nekomata.Function (Function (arity))
 import qualified Nekomata.Particle as Particle
 import Paths_Nekomata (version)
 import System.Console.Haskeline
@@ -30,6 +31,7 @@ data ReplCommand
     | ReplInput String
     | ReplInfo String
     | ReplEval String
+    | ReplArity String
     deriving (Eq, Show)
 
 parseReplCommand :: String -> ReplCommand
@@ -47,6 +49,7 @@ parseReplCommand input =
         ("\\Limit" : rest) -> ReplLimit (unwords rest)
         ("\\Input" : rest) -> ReplInput (unwords rest)
         ("\\Info" : rest) -> ReplInfo (unwords rest)
+        ("\\Arity" : rest) -> ReplArity (unwords rest)
         _ -> ReplEval input
 
 replCommandStrings :: [String]
@@ -63,6 +66,7 @@ replCommandStrings =
     , "\\Limit"
     , "\\Input"
     , "\\Info"
+    , "\\Arity"
     ]
 
 helpString :: String
@@ -83,6 +87,7 @@ helpString =
         , "  \\Limit <n>     Set the max number of results to show (default: 16)"
         , "  \\Input <data>  Reset the stack with the given input"
         , "  \\Info <name>   Show information about a builtin"
+        , "  \\Arity <code>  Show the arity of a function"
         , ""
         , "Press TAB to complete commands and builtins."
         , "Add a space after the full name of a builtin and press TAB \
@@ -141,6 +146,14 @@ repl state = handleInterrupt (outputStrLn "Cancelled." >> repl state) $ do
                             toResult (mode state) (Just $ limit state) result
                     mapM_ outputStrLn $ showResult result'
                     repl state{runtime = rt}
+        Just (ReplArity code) -> do
+            case compile code of
+                Left e -> do
+                    outputStrLn $ "Invalid code: " ++ show e
+                    repl state
+                Right function' -> do
+                    outputStrLn $ code ++ " : " ++ show (arity function')
+                    repl state
 
 replCommandCompletion :: String -> [Completion]
 replCommandCompletion prefix =

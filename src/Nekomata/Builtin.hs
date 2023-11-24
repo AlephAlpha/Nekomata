@@ -1071,6 +1071,16 @@ builtins =
         \used in min and max. It can compare two arbitrary values, \
         \not just numbers or chars."
     , Builtin
+        "minMax"
+        'ɱ'
+        minMax
+        "Get both the minimum and the maximum of a list.\n\
+        \If there are multiple minimums or maximums, return the first one.\n\
+        \Fail when the list is empty.\n\
+        \The order used in this function is different from the one \
+        \used in min and max. It can compare two arbitrary values, \
+        \not just numbers or chars."
+    , Builtin
         "concat"
         'j'
         concat'
@@ -1285,6 +1295,12 @@ builtins =
         "Flatten a nested list.\n\
         \If the argument is a number or a char, \
         \it is converted to a singleton list."
+    , Builtin
+        "pad"
+        'Ḟ'
+        pad
+        "Pad a nested list with zeros to make it rectangular.\n\
+        \If the argument is a number or a char, it is unchanged."
     ]
 
 -- | The map from names to builtin functions

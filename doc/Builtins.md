@@ -968,6 +968,16 @@ Fail when the list is empty.
 
 The order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or chars.
 
+### `minMax` (`ɱ`, `1 -> 2`)
+
+Get both the minimum and the maximum of a list.
+
+If there are multiple minimums or maximums, return the first one.
+
+Fail when the list is empty.
+
+The order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or chars.
+
 ### `concat` (`j`, `1 -> 1`)
 
 Concatenate a list of lists or a list.
@@ -1169,6 +1179,12 @@ Push the reverse of a list without popping the original list.
 Flatten a nested list.
 
 If the argument is a number or a char, it is converted to a singleton list.
+
+### `pad` (`Ḟ`, `1 -> 1`)
+
+Pad a nested list with zeros to make it rectangular.
+
+If the argument is a number or a char, it is unchanged.
 
 ## Particles
 

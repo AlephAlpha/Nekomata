@@ -341,6 +341,14 @@ maximum' = unary maximum''
     maximum'' i (DListT xs) = liftList (tryFoldl1 (const tryMax) i) xs
     maximum'' _ _ = Fail
 
+minMax :: Function
+minMax = unary2 minMax'
+  where
+    minMax' i (DListT xs) = liftList12 (minMax_ i) xs
+    minMax' _ _ = (Fail, Fail)
+    minMax_ i xs =
+        Val (tryFoldl1 (const tryMin) i xs, tryFoldl1 (const tryMax) i xs)
+
 concat' :: Function
 concat' = unary concat''
   where
@@ -742,3 +750,33 @@ flatten = unary flatten'
   where
     flatten' i (DListT xs) = DListT . concat_ . tryMap flatten' i <$> xs
     flatten' _ x = Val $ singleton_ x
+
+pad :: Function
+pad = unary pad'
+  where
+    pad' i x = padShape (leftId i) x >>= padTo (rightId i) x
+    padShape :: Id -> DataTry -> TryList (Try Integer)
+    padShape i (DListT xs) =
+        Val
+            . Cons (xs >>= length_)
+            $ xs
+            >>= tryFoldl tryMaxList (rightId i) Nil
+            . tryMap padShape (leftId i)
+    padShape _ _ = Val Nil
+    tryMaxList _ Nil ys = Val ys
+    tryMaxList _ xs Nil = Val xs
+    tryMaxList i (Cons x xs) (Cons y ys) =
+        Val . Cons (liftJoinM2 tryMax x y) $ liftJoinM2 (tryMaxList i) xs ys
+    padTo :: Id -> DataTry -> ListTry (Try Integer) -> TryData
+    padTo _ x Nil = Val x
+    padTo i (DListT xs) (Cons y ys) =
+        DListT
+            . Val
+            . tryMap (\i' xs' -> ys >>= padTo i' xs') i
+            <$> liftJoinM2 (padList zero) y xs
+    padTo i x ys = padTo i (singleton_ x) ys
+    zero = Val . DNumT . Val $ Det 0
+    padList :: a -> Integer -> ListTry a -> TryList a
+    padList _ 0 _ = Val Nil
+    padList x n Nil = replicate_ x n
+    padList x n (Cons y ys) = Val . Cons y $ ys >>= padList x (n - 1)
