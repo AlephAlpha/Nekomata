@@ -656,6 +656,26 @@ unrle = binary unrle'
     unrle_ i xs ys =
         zipWithFail replicate'' (leftId i) xs ys >>= concat_
 
+slices :: Function
+slices = binaryVecArg2 slices'
+  where
+    slices' _ (DNumT x) (DNumT y) =
+        liftNum (\x' -> liftInt (flip slices_ . fromList $ range0_ x') y) x
+    slices' _ (DListT xs) (DNumT y) =
+        liftList (\x -> liftInt (`slices_` x) y) xs
+    slices' _ _ _ = Fail
+    slices_ :: Integer -> ListTry a -> TryList (TryList a)
+    slices_ n _ | n <= 0 = Fail
+    slices_ n xs =
+        splitAt' n xs <&> \case
+            (Nil, _) -> Nil
+            (ys, Nil) -> singleton $ Val ys
+            (ys, zs) -> Cons (Val ys) (slices_ n zs)
+    splitAt' :: Integer -> ListTry a -> Try (ListTry a, ListTry a)
+    splitAt' 0 xs = Val (Nil, xs)
+    splitAt' n (Cons x xs) = xs >>= splitAt' (n - 1) <&> first (Cons x . Val)
+    splitAt' _ Nil = Val (Nil, Nil)
+
 uninterleave :: Function
 uninterleave = unary2 uninterleave'
   where

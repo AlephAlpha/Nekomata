@@ -1227,6 +1227,16 @@ builtins =
         \the second argument is a list of lengths.\n\
         \Fails when the two lists are of different lengths."
     , Builtin
+        "slices"
+        'Š'
+        slices
+        "Split a list into a list of slices of a given length.\n\
+        \If the length of the list is not a multiple of the slice length, \
+        \the last slice is shorter.\n\
+        \If the first argument is a number, \
+        \it is converted to a range from 0 to that number minus 1.\n\
+        \Fails when the given length is not positive."
+    , Builtin
         "uninterleave"
         'ĭ'
         uninterleave

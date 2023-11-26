@@ -171,12 +171,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 
 - [ ] `\onAny`：助词，将一个函数应用到列表的任意一个元素上。比如说 `[1,2,3] \onAny \increment` 有三种可能的结果：`[2,2,3]`、`[1,3,3]`、`[1,2,4]`。
 
-### [Matrix with 1 to L(n), in all n columns](https://codegolf.stackexchange.com/q/142037/9288)
-
-```
-\range1 \pad \transpose
-```
-
 ## 关于字符串
 
 从 v0.5.0.0 开始，Nekomata 将不再区分字符串和列表，增加了一个字符类型，当一个列表的全部元素都是字符时，就视为一个字符串。字符串和列表只在输入输出时有区别，其它时候都是一样的。
@@ -221,3 +215,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 ## 文档
 
 目前的文档还很不完善。需要增加更多的例子，以及更详细的说明。
+
+- [ ] 为每个函数增加例子。
+- [ ] 重写现有的 Tutorial。考虑分成多个文件，每个文件只讲一个主题。

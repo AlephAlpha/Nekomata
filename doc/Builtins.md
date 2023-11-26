@@ -1116,6 +1116,16 @@ The first argument is a list of elements, the second argument is a list of lengt
 
 Fails when the two lists are of different lengths.
 
+### `slices` (`Š`, `2 -> 1`)
+
+Split a list into a list of slices of a given length.
+
+If the length of the list is not a multiple of the slice length, the last slice is shorter.
+
+If the first argument is a number, it is converted to a range from 0 to that number minus 1.
+
+Fails when the given length is not positive.
+
 ### `uninterleave` (`ĭ`, `1 -> 2`)
 
 uninterleave a list into a list of elements at even positions and a list of elements at odd positions.

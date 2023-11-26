@@ -2331,7 +2331,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q257631: Time to shortest permutation" $ do
         specEval
-            "↕ᵃ{Jᵐɗ\"∩<\"<60b}-_Paṁ"
+            "↕ᵃ{2Šᵐɗ\"∩<\"<60b}-_Paṁ"
             [ ("[1,1,4,3]", all_ ["91"])
             , ("[0,1,0,1]", all_ ["9"])
             , ("[1,7,3,8]", all_ ["59"])
@@ -2559,7 +2559,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q259576: all_ of the Boards" $ do
         specEval
-            "į3ƂÐ3~ᵑᵐç3~ᵑçaḞS∑ƶ"
+            "į3ƂÐ3~ᵑᵐç3~ᵑçaᵐᶜ{0*}∑ƶ"
             [("", Count 215)]
     describe "q259633: Make a Custom Bayer Matrix" $ do
         specEval
@@ -3235,7 +3235,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q266561: aaabbabbc" $ do
         specEval
-            "ĕ<ĭÐŤʳXH\"c\"I"
+            "ĕ<2ŠʳXH\"c\"I"
             [ ("\"cbbbaab\"", all_ ["aa"])
             , ("\"bbbaabc\"", all_ ["aa"])
             , ("\"baaacbb\"", all_ ["ab"])
