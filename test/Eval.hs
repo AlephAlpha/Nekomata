@@ -372,7 +372,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q70837: Say What You See" $ do
         specEval
-            "1Uᶦ{Y$Ĭ}ɗ"
+            "1ᶦ{ƊY$Ĭɗ"
             [("", truncate_ ["1", "11", "21", "1211", "111221", "312211", "13112221", "1113213211", "31131211131221", "13211311123113112211"])]
     describe "q71476: Determine the depth of an array" $ do
         specEval
@@ -601,7 +601,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q94028: Find the largest number that's adjacent to a zero" $ do
         specEval
-            "qᵗZđ+aṀ"
+            "qᵗZđ+Å"
             [ ("[1,4,3,6,0,3,7,0]", all_ ["7"])
             , ("[9,4,9,0,9,0,9,15,-2]", all_ ["9"])
             , ("[-4,-6,-2,0,-9]", all_ ["-2"])
@@ -688,7 +688,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q96923: Find the maximum deviation" $ do
         specEval
-            "q$Lɱ≈aṀ"
+            "q$Lɱ≈Å"
             [("[6,9,4,7,4,1] 3", all_ ["6"])]
     describe "q98730: Count trailing truths" $ do
         specEval
@@ -1708,7 +1708,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q226593: Split a list into maximal equal-sum sections" $ do
         specEval
-            "O:ᵐ∑≡$Ðaṁl"
+            "O:ᵐ∑≡$Ðål"
             [ ("[9,5,1,2,9,2]", all_ ["[[1,2,9,2],[9,5]]"])
             , ("[1,1,3,5,7,4]", all_ ["[[3,4],[7],[1,1,5]]"])
             , ("[2,9,6,1,5,8,2]", all_ ["[[1,8,2],[6,5],[2,9]]"])
@@ -2240,7 +2240,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q255373: CGAC2022 Day 10: Help Santa sort presents!" $ do
         specEval
-            "ˡ{ᵗ≡ĭ?}aṀ"
+            "ˡ{ᵗ≡ĭ?}Å"
             [ ("[1]", all_ ["0"])
             , ("[1,0,1,0,1,0,1]", all_ ["1"])
             , ("[1,0,1,0,1,1]", all_ ["3"])
@@ -2331,7 +2331,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q257631: Time to shortest permutation" $ do
         specEval
-            "↕ᵃ{2Šᵐɗ\"∩<\"<60b}-_Paṁ"
+            "↕ᵃ{2Šᵐɗ\"∩<\"<60b}-_På"
             [ ("[1,1,4,3]", all_ ["91"])
             , ("[0,1,0,1]", all_ ["9"])
             , ("[1,7,3,8]", all_ ["59"])
@@ -2453,7 +2453,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q258511: Longest Valid Parentheses" $ do
         specEval
-            "q£E→∫x>çƆᵖLaṀ"
+            "q£E→∫x>çƆᵖLÅ"
             [ ("\"(()())\"", all_ ["6"])
             , ("\")()())\"", all_ ["4"])
             , ("\"()(())\"", all_ ["6"])
@@ -2531,6 +2531,17 @@ testEval = describe "Evaluation" $ do
             , ("[0]", Check True)
             , ("[3,2,1]", Check True)
             , ("[3,3,3,3]", Check True)
+            ]
+    describe "q259167: How long to carry sort?" $ do
+        specEval
+            "õx-çṀ"
+            [ ("[]", all_ ["0"])
+            , ("[-2,3,9]", all_ ["0"])
+            , ("[4,1,2,3]", all_ ["1"])
+            , ("[1,3,2,4]", all_ ["1"])
+            , ("[4,3,2,1]", all_ ["3"])
+            , ("[0,-1,-2,-3,-4]", all_ ["4"])
+            , ("[1,2,0,3,2,1,2,4,3]", all_ ["3"])
             ]
     describe "q259233: We're gonna need a bigger podium!" $ do
         specEval
@@ -3138,7 +3149,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q265382: Find the largest sum such that no two elements are touching" $ do
         specEval
-            "Jĭ?∑haṀ"
+            "Jĭ?∑hÅ"
             [ ("[1,2,3,4]", all_ ["6"])
             , ("[1,2,3,4,5]", all_ ["9"])
             , ("[2,2,1,1,2,1,1,2]", all_ ["7"])
@@ -3222,7 +3233,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q266479: Find the fairest partition of a list" $ do
         specEval
-            "ŋ∑Aaṁ"
+            "ŋ∑Aå"
             [ ("[1,2,3]", all_ ["0"])
             , ("[2,3,5,7,11]", all_ ["0"])
             , ("[13,17,19,23]", all_ ["0"])
@@ -3269,4 +3280,14 @@ testEval = describe "Evaluation" $ do
             , ("7", all_ ["1"])
             , ("8", all_ ["1"])
             , ("9", all_ ["1"])
+            ]
+    describe "q267099: Which skill to train?" $ do
+        specEval
+            "õõ2+$ŗ→Eõl"
+            [ ("[3,2,4,1,2]", all_ ["4"])
+            , ("[7,19,12,20,14]", all_ ["3"])
+            , ("[13,12,19,9,20]", all_ ["0"])
+            , ("[13,18,12,12,14]", all_ ["4"])
+            , ("[18,19,18,16,13]", all_ ["1"])
+            , ("[14,14,19,17,11]", all_ ["2"])
             ]

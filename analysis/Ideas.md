@@ -86,14 +86,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 \logicalNot \ordering \nth
 ```
 
-- [ ] `\ordering`：求一个列表的排序索引。比如说 `[3, 1, 2]` 的排序索引是 `[1, 2, 0]`。
-
-### [How long to carry sort?](https://codegolf.stackexchange.com/q/259167/9288)
-
-```
-\ordering \enumerate \sub \cons0 \maximum
-```
-
 ### [Gödel encoding - Part I](https://codegolf.stackexchange.com/q/259960/9288)
 
 目前完全无法解答，除非支持递归。
@@ -216,5 +208,5 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 
 目前的文档还很不完善。需要增加更多的例子，以及更详细的说明。
 
-- [ ] 为每个函数增加例子。
+- [ ] 为每个函数增加例子。可以考虑把这些例子用作单元测试。
 - [ ] 重写现有的 Tutorial。考虑分成多个文件，每个文件只讲一个主题。

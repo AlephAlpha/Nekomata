@@ -95,6 +95,18 @@ builtins =
         uniqueValue
         "Remove duplicate values from a non-deterministic object."
     , Builtin
+        "minValue"
+        'å'
+        minValue
+        "Get the minimum possible value from a non-deterministic object.\n\
+        \Fails if the object has no values."
+    , Builtin
+        "maxValue"
+        'Å'
+        maxValue
+        "Get the maximum possible value from a non-deterministic object.\n\
+        \Fails if the object has no values."
+    , Builtin
         "normalForm"
         '¤'
         normalForm'
@@ -1311,6 +1323,13 @@ builtins =
         pad
         "Pad a nested list with zeros to make it rectangular.\n\
         \If the argument is a number or a char, it is unchanged."
+    , Builtin
+        "ordering"
+        'õ'
+        ordering
+        "Get the ordering of a list.\n\
+        \The n'th element of the result is the index of the n'th element \
+        \in the sorted list."
     ]
 
 -- | The map from names to builtin functions

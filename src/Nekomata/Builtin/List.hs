@@ -6,7 +6,7 @@ import Control.Arrow (first)
 import Control.Monad (liftM2)
 import Data.Functor ((<&>))
 import Data.Maybe (fromMaybe)
-import Nekomata.Builtin.Basic (dup, eq)
+import Nekomata.Builtin.Basic (allValues, dup, eq)
 import Nekomata.Data
 import Nekomata.Function
 import Nekomata.NonDet
@@ -121,6 +121,7 @@ interval :: Function
 interval = binaryVecFail interval'
   where
     interval' _ (DNumT x) (DNumT y) = liftNum2 interval_ x y
+    interval' _ (DCharT x) (DCharT y) = liftChar2 enumFromTo x y
     interval' _ _ _ = Fail
     interval_ :: Rational -> Rational -> [Integer]
     interval_ x y = enumFromTo (ceiling x) (floor y)
@@ -393,10 +394,12 @@ nub = unary nub'
 sort :: Function
 sort = unary sort'
   where
-    sort' i (DListT xs) = liftList (sort_ i) xs
+    sort' _ (DListT xs) = liftList sort_ xs
     sort' _ _ = Fail
-    sort_ :: (TryOrd a) => Id -> ListTry a -> TryList a
-    sort_ _ xs = mergeLists (Val . singleton <$> xs)
+
+sort_ :: (TryOrd a) => ListTry a -> TryList a
+sort_ s = mergeLists (Val . singleton <$> s)
+  where
     mergeLists :: (TryOrd a) => ListTry (TryList a) -> TryList a
     mergeLists Nil = Val Nil
     mergeLists (Cons x xs) = xs >>= mergeLists' x
@@ -800,3 +803,22 @@ pad = unary pad'
     padList _ 0 _ = Val Nil
     padList x n Nil = replicate_ x n
     padList x n (Cons y ys) = Val . Cons y $ ys >>= padList x (n - 1)
+
+ordering :: Function
+ordering = unary ordering'
+  where
+    ordering' i (DListT xs) = liftList (ordering_ i) xs
+    ordering' _ _ = Fail
+    ordering_ :: Id -> ListTry TryData -> TryList (Try Integer)
+    ordering_ i xs =
+        length_ xs
+            >>= zipWithFail (\_ x y -> Val (OrdBy x y)) i xs
+            . (\n -> Val <$> fromList [0 .. n - 1])
+            >>= sort_
+            <&> fmap (fmap ordVal)
+
+minValue :: Function
+minValue = allValues .* minimum'
+
+maxValue :: Function
+maxValue = allValues .* maximum'

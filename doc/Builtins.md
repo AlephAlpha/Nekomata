@@ -32,6 +32,18 @@ Count the number of values in a non-deterministic object.
 
 Remove duplicate values from a non-deterministic object.
 
+### `minValue` (`å`, `1 -> 1`)
+
+Get the minimum possible value from a non-deterministic object.
+
+Fails if the object has no values.
+
+### `maxValue` (`Å`, `1 -> 1`)
+
+Get the maximum possible value from a non-deterministic object.
+
+Fails if the object has no values.
+
 ### `normalForm` (`¤`, `1 -> 1`)
 
 Convert a non-deterministic object to the normal form.
@@ -1195,6 +1207,12 @@ If the argument is a number or a char, it is converted to a singleton list.
 Pad a nested list with zeros to make it rectangular.
 
 If the argument is a number or a char, it is unchanged.
+
+### `ordering` (`õ`, `1 -> 1`)
+
+Get the ordering of a list.
+
+The n'th element of the result is the index of the n'th element in the sorted list.
 
 ## Particles
 
