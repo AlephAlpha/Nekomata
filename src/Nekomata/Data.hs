@@ -63,8 +63,8 @@ zipWithFail ::
     (Id -> ListTry (Try a) -> ListTry (Try b) -> TryList (Try c))
 zipWithFail _ _ Nil Nil = Val Nil
 zipWithFail f i (Cons x xs) (Cons y ys) =
-    Val
-        $ Cons
+    Val $
+        Cons
             (liftJoinM2 (f (leftId i)) x y)
             (liftJoinM2 (zipWithFail f (rightId i)) xs ys)
 zipWithFail _ _ _ _ = Fail

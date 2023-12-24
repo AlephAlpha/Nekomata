@@ -75,8 +75,8 @@ identity = Function (Arity 0 0) $ \_ s -> s
 -- | Compose two functions
 (.*) :: Function -> Function -> Function
 (.*) f g =
-    Function (composeArity (arity f) (arity g))
-        $ \i -> apply g (leftId i) . apply f (rightId i)
+    Function (composeArity (arity f) (arity g)) $
+        \i -> apply g (leftId i) . apply f (rightId i)
 
 infixr 9 .*
 
@@ -91,20 +91,20 @@ unary f = Function (Arity 1 1) $ \i (x :+ s) -> (x >>= f i) :+ s
 -- | Convert a binary function to a Nekomata function
 binary :: (Id -> DataTry -> DataTry -> TryData) -> Function
 binary f =
-    Function (Arity 2 1)
-        $ \i (x :+ y :+ s) -> liftJoinM2 (f i) y x :+ s
+    Function (Arity 2 1) $
+        \i (x :+ y :+ s) -> liftJoinM2 (f i) y x :+ s
 
 -- | Convert a unary function that returns two values to a Nekomata function
 unary2 :: (Id -> DataTry -> (TryData, TryData)) -> Function
 unary2 f =
-    Function (Arity 1 2)
-        $ \i (x :+ s) -> let z = f i <$> x in (z >>= snd) :+ (z >>= fst) :+ s
+    Function (Arity 1 2) $
+        \i (x :+ s) -> let z = f i <$> x in (z >>= snd) :+ (z >>= fst) :+ s
 
 -- | Convert a binary function that returns two values to a Nekomata function
 binary2 :: (Id -> DataTry -> DataTry -> (TryData, TryData)) -> Function
 binary2 f =
-    Function (Arity 2 2)
-        $ \i (x :+ y :+ s) ->
+    Function (Arity 2 2) $
+        \i (x :+ y :+ s) ->
             let z = liftM2 (f i) y x
              in (z >>= snd) :+ (z >>= fst) :+ s
 
@@ -170,8 +170,8 @@ predicateVec f = unaryVec $ \i x -> f i x >>= \b -> if b then Val x else Fail
 When the predicate returns 'True', the first argument is returned.
 -}
 predicateVec2 :: (Id -> DataTry -> DataTry -> Try Bool) -> Function
-predicateVec2 f = binaryVecFail
-    $ \i x y -> f i x y >>= \b -> if b then Val x else Fail
+predicateVec2 f = binaryVecFail $
+    \i x y -> f i x y >>= \b -> if b then Val x else Fail
 
 -- | Convert and vectorize a unary numeric function
 unaryNum :: (ToTryData a) => (Id -> Rational -> a) -> Function

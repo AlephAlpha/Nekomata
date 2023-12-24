@@ -1160,6 +1160,22 @@ testEval = describe "Evaluation" $ do
             , ("[1,2,4,10,18,10,100]", Check False)
             , ("[10,20,30,30,30]", Check False)
             ]
+    describe "q144201: Stackable sequences" $ do
+        specEval
+            "Oᵐ{x="
+            [ ("[0]", Check True)
+            , ("[0,1]", Check True)
+            , ("[0,1,2,3,4]", Check True)
+            , ("[0,0,0,1,1,1,2,2,2,3,4,5,6,7,8,9,0]", Check True)
+            , ("[0,1,2,0,3,1]", Check True)
+            , ("[0,1,2,0,3,0,4,5,1,1,6,2,7,3,2,8,3,9,0]", Check True)
+            , ("[1]", Check False)
+            , ("[0,2,1]", Check False)
+            , ("[0,0,0,1,1,1,1]", Check False)
+            , ("[0,0,1,2,3,1,2,4,2,5]", Check False)
+            , ("[0,1,2,3,0,1,2,1,0]", Check False)
+            , ("[0,0,0,1,1,2,2,2,3]", Check False)
+            ]
     describe "q144233: How many Wazirs can be placed on an N×N Chessboard?" $ do
         specEval
             "*äK"
@@ -3299,4 +3315,34 @@ testEval = describe "Evaluation" $ do
             , ("[0,0,1,1]", all_ ["[[0,0,1,1]]", "[[0,0,1],[1]]", "[[0,1],[0,1]]"])
             , ("[0,0,1,1,1]", all_ ["[[0,0,1,1,1]]", "[[0,0,1,1],[1]]", "[[0,1],[0,1,1]]", "[[0,0,1],[1,1]]", "[[0,0,1],[1],[1]]", "[[0,1],[0,1],[1]]"])
             , ("[1,1,1,1,1]", all_ ["[[1,1,1,1,1]]", "[[1],[1,1,1,1]]", "[[1,1],[1,1,1]]", "[[1],[1],[1,1,1]]", "[[1],[1,1],[1,1]]", "[[1],[1],[1],[1,1]]", "[[1],[1],[1],[1],[1]]"])
+            ]
+    describe "q267491: Iteratively sort a list" $ do
+        specEval
+            "oOᵐůj"
+            [ ("[1,5,2,2,8,3,5,2,9]", first_ "[1,2,3,5,8,9,2,5,2]")
+            , ("[8,5]", first_ "[5,8]")
+            , ("[2,2,2]", first_ "[2,2,2]")
+            ]
+    describe "q268592: Test whether a sequence is bitonic" $ do
+        specEval
+            "∆±ĉđ"
+            [ ("[1,3,5,7,6,4,2]", Check True)
+            , ("[99,4,8,16]", Check True)
+            , ("[100000,10000,1000,100,10,1,11,111,1111,11111,111111]", Check True)
+            , ("[2,1,3,4,5,6]", Check True)
+            , ("[1,2,3,4,5,6,7]", Check False)
+            , ("[7,6,5,4,3,2,1]", Check False)
+            , ("[1,4,7,6,2,3,5]", Check False)
+            , ("[99,88,66,77,55,44,33,22,11]", Check False)
+            , ("[1,9,2,8,3,7,4,6,5]", Check False)
+            ]
+    describe "q268620: Am I vaccinated?" $ do
+        specEval
+            "'B∕uo"
+            [ ("\"ABCWYB\"", all_ ["ABCWY"])
+            , ("\"ABCWY\"", all_ ["ACWY"])
+            , ("\"B\"", all_ ["[]"])
+            , ("\"BB\"", all_ ["B"])
+            , ("\"ACWYBB\"", all_ ["ABCWY"])
+            , ("\"ACWYB\"", all_ ["ACWY"])
             ]

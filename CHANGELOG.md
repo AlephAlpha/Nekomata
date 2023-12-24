@@ -12,6 +12,7 @@
 
 * `\apply2` is renamed to `\onBoth`.
 * `\interval` can now take two chars as arguments.
+* `\intersect`, `\union` and `\setMinus` now convert numbers and characters to singleton lists.
 
 ### Breaking changes
 

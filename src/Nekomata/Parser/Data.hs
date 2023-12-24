@@ -63,10 +63,10 @@ checkCodePage' :: Char -> Parser Word8
 checkCodePage' c = case charToInt c of
     Just x' -> return x'
     Nothing ->
-        parserFail
-            $ "Character '"
-            ++ [c]
-            ++ "' is not in Nekomata's code page."
+        parserFail $
+            "Character '"
+                ++ [c]
+                ++ "' is not in Nekomata's code page."
 
 -- | Parse a string literal
 parseString :: Parser [Word8]
@@ -128,4 +128,4 @@ parseInput =
         `endBy` (try (spaces >> char ',' >> spaces) <|> spaces)
         <* spaces
         <* eof
-        <?> "Nekomata input"
+            <?> "Nekomata input"

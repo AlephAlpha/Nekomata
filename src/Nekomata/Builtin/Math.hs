@@ -215,12 +215,12 @@ floor' :: Function
 floor' = unaryNum $ const (floor :: Rational -> Integer)
 
 natural :: Function
-natural = nullary
-    $ \i -> toTryData <$> anyOf i $ fromList [0 :: Integer ..]
+natural = nullary $
+    \i -> toTryData <$> anyOf i $ fromList [0 :: Integer ..]
 
 integer :: Function
-integer = nullary
-    $ \i -> toTryData <$> anyOf i $ fromList integers
+integer = nullary $
+    \i -> toTryData <$> anyOf i $ fromList integers
   where
     integers = (0 :: Integer) : [y | x <- [1 ..], y <- [x, -x]]
 
@@ -353,11 +353,11 @@ isPrime' = predicateVec isPrime''
     isPrime'' _ x = isCertifiedPrime <$> toTryInt' (toTryNum x)
 
 prime :: Function
-prime = nullary
-    $ \i ->
+prime = nullary $
+    \i ->
         toTryData
             <$> anyOf i
-            . fromList
+                . fromList
             $ map unPrime [nextPrime (1 :: Integer) ..]
 
 primePi :: Function
@@ -385,17 +385,17 @@ gcd' :: Function
 gcd' = binaryNumFail $ const gcd_
   where
     gcd_ x y =
-        Val
-            $ gcd (numerator x) (numerator y)
-            % lcm (denominator x) (denominator y)
+        Val $
+            gcd (numerator x) (numerator y)
+                % lcm (denominator x) (denominator y)
 
 lcm' :: Function
 lcm' = binaryNumFail $ const lcm_
   where
     lcm_ x y =
-        Val
-            $ lcm (numerator x) (numerator y)
-            % gcd (denominator x) (denominator y)
+        Val $
+            lcm (numerator x) (numerator y)
+                % gcd (denominator x) (denominator y)
 
 divisors :: Function
 divisors = unaryInt $ const divisors_
@@ -426,8 +426,8 @@ sqrt' = unaryNum $ const sqrt_
 
 unitVec2 :: Function
 unitVec2 =
-    nullary
-        $ \i ->
+    nullary $
+        \i ->
             Choice
                 i
                 (toTryData ([0, 1] :: [Integer]))

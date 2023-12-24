@@ -30,9 +30,9 @@ compile =
     left CodePageError
         . checkCodePage
         >=> left ParseError
-        . parse parseProgram ""
+            . parse parseProgram ""
         >=> left ParticleArityError
-        . compileProgram
+            . compileProgram
 
 -- | Nekomata's runtime state
 data Runtime = Runtime {choiceId :: Id, stack :: Stack}
@@ -46,7 +46,7 @@ readInput =
     left CodePageError
         . checkCodePage
         >=> left ParseError
-        . parse parseInput ""
+            . parse parseInput ""
 
 -- | Run a Nekomata function with the given runtime state
 runFunction :: Function -> Runtime -> (Runtime, TryData)

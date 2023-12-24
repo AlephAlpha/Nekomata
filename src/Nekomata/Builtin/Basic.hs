@@ -13,21 +13,21 @@ fail' :: Function
 fail' = constant (Fail :: TryData)
 
 allValues :: Function
-allValues = Function (Arity 1 1)
-    $ \_ (x :+ s) -> Cut (\ds -> (ds, toTryData . fromList $ values ds x)) :+ s
+allValues = Function (Arity 1 1) $
+    \_ (x :+ s) -> Cut (\ds -> (ds, toTryData . fromList $ values ds x)) :+ s
 
 oneValue :: Function
-oneValue = Function (Arity 1 1)
-    $ \_ (x :+ s) ->
+oneValue = Function (Arity 1 1) $
+    \_ (x :+ s) ->
         Cut (\ds -> maybe (ds, Fail) (second toTryData) $ firstValue ds x) :+ s
 
 countValues' :: Function
-countValues' = Function (Arity 1 1)
-    $ \_ (x :+ s) -> Cut (\ds -> (ds, toTryData $ countValues ds x)) :+ s
+countValues' = Function (Arity 1 1) $
+    \_ (x :+ s) -> Cut (\ds -> (ds, toTryData $ countValues ds x)) :+ s
 
 uniqueValue :: Function
-uniqueValue = Function (Arity 1 1)
-    $ \i (x :+ s) ->
+uniqueValue = Function (Arity 1 1) $
+    \i (x :+ s) ->
         Cut (\ds -> (ds, anyOf' i (nub $ values ds x) >>= toTryData)) :+ s
 
 normalForm' :: Function

@@ -202,8 +202,8 @@ unsnoc = unary2 unsnoc'
         xs
             >>= unsnoc_
             >>= Val
-            . Just
-            . maybe (Nil, x) (first (Cons x . Val))
+                . Just
+                . maybe (Nil, x) (first (Cons x . Val))
     unzipMaybe :: Maybe (a, b) -> (Maybe a, Maybe b)
     unzipMaybe Nothing = (Nothing, Nothing)
     unzipMaybe (Just (a, b)) = (Just a, Just b)
@@ -266,11 +266,11 @@ subset = unary subset'
     subset_ i xs = Choice (leftId i) (Val Nil) (nonemptySubset (rightId i) xs)
     nonemptySubset _ Nil = Fail
     nonemptySubset i (Cons x xs) =
-        Choice (leftId i) (Val $ singleton x)
-            $ xs
-            >>= nonemptySubset (leftId (rightId i))
-            >>= \ys ->
-                Choice (rightId (rightId i)) (Val ys) (Val . Cons x $ Val ys)
+        Choice (leftId i) (Val $ singleton x) $
+            xs
+                >>= nonemptySubset (leftId (rightId i))
+                >>= \ys ->
+                    Choice (rightId (rightId i)) (Val ys) (Val . Cons x $ Val ys)
 
 subsequence :: Function
 subsequence = unary subsequence'
@@ -386,10 +386,10 @@ nub = unary nub'
     nub_ :: (TryEq a) => Id -> ListTry a -> ListTry a
     nub_ _ Nil = Nil
     nub_ i (Cons x xs) =
-        Cons x
-            $ xs
-            >>= tryFilter (const $ tryNe x) (leftId i)
-            <&> nub_ (rightId i)
+        Cons x $
+            xs
+                >>= tryFilter (const $ tryNe x) (leftId i)
+                <&> nub_ (rightId i)
 
 sort :: Function
 sort = unary sort'
@@ -531,8 +531,7 @@ setPartition = unary setPartition'
 setMinus :: Function
 setMinus = binary setMinus'
   where
-    setMinus' _ (DListT xs) (DListT ys) = liftList2 setMinus_ xs ys
-    setMinus' _ _ _ = Fail
+    setMinus' _ x y = liftList2 setMinus_ (orSingleton x) (orSingleton y)
     setMinus_ :: (TryEq a) => ListTry a -> ListTry a -> TryList a
     setMinus_ xs Nil = Val xs
     setMinus_ xs (Cons y ys) = liftJoinM2 setMinus_ (delete y xs) ys
@@ -588,8 +587,7 @@ tryElem x (Cons y ys) =
 intersect :: Function
 intersect = binary intersect'
   where
-    intersect' _ (DListT xs) (DListT ys) = liftList2 intersect_ xs ys
-    intersect' _ _ _ = Fail
+    intersect' _ x y = liftList2 intersect_ (orSingleton x) (orSingleton y)
     intersect_ :: (TryEq a) => ListTry a -> ListTry a -> TryList a
     intersect_ Nil _ = Val Nil
     intersect_ (Cons x xs) ys =
@@ -601,8 +599,7 @@ intersect = binary intersect'
 union :: Function
 union = binary union'
   where
-    union' _ (DListT xs) (DListT ys) = liftList2 union_ xs ys
-    union' _ _ _ = Fail
+    union' _ x y = liftList2 union_ (orSingleton x) (orSingleton y)
     union_ :: (TryEq a) => ListTry a -> ListTry a -> TryList a
     union_ Nil xs = Val xs
     union_ (Cons x xs) ys =
@@ -783,8 +780,8 @@ pad = unary pad'
         Val
             . Cons (xs >>= length_)
             $ xs
-            >>= tryFoldl tryMaxList (rightId i) Nil
-            . tryMap padShape (leftId i)
+                >>= tryFoldl tryMaxList (rightId i) Nil
+                    . tryMap padShape (leftId i)
     padShape _ _ = Val Nil
     tryMaxList _ Nil ys = Val ys
     tryMaxList _ xs Nil = Val xs
@@ -813,7 +810,7 @@ ordering = unary ordering'
     ordering_ i xs =
         length_ xs
             >>= zipWithFail (\_ x y -> Val (OrdBy x y)) i xs
-            . (\n -> Val <$> fromList [0 .. n - 1])
+                . (\n -> Val <$> fromList [0 .. n - 1])
             >>= sort_
             <&> fmap (fmap ordVal)
 
