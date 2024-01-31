@@ -947,7 +947,7 @@ testEval = describe "Evaluation" $ do
             , ("999999", Check False)
             ]
         specEval
-            "R∫$Ĩ"
+            "R∫ē"
             [ ("1", Check True)
             , ("3", Check True)
             , ("6", Check True)
@@ -1586,6 +1586,17 @@ testEval = describe "Evaluation" $ do
             , ("[1,2,10]", Check True)
             , ("[1,1]", Check False)
             , ("[10,1]", Check False)
+            ]
+    describe "q203330: Is it a brainfuck instruction?" $ do
+        specEval
+            "\"+,-.<>[]\"ē"
+            [ ("'+'", Check True)
+            , ("'#'", Check False)
+            , ("'<'", Check True)
+            , ("'>'", Check True)
+            , ("'.'", Check True)
+            , ("'P'", Check False)
+            , ("','", Check True)
             ]
     describe "q203797: Generate list of numbers and their negative counterparts" $ do
         specEval
@@ -3345,4 +3356,67 @@ testEval = describe "Evaluation" $ do
             , ("\"BB\"", all_ ["B"])
             , ("\"ACWYBB\"", all_ ["ABCWY"])
             , ("\"ACWYB\"", all_ ["ACWY"])
+            ]
+    describe "q268769: Can their first appearance happen together?" $ do
+        specEval
+            "ᶜ$ᵗ{iq=}s="
+            [ ("\"01\" \"1\"", Check True)
+            , ("\"00\" \"0\"", Check False)
+            , ("\"01\" \"11\"", Check False)
+            , ("\"11\" \"11\"", Check True)
+            , ("\"0101\" \"1\"", Check False)
+            , ("\"111\" \"11\"", Check False)
+            ]
+    describe "q268918: How many Carlitz compositions are there?" $ do
+        specEval
+            "řJĉᵐz"
+            [ ("0", Count 1)
+            , ("1", Count 1)
+            , ("2", Count 1)
+            , ("3", Count 3)
+            , ("4", Count 4)
+            , ("5", Count 7)
+            , ("6", Count 14)
+            , ("7", Count 23)
+            , ("8", Count 39)
+            , ("9", Count 71)
+            , ("10", Count 124)
+            ]
+    describe "q269087: Counting Collinear Points" $ do
+        specEval
+            "≈đG←"
+            [ ("[5,10] [10,5]", all_ ["4"])
+            , ("[-8,5] [0,5]", all_ ["7"])
+            , ("[-3,-3] [2,2]", all_ ["4"])
+            ]
+    describe "q269204: Divmod continuously until the remainder is 1 or 0, then get the remainder" $ do
+        specEval
+            "ʷ{Ƶþ"
+            [ ("4 15", all_ ["0"])
+            , ("7 102", all_ ["1"])
+            , ("2 20", all_ ["0"])
+            , ("0 10", all_ ["0"])
+            , ("1 11", all_ ["1"])
+            , ("7 99", all_ ["1"])
+            , ("45 45", all_ ["0"])
+            , ("30 31", all_ ["1"])
+            , ("7 999", all_ ["0"])
+            , ("6 999", all_ ["1"])
+            , ("7 88", all_ ["0"])
+            , ("999 1", all_ ["1"])
+            , ("7 98", all_ ["0"])
+            , ("998 999", all_ ["1"])
+            ]
+    describe "q269428: Doubleouble Talkalk" $ do
+        specEval
+            "Jtđ="
+            [ ("\"SSS\"", Check True)
+            , ("\"SNYYY\"", Check True)
+            , ("\"SNYY\"", Check True)
+            , ("\"SNNYY\"", Check True)
+            , ("\"SNYNY\"", Check True)
+            , ("\"FALSYTESTCASES\"", Check False)
+            , ("\"FALSYTESTCASESXFALSYTESTCASES\"", Check False)
+            , ("\"FALSYTESTCASESFALSYTESTCASES\"", Check False)
+            , ("\"SMARTIEATIE\"", Check False)
             ]

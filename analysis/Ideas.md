@@ -103,14 +103,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 
 支持递归需要对现有的解释器进行大量的修改。一个问题是它会让 arity 变得不确定。可以考虑为不同 arity 的函数分别定义 `\self`，比如说 `\self1`、`\self2`、`\self3` 等等。
 
-### [Is it a brainfuck instruction?](https://codegolf.stackexchange.com/q/203330/9288)
-
-```
-"+,-.<>[]" \elem
-```
-
-- [ ] `\elem`：检查一个元素是否在一个列表中。注意其参数顺序与 `\free` 相反。
-
 ### [Find Unique Anagrams](https://codegolf.stackexchange.com/q/261128/9288)
 
 ```

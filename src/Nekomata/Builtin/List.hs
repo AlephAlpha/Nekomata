@@ -819,3 +819,13 @@ minValue = allValues .* minimum'
 
 maxValue :: Function
 maxValue = allValues .* maximum'
+
+elem' :: Function
+elem' = binary elem''
+  where
+    elem'' _ x (DListT ys) = liftList (elem_ x) ys
+    elem'' _ _ _ = Fail
+    elem_ :: (TryEq a) => a -> ListTry (Try a) -> Try a
+    elem_ _ Nil = Fail
+    elem_ x (Cons y ys) =
+        y >>= tryEq x >>= \b -> if b then Val x else ys >>= elem_ x

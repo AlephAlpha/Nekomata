@@ -1330,6 +1330,12 @@ builtins =
         "Get the ordering of a list.\n\
         \The n'th element of the result is the index of the n'th element \
         \in the sorted list."
+    , Builtin
+        "elem"
+        'ē'
+        elem'
+        "Check if an element is in a list.\n\
+        \If it is, push the element, otherwise fail."
     ]
 
 -- | The map from names to builtin functions

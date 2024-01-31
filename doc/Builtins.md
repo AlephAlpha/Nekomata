@@ -1214,6 +1214,12 @@ Get the ordering of a list.
 
 The n'th element of the result is the index of the n'th element in the sorted list.
 
+### `elem` (`ē`, `2 -> 1`)
+
+Check if an element is in a list.
+
+If it is, push the element, otherwise fail.
+
 ## Particles
 
 ### `onBoth` (`ᵃ`, `(0 -> n) -> (0 -> 2 * n) or (m -> n) -> (m + 1 -> 2 * n) where m > 0`)
