@@ -829,3 +829,12 @@ elem' = binary elem''
     elem_ _ Nil = Fail
     elem_ x (Cons y ys) =
         y >>= tryEq x >>= \b -> if b then Val x else ys >>= elem_ x
+
+filterBy :: Function
+filterBy = binary filterBy'
+  where
+    filterBy' i (DListT xs) (DListT ys) = liftList2 (filterBy_ i) xs ys
+    filterBy' _ _ _ = Fail
+    filterBy_ i xs ys =
+        zipWithFail (\_ x y -> normalForm (Val y) >> Val x) i xs ys
+            >>= filterTry

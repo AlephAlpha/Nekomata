@@ -1220,6 +1220,14 @@ Check if an element is in a list.
 
 If it is, push the element, otherwise fail.
 
+### `filterBy` (`ḟ`, `2 -> 1`)
+
+Filter a list by whether the corresponding element in another list is not failed.
+
+If the first list also contains failed items, those items are also removed.
+
+Fail when the two lists are of different lengths.
+
 ## Particles
 
 ### `onBoth` (`ᵃ`, `(0 -> n) -> (0 -> 2 * n) or (m -> n) -> (m + 1 -> 2 * n) where m > 0`)

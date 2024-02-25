@@ -157,6 +157,14 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 
 - [ ] `\onAny`：助词，将一个函数应用到列表的任意一个元素上。比如说 `[1,2,3] \onAny \increment` 有三种可能的结果：`[2,2,3]`、`[1,3,3]`、`[1,2,4]`。
 
+### [Remove falsy rows and columns](https://codegolf.stackexchange.com/q/269954/9288)
+
+```
+\isNonzero \dup \transpose \removeFail \transpose \swap \filterBy
+```
+
+- [ ] `\filterBy`：输入两个列表，其长度必须一致。根据第二个列表的元素是否为 Fail，将第一个列表的元素过滤。比如输入 `[1,2,3,4]` 和 `[4,Fail,2,Fail]`，输出 `[1,3]`。
+
 ## 关于字符串
 
 从 v0.5.0.0 开始，Nekomata 将不再区分字符串和列表，增加了一个字符类型，当一个列表的全部元素都是字符时，就视为一个字符串。字符串和列表只在输入输出时有区别，其它时候都是一样的。

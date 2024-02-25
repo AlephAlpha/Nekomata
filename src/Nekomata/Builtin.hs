@@ -1336,6 +1336,15 @@ builtins =
         elem'
         "Check if an element is in a list.\n\
         \If it is, push the element, otherwise fail."
+    , Builtin
+        "filterBy"
+        'ḟ'
+        filterBy
+        "Filter a list by whether the corresponding element in another list \
+        \is not failed.\n\
+        \If the first list also contains failed items, \
+        \those items are also removed.\n\
+        \Fail when the two lists are of different lengths."
     ]
 
 -- | The map from names to builtin functions

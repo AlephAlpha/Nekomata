@@ -871,7 +871,7 @@ testEval = describe "Evaluation" $ do
             , ("[1,1,1,0,0,0,0,1,1,1,1,0,0,1,0,0,1,1,0,0,1,1,1,1,0,0,1,0,0]", all_ ["[1,1,1,0,0,1,1,1,1,0,1,0,1,1,0,1,1,1,1,0,1,0]"])
             ]
         specEval
-            "¬∫½ᶻ¿‼"
+            "¬∫½ḟ"
             [ ("[1,0,0,1,0,0,1]", all_ ["[1,0,1,0,1]"])
             , ("[1,1,0,0,1,1,0,0,1]", all_ ["[1,1,0,1,1,0,1]"])
             , ("[1,1,0,0,1,1,1,0,0,1,1]", all_ ["[1,1,0,1,1,1,0,1,1]"])
@@ -3419,4 +3419,48 @@ testEval = describe "Evaluation" $ do
             , ("\"FALSYTESTCASESXFALSYTESTCASES\"", Check False)
             , ("\"FALSYTESTCASESFALSYTESTCASES\"", Check False)
             , ("\"SMARTIEATIE\"", Check False)
+            ]
+    describe "q269712: Modular Equivalence" $ do
+        specEval
+            "ᵋ*+-Ď~2>"
+            [ ("3 4", all_ ["5"])
+            , ("5 8", all_ ["3", "9", "27"])
+            , ("29 9", all_ ["223"])
+            , ("26 4", all_ ["37", "74"])
+            , ("13 11", all_ ["7", "17", "119"])
+            , ("6258 571", all_ ["463", "7703", "3566489"])
+            ]
+    describe "q269857: Counting rankings" $ do
+        specEval
+            "RJ:ᵐhmj↕ũh="
+            [ ("1 1", Count 1)
+            , ("2 1", Count 2)
+            , ("2 2", Count 1)
+            , ("3 1", Count 6)
+            , ("3 2", Count 4)
+            , ("3 3", Count 3)
+            , ("4 1", Count 26)
+            , ("4 2", Count 18)
+            , ("4 3", Count 18)
+            , ("4 4", Count 13)
+            ]
+    describe "q269954: Remove falsy rows and columns" $ do
+        specEval
+            "Z:Ť‼Ť$ḟ"
+            [ ("[[1,2,3],[4,5,6]]", all_ ["[[1,2,3],[4,5,6]]"])
+            , ("[[1,2,3],[4,5,0]]", all_ ["[[1,2]]"])
+            , ("[[3,6,19],[4,0,18],[2,19,3]]", all_ ["[[3,19],[2,3]]"])
+            , ("[[5,3,2,4,1],[3,2,0,4,7],[7,1,9,8,2],[3,2,1,5,7],[6,4,6,1,2],[9,3,2,4,0]]", all_ ["[[5,3,4],[7,1,8],[3,2,5],[6,4,1]]"])
+            , ("[[4,9,4,1],[2,0,6,0],[3,4,1,2],[9,7,8,5],[3,5,2,0]]", all_ ["[[4,4],[3,1],[9,8]]"])
+            ]
+    describe "q270154: Strings without twin letters" $ do
+        specEval
+            "ŧĉᵐz"
+            [ ("3 \"ABC\"", all_ ["ABA", "ABC", "ACA", "ACB", "BAB", "BAC", "BCA", "BCB", "CAB", "CAC", "CBA", "CBC"])
+            , ("3 \"AB\"", all_ ["ABA", "BAB"])
+            , ("3 \"ABCD\"", truncate_ ["ABA", "ABC", "ABD", "ACA", "ACB", "ACD", "ADA", "ADB", "ADC", "BAB"])
+            , ("2 \"OKAY\"", all_ ["OK", "OA", "OY", "KO", "KA", "KY", "AO", "AK", "AY", "YO", "YK", "YA"])
+            , ("3 \"CODEGLF\"", truncate_ ["COC", "COD", "COE", "COG", "COL", "COF", "CDC", "CDO", "CDE", "CDG"])
+            , ("4 \"NFKD\"", truncate_ ["NFNF", "NFNK", "NFND", "NFKN", "NFKF", "NFKD", "NFDN", "NFDF", "NFDK", "NKNF"])
+            , ("5 \"JOHN\"", truncate_ ["JOJOJ", "JOJOH", "JOJON", "JOJHJ", "JOJHO", "JOJHN", "JOJNJ", "JOJNO", "JOJNH", "JOHJO"])
             ]

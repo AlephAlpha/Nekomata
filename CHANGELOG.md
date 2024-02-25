@@ -6,7 +6,7 @@
 * Fixed a bug in printing truncated results.
 * Now characters are internally represented as `Word8`s instead of `Char`s.
 * Added a REPL command `\Arity` to print the arity of a function.
-* New built-in functions: `elem`, `\minValue`, `\minMax`, `\maxValue`, `\ordering`, `\pad`, `\slices`.
+* New built-in functions: `elem`, `\filterBy`, `\minValue`, `\minMax`, `\maxValue`, `\ordering`, `\pad`, `\slices`.
 
 ### Breaking changes
 
