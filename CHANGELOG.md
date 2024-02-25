@@ -1,6 +1,6 @@
 # Revision history for Nekomata
 
-## 0.6.0.0 -- Unreleased
+## 0.6.0.0 -- 2024-02-25
 
 * Updated some dependencies. Now Nekomata can be built with GHC 9.8.1.
 * Fixed a bug in printing truncated results.
