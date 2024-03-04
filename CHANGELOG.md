@@ -1,21 +1,22 @@
 # Revision history for Nekomata
 
+## 0.6.1.0 -- Unreleased
+
+* Now the REPL saves the history to a file named `.history` in the current directory.
+
 ## 0.6.0.0 -- 2024-02-25
 
 * Updated some dependencies. Now Nekomata can be built with GHC 9.8.1.
 * Fixed a bug in printing truncated results.
 * Now characters are internally represented as `Word8`s instead of `Char`s.
 * Added a REPL command `\Arity` to print the arity of a function.
-* New built-in functions: `elem`, `\filterBy`, `\minValue`, `\minMax`, `\maxValue`, `\ordering`, `\pad`, `\slices`.
+* New built-in functions: `\elem`, `\filterBy`, `\minValue`, `\minMax`, `\maxValue`, `\ordering`, `\pad`, `\slices`.
 
 ### Breaking changes
 
 * `\apply2` is renamed to `\onBoth`.
 * `\interval` can now take two chars as arguments.
 * `\intersect`, `\union` and `\setMinus` now convert numbers and characters to singleton lists.
-
-### Breaking changes
-
 * Fixed a bug in comparing characters. Now characters are compared by their code points in Nekomata's custom code page instead of Unicode.
 
 ## 0.5.1.0 -- 2023-09-27

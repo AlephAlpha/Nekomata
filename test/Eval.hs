@@ -353,6 +353,13 @@ testEval = describe "Evaluation" $ do
             , ("3", all_ ["[[1,0,0],[0,1,0],[0,0,1]]"])
             , ("4", all_ ["[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]"])
             ]
+        specEval
+            "ᵐĦḞ"
+            [ ("1", all_ ["[[1]]"])
+            , ("2", all_ ["[[1,0],[0,1]]"])
+            , ("3", all_ ["[[1,0,0],[0,1,0],[0,0,1]]"])
+            , ("4", all_ ["[[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]]"])
+            ]
     describe "q70558: Hypercube elements" $ do
         specEval
             "→rᵉÇË*"
@@ -2909,7 +2916,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q262809: Diagonalize a vector" $ do
         specEval
-            "x:ᵒ-¬*"
+            "xᵐĦ*Ḟ"
             [ ("[]", all_ ["[]"])
             , ("[0]", all_ ["[[0]]"])
             , ("[1]", all_ ["[[1]]"])
@@ -3463,4 +3470,30 @@ testEval = describe "Evaluation" $ do
             , ("3 \"CODEGLF\"", truncate_ ["COC", "COD", "COE", "COG", "COL", "COF", "CDC", "CDO", "CDE", "CDG"])
             , ("4 \"NFKD\"", truncate_ ["NFNF", "NFNK", "NFND", "NFKN", "NFKF", "NFKD", "NFDN", "NFDF", "NFDK", "NKNF"])
             , ("5 \"JOHN\"", truncate_ ["JOJOJ", "JOJOH", "JOJON", "JOJHJ", "JOJHO", "JOJHN", "JOJNJ", "JOJNO", "JOJNH", "JOHJO"])
+            ]
+    describe "q271363: Is it a tetrate of two?" $ do
+        specEval
+            "0ʷ{ᵖ>Ë}="
+            [ ("1", Check True)
+            , ("2", Check True)
+            , ("4", Check True)
+            , ("16", Check True)
+            , ("65536", Check True)
+            , ("3", Check False)
+            , ("8", Check False)
+            , ("27", Check False)
+            , ("81", Check False)
+            , ("256", Check False)
+            ]
+    describe "q271436: Reconstruct a list from its prefixes" $ do
+        specEval
+            "ᵐ∑oç∆"
+            [ ("[[1],[1,2],[1,2,3]]", all_ ["[1,2,3]"])
+            , ("[[2,1],[1],[3,1,2]]", all_ ["[1,2,3]"])
+            , ("[[6,4,8],[7,4,8,6],[6,4],[6]]", all_ ["[6,4,8,7]"])
+            , ("[[6,2,3,1],[1,2],[1],[6,1,2],[2,2,3,1,6]]", all_ ["[1,2,6,3,2]"])
+            , ("[[2],[30,2,27,40],[27,40,2,89,30],[2,30,27],[27,2]]", all_ ["[2,27,30,40,89]"])
+            , ("[[8,4],[4,8,8,4],[4,4,8],[4]]", all_ ["[4,8,4,8]"])
+            , ("[[22,98,62,80],[80,98],[22,98,10,62,80,87,2],[98],[62,80,98],[22,98,2,62,80],[2,22,98,62,87,80]]", all_ ["[98,80,62,22,2,87,10]"])
+            , ("[[43,84,56,19],[56,43],[43,56,19],[43]]", all_ ["[43,56,19,84]"])
             ]

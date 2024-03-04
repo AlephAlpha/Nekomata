@@ -200,7 +200,7 @@ replCompletion (s, _) = do
             return (rest', builtin ++ replCommand)
 
 replSettings :: (Monad m) => Settings m
-replSettings = Settings replCompletion Nothing True
+replSettings = Settings replCompletion (Just ".history") True
 
 runRepl :: IO ()
 runRepl = do
