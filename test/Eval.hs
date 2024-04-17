@@ -77,7 +77,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q183: Finding \"sub-palindromes\"." $ do
         specEval
-            "qNᵗzƀ=ũ"
+            "qŁƀ=ũ"
             [ ("\"12131331\"", all_ ["121", "131", "313", "1331", "33"])
             , ("\"3333\"", all_ ["33", "333", "3333"])
             ]
@@ -133,6 +133,10 @@ testEval = describe "Evaluation" $ do
         specEval
             "ŢṂ"
             [("[4,3,1,0,6,1,6,4,4,0,3,1,7,7,3,4,1,1,2,8]", all_ ["1"])]
+    describe "q46836: Total number of topological sorts" $ do
+        specEval
+            "↕ᵚ{S="
+            [("6 [[0,1],[0,2],[0,3],[0,5],[1,2],[1,4],[3,2],[5,3]]", Count 9)]
     describe "q50020: List Sophie Germain primes" $ do
         specEval
             "Ƥ←½Q"
@@ -728,7 +732,7 @@ testEval = describe "Evaluation" $ do
             , ("[[5,3],[1,3],[9,3],[1,-1000]] [[1,3],[2,4]]", all_ ["[[11,27],[7,15],[15,39],[-1999,-3997]]"])
             ]
         specEval
-            "ᵐ*ᵐ∑"
+            "ᵐ*Ŝ"
             [ ("[[1,2],[3,4],[5,6]] [[1,2,3,4,5],[6,7,8,9,10]]", all_ ["[[13,16,19,22,25],[27,34,41,48,55],[41,52,63,74,85]]"])
             , ("[[2,3],[3,4]] [[3,5],[3,1]]", all_ ["[[15,13],[21,19]]"])
             , ("[[5,3],[1,3],[9,3],[1,-1000]] [[1,3],[2,4]]", all_ ["[[11,27],[7,15],[15,39],[-1999,-3997]]"])
@@ -1286,6 +1290,18 @@ testEval = describe "Evaluation" $ do
             , ("[1,1,1,1,1,1,1] 6", all_ ["[1,2,2,2,2,2,1]"])
             , ("[1,2,3,4,5,6,7,8,9] 6", all_ ["[1,4,9,16,20,24,21,16,9]"])
             ]
+    describe "q156602: Quickly regrouping lists" $ do
+        specEval
+            "ˡ{Łĉᵐ#"
+            [ ("[1,2,3,3,2,1]", all_ ["4"])
+            , ("[1,2,3,4,5,6,7]", all_ ["2"])
+            , ("[1,1,1,1,1,1]", all_ ["1"])
+            , ("[2]", all_ ["0"])
+            , ("[1,2,4]", all_ ["2"])
+            , ("[1,2,2,1,1,2]", all_ ["4"])
+            , ("[1,2,2,1,1,2,1,2,2]", all_ ["5"])
+            , ("[1]", all_ ["0"])
+            ]
     describe "q162254: Generate a Walsh Matrix" $ do
         specEval
             "Ë:ᵒ&Þ£E"
@@ -1742,7 +1758,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q226593: Split a list into maximal equal-sum sections" $ do
         specEval
-            "O:ᵐ∑≡$Ðål"
+            "O:Ŝ≡$Ðål"
             [ ("[9,5,1,2,9,2]", all_ ["[[1,2,9,2],[9,5]]"])
             , ("[1,1,3,5,7,4]", all_ ["[[3,4],[7],[1,1,5]]"])
             , ("[2,9,6,1,5,8,2]", all_ ["[[1,8,2],[6,5],[2,9]]"])
@@ -2257,7 +2273,7 @@ testEval = describe "Evaluation" $ do
             , ("[3,1,4,1,5,9,2,6]", all_ ["3", "4", "4", "9", "5", "14", "2", "31"])
             ]
         specEval
-            "x:→&xï@ᵐ∑"
+            "x:→&xï@Ŝ"
             [ ("[]", all_ ["[]"])
             , ("[999]", all_ ["[999]"])
             , ("[3,1,4]", all_ ["[3,4,4]"])
@@ -2401,7 +2417,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q257458: Sum of Consecutive Squares" $ do
         specEval
-            "qᵗz:∙="
+            "qŁ:∙="
             [ ("5", Check True)
             , ("13", Check True)
             , ("14", Check True)
@@ -2869,7 +2885,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q262512: Generate all linked chains" $ do
         specEval
-            "\"-_\"Ňŧĉᵗz'=ᵚcjt"
+            "\"-_\"ŇŧĉŁ'=ᵚcjt"
             [("", truncate_ ["-=_", "_=-", "--=_", "-=_=-", "-=__", "_=--", "_=-=_", "__=-"])]
     describe "q262518: Landmine Number I" $ do
         specEval
@@ -3047,7 +3063,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q264166: Count N-Rich Permutations of an Integer Sequence" $ do
         specEval
-            "↕∆±ĉᵐ∑çṀ→="
+            "↕∆±ĉŜçṀ→="
             [ ("[1,2,3,4,5] 1", Count 1)
             , ("[1,2,3,4,5] 2", Count 69)
             , ("[1,2,3,4,5] 3", Count 41)
@@ -3487,7 +3503,7 @@ testEval = describe "Evaluation" $ do
             ]
     describe "q271436: Reconstruct a list from its prefixes" $ do
         specEval
-            "ᵐ∑oç∆"
+            "Ŝoç∆"
             [ ("[[1],[1,2],[1,2,3]]", all_ ["[1,2,3]"])
             , ("[[2,1],[1],[3,1,2]]", all_ ["[1,2,3]"])
             , ("[[6,4,8],[7,4,8,6],[6,4],[6]]", all_ ["[6,4,8,7]"])
@@ -3496,4 +3512,52 @@ testEval = describe "Evaluation" $ do
             , ("[[8,4],[4,8,8,4],[4,4,8],[4]]", all_ ["[4,8,4,8]"])
             , ("[[22,98,62,80],[80,98],[22,98,10,62,80,87,2],[98],[62,80,98],[22,98,2,62,80],[2,22,98,62,87,80]]", all_ ["[98,80,62,22,2,87,10]"])
             , ("[[43,84,56,19],[56,43],[43,56,19],[43]]", all_ ["[43,56,19,84]"])
+            ]
+    describe "q271505: Reconstruct a list of strings from its prefixes" $ do
+        specEval
+            "↕ᵉtiᶻ{∕z"
+            [ ("[[],[\"lorem\"],[\"lorem\",\"ipsum\"],[\"lorem\",\"ipsum\",\"dolor\"]]", all_ ["[\"lorem\",\"ipsum\",\"dolor\"]"])
+            , ("[[\"ipsum\",\"lorem\"],[\"lorem\"],[\"dolor\",\"lorem\",\"ipsum\"],[]]", all_ ["[\"lorem\",\"ipsum\",\"dolor\"]"])
+            , ("[[\"consectetuer\",\"sit\",\"elit\"],[\"adipiscing\",\"sit\",\"elit\",\"consectetuer\"],[\"consectetuer\",\"sit\"],[\"consectetuer\"],[]]", all_ ["[\"consectetuer\",\"sit\",\"elit\",\"adipiscing\"]"])
+            , ("[[\"ipsum\"],[\"nunc\",\"ipsum\",\"justo\",\"in\"],[\"justo\",\"in\",\"ipsum\",\"molestie\",\"nunc\"],[\"ipsum\",\"nunc\",\"justo\"],[\"justo\",\"ipsum\"],[]]", all_ ["[\"ipsum\",\"justo\",\"nunc\",\"in\",\"molestie\"]"])
+            , ("[[\"elit\",\"sit\"],[\"sit\",\"elit\",\"elit\",\"sit\"],[\"sit\",\"sit\",\"elit\"],[\"sit\"],[]]", all_ ["[\"sit\",\"elit\",\"sit\",\"elit\"]"])
+            ]
+        specEval
+            "Ŝoç∆ᵐᶠZH"
+            [ ("[[\"lorem\"],[\"lorem\",\"ipsum\"],[\"lorem\",\"ipsum\",\"dolor\"]]", all_ ["[\"lorem\",\"ipsum\",\"dolor\"]"])
+            , ("[[\"ipsum\",\"lorem\"],[\"lorem\"],[\"dolor\",\"lorem\",\"ipsum\"]]", all_ ["[\"lorem\",\"ipsum\",\"dolor\"]"])
+            , ("[[\"consectetuer\",\"sit\",\"elit\"],[\"adipiscing\",\"sit\",\"elit\",\"consectetuer\"],[\"consectetuer\",\"sit\"],[\"consectetuer\"]]", all_ ["[\"consectetuer\",\"sit\",\"elit\",\"adipiscing\"]"])
+            , ("[[\"ipsum\"],[\"nunc\",\"ipsum\",\"justo\",\"in\"],[\"justo\",\"in\",\"ipsum\",\"molestie\",\"nunc\"],[\"ipsum\",\"nunc\",\"justo\"],[\"justo\",\"ipsum\"]]", all_ ["[\"ipsum\",\"justo\",\"nunc\",\"in\",\"molestie\"]"])
+            , ("[[\"elit\",\"sit\"],[\"sit\",\"elit\",\"elit\",\"sit\"],[\"sit\",\"sit\",\"elit\"],[\"sit\"]]", all_ ["[\"sit\",\"elit\",\"sit\",\"elit\"]"])
+            ]
+    describe "q271522: Can I follow this recipe?" $ do
+        specEval
+            "ᶦ{ĕ~f}z"
+            [ ("[[9,2,3]]", Check True)
+            , ("[[],[]]", Check False)
+            , ("[[2],[9]]", Check True)
+            , ("[[],[3],[2,6],[1,2,4],[1,2,3]]", Check True)
+            , ("[[1,2,3],[],[2,4],[1,2,4],[3]]", Check False)
+            , ("[[],[],[9]]", Check False)
+            , ("[[1,2,3],[],[2,4],[1,2,4],[3],[9]]", Check False)
+            ]
+    describe "q271970: Next cyclic suffix" $ do
+        specEval
+            "Ṁ→↔$ŧᵖ{,:xŘṀ="
+            [ ("[9] 3", first_ "[9,9,9]")
+            , ("[4,2,1] 3", first_ "[4,2,1]")
+            , ("[9,0,9] 2", first_ "[0,8]")
+            , ("[9,8,0,9,8] 2", first_ "[0,8]")
+            , ("[9,8,0,9,8] 3", first_ "[0,9,7]")
+            , ("[9,8,0,9,8] 4", first_ "[0,9,8,0]")
+            , ("[9,9,0,9] 1", first_ "[8]")
+            , ("[5,4] 5", first_ "[5,4,5,4,4]")
+            , ("[10,6,2] 4", first_ "[10,6,2,9]")
+            ]
+    describe "q272425: Fixed Repeating Output" $ do
+        specEval
+            "Ħ¬"
+            [ ("5", all_ ["[1,1,1,1,1,0]"])
+            , ("2", all_ ["[1,1,0]"])
+            , ("0", all_ ["[0]"])
             ]

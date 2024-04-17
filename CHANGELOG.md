@@ -3,6 +3,12 @@
 ## 0.6.1.0 -- Unreleased
 
 * Now the REPL saves the history to a file named `.history` in the current directory.
+* New built-in functions: `\isLong`, `\sumEach`.
+
+### Breaking changes
+
+* `\charToInt` now leaves the argument unchanged if it is already an integer. It still fails if the argument is a non-integral number.
+* `\intToChar` now leaves the argument unchanged if it is already a character.
 
 ## 0.6.0.0 -- 2024-02-25
 

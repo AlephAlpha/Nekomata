@@ -13,6 +13,7 @@ charToInt' :: Function
 charToInt' = unaryVec charToInt''
   where
     charToInt'' _ (DCharT x) = liftChar charToInt_ x
+    charToInt'' _ (DNumT x) = liftInt Just x
     charToInt'' _ _ = Fail
     charToInt_ :: Word8 -> Integer
     charToInt_ = fromIntegral
@@ -21,6 +22,7 @@ intToChar' :: Function
 intToChar' = unaryVec intToChar''
   where
     intToChar'' _ (DNumT x) = liftInt intToChar_ x
+    intToChar'' _ (DCharT x) = liftChar Just x
     intToChar'' _ _ = Fail
     intToChar_ :: Integer -> Maybe Word8
     intToChar_ x

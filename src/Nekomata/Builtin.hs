@@ -186,6 +186,12 @@ builtins =
         "Check if a list is non-empty.\n\
         \If it is, push the list itself, otherwise fail."
     , Builtin
+        "isLong"
+        'Ł'
+        isLong
+        "Check if the length of a list is greater than 1.\n\
+        \If it is, push the list itself, otherwise fail."
+    , Builtin
         "isNonzero"
         'Z'
         isNonzero
@@ -870,17 +876,27 @@ builtins =
         \it is converted to a number according to Nekomata's code page, \
         \and then treated as a singleton list."
     , Builtin
+        "sumEach"
+        'Ŝ'
+        sumEach
+        "Take the sum of each list in a list of lists of numbers.\n\
+        \The addition is automatically vectorized with padding zeros.\n\
+        \If some of the elements are chars, \
+        \they are converted to numbers according to Nekomata's code page."
+    , Builtin
         "charToInt"
         'e'
         charToInt'
         "Convert a char to an integer according to Nekomata's code page.\n\
+        \If the input is already an integer, it is left unchanged.\n\
         \This function is automatically vectorized."
     , Builtin
         "intToChar"
         'H'
         intToChar'
         "Convert an integer to a char according to Nekomata's code page.\n\
-        \Fail when the integer is not in the range 0 to 255.\
+        \If the input is already a char, it is left unchanged.\n\
+        \Fail when the integer is not in the range 0 to 255.\n\
         \This function is automatically vectorized."
     , Builtin
         "read"

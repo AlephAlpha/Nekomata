@@ -114,6 +114,12 @@ Check if a list is non-empty.
 
 If it is, push the list itself, otherwise fail.
 
+### `isLong` (`Ł`, `1 -> 1`)
+
+Check if the length of a list is greater than 1.
+
+If it is, push the list itself, otherwise fail.
+
 ### `isNonzero` (`Z`, `1 -> 1`)
 
 Check if a number is non-zero.
@@ -786,9 +792,19 @@ If the input is a single integer, it is treated as a singleton list.
 
 If the input is a single char, it is converted to a number according to Nekomata's code page, and then treated as a singleton list.
 
+### `sumEach` (`Ŝ`, `1 -> 1`)
+
+Take the sum of each list in a list of lists of numbers.
+
+The addition is automatically vectorized with padding zeros.
+
+If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
+
 ### `charToInt` (`e`, `1 -> 1`)
 
 Convert a char to an integer according to Nekomata's code page.
+
+If the input is already an integer, it is left unchanged.
 
 This function is automatically vectorized.
 
@@ -796,7 +812,11 @@ This function is automatically vectorized.
 
 Convert an integer to a char according to Nekomata's code page.
 
-Fail when the integer is not in the range 0 to 255.This function is automatically vectorized.
+If the input is already a char, it is left unchanged.
+
+Fail when the integer is not in the range 0 to 255.
+
+This function is automatically vectorized.
 
 ### `read` (`Ĝ`, `1 -> 1`)
 

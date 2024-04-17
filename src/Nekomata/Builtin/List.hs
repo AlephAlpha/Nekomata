@@ -19,9 +19,19 @@ isNonempty = predicate isNonempty'
   where
     isNonempty' _ (DListT x) = isNonempty_ <$> x
     isNonempty' _ _ = Fail
-    isNonempty_ :: ListTry a -> Bool
-    isNonempty_ (Cons _ _) = True
-    isNonempty_ Nil = False
+
+isNonempty_ :: ListTry a -> Bool
+isNonempty_ (Cons _ _) = True
+isNonempty_ Nil = False
+
+isLong :: Function
+isLong = predicate isLong'
+  where
+    isLong' _ (DListT x) = x >>= isLong_
+    isLong' _ _ = Fail
+    isLong_ :: ListTry a -> Try Bool
+    isLong_ (Cons _ xs) = isNonempty_ <$> xs
+    isLong_ Nil = Val False
 
 anyOf' :: Function
 anyOf' = unary anyOf''

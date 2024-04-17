@@ -232,16 +232,15 @@ one = DNumT . Val $ Det 1
 
 sum' :: Function
 sum' = unary sum''
-  where
-    sum'' i (DListT xs) =
-        liftList (tryFoldl add' i zero) xs
-    sum'' _ _ = Fail
+
+sum'' :: Id -> DataTry -> TryData
+sum'' i (DListT xs) = liftList (tryFoldl add' i zero) xs
+sum'' _ _ = Fail
 
 product' :: Function
 product' = unary product''
   where
-    product'' i (DListT xs) =
-        liftList (tryFoldl mul' i one) xs
+    product'' i (DListT xs) = liftList (tryFoldl mul' i one) xs
     product'' _ _ = Fail
 
 dot :: Function
@@ -453,3 +452,9 @@ popCount' = unaryInt $ const (toInteger . popCount)
 
 histogram :: Function
 histogram = flatten .* powOf2 .* binary' .* sum'
+
+sumEach :: Function
+sumEach = unary sumEach'
+  where
+    sumEach' i (DListT xs) = liftList (tryMap sum'' i) xs
+    sumEach' _ _ = Fail
