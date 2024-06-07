@@ -24,14 +24,14 @@ optCode =
                 <> metavar "CODE"
                 <> help "Code to run"
             )
-        <|> CodeFile
+            <|> CodeFile
         <$> strOption
             ( long "file"
                 <> short 'f'
                 <> metavar "FILE"
                 <> help "File to run (custom encoding)"
             )
-        <|> CodeFileUtf8
+            <|> CodeFileUtf8
         <$> strOption
             ( long "utf8"
                 <> short 'u'
@@ -48,13 +48,13 @@ optInput =
                 <> metavar "INPUT"
                 <> help "Input to pass to the program"
             )
-        <|> flag'
-            InputStdin
-            ( long "stdin"
-                <> short 's'
-                <> help "Read input from stdin"
-            )
-        <|> pure InputNone
+            <|> flag'
+                InputStdin
+                ( long "stdin"
+                    <> short 's'
+                    <> help "Read input from stdin"
+                )
+            <|> pure InputNone
 
 optMode :: Parser Mode
 optMode =
@@ -117,17 +117,17 @@ opts :: Parser Opts
 opts =
     Opts
         <$> optRunOnce
-        <|> flag' Repl (long "repl" <> short 'r' <> help "Run the REPL")
-        <|> flag'
-            DocBuiltin
-            (long "doc" <> help "Generate documentation for builtins")
-        <|> flag'
-            DocCodePage
-            (long "codepage" <> help "Generate documentation for code page")
-        <|> flag'
-            Version
-            (long "version" <> short 'v' <> help "Show version")
-        <|> pure Repl
+            <|> flag' Repl (long "repl" <> short 'r' <> help "Run the REPL")
+            <|> flag'
+                DocBuiltin
+                (long "doc" <> help "Generate documentation for builtins")
+            <|> flag'
+                DocCodePage
+                (long "codepage" <> help "Generate documentation for code page")
+            <|> flag'
+                Version
+                (long "version" <> short 'v' <> help "Show version")
+            <|> pure Repl
 
 optsInfo :: ParserInfo Opts
 optsInfo =

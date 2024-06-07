@@ -20,9 +20,13 @@ import Nekomata.Function
 -- | A builtin function in Nekomata
 data Builtin = Builtin
     { name :: String
+    -- ^ The name of the builtin function
     , short :: Char
+    -- ^ The short name of the builtin function
     , func :: Function
+    -- ^ The function itself
     , help :: String
+    -- ^ The help message for the builtin function
     }
 
 instance Show Builtin where
@@ -1372,7 +1376,11 @@ builtinShortMap :: Map Char Builtin
 builtinShortMap = Map.fromList [(short b, b) | b <- builtins]
 
 -- | An error that occurs when a builtin function is not found
-data BuiltinNotFoundError = BuiltinNotFound String | BuiltinShortNotFound Char
+data BuiltinNotFoundError
+    = -- | Cannot find a builtin function with the given full name
+      BuiltinNotFound String
+    | -- | Cannot find a builtin function with the given short name
+      BuiltinShortNotFound Char
     deriving (Eq)
 
 instance Show BuiltinNotFoundError where

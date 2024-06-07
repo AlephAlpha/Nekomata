@@ -7,7 +7,6 @@ import qualified Data.Map.Strict as Map
 import Data.Version (showVersion)
 import Nekomata.Builtin (Builtin (short), builtinMap, infoByName)
 import Nekomata.Eval
-import Nekomata.Function (Function (arity))
 import qualified Nekomata.Particle as Particle
 import Paths_Nekomata (version)
 import System.Console.Haskeline
@@ -152,7 +151,7 @@ repl state = handleInterrupt (outputStrLn "Cancelled." >> repl state) $ do
                     outputStrLn $ "Invalid code: " ++ show e
                     repl state
                 Right function' -> do
-                    outputStrLn $ code ++ " : " ++ show (arity function')
+                    outputStrLn $ code ++ " : " ++ show (getArity function')
                     repl state
 
 replCommandCompletion :: String -> [Completion]

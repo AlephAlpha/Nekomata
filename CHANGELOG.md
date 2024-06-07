@@ -1,5 +1,11 @@
 # Revision history for Nekomata
 
+## 0.7.0.0 -- Unreleased
+
+### Breaking changes
+
+* Some modules in the library are no longer exposed.
+
 ## 0.6.1.0 -- 2024-06-07
 
 * Now the REPL saves the history to a file named `.history` in the current directory.

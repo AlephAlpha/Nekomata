@@ -68,6 +68,10 @@ data Function = Function
     , apply :: Id -> Stack -> Stack
     }
 
+-- | Get the arity of a function
+getArity :: Function -> Arity
+getArity = arity
+
 -- | The identity function
 identity :: Function
 identity = Function (Arity 0 0) $ \_ s -> s

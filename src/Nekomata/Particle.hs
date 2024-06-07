@@ -30,10 +30,15 @@ newtype Particle = Particle {runParticle :: Function -> Maybe Function}
 -- | A builtin particle in Nekomata
 data BuiltinParticle = BuiltinParticle
     { name :: String
+    -- ^ The name of the particle
     , short :: Char
+    -- ^ The short name of the particle
     , particle :: Particle
+    -- ^ The particle itself
     , arity :: String
+    -- ^ The arity of the particle
     , help :: String
+    -- ^ The help message for the particle
     }
 
 instance Show BuiltinParticle where
@@ -251,8 +256,10 @@ builtinParticleShortMap =
 
 -- | An error that occurs when a builtin particle is not found
 data ParticleNotFoundError
-    = ParticleNotFound String
-    | ParticleShortNotFound Char
+    = -- | Cannot find a particle with the given full name
+      ParticleNotFound String
+    | -- | Cannot find a particle with the given short name
+      ParticleShortNotFound Char
     deriving (Eq)
 
 instance Show ParticleNotFoundError where
@@ -266,9 +273,13 @@ with the wrong arity
 -}
 data ParticleArityError = ParticleArityError
     { particleName :: String
+    -- ^ The name of the particle
     , particleShort :: Char
+    -- ^ The short name of the particle
     , particleArity :: String
+    -- ^ The arity of the particle
     , functionArity :: String
+    -- ^ The arity of the function applied to
     }
     deriving (Eq)
 

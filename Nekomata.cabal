@@ -21,7 +21,7 @@ name:            Nekomata
 -- PVP summary:  +-+------- breaking API changes
 --               | | +----- non-breaking API additions
 --               | | | +--- code changes with no API change
-version:         0.6.1.0
+version:         0.7.0.0
 
 -- A short (one-line) description of the package.
 synopsis:
@@ -64,13 +64,8 @@ library
   exposed-modules:
     Nekomata.Builtin
     Nekomata.CodePage
-    Nekomata.Data
     Nekomata.Eval
-    Nekomata.Function
-    Nekomata.NonDet
-    Nekomata.Parser
     Nekomata.Particle
-    Nekomata.Program
 
   -- Modules included in this library but not exported.
   other-modules:
@@ -78,8 +73,14 @@ library
     Nekomata.Builtin.List
     Nekomata.Builtin.Math
     Nekomata.Builtin.String
+    Nekomata.Data
+    Nekomata.Function
+    Nekomata.NonDet
+    Nekomata.Parser
     Nekomata.Parser.Data
     Nekomata.Parser.Program
+    Nekomata.Program
+    Nekomata.Result
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:
@@ -88,7 +89,7 @@ library
   build-depends:
     , arithmoi       ^>=0.13
     , base           >=4.15 && <5
-    , containers     ^>=0.6
+    , containers     ^>=0.7
     , integer-roots  ^>=1.0
     , parsec         ^>=3.1
 
@@ -118,7 +119,7 @@ executable Nekomata
   build-depends:
     , base                  >=4.15 && <5
     , bytestring            ^>=0.12
-    , containers            ^>=0.6
+    , containers            ^>=0.7
     , haskeline             ^>=0.8
     , Nekomata
     , optparse-applicative  ^>=0.18

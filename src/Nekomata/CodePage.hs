@@ -1,4 +1,14 @@
-module Nekomata.CodePage where
+module Nekomata.CodePage (
+    CodePageError (..),
+    byteToChar,
+    charToInt,
+    checkCodePage,
+    codePage,
+    codePageMarkdown,
+    fromBytes,
+    intToChar,
+    toBytes,
+) where
 
 import Control.Monad (zipWithM)
 import Data.List (elemIndex)
@@ -40,7 +50,7 @@ intToChar x
 byteToChar :: Word8 -> Char
 byteToChar = (codePage !!) . fromIntegral
 
--- A Markdown table of the code page
+-- | A Markdown table of the code page
 codePageMarkdown :: String
 codePageMarkdown =
     "| |"
@@ -67,7 +77,13 @@ codePageMarkdown =
     escape c = [c]
 
 -- | An error that occurs when a character is not in Nekomata's code page.
-data CodePageError = CodePageError {char :: Char, pos :: Int} deriving (Eq)
+data CodePageError = CodePageError
+    { char :: Char
+    -- ^ The character that is not in the code page
+    , pos :: Int
+    -- ^ The position of the character in the string
+    }
+    deriving (Eq)
 
 instance Show CodePageError where
     show (CodePageError c i) =

@@ -200,9 +200,12 @@ instance (NonDet a) => NonDet (ListTry a) where
 
 -- | Nekomata's data type (deterministic)
 data Data
-    = DNum Rational
-    | DChar Word8
-    | DList [Data]
+    = -- | A rational number
+      DNum Rational
+    | -- | A character
+      DChar Word8
+    | -- | A list of data
+      DList [Data]
     deriving (Eq, Ord)
 
 -- | Check if a @Data@ is a nonempty String, and return the String if it is

@@ -1,4 +1,25 @@
-module Nekomata.Eval where
+module Nekomata.Eval (
+    Arity (..),
+    Data (..),
+    Function,
+    NekomataData,
+    NekomataError,
+    Mode (..),
+    Result (..),
+    Runtime,
+    allResults,
+    checkResult,
+    compile,
+    countResults,
+    eval,
+    firstResult,
+    getArity,
+    initRuntime,
+    readInput,
+    runFunction,
+    showResult,
+    toResult,
+) where
 
 import Control.Arrow (left)
 import Control.Monad ((>=>))
@@ -10,6 +31,7 @@ import Nekomata.NonDet
 import Nekomata.Parser
 import Nekomata.Particle (ParticleArityError)
 import Nekomata.Program
+import Nekomata.Result
 import Text.Parsec (ParseError, parse)
 
 -- | An error that can occur during parsing and evaluation
@@ -35,12 +57,13 @@ compile =
             . compileProgram
 
 -- | Nekomata's runtime state
-data Runtime = Runtime {choiceId :: Id, stack :: Stack}
+data Runtime = Runtime Id Stack
 
 -- | Initialize Nekomata's runtime state with a list of input values
 initRuntime :: [Data] -> Runtime
 initRuntime = Runtime initId . initStack . map fromValue
 
+-- | Read a Nekomata input string into a list of values
 readInput :: String -> Either NekomataError [Data]
 readInput =
     left CodePageError
@@ -48,14 +71,25 @@ readInput =
         >=> left ParseError
             . parse parseInput ""
 
+-- | Nekomata's non-deterministic evaluation result
+newtype NekomataData = NekomataData {fromNekomataData :: TryData}
+
 -- | Run a Nekomata function with the given runtime state
-runFunction :: Function -> Runtime -> (Runtime, TryData)
+runFunction :: Function -> Runtime -> (Runtime, NekomataData)
 runFunction f (Runtime id' s) =
     let s' = apply f (leftId id') s
-     in (Runtime (rightId id') s', top s')
+     in (Runtime (rightId id') s', NekomataData $ top s')
 
 -- | Nekomata's evaluation mode
-data Mode = AllValues | FirstValue | CountValues | CheckExistence
+data Mode
+    = -- | Show all results
+      AllValues
+    | -- | Show the first result
+      FirstValue
+    | -- | Count the number of results
+      CountValues
+    | -- | Check if there are any results
+      CheckExistence
     deriving (Eq, Ord, Show)
 
 -- | Show a Nekomata value
@@ -63,49 +97,23 @@ showData :: Data -> String
 showData x = fromMaybe (show x) $ asString x
 
 -- | Get all results of a Nekomata evaluation as a list of strings
-allResults :: TryData -> [String]
-allResults = map showData . values initDecisions
+allResults :: NekomataData -> [String]
+allResults = map showData . values initDecisions . fromNekomataData
 
 -- | Get the first result of a Nekomata evaluation as a string
-firstResult :: TryData -> Maybe String
-firstResult = fmap showData . values initDecisions
+firstResult :: NekomataData -> Maybe String
+firstResult = fmap showData . values initDecisions . fromNekomataData
 
 -- | Count the number of results of a Nekomata evaluation
-countResults :: TryData -> Integer
-countResults = countValues initDecisions
+countResults :: NekomataData -> Integer
+countResults = countValues initDecisions . fromNekomataData
 
 -- | Check if a Nekomata evaluation has any results
-checkResult :: TryData -> Bool
-checkResult = hasValue initDecisions
-
--- | The result of a Nekomata evaluation, to be shown to the user
-data Result
-    = All Bool [String]
-    | First (Maybe String)
-    | Count Integer
-    | Check Bool
-    deriving (Eq)
-
-instance Show Result where
-    show (All truncated xs) = unwords xs ++ if truncated then " ..." else ""
-    show (First x) = fromMaybe "" x
-    show (Count n) = show n
-    show (Check b) = show b
-
--- | Show a Nekomata result separated by newlines
-showResult :: Result -> [String]
-showResult (All truncated xs) = xs ++ ["..." | truncated]
-showResult (First x) = [fromMaybe "" x]
-showResult (Count n) = [show n]
-showResult (Check b) = [show b]
-
--- | Truncate a list of strings to a given length
-truncate' :: Int -> [String] -> Result
-truncate' n xs =
-    let (ys, zs) = splitAt n xs in All (not $ null zs) ys
+checkResult :: NekomataData -> Bool
+checkResult = hasValue initDecisions . fromNekomataData
 
 -- | Get the result of a Nekomata evaluation according to the mode
-toResult :: Mode -> Maybe Int -> TryData -> Result
+toResult :: Mode -> Maybe Int -> NekomataData -> Result
 toResult AllValues Nothing = All False . allResults
 toResult AllValues (Just n) = truncate' n . allResults
 toResult FirstValue _ = First . firstResult
