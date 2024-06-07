@@ -1,6 +1,6 @@
 # Revision history for Nekomata
 
-## 0.6.1.0 -- Unreleased
+## 0.6.1.0 -- 2024-06-07
 
 * Now the REPL saves the history to a file named `.history` in the current directory.
 * New built-in functions: `\isLong`, `\sumEach`.

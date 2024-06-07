@@ -3602,3 +3602,22 @@ testEval = describe "Evaluation" $ do
             , ("[[1,4],[7,4],[9,6]]", Check False)
             , ("[[6,1],[1,6]]", Check False)
             ]
+    describe "q273467: Looping counter extended" $ do
+        specEval
+            "Ňr26%→Ɔ64+$∑→řH"
+            [("", truncate_ ["A", "BB", "CCCC", "DDDDDDD", "EEEEEEEEEEE", "FFFFFFFFFFFFFFFF"])]
+    describe "q273479: Is this a valid PZN?" $ do
+        specEval
+            "7R¢ɔ∙11¦"
+            [ ("[0,0,0,0,0,0,0,0]", Check True)
+            , ("[1,3,7,2,4,8,5,7]", Check True)
+            , ("[0,8,1,0,8,7,5,4]", Check True)
+            , ("[0,4,8,6,1,8,8,0]", Check True)
+            , ("[1,6,0,8,6,3,3,4]", Check True)
+            , ("[0,1,3,4,9,0,3,5]", Check True)
+            , ("[0,0,0,0,0,0,0,1]", Check False)
+            , ("[0,0,0,0,0,0,0,2]", Check False)
+            , ("[0,6,7,6,5,7,7,4]", Check False)
+            , ("[0,8,1,0,8,7,5,9]", Check False)
+            , ("[0,0,1,0,0,0,1,0]", Check False)
+            ]
