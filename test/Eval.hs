@@ -1,31 +1,47 @@
 {-# OPTIONS_GHC -Wno-incomplete-uni-patterns #-}
 
-module Eval (testEval) where
+module Eval (testBuiltins, testEval) where
 
 import Control.Monad
 import Data.Either (isRight)
+import Nekomata.Builtin
 import Nekomata.Eval
 import Test.Hspec
+
+shouldMatch :: NekomataData -> Result -> Expectation
+shouldMatch x (All False xs) = allResults x `shouldBe` xs
+shouldMatch x (All True xs) = take (length xs) (allResults x) `shouldBe` xs
+shouldMatch x (First y) = firstResult x `shouldBe` y
+shouldMatch x (Count n) = countResults x `shouldBe` n
+shouldMatch x (Check b) = checkResult x `shouldBe` b
+
+specBuiltin :: Builtin -> Spec
+specBuiltin builtin =
+    if null (examples builtin)
+        then return ()
+        else describe (show builtin ++ " (" ++ [short builtin] ++ ")") $ do
+            forM_ (examples builtin) $ \(input, output) -> do
+                it (input ++ " -> " ++ show output) $ do
+                    let Right f = compile input
+                    let runtime = initRuntime []
+                    let result = snd $ runFunction f runtime
+                    result `shouldMatch` output
+
+testBuiltins :: Spec
+testBuiltins = describe "Examples of built-in functions" $ do
+    forM_ builtins specBuiltin
 
 specEval :: String -> [(String, Result)] -> Spec
 specEval code testCases = context code $ do
     it "should compile" $ do
         code `shouldSatisfy` isRight . compile
-    it ("should be " ++ show (length code) ++ " bytes") $ do
-        length code `shouldBe` length code
     let Right f = compile code
     forM_ testCases $ \(input, output) -> do
         it (input ++ " -> " ++ show output) $ do
             let Right input' = readInput input
             let runtime = initRuntime input'
             let result = snd $ runFunction f runtime
-            case output of
-                All False xs -> allResults result `shouldBe` xs
-                All True xs ->
-                    take (length xs) (allResults result) `shouldBe` xs
-                First x -> firstResult result `shouldBe` x
-                Count n -> countResults result `shouldBe` n
-                Check b -> checkResult result `shouldBe` b
+            result `shouldMatch` output
 
 all_ :: [String] -> Result
 all_ = All False
@@ -40,7 +56,7 @@ nothing_ :: Result
 nothing_ = First Nothing
 
 testEval :: Spec
-testEval = describe "Evaluation" $ do
+testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
     describe "q69: Golf you a quine for great good!" $ do
         specEval
             "\"ᵉĝ,\"ᵉĝ,"

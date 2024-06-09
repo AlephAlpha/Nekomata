@@ -63,4 +63,5 @@ testNames = do
 main :: IO ()
 main = hspec $ do
     testNames
+    testBuiltins
     testEval

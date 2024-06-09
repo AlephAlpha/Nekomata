@@ -16,6 +16,7 @@ import Nekomata.Builtin.List
 import Nekomata.Builtin.Math
 import Nekomata.Builtin.String
 import Nekomata.Function
+import Nekomata.Result
 
 -- | A builtin function in Nekomata
 data Builtin = Builtin
@@ -27,6 +28,8 @@ data Builtin = Builtin
     -- ^ The function itself
     , help :: String
     -- ^ The help message for the builtin function
+    , examples :: [(String, Result)]
+    -- ^ Some examples for the builtin function
     }
 
 instance Show Builtin where
@@ -42,6 +45,14 @@ info b =
         ++ show (arity (func b))
         ++ "):\n"
         ++ help b
+        ++ if null (examples b)
+            then ""
+            else
+                "\nExamples:\n"
+                    ++ unlines
+                        [ "  " ++ example ++ " -> " ++ show result
+                        | (example, result) <- examples b
+                        ]
 
 -- | Get the info string for a builtin function in Markdown format
 infoMarkdown :: Builtin -> String
@@ -54,6 +65,15 @@ infoMarkdown b =
         ++ show (arity (func b))
         ++ "`)\n\n"
         ++ concatMap (++ "\n\n") (lines (help b))
+        ++ if null (examples b)
+            then ""
+            else
+                "__Examples__:\n\n"
+                    ++ unlines
+                        [ "- `" ++ example ++ "` → `" ++ show result ++ "`"
+                        | (example, result) <- examples b
+                        ]
+                    ++ "\n"
 
 -- | Get the info string for a builtin function by name
 infoByName :: String -> Maybe String
@@ -72,44 +92,52 @@ builtins =
         choice
         "Choose between two values.\n\
         \This function is non-deterministic."
+        [("1 2?", All False ["1", "2"])]
     , Builtin
         "fail"
         '!'
         fail'
         "Push a non-deterministic object with no values."
+        []
     , Builtin
         "allValues"
         'a'
         allValues
         "Get a list of all possible values for a non-deterministic object."
+        [("1 2?a", All False ["[1,2]"])]
     , Builtin
         "oneValue"
         '¡'
         oneValue
         "Get the first possible value from a non-deterministic object.\n\
         \Fails if the object has no values."
+        [("1 2?¡", All False ["1"])]
     , Builtin
         "countValues"
         'n'
         countValues'
         "Count the number of values in a non-deterministic object."
+        [("1 2?n", All False ["2"])]
     , Builtin
         "uniqueValue"
         'ũ'
         uniqueValue
         "Remove duplicate values from a non-deterministic object."
+        [("[1,1,2]~ũ", All False ["1", "2"])]
     , Builtin
         "minValue"
         'å'
         minValue
         "Get the minimum possible value from a non-deterministic object.\n\
         \Fails if the object has no values."
+        [("1 2?å", All False ["1"])]
     , Builtin
         "maxValue"
         'Å'
         maxValue
         "Get the maximum possible value from a non-deterministic object.\n\
         \Fails if the object has no values."
+        [("1 2?Å", All False ["2"])]
     , Builtin
         "normalForm"
         '¤'
@@ -118,83 +146,127 @@ builtins =
         \I haven't given a formal definition for the normal form. \
         \This function basically lifts all the non-determinism \
         \in lists to the top level."
+        []
     , Builtin
         "if"
         'I'
         if'
         "Choose the first value that doesn't fail between two values."
+        [ ("1 2I", All False ["1"])
+        , ("! 2I", All False ["2"])
+        ]
     , Builtin
         "andThen"
         '¿'
         andThen
         "Take two values, \n\
         \and return the first one if the second one doesn't fail."
+        [ ("1 2¿", All False ["1"])
+        , ("1 !¿", All False [])
+        ]
     , Builtin
         "drop"
         '^'
         drop'
         "Drop the top value of the stack: `a ... -> ...`."
+        []
     , Builtin
         "dup"
         ':'
         dup
         "Duplicate the top value of the stack: `a ... -> a a ...`."
+        []
     , Builtin
         "swap"
         '$'
         swap
         "Swap the top two values of the stack: `a b ... -> b a ...`."
+        []
     , Builtin
         "rot3"
         '§'
         rot3
         "Swap the top two values of the stack: `a b c ... -> c b a ...`."
+        []
     , Builtin
         "over"
         'v'
         over
         "Duplicate the second value of the stack, \
         \and put it on top of the stack: `a b ... -> b a b ...`."
+        []
     , Builtin
         "eq"
         '='
         eq
         "Check if two values are equal.\n\
         \If they are, push the first value, otherwise fail."
+        [ ("1 1=", All False ["1"])
+        , ("1 2=", All False [])
+        ]
     , Builtin
         "ne"
         '≠'
         ne
         "Check if two values are not equal.\n\
         \If they are not, push the first value, otherwise fail."
+        [ ("1 1≠", All False [])
+        , ("1 2≠", All False ["1"])
+        ]
     , Builtin
         "lt"
         'Ļ'
         lt
         "Check if the first value is less than the second.\n\
         \If it is, push the first value, otherwise fail.\n\
-        \Unlike `less`, this function does not automatically vectorize, \
-        \so you can use it to compare two lists."
+        \This function uses an ordering that is defined on all values. \
+        \Numbers are smaller than chars, which are smaller than lists. \
+        \Lists are compared in the lexicographic order."
+        [ ("1 2Ļ", All False ["1"])
+        , ("1 1Ļ", All False [])
+        , ("2 1Ļ", All False [])
+        , ("1 'aĻ", All False ["1"])
+        , ("'a [1]Ļ", All False ["'a'"])
+        , ("[1,2] [2]Ļ", All False ["[1,2]"])
+        , ("[1,2] [1]Ļ", All False [])
+        ]
     , Builtin
         "gt"
         'Ģ'
         gt
         "Check if the first value is greater than the second.\n\
         \If it is, push the first value, otherwise fail.\n\
-        \Unlike `greater`, this function does not automatically vectorize, \
-        \so you can use it to compare two lists."
+        \This function uses an ordering that is defined on all values. \
+        \Numbers are smaller than chars, which are smaller than lists. \
+        \Lists are compared in the lexicographic order."
+        [ ("1 2Ģ", All False [])
+        , ("1 1Ģ", All False [])
+        , ("2 1Ģ", All False ["2"])
+        , ("'a 1Ģ", All False ["'a'"])
+        , ("[1] 'aĢ", All False ["[1]"])
+        , ("[1,2] [2]Ģ", All False [])
+        , ("[1,2] [1]Ģ", All False ["[1,2]"])
+        ]
     , Builtin
         "isNonempty"
         'N'
         isNonempty
         "Check if a list is non-empty.\n\
         \If it is, push the list itself, otherwise fail."
+        [ ("[1]N", All False ["[1]"])
+        , ("\"Hello\"N", All False ["Hello"])
+        , ("[]N", All False [])
+        ]
     , Builtin
         "isLong"
         'Ł'
         isLong
         "Check if the length of a list is greater than 1.\n\
         \If it is, push the list itself, otherwise fail."
+        [ ("[1,2]Ł", All False ["[1,2]"])
+        , ("[1]Ł", All False [])
+        , ("[]Ł", All False [])
+        ]
     , Builtin
         "isNonzero"
         'Z'
@@ -204,6 +276,11 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("1Z", All False ["1"])
+        , ("0Z", All False [])
+        , ("1_Z", All False ["-1"])
+        , ("[1,[2,3]]Z", All False ["[1,[2,3]]"])
+        ]
     , Builtin
         "isPositive"
         'P'
@@ -213,6 +290,11 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("1P", All False ["1"])
+        , ("0P", All False [])
+        , ("1_P", All False [])
+        , ("[1,[2,3]]P", All False ["[1,[2,3]]"])
+        ]
     , Builtin
         "isNonnegative"
         'ň'
@@ -222,6 +304,11 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("1ň", All False ["1"])
+        , ("0ň", All False ["0"])
+        , ("1_ň", All False [])
+        , ("[1,[2,3]]ň", All False ["[1,[2,3]]"])
+        ]
     , Builtin
         "isZero"
         'ž'
@@ -231,6 +318,11 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("1ž", All False [])
+        , ("0ž", All False ["0"])
+        , ("1_ž", All False [])
+        , ("[0,[0,0]]ž", All False ["[0,[0,0]]"])
+        ]
     , Builtin
         "isBig"
         'Ƶ'
@@ -240,6 +332,12 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("2Ƶ", All False ["2"])
+        , ("1Ƶ", All False [])
+        , ("0Ƶ", All False [])
+        , ("1_Ƶ", All False [])
+        , ("2_Ƶ", All False ["-2"])
+        ]
     , Builtin
         "isSmall"
         'ƶ'
@@ -250,6 +348,12 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("2ƶ", All False [])
+        , ("1ƶ", All False ["1"])
+        , ("0ƶ", All False ["0"])
+        , ("1_ƶ", All False ["-1"])
+        , ("2_ƶ", All False [])
+        ]
     , Builtin
         "less"
         '<'
@@ -260,6 +364,12 @@ builtins =
         \they are converted to numbers according to Nekomata's code page \
         \before comparison, but the result is still a char.\n\
         \This function is automatically vectorized."
+        [ ("1 2<", All False ["1"])
+        , ("1 1<", All False [])
+        , ("2 1<", All False [])
+        , ("[1,2,3] [2,3,4]<", All False ["[1,2,3]"])
+        , ("[1,2] [2,1]<", All False [])
+        ]
     , Builtin
         "lessEq"
         '≤'
@@ -270,6 +380,12 @@ builtins =
         \they are converted to numbers according to Nekomata's code page \
         \before comparison, but the result is still a char.\n\
         \This function is automatically vectorized."
+        [ ("1 2≤", All False ["1"])
+        , ("1 1≤", All False ["1"])
+        , ("2 1≤", All False [])
+        , ("[1,2,3] [2,3,4]≤", All False ["[1,2,3]"])
+        , ("[1,2] [2,1]≤", All False [])
+        ]
     , Builtin
         "greater"
         '>'
@@ -280,6 +396,12 @@ builtins =
         \they are converted to numbers according to Nekomata's code page \
         \before comparison, but the result is still a char.\n\
         \This function is automatically vectorized."
+        [ ("1 2>", All False [])
+        , ("1 1>", All False [])
+        , ("2 1>", All False ["2"])
+        , ("[2,3,4] [1,2,3]>", All False ["[2,3,4]"])
+        , ("[2,1] [1,2]>", All False [])
+        ]
     , Builtin
         "greaterEq"
         '≥'
@@ -290,21 +412,30 @@ builtins =
         \they are converted to numbers according to Nekomata's code page \
         \before comparison, but the result is still a char.\n\
         \This function is automatically vectorized."
+        [ ("1 2≥", All False [])
+        , ("1 1≥", All False ["1"])
+        , ("2 1≥", All False ["2"])
+        , ("[2,3,4] [1,2,3]≥", All False ["[2,3,4]"])
+        , ("[2,1] [1,2]≥", All False [])
+        ]
     , Builtin
         "neg1"
         '£'
         neg1
         "The constant -1."
+        [("£", All False ["-1"])]
     , Builtin
         "ten"
         '¢'
         ten
         "The constant 10."
+        [("¢", All False ["10"])]
     , Builtin
         "octet"
         '¥'
         octet
         "The constant 256."
+        [("¥", All False ["256"])]
     , Builtin
         "neg"
         '_'
@@ -313,6 +444,9 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("1_", All False ["-1"])
+        , ("[1,[2,3]]_", All False ["[-1,[-2,-3]]"])
+        ]
     , Builtin
         "abs"
         'A'
@@ -321,6 +455,10 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("1A", All False ["1"])
+        , ("1_A", All False ["1"])
+        , ("[-1,[2,-3]]A", All False ["[1,[2,3]]"])
+        ]
     , Builtin
         "increment"
         '→'
@@ -329,6 +467,9 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("1→", All False ["2"])
+        , ("[1,[2,3]]→", All False ["[2,[3,4]]"])
+        ]
     , Builtin
         "decrement"
         '←'
@@ -337,6 +478,9 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("1←", All False ["0"])
+        , ("[1,[2,3]]←", All False ["[0,[1,2]]"])
+        ]
     , Builtin
         "logicalNot"
         '¬'
@@ -345,6 +489,11 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("1¬", All False ["0"])
+        , ("2¬", All False ["0"])
+        , ("0¬", All False ["1"])
+        , ("[-1,[0,1]]¬", All False ["[0,[1,0]]"])
+        ]
     , Builtin
         "sign"
         '±'
@@ -354,6 +503,10 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("2±", All False ["1"])
+        , ("0±", All False ["0"])
+        , ("[-2,[0,2]]±", All False ["[-1,[0,1]]"])
+        ]
     , Builtin
         "add"
         '+'
@@ -362,6 +515,12 @@ builtins =
         \If one or both of the arguments are chars, \
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized with padding zeros."
+        [ ("1 1+", All False ["2"])
+        , ("[1,2] [2,3]+", All False ["[3,5]"])
+        , ("1 [2,3]+", All False ["[3,4]"])
+        , ("[1] [2,3]+", All False ["[3,3]"])
+        , ("[[1],[0,1]] [[0,2],[2]]+", All False ["[[1,2],[2,1]]"])
+        ]
     , Builtin
         "sub"
         '-'
@@ -370,6 +529,12 @@ builtins =
         \If one or both of the arguments are chars, \
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized with padding zeros."
+        [ ("1 1-", All False ["0"])
+        , ("[1,2] [2,3]-", All False ["[-1,-1]"])
+        , ("1 [2,3]-", All False ["[-1,-2]"])
+        , ("[1] [2,3]-", All False ["[-1,-3]"])
+        , ("[[1],[0,1]] [[0,2],[2]]-", All False ["[[1,-2],[-2,1]]"])
+        ]
     , Builtin
         "absDiff"
         '≈'
@@ -378,6 +543,11 @@ builtins =
         \If one or both of the arguments are chars, \
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized with padding zeros."
+        [ ("1 2≈", All False ["1"])
+        , ("[1,2] [3,1]≈", All False ["[2,1]"])
+        , ("2 [1,3]≈", All False ["[1,1]"])
+        , ("[1] [3,1]≈", All False ["[2,1]"])
+        ]
     , Builtin
         "mul"
         '*'
@@ -387,6 +557,11 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
+        [ ("2 3*", All False ["6"])
+        , ("[2,3] [3,4]*", All False ["[6,12]"])
+        , ("2 [3,4]*", All False ["[6,8]"])
+        , ("[2] [3,4]*", All False [])
+        ]
     , Builtin
         "div"
         '/'
@@ -397,6 +572,12 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
+        [ ("6 3/", All False ["2"])
+        , ("3 6/", All False ["1/2"])
+        , ("[3,6] [2,3]/", All False ["[3/2,2]"])
+        , ("3 [2,3]/", All False ["[3/2,1]"])
+        , ("[3] [2,3]/", All False [])
+        ]
     , Builtin
         "divInt"
         '÷'
@@ -408,6 +589,13 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
+        [ ("6 3÷", All False ["2"])
+        , ("3 6÷", All False ["0"])
+        , ("3_ 6÷", All False ["-1"])
+        , ("[3,6] [-2,3]÷", All False ["[-2,2]"])
+        , ("3 [-2,3]÷", All False ["[-2,1]"])
+        , ("[3] [-2,3]÷", All False [])
+        ]
     , Builtin
         "mod"
         '%'
@@ -418,6 +606,14 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
+        [ ("5 3%", All False ["2"])
+        , ("5_ 3%", All False ["1"])
+        , ("5 3_%", All False ["-1"])
+        , ("5_ 3_%", All False ["-2"])
+        , ("[5,6] [3,4]%", All False ["[2,2]"])
+        , ("5 [3,4]%", All False ["[2,1]"])
+        , ("[5] [3,4]%", All False [])
+        ]
     , Builtin
         "divExact"
         '¦'
@@ -429,6 +625,12 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
+        [ ("6 3¦", All False ["2"])
+        , ("5 3¦", All False [])
+        , ("[6,4] [3,4]¦", All False ["[2,1]"])
+        , ("6 [2,3]¦", All False ["[3,2]"])
+        , ("[6] [2,3]¦", All False [])
+        ]
     , Builtin
         "divMod"
         'þ'
@@ -439,6 +641,7 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
+        [("5 3þÐ", All False ["[1,2]"])]
     , Builtin
         "half"
         '½'
@@ -448,6 +651,10 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("6½", All False ["3"])
+        , ("5½", All False [])
+        , ("[6,4]½", All False ["[3,2]"])
+        ]
     , Builtin
         "pow"
         'E'
@@ -460,6 +667,13 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
+        [ ("2 3E", All False ["9"])
+        , ("3 2E", All False ["8"])
+        , ("2 1\\2E", All False ["1/4"])
+        , ("1\\2 2E", All False [])
+        , ("[-2,0,2] 2E", All False ["[1/4,1,4]"])
+        , ("[2] [3,4]E", All False [])
+        ]
     , Builtin
         "recip"
         'ŗ'
@@ -469,6 +683,10 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("2ŗ", All False ["1/2"])
+        , ("0ŗ", All False [])
+        , ("[2,3]ŗ", All False ["[1/2,1/3]"])
+        ]
     , Builtin
         "mul2"
         'Ä'
@@ -477,6 +695,9 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("2Ä", All False ["4"])
+        , ("[2,3]Ä", All False ["[4,6]"])
+        ]
     , Builtin
         "div2"
         'ä'
@@ -487,6 +708,9 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("2ä", All False ["1"])
+        , ("[2,3]ä", All False ["[1,3/2]"])
+        ]
     , Builtin
         "mod2"
         'Ö'
@@ -495,6 +719,9 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("5Ö", All False ["1"])
+        , ("[5,6]Ö", All False ["[1,0]"])
+        ]
     , Builtin
         "powOf2"
         'Ë'
@@ -504,6 +731,9 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("3Ë", All False ["8"])
+        , ("[-2,0,2]Ë", All False ["[1/4,1,4]"])
+        ]
     , Builtin
         "denominator"
         'ḍ'
@@ -512,6 +742,10 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("1\\2ḍ", All False ["2"])
+        , ("2ḍ", All False ["1"])
+        , ("[2/3,3/5]ḍ", All False ["[3,5]"])
+        ]
     , Builtin
         "numerator"
         'ṇ'
@@ -520,18 +754,32 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("1\\2ṇ", All False ["1"])
+        , ("2ṇ", All False ["2"])
+        , ("[2/3,3/5]ṇ", All False ["[2,3]"])
+        ]
     , Builtin
         "min"
         'm'
         min'
         "Get the minimum of two numbers or two chars.\n\
         \This function is automatically vectorized with padding."
+        [ ("1 2m", All False ["1"])
+        , ("[1,2] [2,1]m", All False ["[1,1]"])
+        , ("2 [1,3]m", All False ["[1,2]"])
+        , ("[2] [1,3]m", All False ["[1,3]"])
+        ]
     , Builtin
         "max"
         'M'
         max'
         "Get the maximum of two numbers or two chars.\n\
         \This function is automatically vectorized with padding."
+        [ ("1 2M", All False ["2"])
+        , ("[1,2] [2,1]M", All False ["[2,2]"])
+        , ("2 [1,3]M", All False ["[2,3]"])
+        , ("[2] [1,3]M", All False ["[2,3]"])
+        ]
     , Builtin
         "ceil"
         'K'
@@ -540,6 +788,10 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("1K", All False ["1"])
+        , ("1\\2K", All False ["1"])
+        , ("[5/2,-3/2]K", All False ["[3,-1]"])
+        ]
     , Builtin
         "floor"
         'k'
@@ -548,18 +800,32 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        [ ("1k", All False ["1"])
+        , ("1\\2k", All False ["0"])
+        , ("[5/2,-3/2]k", All False ["[2,-2]"])
+        ]
     , Builtin
         "range0"
         'r'
         range0
         "Create a list of integers from 0 to ceil(n)-1.\n\
         \This function is automatically vectorized."
+        [ ("3r", All False ["[0,1,2]"])
+        , ("5\\2r", All False ["[0,1,2]"])
+        , ("1_r", All False ["[]"])
+        , ("[3,4]r", All False ["[[0,1,2],[0,1,2,3]]"])
+        ]
     , Builtin
         "range1"
         'R'
         range1
-        "Create a list of integers from 1 to n.\n\
+        "Create a list of integers from 1 to floor(n).\n\
         \This function is automatically vectorized."
+        [ ("3R", All False ["[1,2,3]"])
+        , ("5\\2R", All False ["[1,2]"])
+        , ("1_R", All False ["[]"])
+        , ("[3,4]R", All False ["[[1,2,3],[1,2,3,4]]"])
+        ]
     , Builtin
         "interval"
         'ï'
@@ -567,18 +833,26 @@ builtins =
         "Create a list of integers from ceil(x) to floor(y).\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
+        [ ("3 5ï", All False ["[3,4,5]"])
+        , ("5 3ï", All False ["[]"])
+        , ("3\\2 7\\2ï", All False ["[2,3]"])
+        , ("1_ [2,3,-3]ï", All False ["[[-1,0,1,2],[-1,0,1,2,3],[]]"])
+        , ("[3] [5,7]ï", All False [])
+        ]
     , Builtin
         "natural"
         'Ň'
         natural
         "Non-deterministically choose a natural number.\n\
         \This function is non-deterministic."
+        [("Ň", All True ["0", "1", "2", "3", "4", "5"])]
     , Builtin
         "integer"
         'Ž'
         integer
         "Non-deterministically choose an integer.\n\
         \This function is non-deterministic."
+        [("Ž", All True ["0", "1", "-1", "2", "-2", "3"])]
     , Builtin
         "sum"
         '∑'
@@ -587,6 +861,7 @@ builtins =
         \The addition is automatically vectorized with padding zeros.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
+        []
     , Builtin
         "product"
         '∏'
@@ -596,6 +871,7 @@ builtins =
         \and fails when the two lists are of different lengths.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
+        []
     , Builtin
         "dot"
         '∙'
@@ -605,6 +881,7 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \The current implementation is simply a composition of \
         \mul and sum."
+        []
     , Builtin
         "convolve"
         '×'
@@ -616,6 +893,7 @@ builtins =
         \it takes the multi-dimensional convolution.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
+        []
     , Builtin
         "mean"
         'µ'
@@ -623,6 +901,7 @@ builtins =
         "Take the mean of a list of numbers.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
+        []
     , Builtin
         "fromBase"
         'b'
@@ -634,6 +913,7 @@ builtins =
         \If the base is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized over the base."
+        []
     , Builtin
         "fromBaseRev"
         'd'
@@ -645,6 +925,7 @@ builtins =
         \If the base is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized over the base."
+        []
     , Builtin
         "toBase"
         'D'
@@ -659,6 +940,7 @@ builtins =
         \This function is automatically vectorized over both arguments. \
         \If both arguments are lists, \
         \the result is a list of lists of digits."
+        []
     , Builtin
         "toBaseRev"
         'B'
@@ -673,6 +955,7 @@ builtins =
         \This function is automatically vectorized over both arguments. \
         \If both arguments are lists, \
         \the result is a list of lists of digits."
+        []
     , Builtin
         "binary"
         'Ƃ'
@@ -681,6 +964,7 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        []
     , Builtin
         "fromBinary"
         'ƃ'
@@ -688,6 +972,7 @@ builtins =
         "Convert a list of binary digits in reverse order to an integer.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
+        []
     , Builtin
         "digits"
         'Ɗ'
@@ -696,6 +981,7 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        []
     , Builtin
         "fromDigits"
         'ɗ'
@@ -703,6 +989,7 @@ builtins =
         "Convert a list of decimal digits to an integer.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
+        []
     , Builtin
         "cumsum"
         '∫'
@@ -711,6 +998,7 @@ builtins =
         \The addition is automatically vectorized with padding zeros.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
+        []
     , Builtin
         "delta"
         '∆'
@@ -719,6 +1007,7 @@ builtins =
         \The subtraction is automatically vectorized with padding zeros.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
+        []
     , Builtin
         "binomial"
         'Ç'
@@ -729,6 +1018,7 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
+        []
     , Builtin
         "factorial"
         'F'
@@ -737,6 +1027,7 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        []
     , Builtin
         "isPrime"
         'Q'
@@ -745,12 +1036,14 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        []
     , Builtin
         "prime"
         'Ƥ'
         prime
         "Non-deterministically choose a prime number.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "primePi"
         'ƥ'
@@ -759,6 +1052,7 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        []
     , Builtin
         "factor"
         'ƒ'
@@ -769,6 +1063,7 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        []
     , Builtin
         "gcd"
         'G'
@@ -778,6 +1073,7 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
+        []
     , Builtin
         "lcm"
         'g'
@@ -787,6 +1083,7 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
+        []
     , Builtin
         "divisors"
         'Ď'
@@ -796,6 +1093,7 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        []
     , Builtin
         "intPartition"
         'Ṗ'
@@ -805,6 +1103,7 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is non-deterministic and automatically vectorized."
+        []
     , Builtin
         "sqrt"
         '√'
@@ -814,12 +1113,14 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        []
     , Builtin
         "unitVec2"
         'į'
         unitVec2
         "Choose one of [0, 1] and [1, 0] non-deterministically.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "orNeg"
         'ŋ'
@@ -830,6 +1131,7 @@ builtins =
         \This function is non-deterministic and automatically vectorized.\n\
         \When the input is a list, \
         \each element is optionally negated independently."
+        []
     , Builtin
         "bitAnd"
         '&'
@@ -839,6 +1141,7 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
+        []
     , Builtin
         "bitOr"
         '|'
@@ -847,6 +1150,7 @@ builtins =
         \If one or both of the arguments are chars, \
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized with padding."
+        []
     , Builtin
         "bitXor"
         'X'
@@ -855,6 +1159,7 @@ builtins =
         \If one or both of the arguments are chars, \
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized with padding."
+        []
     , Builtin
         "popCount"
         'Þ'
@@ -863,6 +1168,7 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
+        []
     , Builtin
         "histogram"
         'Ħ'
@@ -879,6 +1185,7 @@ builtins =
         \If the input is a single char, \
         \it is converted to a number according to Nekomata's code page, \
         \and then treated as a singleton list."
+        []
     , Builtin
         "sumEach"
         'Ŝ'
@@ -887,6 +1194,7 @@ builtins =
         \The addition is automatically vectorized with padding zeros.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
+        []
     , Builtin
         "charToInt"
         'e'
@@ -894,6 +1202,7 @@ builtins =
         "Convert a char to an integer according to Nekomata's code page.\n\
         \If the input is already an integer, it is left unchanged.\n\
         \This function is automatically vectorized."
+        []
     , Builtin
         "intToChar"
         'H'
@@ -902,6 +1211,7 @@ builtins =
         \If the input is already a char, it is left unchanged.\n\
         \Fail when the integer is not in the range 0 to 255.\n\
         \This function is automatically vectorized."
+        []
     , Builtin
         "read"
         'Ĝ'
@@ -909,11 +1219,13 @@ builtins =
         "Parse a string (a list of chars) or a single char \
         \as a Nekomata value.\n\
         \Fail when the string is not a valid Nekomata value."
+        []
     , Builtin
         "show"
         'ĝ'
         show'
         "Convert a Nekomata value to a string (a list of chars)."
+        []
     , Builtin
         "anyOf"
         '~'
@@ -922,100 +1234,119 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "emptyList"
         'Ø'
         emptyList
         "Push an empty list."
+        []
     , Builtin
         "singleton"
         'U'
         singleton'
         "Create a list with a single element."
+        []
     , Builtin
         "unsingleton"
         'z'
         unsingleton
         "Get the only element of a list with a single element.\n\
         \Fails when the list is empty or has more than one element."
+        []
     , Builtin
         "pair"
         'Ð'
         pair
         "Create a list with two elements."
+        []
     , Builtin
         "unpair"
         'đ'
         unpair
         "Get the two elements of a list with two elements.\n\
         \Fails when the length of the list is not 2."
+        []
     , Builtin
         "removeFail"
         '‼'
         removeFail
         "Remove failed items from a list."
+        []
     , Builtin
         "length"
         '#'
         length'
         "Get the length of a list."
+        []
     , Builtin
         "lengthIs"
         'L'
         lengthIs
         "Check if the length of a list is equal to a given integer.\n\
         \If it is, push the list itself, otherwise fail."
+        []
     , Builtin
         "nth"
         '@'
         nth
         "Get the nth element of a list.\n\
         \This function is automatically vectorized on the second argument."
+        []
     , Builtin
         "head"
         'h'
         head'
         "Get the first element of a list."
+        []
     , Builtin
         "tail"
         't'
         tail'
         "Remove the first element of a list."
+        []
     , Builtin
         "cons"
         'c'
         cons
         "Prepend an element to a list."
+        []
     , Builtin
         "uncons"
         'C'
         uncons
         "Get the first element and the rest of a list."
+        []
     , Builtin
         "last"
         'l'
         last'
         "Get the last element of a list."
+        []
     , Builtin
         "init"
         'i'
         init'
         "Remove the last element of a list."
+        []
     , Builtin
         "snoc"
         'ɔ'
         snoc
         "Append an element to a list."
+        []
     , Builtin
         "unsnoc"
         'Ɔ'
         unsnoc
         "Get the last element and the rest of a list."
+        []
     , Builtin
         "cons0"
         'ç'
         cons0
         "Prepend a zero to a list."
+        []
     , Builtin
         "reverse"
         '↔'
@@ -1023,6 +1354,7 @@ builtins =
         "Reverse a list.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1."
+        []
     , Builtin
         "prefix"
         'p'
@@ -1031,6 +1363,7 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "suffix"
         's'
@@ -1039,12 +1372,14 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "take"
         'T'
         take'
         "Get the first n elements of a list.\n\
         \This function is automatically vectorized on the second argument."
+        []
     , Builtin
         "subset"
         'S'
@@ -1053,6 +1388,7 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "subsequence"
         'q'
@@ -1061,6 +1397,7 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "join"
         ','
@@ -1068,6 +1405,7 @@ builtins =
         "Concatenate two lists.\n\
         \If one of the arguments is a number or a char, \
         \it is converted to a singleton list before concatenation."
+        []
     , Builtin
         "split"
         ';'
@@ -1076,12 +1414,14 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "replicate"
         'ř'
         replicate'
         "Create a list with n copies of an element.\n\
         \This function is automatically vectorized on the second argument."
+        []
     , Builtin
         "minimum"
         'ṁ'
@@ -1092,6 +1432,7 @@ builtins =
         \The order used in this function is different from the one \
         \used in min and max. It can compare two arbitrary values, \
         \not just numbers or chars."
+        []
     , Builtin
         "maximum"
         'Ṁ'
@@ -1102,6 +1443,7 @@ builtins =
         \The order used in this function is different from the one \
         \used in min and max. It can compare two arbitrary values, \
         \not just numbers or chars."
+        []
     , Builtin
         "minMax"
         'ɱ'
@@ -1112,6 +1454,7 @@ builtins =
         \The order used in this function is different from the one \
         \used in min and max. It can compare two arbitrary values, \
         \not just numbers or chars."
+        []
     , Builtin
         "concat"
         'j'
@@ -1119,6 +1462,7 @@ builtins =
         "Concatenate a list of lists or a list.\n\
         \If one item in the list is a number or a char, \
         \it is converted to a singleton list before concatenation."
+        []
     , Builtin
         "unconcat"
         'J'
@@ -1127,16 +1471,19 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "nub"
         'u'
         nub
         "Remove duplicate elements from a list."
+        []
     , Builtin
         "sort"
         'o'
         sort
         "Sort a list."
+        []
     , Builtin
         "permutation"
         '↕'
@@ -1145,6 +1492,7 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "extract"
         'ĕ'
@@ -1154,6 +1502,7 @@ builtins =
         \it is converted to a range from 0 to that number minus 1.\n\
         \Returns the element and the rest of the list.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "allEqual"
         '≡'
@@ -1161,6 +1510,7 @@ builtins =
         "Check if all elements in a list are equal.\n\
         \If it is, push the equal element, otherwise fail.\n\
         \If the list is empty, this function fails."
+        []
     , Builtin
         "isUnique"
         'ů'
@@ -1168,6 +1518,7 @@ builtins =
         "Check if all elements in a list are unique.\n\
         \If it is, push the list itself, otherwise fail.\n\
         \The empty list is considered unique."
+        []
     , Builtin
         "free"
         'f'
@@ -1176,12 +1527,14 @@ builtins =
         \This means that the list is not equal to the element, \
         \and recursively, every item of the list if free of that element.\n\
         \If it is, push the list itself, otherwise fail."
+        []
     , Builtin
         "enumerate"
         'x'
         enumerate
         "Push a list of integers from 0 to the length of the argument minus 1 \
         \without popping the original argument."
+        []
     , Builtin
         "rotate"
         'Ř'
@@ -1190,12 +1543,14 @@ builtins =
         \If the first argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is automatically vectorized on the second argument."
+        []
     , Builtin
         "transpose"
         'Ť'
         transpose
         "Transpose a list of lists.\n\
         \Fail if the sublists are not all of the same length."
+        []
     , Builtin
         "setPartition"
         'O'
@@ -1205,12 +1560,14 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "setMinus"
         '∕'
         setMinus
         "For each element in the second list, \
         \remove the first occurrence of that element in the first list."
+        []
     , Builtin
         "index"
         'Ĩ'
@@ -1218,38 +1575,45 @@ builtins =
         "Get the index of any occurrence of an element in a list.\n\
         \Fail if the element does not occur in the list.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "count"
         'Ĉ'
         count
         "Count the number of occurrences of an element in a list."
+        []
     , Builtin
         "tally"
         'Ţ'
         tally
         "Count the number of occurrences of each element in a list.\n\
         \Return a list of elements and a list of counts in the same order."
+        []
     , Builtin
         "intersect"
         '∩'
         intersect
         "Get the intersection of two lists."
+        []
     , Builtin
         "union"
         'Ŭ'
         union
         "Get the union of two lists."
+        []
     , Builtin
         "chunks"
         'ĉ'
         chunks
         "Split a list into a list of chunks of equal elements."
+        []
     , Builtin
         "rle"
         'Y'
         rle
         "Run-length encode a list.\n\
         \Returns a list of elements and a list of lengths."
+        []
     , Builtin
         "unrle"
         'y'
@@ -1258,6 +1622,7 @@ builtins =
         \The first argument is a list of elements, \
         \the second argument is a list of lengths.\n\
         \Fails when the two lists are of different lengths."
+        []
     , Builtin
         "slices"
         'Š'
@@ -1268,6 +1633,7 @@ builtins =
         \If the first argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \Fails when the given length is not positive."
+        []
     , Builtin
         "uninterleave"
         'ĭ'
@@ -1276,6 +1642,7 @@ builtins =
         \at even positions and a list of elements at odd positions.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1."
+        []
     , Builtin
         "interleave"
         'Ĭ'
@@ -1283,6 +1650,7 @@ builtins =
         "Interleave two lists.\n\
         \The length of the first list must be either equal to or one more than \
         \the length of the second list. Otherwise, this function fails."
+        []
     , Builtin
         "minimumBy"
         'ṃ'
@@ -1292,6 +1660,7 @@ builtins =
         \return any of them non-deterministically.\n\
         \Fails when the two lists are of different lengths.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "maximumBy"
         'Ṃ'
@@ -1301,6 +1670,7 @@ builtins =
         \return any of them non-deterministically.\n\
         \Fails when the two lists are of different lengths.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "shortest"
         'ş'
@@ -1309,6 +1679,7 @@ builtins =
         \If there are multiple shortest ones, \
         \return any of them non-deterministically.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "longest"
         'Ş'
@@ -1317,6 +1688,7 @@ builtins =
         \If there are multiple longest ones, \
         \return any of them non-deterministically.\n\
         \This function is non-deterministic."
+        []
     , Builtin
         "tuple"
         'ŧ'
@@ -1325,11 +1697,13 @@ builtins =
         \whose elements are taken from another list.\n\
         \This function is non-deterministic, \
         \and automatically vectorized on the second argument."
+        []
     , Builtin
         "bifurcate"
         'ƀ'
         bifurcate
         "Push the reverse of a list without popping the original list."
+        []
     , Builtin
         "flatten"
         'V'
@@ -1337,12 +1711,14 @@ builtins =
         "Flatten a nested list.\n\
         \If the argument is a number or a char, \
         \it is converted to a singleton list."
+        []
     , Builtin
         "pad"
         'Ḟ'
         pad
         "Pad a nested list with zeros to make it rectangular.\n\
         \If the argument is a number or a char, it is unchanged."
+        []
     , Builtin
         "ordering"
         'õ'
@@ -1350,12 +1726,14 @@ builtins =
         "Get the ordering of a list.\n\
         \The n'th element of the result is the index of the n'th element \
         \in the sorted list."
+        []
     , Builtin
         "elem"
         'ē'
         elem'
         "Check if an element is in a list.\n\
         \If it is, push the element, otherwise fail."
+        []
     , Builtin
         "filterBy"
         'ḟ'
@@ -1365,6 +1743,7 @@ builtins =
         \If the first list also contains failed items, \
         \those items are also removed.\n\
         \Fail when the two lists are of different lengths."
+        []
     ]
 
 -- | The map from names to builtin functions

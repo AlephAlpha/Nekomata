@@ -2,6 +2,8 @@
 
 ## 0.7.0.0 -- Unreleased
 
+* Added examples to the documentation of some built-in functions.
+
 ### Breaking changes
 
 * Some modules in the library are no longer exposed.

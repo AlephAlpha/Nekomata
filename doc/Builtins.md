@@ -10,6 +10,10 @@ Choose between two values.
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `1 2?` → `1 2`
+
 ### `fail` (`!`, `0 -> 1`)
 
 Push a non-deterministic object with no values.
@@ -18,19 +22,35 @@ Push a non-deterministic object with no values.
 
 Get a list of all possible values for a non-deterministic object.
 
+__Examples__:
+
+- `1 2?a` → `[1,2]`
+
 ### `oneValue` (`¡`, `1 -> 1`)
 
 Get the first possible value from a non-deterministic object.
 
 Fails if the object has no values.
 
+__Examples__:
+
+- `1 2?¡` → `1`
+
 ### `countValues` (`n`, `1 -> 1`)
 
 Count the number of values in a non-deterministic object.
 
+__Examples__:
+
+- `1 2?n` → `2`
+
 ### `uniqueValue` (`ũ`, `1 -> 1`)
 
 Remove duplicate values from a non-deterministic object.
+
+__Examples__:
+
+- `[1,1,2]~ũ` → `1 2`
 
 ### `minValue` (`å`, `1 -> 1`)
 
@@ -38,11 +58,19 @@ Get the minimum possible value from a non-deterministic object.
 
 Fails if the object has no values.
 
+__Examples__:
+
+- `1 2?å` → `1`
+
 ### `maxValue` (`Å`, `1 -> 1`)
 
 Get the maximum possible value from a non-deterministic object.
 
 Fails if the object has no values.
+
+__Examples__:
+
+- `1 2?Å` → `2`
 
 ### `normalForm` (`¤`, `1 -> 1`)
 
@@ -54,11 +82,21 @@ I haven't given a formal definition for the normal form. This function basically
 
 Choose the first value that doesn't fail between two values.
 
+__Examples__:
+
+- `1 2I` → `1`
+- `! 2I` → `2`
+
 ### `andThen` (`¿`, `2 -> 1`)
 
 Take two values, 
 
 and return the first one if the second one doesn't fail.
+
+__Examples__:
+
+- `1 2¿` → `1`
+- `1 !¿` → ``
 
 ### `drop` (`^`, `1 -> 0`)
 
@@ -86,11 +124,21 @@ Check if two values are equal.
 
 If they are, push the first value, otherwise fail.
 
+__Examples__:
+
+- `1 1=` → `1`
+- `1 2=` → ``
+
 ### `ne` (`≠`, `2 -> 1`)
 
 Check if two values are not equal.
 
 If they are not, push the first value, otherwise fail.
+
+__Examples__:
+
+- `1 1≠` → ``
+- `1 2≠` → `1`
 
 ### `lt` (`Ļ`, `2 -> 1`)
 
@@ -98,7 +146,17 @@ Check if the first value is less than the second.
 
 If it is, push the first value, otherwise fail.
 
-Unlike `less`, this function does not automatically vectorize, so you can use it to compare two lists.
+This function uses an ordering that is defined on all values. Numbers are smaller than chars, which are smaller than lists. Lists are compared in the lexicographic order.
+
+__Examples__:
+
+- `1 2Ļ` → `1`
+- `1 1Ļ` → ``
+- `2 1Ļ` → ``
+- `1 'aĻ` → `1`
+- `'a [1]Ļ` → `'a'`
+- `[1,2] [2]Ļ` → `[1,2]`
+- `[1,2] [1]Ļ` → ``
 
 ### `gt` (`Ģ`, `2 -> 1`)
 
@@ -106,7 +164,17 @@ Check if the first value is greater than the second.
 
 If it is, push the first value, otherwise fail.
 
-Unlike `greater`, this function does not automatically vectorize, so you can use it to compare two lists.
+This function uses an ordering that is defined on all values. Numbers are smaller than chars, which are smaller than lists. Lists are compared in the lexicographic order.
+
+__Examples__:
+
+- `1 2Ģ` → ``
+- `1 1Ģ` → ``
+- `2 1Ģ` → `2`
+- `'a 1Ģ` → `'a'`
+- `[1] 'aĢ` → `[1]`
+- `[1,2] [2]Ģ` → ``
+- `[1,2] [1]Ģ` → `[1,2]`
 
 ### `isNonempty` (`N`, `1 -> 1`)
 
@@ -114,11 +182,23 @@ Check if a list is non-empty.
 
 If it is, push the list itself, otherwise fail.
 
+__Examples__:
+
+- `[1]N` → `[1]`
+- `"Hello"N` → `Hello`
+- `[]N` → ``
+
 ### `isLong` (`Ł`, `1 -> 1`)
 
 Check if the length of a list is greater than 1.
 
 If it is, push the list itself, otherwise fail.
+
+__Examples__:
+
+- `[1,2]Ł` → `[1,2]`
+- `[1]Ł` → ``
+- `[]Ł` → ``
 
 ### `isNonzero` (`Z`, `1 -> 1`)
 
@@ -130,6 +210,13 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `1Z` → `1`
+- `0Z` → ``
+- `1_Z` → `-1`
+- `[1,[2,3]]Z` → `[1,[2,3]]`
+
 ### `isPositive` (`P`, `1 -> 1`)
 
 Check if a number is positive.
@@ -139,6 +226,13 @@ If it is, push the number itself, otherwise fail.
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `1P` → `1`
+- `0P` → ``
+- `1_P` → ``
+- `[1,[2,3]]P` → `[1,[2,3]]`
 
 ### `isNonnegative` (`ň`, `1 -> 1`)
 
@@ -150,6 +244,13 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `1ň` → `1`
+- `0ň` → `0`
+- `1_ň` → ``
+- `[1,[2,3]]ň` → `[1,[2,3]]`
+
 ### `isZero` (`ž`, `1 -> 1`)
 
 Check if a number is zero.
@@ -160,6 +261,13 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `1ž` → ``
+- `0ž` → `0`
+- `1_ž` → ``
+- `[0,[0,0]]ž` → `[0,[0,0]]`
+
 ### `isBig` (`Ƶ`, `1 -> 1`)
 
 Check if the absolute value of a number is greater than 1.
@@ -169,6 +277,14 @@ If it is, push the number itself, otherwise fail.
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `2Ƶ` → `2`
+- `1Ƶ` → ``
+- `0Ƶ` → ``
+- `1_Ƶ` → ``
+- `2_Ƶ` → `-2`
 
 ### `isSmall` (`ƶ`, `1 -> 1`)
 
@@ -182,6 +298,14 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `2ƶ` → ``
+- `1ƶ` → `1`
+- `0ƶ` → `0`
+- `1_ƶ` → `-1`
+- `2_ƶ` → ``
+
 ### `less` (`<`, `2 -> 1`)
 
 Check if the first number is less than the second.
@@ -191,6 +315,14 @@ If it is, push the first number, otherwise fail.
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page before comparison, but the result is still a char.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `1 2<` → `1`
+- `1 1<` → ``
+- `2 1<` → ``
+- `[1,2,3] [2,3,4]<` → `[1,2,3]`
+- `[1,2] [2,1]<` → ``
 
 ### `lessEq` (`≤`, `2 -> 1`)
 
@@ -202,6 +334,14 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `1 2≤` → `1`
+- `1 1≤` → `1`
+- `2 1≤` → ``
+- `[1,2,3] [2,3,4]≤` → `[1,2,3]`
+- `[1,2] [2,1]≤` → ``
+
 ### `greater` (`>`, `2 -> 1`)
 
 Check if the first number is greater than the second.
@@ -211,6 +351,14 @@ If it is, push the first number, otherwise fail.
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page before comparison, but the result is still a char.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `1 2>` → ``
+- `1 1>` → ``
+- `2 1>` → `2`
+- `[2,3,4] [1,2,3]>` → `[2,3,4]`
+- `[2,1] [1,2]>` → ``
 
 ### `greaterEq` (`≥`, `2 -> 1`)
 
@@ -222,17 +370,37 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `1 2≥` → ``
+- `1 1≥` → `1`
+- `2 1≥` → `2`
+- `[2,3,4] [1,2,3]≥` → `[2,3,4]`
+- `[2,1] [1,2]≥` → ``
+
 ### `neg1` (`£`, `0 -> 1`)
 
 The constant -1.
+
+__Examples__:
+
+- `£` → `-1`
 
 ### `ten` (`¢`, `0 -> 1`)
 
 The constant 10.
 
+__Examples__:
+
+- `¢` → `10`
+
 ### `octet` (`¥`, `0 -> 1`)
 
 The constant 256.
+
+__Examples__:
+
+- `¥` → `256`
 
 ### `neg` (`_`, `1 -> 1`)
 
@@ -242,6 +410,11 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `1_` → `-1`
+- `[1,[2,3]]_` → `[-1,[-2,-3]]`
+
 ### `abs` (`A`, `1 -> 1`)
 
 Absolute value of a number.
@@ -249,6 +422,12 @@ Absolute value of a number.
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `1A` → `1`
+- `1_A` → `1`
+- `[-1,[2,-3]]A` → `[1,[2,3]]`
 
 ### `increment` (`→`, `1 -> 1`)
 
@@ -258,6 +437,11 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `1→` → `2`
+- `[1,[2,3]]→` → `[2,[3,4]]`
+
 ### `decrement` (`←`, `1 -> 1`)
 
 Decrement a number.
@@ -265,6 +449,11 @@ Decrement a number.
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `1←` → `0`
+- `[1,[2,3]]←` → `[0,[1,2]]`
 
 ### `logicalNot` (`¬`, `1 -> 1`)
 
@@ -274,6 +463,13 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `1¬` → `0`
+- `2¬` → `0`
+- `0¬` → `1`
+- `[-1,[0,1]]¬` → `[0,[1,0]]`
+
 ### `sign` (`±`, `1 -> 1`)
 
 Returns -1 if the argument is negative, 0 if it is zero, and 1 if it is positive.
@@ -281,6 +477,12 @@ Returns -1 if the argument is negative, 0 if it is zero, and 1 if it is positive
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `2±` → `1`
+- `0±` → `0`
+- `[-2,[0,2]]±` → `[-1,[0,1]]`
 
 ### `add` (`+`, `2 -> 1`)
 
@@ -290,6 +492,14 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized with padding zeros.
 
+__Examples__:
+
+- `1 1+` → `2`
+- `[1,2] [2,3]+` → `[3,5]`
+- `1 [2,3]+` → `[3,4]`
+- `[1] [2,3]+` → `[3,3]`
+- `[[1],[0,1]] [[0,2],[2]]+` → `[[1,2],[2,1]]`
+
 ### `sub` (`-`, `2 -> 1`)
 
 Subtract two numbers.
@@ -297,6 +507,14 @@ Subtract two numbers.
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized with padding zeros.
+
+__Examples__:
+
+- `1 1-` → `0`
+- `[1,2] [2,3]-` → `[-1,-1]`
+- `1 [2,3]-` → `[-1,-2]`
+- `[1] [2,3]-` → `[-1,-3]`
+- `[[1],[0,1]] [[0,2],[2]]-` → `[[1,-2],[-2,1]]`
 
 ### `absDiff` (`≈`, `2 -> 1`)
 
@@ -306,6 +524,13 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized with padding zeros.
 
+__Examples__:
+
+- `1 2≈` → `1`
+- `[1,2] [3,1]≈` → `[2,1]`
+- `2 [1,3]≈` → `[1,1]`
+- `[1] [3,1]≈` → `[2,1]`
+
 ### `mul` (`*`, `2 -> 1`)
 
 Multiply two numbers.
@@ -313,6 +538,13 @@ Multiply two numbers.
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
+
+__Examples__:
+
+- `2 3*` → `6`
+- `[2,3] [3,4]*` → `[6,12]`
+- `2 [3,4]*` → `[6,8]`
+- `[2] [3,4]*` → ``
 
 ### `div` (`/`, `2 -> 1`)
 
@@ -324,6 +556,14 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+__Examples__:
+
+- `6 3/` → `2`
+- `3 6/` → `1/2`
+- `[3,6] [2,3]/` → `[3/2,2]`
+- `3 [2,3]/` → `[3/2,1]`
+- `[3] [2,3]/` → ``
+
 ### `divInt` (`÷`, `2 -> 1`)
 
 Integer division of two numbers. Result is rounded towards negative infinity.
@@ -333,6 +573,15 @@ Fails when the divisor is zero.
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
+
+__Examples__:
+
+- `6 3÷` → `2`
+- `3 6÷` → `0`
+- `3_ 6÷` → `-1`
+- `[3,6] [-2,3]÷` → `[-2,2]`
+- `3 [-2,3]÷` → `[-2,1]`
+- `[3] [-2,3]÷` → ``
 
 ### `mod` (`%`, `2 -> 1`)
 
@@ -344,6 +593,16 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+__Examples__:
+
+- `5 3%` → `2`
+- `5_ 3%` → `1`
+- `5 3_%` → `-1`
+- `5_ 3_%` → `-2`
+- `[5,6] [3,4]%` → `[2,2]`
+- `5 [3,4]%` → `[2,1]`
+- `[5] [3,4]%` → ``
+
 ### `divExact` (`¦`, `2 -> 1`)
 
 Divide two numbers.
@@ -353,6 +612,14 @@ Fails when the divisor is zero or the result is not an integer.
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
+
+__Examples__:
+
+- `6 3¦` → `2`
+- `5 3¦` → ``
+- `[6,4] [3,4]¦` → `[2,1]`
+- `6 [2,3]¦` → `[3,2]`
+- `[6] [2,3]¦` → ``
 
 ### `divMod` (`þ`, `2 -> 2`)
 
@@ -364,6 +631,10 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+__Examples__:
+
+- `5 3þÐ` → `[1,2]`
+
 ### `half` (`½`, `1 -> 1`)
 
 Check if an integer is even, and divide it by 2.
@@ -373,6 +644,12 @@ Fails when the integer is odd.
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `6½` → `3`
+- `5½` → ``
+- `[6,4]½` → `[3,2]`
 
 ### `pow` (`E`, `2 -> 1`)
 
@@ -386,6 +663,15 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+__Examples__:
+
+- `2 3E` → `9`
+- `3 2E` → `8`
+- `2 1\2E` → `1/4`
+- `1\2 2E` → ``
+- `[-2,0,2] 2E` → `[1/4,1,4]`
+- `[2] [3,4]E` → ``
+
 ### `recip` (`ŗ`, `1 -> 1`)
 
 Reciprocal of a number.
@@ -396,6 +682,12 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `2ŗ` → `1/2`
+- `0ŗ` → ``
+- `[2,3]ŗ` → `[1/2,1/3]`
+
 ### `mul2` (`Ä`, `1 -> 1`)
 
 Multiply a number by 2.
@@ -403,6 +695,11 @@ Multiply a number by 2.
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `2Ä` → `4`
+- `[2,3]Ä` → `[4,6]`
 
 ### `div2` (`ä`, `1 -> 1`)
 
@@ -414,6 +711,11 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `2ä` → `1`
+- `[2,3]ä` → `[1,3/2]`
+
 ### `mod2` (`Ö`, `1 -> 1`)
 
 Modulo a number by 2.
@@ -421,6 +723,11 @@ Modulo a number by 2.
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `5Ö` → `1`
+- `[5,6]Ö` → `[1,0]`
 
 ### `powOf2` (`Ë`, `1 -> 1`)
 
@@ -432,6 +739,11 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `3Ë` → `8`
+- `[-2,0,2]Ë` → `[1/4,1,4]`
+
 ### `denominator` (`ḍ`, `1 -> 1`)
 
 Get the denominator of a number.
@@ -439,6 +751,12 @@ Get the denominator of a number.
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `1\2ḍ` → `2`
+- `2ḍ` → `1`
+- `[2/3,3/5]ḍ` → `[3,5]`
 
 ### `numerator` (`ṇ`, `1 -> 1`)
 
@@ -448,17 +766,37 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `1\2ṇ` → `1`
+- `2ṇ` → `2`
+- `[2/3,3/5]ṇ` → `[2,3]`
+
 ### `min` (`m`, `2 -> 1`)
 
 Get the minimum of two numbers or two chars.
 
 This function is automatically vectorized with padding.
 
+__Examples__:
+
+- `1 2m` → `1`
+- `[1,2] [2,1]m` → `[1,1]`
+- `2 [1,3]m` → `[1,2]`
+- `[2] [1,3]m` → `[1,3]`
+
 ### `max` (`M`, `2 -> 1`)
 
 Get the maximum of two numbers or two chars.
 
 This function is automatically vectorized with padding.
+
+__Examples__:
+
+- `1 2M` → `2`
+- `[1,2] [2,1]M` → `[2,2]`
+- `2 [1,3]M` → `[2,3]`
+- `[2] [1,3]M` → `[2,3]`
 
 ### `ceil` (`K`, `1 -> 1`)
 
@@ -468,6 +806,12 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `1K` → `1`
+- `1\2K` → `1`
+- `[5/2,-3/2]K` → `[3,-1]`
+
 ### `floor` (`k`, `1 -> 1`)
 
 Round a number down to the nearest integer.
@@ -476,17 +820,37 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `1k` → `1`
+- `1\2k` → `0`
+- `[5/2,-3/2]k` → `[2,-2]`
+
 ### `range0` (`r`, `1 -> 1`)
 
 Create a list of integers from 0 to ceil(n)-1.
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `3r` → `[0,1,2]`
+- `5\2r` → `[0,1,2]`
+- `1_r` → `[]`
+- `[3,4]r` → `[[0,1,2],[0,1,2,3]]`
+
 ### `range1` (`R`, `1 -> 1`)
 
-Create a list of integers from 1 to n.
+Create a list of integers from 1 to floor(n).
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `3R` → `[1,2,3]`
+- `5\2R` → `[1,2]`
+- `1_R` → `[]`
+- `[3,4]R` → `[[1,2,3],[1,2,3,4]]`
 
 ### `interval` (`ï`, `2 -> 1`)
 
@@ -494,17 +858,33 @@ Create a list of integers from ceil(x) to floor(y).
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+__Examples__:
+
+- `3 5ï` → `[3,4,5]`
+- `5 3ï` → `[]`
+- `3\2 7\2ï` → `[2,3]`
+- `1_ [2,3,-3]ï` → `[[-1,0,1,2],[-1,0,1,2,3],[]]`
+- `[3] [5,7]ï` → ``
+
 ### `natural` (`Ň`, `0 -> 1`)
 
 Non-deterministically choose a natural number.
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `Ň` → `0 1 2 3 4 5 ...`
+
 ### `integer` (`Ž`, `0 -> 1`)
 
 Non-deterministically choose an integer.
 
 This function is non-deterministic.
+
+__Examples__:
+
+- `Ž` → `0 1 -1 2 -2 3 ...`
 
 ### `sum` (`∑`, `1 -> 1`)
 
