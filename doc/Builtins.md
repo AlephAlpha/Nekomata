@@ -18,6 +18,10 @@ __Examples__:
 
 Push a non-deterministic object with no values.
 
+__Examples__:
+
+- `!` → ``
+
 ### `allValues` (`a`, `1 -> 1`)
 
 Get a list of all possible values for a non-deterministic object.
@@ -72,12 +76,6 @@ __Examples__:
 
 - `1 2?Å` → `2`
 
-### `normalForm` (`¤`, `1 -> 1`)
-
-Convert a non-deterministic object to the normal form.
-
-I haven't given a formal definition for the normal form. This function basically lifts all the non-determinism in lists to the top level.
-
 ### `if` (`I`, `2 -> 1`)
 
 Choose the first value that doesn't fail between two values.
@@ -102,21 +100,41 @@ __Examples__:
 
 Drop the top value of the stack: `a ... -> ...`.
 
+__Examples__:
+
+- `1 2^` → `1`
+
 ### `dup` (`:`, `1 -> 2`)
 
 Duplicate the top value of the stack: `a ... -> a a ...`.
+
+__Examples__:
+
+- `1:Ð` → `[1,1]`
 
 ### `swap` (`$`, `2 -> 2`)
 
 Swap the top two values of the stack: `a b ... -> b a ...`.
 
+__Examples__:
+
+- `1 2$Ð` → `[2,1]`
+
 ### `rot3` (`§`, `3 -> 3`)
 
-Swap the top two values of the stack: `a b c ... -> c b a ...`.
+Rotate the top three values of the stack: `a b c ... -> c a b ...`.
+
+__Examples__:
+
+- `1 2 3§ÐÐ` → `[2,[3,1]]`
 
 ### `over` (`v`, `2 -> 3`)
 
 Duplicate the second value of the stack, and put it on top of the stack: `a b ... -> b a b ...`.
+
+__Examples__:
+
+- `1 2vÐÐ` → `[1,[2,1]]`
 
 ### `eq` (`=`, `2 -> 1`)
 
@@ -894,6 +912,13 @@ The addition is automatically vectorized with padding zeros.
 
 If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
 
+__Examples__:
+
+- `[1,2,3]∑` → `6`
+- `[[1,2],[3,4]]∑` → `[4,6]`
+- `[1,[2,3]]∑` → `[3,4]`
+- `[[],[1],[0,1],[0,0,1]]∑` → `[1,1,1]`
+
 ### `product` (`∏`, `1 -> 1`)
 
 Take the product of a list of numbers.
@@ -901,6 +926,13 @@ Take the product of a list of numbers.
 The multiplication is automatically vectorized and fails when the two lists are of different lengths.
 
 If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
+
+__Examples__:
+
+- `[1,2,3]∏` → `6`
+- `[[1,2],[3,4]]∏` → `[3,8]`
+- `[2,[3,4]]∏` → `[6,8]`
+- `[[1],[2,3]]∏` → ``
 
 ### `dot` (`∙`, `2 -> 1`)
 
@@ -910,21 +942,40 @@ If some of the elements are chars, they are converted to numbers according to Ne
 
 The current implementation is simply a composition of mul and sum.
 
+__Examples__:
+
+- `[1,2,3] [4,5,6]∙` → `32`
+- `[1,2,3] [[1,2],[3,4],[5,6]]∙` → `[22,28]`
+
 ### `convolve` (`×`, `2 -> 1`)
 
 Take the convolution of two lists of numbers.
 
+This is equivalent to multiplying two polynomials.
+
 If one of the arguments is a number, it simply multiplies the other argument by that number.
 
-If the arguments are nested lists, it takes the multi-dimensional convolution.
+If the arguments are nested lists, it takes the multi-dimensional convolution, which is equivalent to multiplying multivariate polynomials.
 
 If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
+
+__Examples__:
+
+- `[1,2,3] [4,5,6]×` → `[4,13,28,27,18]`
+- `[1,2,3] 4×` → `[4,8,12]`
+- `[1,2,3] [[1,2],[3,4]]×` → `[[1,2],[5,8],[9,14],[9,12]]`
+- `[[0,1],[1]] [[0,1],[1]]×` → `[[0,0,1],[0,2],[1]]`
 
 ### `mean` (`µ`, `1 -> 1`)
 
 Take the mean of a list of numbers.
 
 If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
+
+__Examples__:
+
+- `[1,2,3]µ` → `2`
+- `[[1,2],[3,5]]µ` → `[2,7/2]`
 
 ### `fromBase` (`b`, `2 -> 1`)
 
@@ -938,6 +989,13 @@ If the base is a char, it is converted to a number according to Nekomata's code 
 
 This function is automatically vectorized over the base.
 
+__Examples__:
+
+- `[1,2,3] 10b` → `123`
+- `[1,2,3] 1\10b` → `321/100`
+- `[[1,2],[3,4],[5,6]] 10b` → `[135,246]`
+- `[1,2,3] [10,100]b` → `[123,10203]`
+
 ### `fromBaseRev` (`d`, `2 -> 1`)
 
 Convert a list of digits in reverse order to a number.
@@ -950,6 +1008,13 @@ If the base is a char, it is converted to a number according to Nekomata's code 
 
 This function is automatically vectorized over the base.
 
+__Examples__:
+
+- `[1,2,3] 10d` → `321`
+- `[1,2,3] 1\10d` → `123/100`
+- `[[1,2],[3,4],[5,6]] 10d` → `[531,642]`
+- `[1,2,3] [10,100]d` → `[321,30201]`
+
 ### `toBase` (`D`, `2 -> 1`)
 
 Convert an integer to a list of digits.
@@ -958,9 +1023,19 @@ The first argument is the integer, the second argument is the base.
 
 Fails when the inputs are not integers, or the base is less than 2.
 
+If the integer is smaller than zero, it is negated before conversion.
+
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized over both arguments. If both arguments are lists, the result is a list of lists of digits.
+
+__Examples__:
+
+- `123 10D` → `[1,2,3]`
+- `123 1\10D` → ``
+- `123_ 10D` → `[1,2,3]`
+- `[135,246] 10D` → `[[1,3,5],[2,4,6]]`
+- `[135,246] [10,100]D` → `[[[1,3,5],[2,4,6]],[[1,35],[2,46]]]`
 
 ### `toBaseRev` (`B`, `2 -> 1`)
 
@@ -970,17 +1045,34 @@ The first argument is the integer, the second argument is the base.
 
 Fails when the inputs are not integers, or the base is less than 2.
 
+If the integer is smaller than zero, it is negated before conversion.
+
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized over both arguments. If both arguments are lists, the result is a list of lists of digits.
+
+__Examples__:
+
+- `123 10B` → `[3,2,1]`
+- `123 1\10B` → ``
+- `123_ 10B` → `[3,2,1]`
+- `[135,246] 10B` → `[[5,3,1],[6,4,2]]`
+- `[135,246] [10,100]B` → `[[[5,3,1],[6,4,2]],[[35,1],[46,2]]]`
 
 ### `binary` (`Ƃ`, `1 -> 1`)
 
 Convert an integer to a list of binary digits in reverse order.
 
+If the integer is smaller than zero, it is negated before conversion.
+
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `6Ƃ` → `[0,1,1]`
+- `[-6,0,6]Ƃ` → `[[0,1,1],[],[0,1,1]]`
 
 ### `fromBinary` (`ƃ`, `1 -> 1`)
 
@@ -988,19 +1080,36 @@ Convert a list of binary digits in reverse order to an integer.
 
 If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
 
+__Examples__:
+
+- `[0,1,1]ƃ` → `6`
+- `[[1,0,1],[0,1,1]]ƃ` → `[1,2,3]`
+
 ### `digits` (`Ɗ`, `1 -> 1`)
 
 Convert an integer to a list of decimal digits.
 
+If the integer is smaller than zero, it is negated before conversion.
+
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `123Ɗ` → `[1,2,3]`
+- `[-123,0,123]Ɗ` → `[[1,2,3],[],[1,2,3]]`
 
 ### `fromDigits` (`ɗ`, `1 -> 1`)
 
 Convert a list of decimal digits to an integer.
 
 If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
+
+__Examples__:
+
+- `[1,2,3]ɗ` → `123`
+- `[[1,2,3],[0,1,2]]ɗ` → `[10,21,32]`
 
 ### `cumsum` (`∫`, `1 -> 1`)
 
@@ -1010,13 +1119,27 @@ The addition is automatically vectorized with padding zeros.
 
 If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
 
+__Examples__:
+
+- `[1,2,3]∫` → `[1,3,6]`
+- `[[1,2],[3,4]]∫` → `[[1,2],[4,6]]`
+
 ### `delta` (`∆`, `1 -> 1`)
 
 Take the difference between adjacent elements of a list of numbers.
 
 The subtraction is automatically vectorized with padding zeros.
 
+Fails when the input is empty.
+
 If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
+
+__Examples__:
+
+- `[1,3,6]∆` → `[2,3]`
+- `[[1,2],[4,6]]∆` → `[[3,4]]`
+- `[1]∆` → `[]`
+- `[]∆` → ``
 
 ### `binomial` (`Ç`, `2 -> 1`)
 
@@ -1028,6 +1151,15 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+__Examples__:
+
+- `5 3Ç` → `10`
+- `5_ 3Ç` → `-35`
+- `5 3_Ç` → `0`
+- `1\2 2Ç` → `-1/8`
+- `[5,6] 3Ç` → `[10,20]`
+- `5 [0,1,2,3,4,5]Ç` → `[1,5,10,10,5,1]`
+
 ### `factorial` (`F`, `1 -> 1`)
 
 Compute the factorial of an integer.
@@ -1036,13 +1168,28 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `0F` → `1`
+- `5F` → `120`
+- `[5,6]F` → `[120,720]`
+
 ### `isPrime` (`Q`, `1 -> 1`)
 
 Check if an integer is prime.
 
+Negative numbers whose absolute values are prime are also considered to be prime.
+
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `1Q` → ``
+- `2Q` → `2`
+- `2_ Q` → `-2`
+- `[1,2,3,4,5]Q‼` → `[2,3,5]`
 
 ### `prime` (`Ƥ`, `0 -> 1`)
 
@@ -1050,23 +1197,43 @@ Non-deterministically choose a prime number.
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `Ƥ` → `2 3 5 7 11 13 17 19 23 ...`
+
 ### `primePi` (`ƥ`, `1 -> 1`)
 
-Compute the number of primes less than or equal to an integer.
+Compute the number of positive primes less than or equal to a number.
 
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `7ƥ` → `4`
+- `7_ ƥ` → `0`
+- `23\2 ƥ` → `5`
+- `[10,100,1000]ƥ` → `[4,25,168]`
+
 ### `factor` (`ƒ`, `1 -> 2`)
 
 Factorize a rational number, and return a list of prime factors and a list of exponents.
+
+If the number is negative, it is negated before factorization.
 
 Fails when the input is zero.
 
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `12300ƒÐ` → `[[2,3,5,41],[2,1,2,1]]`
+- `123\100 ƒÐ` → `[[2,3,5,41],[-2,1,-2,1]]`
+- `1ƒÐ` → `[[],[]]`
+- `[6,-6]ƒÐ` → `[[[2,3],[2,3]],[[1,1],[1,1]]]`
 
 ### `gcd` (`G`, `2 -> 1`)
 

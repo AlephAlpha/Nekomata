@@ -335,9 +335,11 @@ binomial :: Function
 binomial = binaryNumFail $ const binomial'
   where
     binomial' n k = binomial_ n <$> toTryInt k
-    binomial_ n k =
-        product [n + 1 - fromInteger i | i <- [1 .. k]]
-            / fromInteger (product [1 .. k])
+    binomial_ n k
+        | k < 0 = 0
+        | otherwise =
+            product [n + 1 - fromInteger i | i <- [1 .. k]]
+                / fromInteger (product [1 .. k])
 
 factorial :: Function
 factorial = unaryNum $ const factorial_
@@ -378,7 +380,7 @@ factor = unary2Num $ const factor_
     merge xs@((p, n) : xs') ys@((q, m) : ys')
         | p == q = (p, n - m) : merge xs' ys'
         | p < q = (p, n) : merge xs' ys
-        | otherwise = (q, m) : merge xs ys'
+        | otherwise = (q, -m) : merge xs ys'
 
 gcd' :: Function
 gcd' = binaryNumFail $ const gcd_

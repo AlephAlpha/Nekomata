@@ -3,10 +3,14 @@
 ## 0.7.0.0 -- Unreleased
 
 * Added examples to the documentation of some built-in functions.
+* Fixed some errors in the documentation.
+* Fixed a bug in `\binomial`. Now it returns `0` when the second argument is negative.
+* Fixed a bug in `\factor`.
 
 ### Breaking changes
 
 * Some modules in the library are no longer exposed.
+* The built-in function `\normalForm` is removed, because it is never used, and its semantics are not well-defined.
 
 ## 0.6.1.0 -- 2024-06-07
 

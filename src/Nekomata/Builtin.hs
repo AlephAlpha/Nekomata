@@ -98,7 +98,7 @@ builtins =
         '!'
         fail'
         "Push a non-deterministic object with no values."
-        []
+        [("!", All False [])]
     , Builtin
         "allValues"
         'a'
@@ -139,15 +139,6 @@ builtins =
         \Fails if the object has no values."
         [("1 2?Å", All False ["2"])]
     , Builtin
-        "normalForm"
-        '¤'
-        normalForm'
-        "Convert a non-deterministic object to the normal form.\n\
-        \I haven't given a formal definition for the normal form. \
-        \This function basically lifts all the non-determinism \
-        \in lists to the top level."
-        []
-    , Builtin
         "if"
         'I'
         if'
@@ -169,32 +160,32 @@ builtins =
         '^'
         drop'
         "Drop the top value of the stack: `a ... -> ...`."
-        []
+        [("1 2^", All False ["1"])]
     , Builtin
         "dup"
         ':'
         dup
         "Duplicate the top value of the stack: `a ... -> a a ...`."
-        []
+        [("1:Ð", All False ["[1,1]"])]
     , Builtin
         "swap"
         '$'
         swap
         "Swap the top two values of the stack: `a b ... -> b a ...`."
-        []
+        [("1 2$Ð", All False ["[2,1]"])]
     , Builtin
         "rot3"
         '§'
         rot3
-        "Swap the top two values of the stack: `a b c ... -> c b a ...`."
-        []
+        "Rotate the top three values of the stack: `a b c ... -> c a b ...`."
+        [("1 2 3§ÐÐ", All False ["[2,[3,1]]"])]
     , Builtin
         "over"
         'v'
         over
         "Duplicate the second value of the stack, \
         \and put it on top of the stack: `a b ... -> b a b ...`."
-        []
+        [("1 2vÐÐ", All False ["[1,[2,1]]"])]
     , Builtin
         "eq"
         '='
@@ -861,7 +852,11 @@ builtins =
         \The addition is automatically vectorized with padding zeros.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
-        []
+        [ ("[1,2,3]∑", All False ["6"])
+        , ("[[1,2],[3,4]]∑", All False ["[4,6]"])
+        , ("[1,[2,3]]∑", All False ["[3,4]"])
+        , ("[[],[1],[0,1],[0,0,1]]∑", All False ["[1,1,1]"])
+        ]
     , Builtin
         "product"
         '∏'
@@ -871,7 +866,11 @@ builtins =
         \and fails when the two lists are of different lengths.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
-        []
+        [ ("[1,2,3]∏", All False ["6"])
+        , ("[[1,2],[3,4]]∏", All False ["[3,8]"])
+        , ("[2,[3,4]]∏", All False ["[6,8]"])
+        , ("[[1],[2,3]]∏", All False [])
+        ]
     , Builtin
         "dot"
         '∙'
@@ -881,19 +880,27 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \The current implementation is simply a composition of \
         \mul and sum."
-        []
+        [ ("[1,2,3] [4,5,6]∙", All False ["32"])
+        , ("[1,2,3] [[1,2],[3,4],[5,6]]∙", All False ["[22,28]"])
+        ]
     , Builtin
         "convolve"
         '×'
         convolve
         "Take the convolution of two lists of numbers.\n\
+        \This is equivalent to multiplying two polynomials.\n\
         \If one of the arguments is a number, \
         \it simply multiplies the other argument by that number.\n\
         \If the arguments are nested lists, \
-        \it takes the multi-dimensional convolution.\n\
+        \it takes the multi-dimensional convolution, \
+        \which is equivalent to multiplying multivariate polynomials.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
-        []
+        [ ("[1,2,3] [4,5,6]×", All False ["[4,13,28,27,18]"])
+        , ("[1,2,3] 4×", All False ["[4,8,12]"])
+        , ("[1,2,3] [[1,2],[3,4]]×", All False ["[[1,2],[5,8],[9,14],[9,12]]"])
+        , ("[[0,1],[1]] [[0,1],[1]]×", All False ["[[0,0,1],[0,2],[1]]"])
+        ]
     , Builtin
         "mean"
         'µ'
@@ -901,7 +908,9 @@ builtins =
         "Take the mean of a list of numbers.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
-        []
+        [ ("[1,2,3]µ", All False ["2"])
+        , ("[[1,2],[3,5]]µ", All False ["[2,7/2]"])
+        ]
     , Builtin
         "fromBase"
         'b'
@@ -913,7 +922,11 @@ builtins =
         \If the base is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized over the base."
-        []
+        [ ("[1,2,3] 10b", All False ["123"])
+        , ("[1,2,3] 1\\10b", All False ["321/100"])
+        , ("[[1,2],[3,4],[5,6]] 10b", All False ["[135,246]"])
+        , ("[1,2,3] [10,100]b", All False ["[123,10203]"])
+        ]
     , Builtin
         "fromBaseRev"
         'd'
@@ -925,7 +938,11 @@ builtins =
         \If the base is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized over the base."
-        []
+        [ ("[1,2,3] 10d", All False ["321"])
+        , ("[1,2,3] 1\\10d", All False ["123/100"])
+        , ("[[1,2],[3,4],[5,6]] 10d", All False ["[531,642]"])
+        , ("[1,2,3] [10,100]d", All False ["[321,30201]"])
+        ]
     , Builtin
         "toBase"
         'D'
@@ -935,12 +952,19 @@ builtins =
         \the second argument is the base.\n\
         \Fails when the inputs are not integers, \
         \or the base is less than 2.\n\
+        \If the integer is smaller than zero, \
+        \it is negated before conversion.\n\
         \If one or both of the arguments are chars, \
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized over both arguments. \
         \If both arguments are lists, \
         \the result is a list of lists of digits."
-        []
+        [ ("123 10D", All False ["[1,2,3]"])
+        , ("123 1\\10D", All False [])
+        , ("123_ 10D", All False ["[1,2,3]"])
+        , ("[135,246] 10D", All False ["[[1,3,5],[2,4,6]]"])
+        , ("[135,246] [10,100]D", All False ["[[[1,3,5],[2,4,6]],[[1,35],[2,46]]]"])
+        ]
     , Builtin
         "toBaseRev"
         'B'
@@ -950,21 +974,32 @@ builtins =
         \the second argument is the base.\n\
         \Fails when the inputs are not integers, \
         \or the base is less than 2.\n\
+        \If the integer is smaller than zero, \
+        \it is negated before conversion.\n\
         \If one or both of the arguments are chars, \
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized over both arguments. \
         \If both arguments are lists, \
         \the result is a list of lists of digits."
-        []
+        [ ("123 10B", All False ["[3,2,1]"])
+        , ("123 1\\10B", All False [])
+        , ("123_ 10B", All False ["[3,2,1]"])
+        , ("[135,246] 10B", All False ["[[5,3,1],[6,4,2]]"])
+        , ("[135,246] [10,100]B", All False ["[[[5,3,1],[6,4,2]],[[35,1],[46,2]]]"])
+        ]
     , Builtin
         "binary"
         'Ƃ'
         binary'
         "Convert an integer to a list of binary digits in reverse order.\n\
+        \If the integer is smaller than zero, \
+        \it is negated before conversion.\n\
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
-        []
+        [ ("6Ƃ", All False ["[0,1,1]"])
+        , ("[-6,0,6]Ƃ", All False ["[[0,1,1],[],[0,1,1]]"])
+        ]
     , Builtin
         "fromBinary"
         'ƃ'
@@ -972,16 +1007,22 @@ builtins =
         "Convert a list of binary digits in reverse order to an integer.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
-        []
+        [ ("[0,1,1]ƃ", All False ["6"])
+        , ("[[1,0,1],[0,1,1]]ƃ", All False ["[1,2,3]"])
+        ]
     , Builtin
         "digits"
         'Ɗ'
         digits
         "Convert an integer to a list of decimal digits.\n\
+        \If the integer is smaller than zero, \
+        \it is negated before conversion.\n\
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
-        []
+        [ ("123Ɗ", All False ["[1,2,3]"])
+        , ("[-123,0,123]Ɗ", All False ["[[1,2,3],[],[1,2,3]]"])
+        ]
     , Builtin
         "fromDigits"
         'ɗ'
@@ -989,7 +1030,9 @@ builtins =
         "Convert a list of decimal digits to an integer.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
-        []
+        [ ("[1,2,3]ɗ", All False ["123"])
+        , ("[[1,2,3],[0,1,2]]ɗ", All False ["[10,21,32]"])
+        ]
     , Builtin
         "cumsum"
         '∫'
@@ -998,16 +1041,23 @@ builtins =
         \The addition is automatically vectorized with padding zeros.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
-        []
+        [ ("[1,2,3]∫", All False ["[1,3,6]"])
+        , ("[[1,2],[3,4]]∫", All False ["[[1,2],[4,6]]"])
+        ]
     , Builtin
         "delta"
         '∆'
         delta
         "Take the difference between adjacent elements of a list of numbers.\n\
         \The subtraction is automatically vectorized with padding zeros.\n\
+        \Fails when the input is empty.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
-        []
+        [ ("[1,3,6]∆", All False ["[2,3]"])
+        , ("[[1,2],[4,6]]∆", All False ["[[3,4]]"])
+        , ("[1]∆", All False ["[]"])
+        , ("[]∆", All False [])
+        ]
     , Builtin
         "binomial"
         'Ç'
@@ -1018,7 +1068,13 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
-        []
+        [ ("5 3Ç", All False ["10"])
+        , ("5_ 3Ç", All False ["-35"])
+        , ("5 3_Ç", All False ["0"])
+        , ("1\\2 2Ç", All False ["-1/8"])
+        , ("[5,6] 3Ç", All False ["[10,20]"])
+        , ("5 [0,1,2,3,4,5]Ç", All False ["[1,5,10,10,5,1]"])
+        ]
     , Builtin
         "factorial"
         'F'
@@ -1027,43 +1083,62 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
-        []
+        [ ("0F", All False ["1"])
+        , ("5F", All False ["120"])
+        , ("[5,6]F", All False ["[120,720]"])
+        ]
     , Builtin
         "isPrime"
         'Q'
         isPrime'
         "Check if an integer is prime.\n\
+        \Negative numbers whose absolute values are prime are also considered \
+        \to be prime.\n\
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
-        []
+        [ ("1Q", All False [])
+        , ("2Q", All False ["2"])
+        , ("2_ Q", All False ["-2"])
+        , ("[1,2,3,4,5]Q‼", All False ["[2,3,5]"])
+        ]
     , Builtin
         "prime"
         'Ƥ'
         prime
         "Non-deterministically choose a prime number.\n\
         \This function is non-deterministic."
-        []
+        [("Ƥ", All True ["2", "3", "5", "7", "11", "13", "17", "19", "23"])]
     , Builtin
         "primePi"
         'ƥ'
         primePi
-        "Compute the number of primes less than or equal to an integer.\n\
+        "Compute the number of positive primes less than or equal to a \
+        \number.\n\
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
-        []
+        [ ("7ƥ", All False ["4"])
+        , ("7_ ƥ", All False ["0"])
+        , ("23\\2 ƥ", All False ["5"])
+        , ("[10,100,1000]ƥ", All False ["[4,25,168]"])
+        ]
     , Builtin
         "factor"
         'ƒ'
         factor
         "Factorize a rational number, \
         \and return a list of prime factors and a list of exponents.\n\
+        \If the number is negative, it is negated before factorization.\n\
         \Fails when the input is zero.\n\
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
-        []
+        [ ("12300ƒÐ", All False ["[[2,3,5,41],[2,1,2,1]]"])
+        , ("123\\100 ƒÐ", All False ["[[2,3,5,41],[-2,1,-2,1]]"])
+        , ("1ƒÐ", All False ["[[],[]]"])
+        , ("[6,-6]ƒÐ", All False ["[[[2,3],[2,3]],[[1,1],[1,1]]]"])
+        ]
     , Builtin
         "gcd"
         'G'
