@@ -50,7 +50,12 @@ info b =
             else
                 "\nExamples:\n"
                     ++ unlines
-                        [ "  " ++ example ++ " -> " ++ show result
+                        [ "  "
+                            ++ example
+                            ++ " -> "
+                            ++ if result == All False []
+                                then "Fail"
+                                else show result
                         | (example, result) <- examples b
                         ]
 
@@ -70,7 +75,12 @@ infoMarkdown b =
             else
                 "__Examples__:\n\n"
                     ++ unlines
-                        [ "- `" ++ example ++ "` → `" ++ show result ++ "`"
+                        [ "- `"
+                            ++ example
+                            ++ "` → "
+                            ++ if result == All False []
+                                then "Fail"
+                                else "`" ++ show result ++ "`"
                         | (example, result) <- examples b
                         ]
                     ++ "\n"
@@ -1137,6 +1147,7 @@ builtins =
         [ ("12300ƒÐ", All False ["[[2,3,5,41],[2,1,2,1]]"])
         , ("123\\100 ƒÐ", All False ["[[2,3,5,41],[-2,1,-2,1]]"])
         , ("1ƒÐ", All False ["[[],[]]"])
+        , ("0ƒÐ", All False [])
         , ("[6,-6]ƒÐ", All False ["[[[2,3],[2,3]],[[1,1],[1,1]]]"])
         ]
     , Builtin
@@ -1148,7 +1159,10 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
-        []
+        [ ("12 18G", All False ["6"])
+        , ("1\\12 1\\18G", All False ["1/36"])
+        , ("[12,18] [24,36]G", All False ["[12,18]"])
+        ]
     , Builtin
         "lcm"
         'g'
@@ -1158,27 +1172,38 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
-        []
+        [ ("12 18g", All False ["36"])
+        , ("1\\12 1\\18g", All False ["1/6"])
+        , ("[12,18] [24,36]g", All False ["[24,36]"])
+        ]
     , Builtin
         "divisors"
         'Ď'
         divisors
-        "Compute the list of divisors of an integer.\n\
+        "Compute the list of positive divisors of an integer.\n\
         \Fail when the input is zero.\n\
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
-        []
+        [ ("12Ď", All False ["[1,2,3,4,6,12]"])
+        , ("12_ Ď", All False ["[1,2,3,4,6,12]"])
+        , ("0Ď", All False [])
+        , ("[12,18]Ď", All False ["[[1,2,3,4,6,12],[1,2,3,6,9,18]]"])
+        ]
     , Builtin
         "intPartition"
         'Ṗ'
         intPartition
-        "Partition an integer into a list of integers, \
+        "Partition an integer into a list of positive integers, \
         \whose sum is the original integer.\n\
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is non-deterministic and automatically vectorized."
-        []
+        [ ("4Ṗ", All True ["[1,1,1,1]", "[1,1,2]", "[1,3]", "[2,2]", "[4]"])
+        , ("0Ṗ", All False ["[]"])
+        , ("4_ Ṗ", All True [])
+        , ("[2,2]Ṗ", All False ["[[1,1],[1,1]]", "[[1,1],[2]]", "[[2],[1,1]]", "[[2],[2]]"])
+        ]
     , Builtin
         "sqrt"
         '√'
@@ -1188,14 +1213,18 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
-        []
+        [ ("16√", All False ["4"])
+        , ("16\\9√", All False ["4/3"])
+        , ("8√", All False [])
+        , ("[16,25]√", All False ["[4,5]"])
+        ]
     , Builtin
         "unitVec2"
         'į'
         unitVec2
         "Choose one of [0, 1] and [1, 0] non-deterministically.\n\
         \This function is non-deterministic."
-        []
+        [("į", All True ["[0,1]", "[1,0]"])]
     , Builtin
         "orNeg"
         'ŋ'
@@ -1206,7 +1235,10 @@ builtins =
         \This function is non-deterministic and automatically vectorized.\n\
         \When the input is a list, \
         \each element is optionally negated independently."
-        []
+        [ ("1ŋ", All True ["1", "-1"])
+        , ("0ŋ", All True ["0"])
+        , ("[-1,2]ŋ", All True ["[-1,2]", "[-1,-2]", "[1,2]", "[1,-2]"])
+        ]
     , Builtin
         "bitAnd"
         '&'

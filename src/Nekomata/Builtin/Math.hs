@@ -402,7 +402,7 @@ divisors :: Function
 divisors = unaryInt $ const divisors_
   where
     divisors_ 0 = Fail
-    divisors_ x = toTryData $ divisorsList x
+    divisors_ x = toTryData . sort $ divisorsList x
 
 intPartition :: Function
 intPartition = unaryInt $ intPartition_ 1

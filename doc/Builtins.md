@@ -20,7 +20,7 @@ Push a non-deterministic object with no values.
 
 __Examples__:
 
-- `!` → ``
+- `!` → Fail
 
 ### `allValues` (`a`, `1 -> 1`)
 
@@ -94,7 +94,7 @@ and return the first one if the second one doesn't fail.
 __Examples__:
 
 - `1 2¿` → `1`
-- `1 !¿` → ``
+- `1 !¿` → Fail
 
 ### `drop` (`^`, `1 -> 0`)
 
@@ -145,7 +145,7 @@ If they are, push the first value, otherwise fail.
 __Examples__:
 
 - `1 1=` → `1`
-- `1 2=` → ``
+- `1 2=` → Fail
 
 ### `ne` (`≠`, `2 -> 1`)
 
@@ -155,7 +155,7 @@ If they are not, push the first value, otherwise fail.
 
 __Examples__:
 
-- `1 1≠` → ``
+- `1 1≠` → Fail
 - `1 2≠` → `1`
 
 ### `lt` (`Ļ`, `2 -> 1`)
@@ -169,12 +169,12 @@ This function uses an ordering that is defined on all values. Numbers are smalle
 __Examples__:
 
 - `1 2Ļ` → `1`
-- `1 1Ļ` → ``
-- `2 1Ļ` → ``
+- `1 1Ļ` → Fail
+- `2 1Ļ` → Fail
 - `1 'aĻ` → `1`
 - `'a [1]Ļ` → `'a'`
 - `[1,2] [2]Ļ` → `[1,2]`
-- `[1,2] [1]Ļ` → ``
+- `[1,2] [1]Ļ` → Fail
 
 ### `gt` (`Ģ`, `2 -> 1`)
 
@@ -186,12 +186,12 @@ This function uses an ordering that is defined on all values. Numbers are smalle
 
 __Examples__:
 
-- `1 2Ģ` → ``
-- `1 1Ģ` → ``
+- `1 2Ģ` → Fail
+- `1 1Ģ` → Fail
 - `2 1Ģ` → `2`
 - `'a 1Ģ` → `'a'`
 - `[1] 'aĢ` → `[1]`
-- `[1,2] [2]Ģ` → ``
+- `[1,2] [2]Ģ` → Fail
 - `[1,2] [1]Ģ` → `[1,2]`
 
 ### `isNonempty` (`N`, `1 -> 1`)
@@ -204,7 +204,7 @@ __Examples__:
 
 - `[1]N` → `[1]`
 - `"Hello"N` → `Hello`
-- `[]N` → ``
+- `[]N` → Fail
 
 ### `isLong` (`Ł`, `1 -> 1`)
 
@@ -215,8 +215,8 @@ If it is, push the list itself, otherwise fail.
 __Examples__:
 
 - `[1,2]Ł` → `[1,2]`
-- `[1]Ł` → ``
-- `[]Ł` → ``
+- `[1]Ł` → Fail
+- `[]Ł` → Fail
 
 ### `isNonzero` (`Z`, `1 -> 1`)
 
@@ -231,7 +231,7 @@ This function is automatically vectorized.
 __Examples__:
 
 - `1Z` → `1`
-- `0Z` → ``
+- `0Z` → Fail
 - `1_Z` → `-1`
 - `[1,[2,3]]Z` → `[1,[2,3]]`
 
@@ -248,8 +248,8 @@ This function is automatically vectorized.
 __Examples__:
 
 - `1P` → `1`
-- `0P` → ``
-- `1_P` → ``
+- `0P` → Fail
+- `1_P` → Fail
 - `[1,[2,3]]P` → `[1,[2,3]]`
 
 ### `isNonnegative` (`ň`, `1 -> 1`)
@@ -266,7 +266,7 @@ __Examples__:
 
 - `1ň` → `1`
 - `0ň` → `0`
-- `1_ň` → ``
+- `1_ň` → Fail
 - `[1,[2,3]]ň` → `[1,[2,3]]`
 
 ### `isZero` (`ž`, `1 -> 1`)
@@ -281,9 +281,9 @@ This function is automatically vectorized.
 
 __Examples__:
 
-- `1ž` → ``
+- `1ž` → Fail
 - `0ž` → `0`
-- `1_ž` → ``
+- `1_ž` → Fail
 - `[0,[0,0]]ž` → `[0,[0,0]]`
 
 ### `isBig` (`Ƶ`, `1 -> 1`)
@@ -299,9 +299,9 @@ This function is automatically vectorized.
 __Examples__:
 
 - `2Ƶ` → `2`
-- `1Ƶ` → ``
-- `0Ƶ` → ``
-- `1_Ƶ` → ``
+- `1Ƶ` → Fail
+- `0Ƶ` → Fail
+- `1_Ƶ` → Fail
 - `2_Ƶ` → `-2`
 
 ### `isSmall` (`ƶ`, `1 -> 1`)
@@ -318,11 +318,11 @@ This function is automatically vectorized.
 
 __Examples__:
 
-- `2ƶ` → ``
+- `2ƶ` → Fail
 - `1ƶ` → `1`
 - `0ƶ` → `0`
 - `1_ƶ` → `-1`
-- `2_ƶ` → ``
+- `2_ƶ` → Fail
 
 ### `less` (`<`, `2 -> 1`)
 
@@ -337,10 +337,10 @@ This function is automatically vectorized.
 __Examples__:
 
 - `1 2<` → `1`
-- `1 1<` → ``
-- `2 1<` → ``
+- `1 1<` → Fail
+- `2 1<` → Fail
 - `[1,2,3] [2,3,4]<` → `[1,2,3]`
-- `[1,2] [2,1]<` → ``
+- `[1,2] [2,1]<` → Fail
 
 ### `lessEq` (`≤`, `2 -> 1`)
 
@@ -356,9 +356,9 @@ __Examples__:
 
 - `1 2≤` → `1`
 - `1 1≤` → `1`
-- `2 1≤` → ``
+- `2 1≤` → Fail
 - `[1,2,3] [2,3,4]≤` → `[1,2,3]`
-- `[1,2] [2,1]≤` → ``
+- `[1,2] [2,1]≤` → Fail
 
 ### `greater` (`>`, `2 -> 1`)
 
@@ -372,11 +372,11 @@ This function is automatically vectorized.
 
 __Examples__:
 
-- `1 2>` → ``
-- `1 1>` → ``
+- `1 2>` → Fail
+- `1 1>` → Fail
 - `2 1>` → `2`
 - `[2,3,4] [1,2,3]>` → `[2,3,4]`
-- `[2,1] [1,2]>` → ``
+- `[2,1] [1,2]>` → Fail
 
 ### `greaterEq` (`≥`, `2 -> 1`)
 
@@ -390,11 +390,11 @@ This function is automatically vectorized.
 
 __Examples__:
 
-- `1 2≥` → ``
+- `1 2≥` → Fail
 - `1 1≥` → `1`
 - `2 1≥` → `2`
 - `[2,3,4] [1,2,3]≥` → `[2,3,4]`
-- `[2,1] [1,2]≥` → ``
+- `[2,1] [1,2]≥` → Fail
 
 ### `neg1` (`£`, `0 -> 1`)
 
@@ -562,7 +562,7 @@ __Examples__:
 - `2 3*` → `6`
 - `[2,3] [3,4]*` → `[6,12]`
 - `2 [3,4]*` → `[6,8]`
-- `[2] [3,4]*` → ``
+- `[2] [3,4]*` → Fail
 
 ### `div` (`/`, `2 -> 1`)
 
@@ -580,7 +580,7 @@ __Examples__:
 - `3 6/` → `1/2`
 - `[3,6] [2,3]/` → `[3/2,2]`
 - `3 [2,3]/` → `[3/2,1]`
-- `[3] [2,3]/` → ``
+- `[3] [2,3]/` → Fail
 
 ### `divInt` (`÷`, `2 -> 1`)
 
@@ -599,7 +599,7 @@ __Examples__:
 - `3_ 6÷` → `-1`
 - `[3,6] [-2,3]÷` → `[-2,2]`
 - `3 [-2,3]÷` → `[-2,1]`
-- `[3] [-2,3]÷` → ``
+- `[3] [-2,3]÷` → Fail
 
 ### `mod` (`%`, `2 -> 1`)
 
@@ -619,7 +619,7 @@ __Examples__:
 - `5_ 3_%` → `-2`
 - `[5,6] [3,4]%` → `[2,2]`
 - `5 [3,4]%` → `[2,1]`
-- `[5] [3,4]%` → ``
+- `[5] [3,4]%` → Fail
 
 ### `divExact` (`¦`, `2 -> 1`)
 
@@ -634,10 +634,10 @@ This function is automatically vectorized and fails when the two lists are of di
 __Examples__:
 
 - `6 3¦` → `2`
-- `5 3¦` → ``
+- `5 3¦` → Fail
 - `[6,4] [3,4]¦` → `[2,1]`
 - `6 [2,3]¦` → `[3,2]`
-- `[6] [2,3]¦` → ``
+- `[6] [2,3]¦` → Fail
 
 ### `divMod` (`þ`, `2 -> 2`)
 
@@ -666,7 +666,7 @@ This function is automatically vectorized.
 __Examples__:
 
 - `6½` → `3`
-- `5½` → ``
+- `5½` → Fail
 - `[6,4]½` → `[3,2]`
 
 ### `pow` (`E`, `2 -> 1`)
@@ -686,9 +686,9 @@ __Examples__:
 - `2 3E` → `9`
 - `3 2E` → `8`
 - `2 1\2E` → `1/4`
-- `1\2 2E` → ``
+- `1\2 2E` → Fail
 - `[-2,0,2] 2E` → `[1/4,1,4]`
-- `[2] [3,4]E` → ``
+- `[2] [3,4]E` → Fail
 
 ### `recip` (`ŗ`, `1 -> 1`)
 
@@ -703,7 +703,7 @@ This function is automatically vectorized.
 __Examples__:
 
 - `2ŗ` → `1/2`
-- `0ŗ` → ``
+- `0ŗ` → Fail
 - `[2,3]ŗ` → `[1/2,1/3]`
 
 ### `mul2` (`Ä`, `1 -> 1`)
@@ -882,7 +882,7 @@ __Examples__:
 - `5 3ï` → `[]`
 - `3\2 7\2ï` → `[2,3]`
 - `1_ [2,3,-3]ï` → `[[-1,0,1,2],[-1,0,1,2,3],[]]`
-- `[3] [5,7]ï` → ``
+- `[3] [5,7]ï` → Fail
 
 ### `natural` (`Ň`, `0 -> 1`)
 
@@ -932,7 +932,7 @@ __Examples__:
 - `[1,2,3]∏` → `6`
 - `[[1,2],[3,4]]∏` → `[3,8]`
 - `[2,[3,4]]∏` → `[6,8]`
-- `[[1],[2,3]]∏` → ``
+- `[[1],[2,3]]∏` → Fail
 
 ### `dot` (`∙`, `2 -> 1`)
 
@@ -1032,7 +1032,7 @@ This function is automatically vectorized over both arguments. If both arguments
 __Examples__:
 
 - `123 10D` → `[1,2,3]`
-- `123 1\10D` → ``
+- `123 1\10D` → Fail
 - `123_ 10D` → `[1,2,3]`
 - `[135,246] 10D` → `[[1,3,5],[2,4,6]]`
 - `[135,246] [10,100]D` → `[[[1,3,5],[2,4,6]],[[1,35],[2,46]]]`
@@ -1054,7 +1054,7 @@ This function is automatically vectorized over both arguments. If both arguments
 __Examples__:
 
 - `123 10B` → `[3,2,1]`
-- `123 1\10B` → ``
+- `123 1\10B` → Fail
 - `123_ 10B` → `[3,2,1]`
 - `[135,246] 10B` → `[[5,3,1],[6,4,2]]`
 - `[135,246] [10,100]B` → `[[[5,3,1],[6,4,2]],[[35,1],[46,2]]]`
@@ -1139,7 +1139,7 @@ __Examples__:
 - `[1,3,6]∆` → `[2,3]`
 - `[[1,2],[4,6]]∆` → `[[3,4]]`
 - `[1]∆` → `[]`
-- `[]∆` → ``
+- `[]∆` → Fail
 
 ### `binomial` (`Ç`, `2 -> 1`)
 
@@ -1186,7 +1186,7 @@ This function is automatically vectorized.
 
 __Examples__:
 
-- `1Q` → ``
+- `1Q` → Fail
 - `2Q` → `2`
 - `2_ Q` → `-2`
 - `[1,2,3,4,5]Q‼` → `[2,3,5]`
@@ -1233,6 +1233,7 @@ __Examples__:
 - `12300ƒÐ` → `[[2,3,5,41],[2,1,2,1]]`
 - `123\100 ƒÐ` → `[[2,3,5,41],[-2,1,-2,1]]`
 - `1ƒÐ` → `[[],[]]`
+- `0ƒÐ` → Fail
 - `[6,-6]ƒÐ` → `[[[2,3],[2,3]],[[1,1],[1,1]]]`
 
 ### `gcd` (`G`, `2 -> 1`)
@@ -1243,6 +1244,12 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+__Examples__:
+
+- `12 18G` → `6`
+- `1\12 1\18G` → `1/36`
+- `[12,18] [24,36]G` → `[12,18]`
+
 ### `lcm` (`g`, `2 -> 1`)
 
 Compute the least common multiple of two numbers.
@@ -1251,9 +1258,15 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+__Examples__:
+
+- `12 18g` → `36`
+- `1\12 1\18g` → `1/6`
+- `[12,18] [24,36]g` → `[24,36]`
+
 ### `divisors` (`Ď`, `1 -> 1`)
 
-Compute the list of divisors of an integer.
+Compute the list of positive divisors of an integer.
 
 Fail when the input is zero.
 
@@ -1261,13 +1274,27 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `12Ď` → `[1,2,3,4,6,12]`
+- `12_ Ď` → `[1,2,3,4,6,12]`
+- `0Ď` → Fail
+- `[12,18]Ď` → `[[1,2,3,4,6,12],[1,2,3,6,9,18]]`
+
 ### `intPartition` (`Ṗ`, `1 -> 1`)
 
-Partition an integer into a list of integers, whose sum is the original integer.
+Partition an integer into a list of positive integers, whose sum is the original integer.
 
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is non-deterministic and automatically vectorized.
+
+__Examples__:
+
+- `4Ṗ` → `[1,1,1,1] [1,1,2] [1,3] [2,2] [4] ...`
+- `0Ṗ` → `[]`
+- `4_ Ṗ` → ` ...`
+- `[2,2]Ṗ` → `[[1,1],[1,1]] [[1,1],[2]] [[2],[1,1]] [[2],[2]]`
 
 ### `sqrt` (`√`, `1 -> 1`)
 
@@ -1279,11 +1306,22 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `16√` → `4`
+- `16\9√` → `4/3`
+- `8√` → Fail
+- `[16,25]√` → `[4,5]`
+
 ### `unitVec2` (`į`, `0 -> 1`)
 
 Choose one of [0, 1] and [1, 0] non-deterministically.
 
 This function is non-deterministic.
+
+__Examples__:
+
+- `į` → `[0,1] [1,0] ...`
 
 ### `orNeg` (`ŋ`, `1 -> 1`)
 
@@ -1294,6 +1332,12 @@ If the argument is a char, it is converted to a number according to Nekomata's c
 This function is non-deterministic and automatically vectorized.
 
 When the input is a list, each element is optionally negated independently.
+
+__Examples__:
+
+- `1ŋ` → `1 -1 ...`
+- `0ŋ` → `0 ...`
+- `[-1,2]ŋ` → `[-1,2] [-1,-2] [1,2] [1,-2] ...`
 
 ### `bitAnd` (`&`, `2 -> 1`)
 
