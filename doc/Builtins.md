@@ -1291,9 +1291,9 @@ This function is non-deterministic and automatically vectorized.
 
 __Examples__:
 
-- `4Ṗ` → `[1,1,1,1] [1,1,2] [1,3] [2,2] [4] ...`
+- `4Ṗ` → `[1,1,1,1] [1,1,2] [1,3] [2,2] [4]`
 - `0Ṗ` → `[]`
-- `4_ Ṗ` → ` ...`
+- `4_ Ṗ` → Fail
 - `[2,2]Ṗ` → `[[1,1],[1,1]] [[1,1],[2]] [[2],[1,1]] [[2],[2]]`
 
 ### `sqrt` (`√`, `1 -> 1`)
@@ -1321,7 +1321,7 @@ This function is non-deterministic.
 
 __Examples__:
 
-- `į` → `[0,1] [1,0] ...`
+- `į` → `[0,1] [1,0]`
 
 ### `orNeg` (`ŋ`, `1 -> 1`)
 
@@ -1335,9 +1335,9 @@ When the input is a list, each element is optionally negated independently.
 
 __Examples__:
 
-- `1ŋ` → `1 -1 ...`
-- `0ŋ` → `0 ...`
-- `[-1,2]ŋ` → `[-1,2] [-1,-2] [1,2] [1,-2] ...`
+- `1ŋ` → `1 -1`
+- `0ŋ` → `0`
+- `[-1,2]ŋ` → `[-1,2] [-1,-2] [1,2] [1,-2]`
 
 ### `bitAnd` (`&`, `2 -> 1`)
 
@@ -1347,6 +1347,13 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized and fails when the two lists are of different lengths.
 
+__Examples__:
+
+- `5 3&` → `1`
+- `[5,6] [3,4]&` → `[1,4]`
+- `5 [3,4]&` → `[1,4]`
+- `[5] [3,4]&` → Fail
+
 ### `bitOr` (`|`, `2 -> 1`)
 
 Bitwise OR of two integers.
@@ -1354,6 +1361,13 @@ Bitwise OR of two integers.
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
 
 This function is automatically vectorized with padding.
+
+__Examples__:
+
+- `5 3|` → `7`
+- `[5,6] [3,4]|` → `[7,6]`
+- `5 [3,4]|` → `[7,5]`
+- `[5] [3,4]|` → `[7,4]`
 
 ### `bitXor` (`X`, `2 -> 1`)
 
@@ -1363,13 +1377,27 @@ If one or both of the arguments are chars, they are converted to numbers accordi
 
 This function is automatically vectorized with padding.
 
+__Examples__:
+
+- `5 3X` → `6`
+- `[5,6] [3,4]X` → `[6,2]`
+- `5 [3,4]X` → `[6,1]`
+- `[5] [3,4]X` → `[6,4]`
+
 ### `popCount` (`Þ`, `1 -> 1`)
 
 Count the number of 1s in the binary digits of an integer.
 
+If the number is smaller than zero, the result is also negated.
+
 If the argument is a char, it is converted to a number according to Nekomata's code page.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `13Þ` → `3`
+- `[-13,0,13]Þ` → `[-3,0,3]`
 
 ### `histogram` (`Ħ`, `1 -> 1`)
 
@@ -1377,11 +1405,20 @@ Compute the histogram of a list of integers.
 
 The result is a list, whose length is the maximum of the input list, and whose nth element is the number of occurrences of n in the input.
 
+Fails when the list contains negative integers or fractions.
+
 If the input is a ragged list, it is flattened before computation.
 
 If the input is a single integer, it is treated as a singleton list.
 
 If the input is a single char, it is converted to a number according to Nekomata's code page, and then treated as a singleton list.
+
+__Examples__:
+
+- `0Ħ` → `[1]`
+- `1Ħ` → `[0,1]`
+- `[1,2,3,2,1]Ħ` → `[0,2,2,1]`
+- `[[1,2],[3,2],[1]]Ħ` → `[0,2,2,1]`
 
 ### `sumEach` (`Ŝ`, `1 -> 1`)
 
@@ -1391,6 +1428,12 @@ The addition is automatically vectorized with padding zeros.
 
 If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
 
+__Examples__:
+
+- `[[1,2],[3,4]]Ŝ` → `[3,7]`
+- `[[1,2],[3,4],[5]]Ŝ` → `[3,7,5]`
+- `[[[1,2],[3,4]],[[5,6],[7,8]]]Ŝ` → `[[4,6],[12,14]]`
+
 ### `charToInt` (`e`, `1 -> 1`)
 
 Convert a char to an integer according to Nekomata's code page.
@@ -1398,6 +1441,11 @@ Convert a char to an integer according to Nekomata's code page.
 If the input is already an integer, it is left unchanged.
 
 This function is automatically vectorized.
+
+__Examples__:
+
+- `'a e` → `97`
+- `"Hello"e` → `[72,101,108,108,111]`
 
 ### `intToChar` (`H`, `1 -> 1`)
 
@@ -1409,15 +1457,31 @@ Fail when the integer is not in the range 0 to 255.
 
 This function is automatically vectorized.
 
+__Examples__:
+
+- `97H` → `'a'`
+- `[72,101,108,108,111]H` → `Hello`
+
 ### `read` (`Ĝ`, `1 -> 1`)
 
 Parse a string (a list of chars) or a single char as a Nekomata value.
 
 Fail when the string is not a valid Nekomata value.
 
+__Examples__:
+
+- `'1 Ĝ` → `1`
+- `"[1,2,3]"Ĝ` → `[1,2,3]`
+
 ### `show` (`ĝ`, `1 -> 1`)
 
 Convert a Nekomata value to a string (a list of chars).
+
+__Examples__:
+
+- `1ĝU` → `["1"]`
+- `[1,2,3]ĝU` → `["[1,2,3]"]`
+- `"Hello"ĝU` → `["\"Hello\""]`
 
 ### `anyOf` (`~`, `1 -> 1`)
 
@@ -1427,13 +1491,28 @@ If the argument is a number, it is converted to a range from 0 to that number mi
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `[]~` → Fail
+- `[1,2,3]~` → `1 2 3`
+- `5~` → `0 1 2 3 4`
+
 ### `emptyList` (`Ø`, `0 -> 1`)
 
 Push an empty list.
 
+__Examples__:
+
+- `Ø` → `[]`
+
 ### `singleton` (`U`, `1 -> 1`)
 
 Create a list with a single element.
+
+__Examples__:
+
+- `1U` → `[1]`
+- `[1]U` → `[[1]]`
 
 ### `unsingleton` (`z`, `1 -> 1`)
 
@@ -1441,9 +1520,21 @@ Get the only element of a list with a single element.
 
 Fails when the list is empty or has more than one element.
 
+__Examples__:
+
+- `[1]z` → `1`
+- `[[1]]z` → `[1]`
+- `[]z` → Fail
+- `[1,2]z` → Fail
+
 ### `pair` (`Ð`, `2 -> 1`)
 
 Create a list with two elements.
+
+__Examples__:
+
+- `1 2Ð` → `[1,2]`
+- `[1] 2Ð` → `[[1],2]`
 
 ### `unpair` (`đ`, `1 -> 2`)
 
@@ -1451,13 +1542,30 @@ Get the two elements of a list with two elements.
 
 Fails when the length of the list is not 2.
 
+__Examples__:
+
+- `[1,2]đ+` → `3`
+- `[]đ` → Fail
+- `[1]đ` → Fail
+- `[1,2,3]đ` → Fail
+
 ### `removeFail` (`‼`, `1 -> 1`)
 
 Remove failed items from a list.
 
+__Examples__:
+
+- `[1,2,3]‼` → `[1,2,3]`
+- `[1,0,3]P‼` → `[1,3]`
+
 ### `length` (`#`, `1 -> 1`)
 
 Get the length of a list.
+
+__Examples__:
+
+- `[1,2,3]#` → `3`
+- `[]#` → `0`
 
 ### `lengthIs` (`L`, `2 -> 1`)
 
@@ -1465,53 +1573,115 @@ Check if the length of a list is equal to a given integer.
 
 If it is, push the list itself, otherwise fail.
 
+__Examples__:
+
+- `[1,2,3] 3L` → `[1,2,3]`
+- `[1,2,3] 4L` → Fail
+
 ### `nth` (`@`, `2 -> 1`)
 
 Get the nth element of a list.
 
+The index is 0-based.
+
 This function is automatically vectorized on the second argument.
+
+__Examples__:
+
+- `[1,2,3] 1@` → `2`
+- `[1,2,3] [1,2]@` → `[2,3]`
 
 ### `head` (`h`, `1 -> 1`)
 
 Get the first element of a list.
 
+__Examples__:
+
+- `[1,2,3]h` → `1`
+- `[]h` → Fail
+
 ### `tail` (`t`, `1 -> 1`)
 
 Remove the first element of a list.
+
+__Examples__:
+
+- `[1,2,3]t` → `[2,3]`
+- `[]t` → Fail
 
 ### `cons` (`c`, `2 -> 1`)
 
 Prepend an element to a list.
 
+__Examples__:
+
+- `[2,3] 1c` → `[1,2,3]`
+- `[] 1c` → `[1]`
+
 ### `uncons` (`C`, `1 -> 2`)
 
 Get the first element and the rest of a list.
+
+__Examples__:
+
+- `[1,2,3]CÐ` → `[[2,3],1]`
+- `[]C` → Fail
 
 ### `last` (`l`, `1 -> 1`)
 
 Get the last element of a list.
 
+__Examples__:
+
+- `[1,2,3]l` → `3`
+- `[]l` → Fail
+
 ### `init` (`i`, `1 -> 1`)
 
 Remove the last element of a list.
+
+__Examples__:
+
+- `[1,2,3]i` → `[1,2]`
+- `[]i` → Fail
 
 ### `snoc` (`ɔ`, `2 -> 1`)
 
 Append an element to a list.
 
+__Examples__:
+
+- `[1,2] 3ɔ` → `[1,2,3]`
+- `[] 1ɔ` → `[1]`
+
 ### `unsnoc` (`Ɔ`, `1 -> 2`)
 
 Get the last element and the rest of a list.
 
+__Examples__:
+
+- `[1,2,3]ƆÐ` → `[[1,2],3]`
+- `[]Ɔ` → Fail
+
 ### `cons0` (`ç`, `1 -> 1`)
 
 Prepend a zero to a list.
+
+__Examples__:
+
+- `[1,2,3]ç` → `[0,1,2,3]`
+- `[]ç` → `[0]`
 
 ### `reverse` (`↔`, `1 -> 1`)
 
 Reverse a list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
+
+__Examples__:
+
+- `[1,2,3]↔` → `[3,2,1]`
+- `3↔` → `[2,1,0]`
 
 ### `prefix` (`p`, `1 -> 1`)
 
@@ -1521,6 +1691,11 @@ If the argument is a number, it is converted to a range from 0 to that number mi
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `[1,2,3]p` → `[] [1] [1,2] [1,2,3]`
+- `3p` → `[] [0] [0,1] [0,1,2]`
+
 ### `suffix` (`s`, `1 -> 1`)
 
 Get a suffix of a list.
@@ -1529,11 +1704,24 @@ If the argument is a number, it is converted to a range from 0 to that number mi
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `[1,2,3]s` → `[1,2,3] [2,3] [3] []`
+- `3s` → `[0,1,2] [1,2] [2] []`
+
 ### `take` (`T`, `2 -> 1`)
 
 Get the first n elements of a list.
 
+Fail when the list is shorter than n.
+
 This function is automatically vectorized on the second argument.
+
+__Examples__:
+
+- `[1,2,3] 2T` → `[1,2]`
+- `[1,2,3] 4T` → Fail
+- `[1,2,3] [2,3]T` → `[[1,2],[1,2,3]]`
 
 ### `subset` (`S`, `1 -> 1`)
 
@@ -1543,6 +1731,11 @@ If the argument is a number, it is converted to a range from 0 to that number mi
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `[1,2] S` → `[] [1] [2] [1,2]`
+- `2S` → `[] [0] [1] [0,1]`
+
 ### `subsequence` (`q`, `1 -> 1`)
 
 Get a finite contiguous subsequence of a list.
@@ -1550,6 +1743,11 @@ Get a finite contiguous subsequence of a list.
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
 This function is non-deterministic.
+
+__Examples__:
+
+- `[1,2,3]q` → `[] [1] [1,2] [1,2,3] [2] [2,3] [3]`
+- `3q` → `[] [0] [0,1] [0,1,2] [1] [1,2] [2]`
 
 ### `join` (`,`, `2 -> 1`)
 
@@ -1698,6 +1896,8 @@ For each element in the second list, remove the first occurrence of that element
 ### `index` (`Ĩ`, `2 -> 1`)
 
 Get the index of any occurrence of an element in a list.
+
+The index is 0-based.
 
 Fail if the element does not occur in the list.
 

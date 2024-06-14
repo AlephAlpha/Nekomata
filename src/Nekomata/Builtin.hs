@@ -1199,9 +1199,9 @@ builtins =
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is non-deterministic and automatically vectorized."
-        [ ("4Ṗ", All True ["[1,1,1,1]", "[1,1,2]", "[1,3]", "[2,2]", "[4]"])
+        [ ("4Ṗ", All False ["[1,1,1,1]", "[1,1,2]", "[1,3]", "[2,2]", "[4]"])
         , ("0Ṗ", All False ["[]"])
-        , ("4_ Ṗ", All True [])
+        , ("4_ Ṗ", All False [])
         , ("[2,2]Ṗ", All False ["[[1,1],[1,1]]", "[[1,1],[2]]", "[[2],[1,1]]", "[[2],[2]]"])
         ]
     , Builtin
@@ -1224,7 +1224,7 @@ builtins =
         unitVec2
         "Choose one of [0, 1] and [1, 0] non-deterministically.\n\
         \This function is non-deterministic."
-        [("į", All True ["[0,1]", "[1,0]"])]
+        [("į", All False ["[0,1]", "[1,0]"])]
     , Builtin
         "orNeg"
         'ŋ'
@@ -1235,9 +1235,9 @@ builtins =
         \This function is non-deterministic and automatically vectorized.\n\
         \When the input is a list, \
         \each element is optionally negated independently."
-        [ ("1ŋ", All True ["1", "-1"])
-        , ("0ŋ", All True ["0"])
-        , ("[-1,2]ŋ", All True ["[-1,2]", "[-1,-2]", "[1,2]", "[1,-2]"])
+        [ ("1ŋ", All False ["1", "-1"])
+        , ("0ŋ", All False ["0"])
+        , ("[-1,2]ŋ", All False ["[-1,2]", "[-1,-2]", "[1,2]", "[1,-2]"])
         ]
     , Builtin
         "bitAnd"
@@ -1248,7 +1248,11 @@ builtins =
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized \
         \and fails when the two lists are of different lengths."
-        []
+        [ ("5 3&", All False ["1"])
+        , ("[5,6] [3,4]&", All False ["[1,4]"])
+        , ("5 [3,4]&", All False ["[1,4]"])
+        , ("[5] [3,4]&", All False [])
+        ]
     , Builtin
         "bitOr"
         '|'
@@ -1257,7 +1261,11 @@ builtins =
         \If one or both of the arguments are chars, \
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized with padding."
-        []
+        [ ("5 3|", All False ["7"])
+        , ("[5,6] [3,4]|", All False ["[7,6]"])
+        , ("5 [3,4]|", All False ["[7,5]"])
+        , ("[5] [3,4]|", All False ["[7,4]"])
+        ]
     , Builtin
         "bitXor"
         'X'
@@ -1266,16 +1274,23 @@ builtins =
         \If one or both of the arguments are chars, \
         \they are converted to numbers according to Nekomata's code page.\n\
         \This function is automatically vectorized with padding."
-        []
+        [ ("5 3X", All False ["6"])
+        , ("[5,6] [3,4]X", All False ["[6,2]"])
+        , ("5 [3,4]X", All False ["[6,1]"])
+        , ("[5] [3,4]X", All False ["[6,4]"])
+        ]
     , Builtin
         "popCount"
         'Þ'
         popCount'
         "Count the number of 1s in the binary digits of an integer.\n\
+        \If the number is smaller than zero, the result is also negated.\n\
         \If the argument is a char, \
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
-        []
+        [ ("13Þ", All False ["3"])
+        , ("[-13,0,13]Þ", All False ["[-3,0,3]"])
+        ]
     , Builtin
         "histogram"
         'Ħ'
@@ -1285,6 +1300,7 @@ builtins =
         \whose length is the maximum of the input list, \
         \and whose nth element is the number of occurrences \
         \of n in the input.\n\
+        \Fails when the list contains negative integers or fractions.\n\
         \If the input is a ragged list, \
         \it is flattened before computation.\n\
         \If the input is a single integer, \
@@ -1292,7 +1308,11 @@ builtins =
         \If the input is a single char, \
         \it is converted to a number according to Nekomata's code page, \
         \and then treated as a singleton list."
-        []
+        [ ("0Ħ", All False ["[1]"])
+        , ("1Ħ", All False ["[0,1]"])
+        , ("[1,2,3,2,1]Ħ", All False ["[0,2,2,1]"])
+        , ("[[1,2],[3,2],[1]]Ħ", All False ["[0,2,2,1]"])
+        ]
     , Builtin
         "sumEach"
         'Ŝ'
@@ -1301,7 +1321,10 @@ builtins =
         \The addition is automatically vectorized with padding zeros.\n\
         \If some of the elements are chars, \
         \they are converted to numbers according to Nekomata's code page."
-        []
+        [ ("[[1,2],[3,4]]Ŝ", All False ["[3,7]"])
+        , ("[[1,2],[3,4],[5]]Ŝ", All False ["[3,7,5]"])
+        , ("[[[1,2],[3,4]],[[5,6],[7,8]]]Ŝ", All False ["[[4,6],[12,14]]"])
+        ]
     , Builtin
         "charToInt"
         'e'
@@ -1309,7 +1332,9 @@ builtins =
         "Convert a char to an integer according to Nekomata's code page.\n\
         \If the input is already an integer, it is left unchanged.\n\
         \This function is automatically vectorized."
-        []
+        [ ("'a e", All False ["97"])
+        , ("\"Hello\"e", All False ["[72,101,108,108,111]"])
+        ]
     , Builtin
         "intToChar"
         'H'
@@ -1318,7 +1343,9 @@ builtins =
         \If the input is already a char, it is left unchanged.\n\
         \Fail when the integer is not in the range 0 to 255.\n\
         \This function is automatically vectorized."
-        []
+        [ ("97H", All False ["'a'"])
+        , ("[72,101,108,108,111]H", All False ["Hello"])
+        ]
     , Builtin
         "read"
         'Ĝ'
@@ -1326,13 +1353,18 @@ builtins =
         "Parse a string (a list of chars) or a single char \
         \as a Nekomata value.\n\
         \Fail when the string is not a valid Nekomata value."
-        []
+        [ ("'1 Ĝ", All False ["1"])
+        , ("\"[1,2,3]\"Ĝ", All False ["[1,2,3]"])
+        ]
     , Builtin
         "show"
         'ĝ'
         show'
         "Convert a Nekomata value to a string (a list of chars)."
-        []
+        [ ("1ĝU", All False ["[\"1\"]"])
+        , ("[1,2,3]ĝU", All False ["[\"[1,2,3]\"]"])
+        , ("\"Hello\"ĝU", All False ["[\"\\\"Hello\\\"\"]"])
+        ]
     , Builtin
         "anyOf"
         '~'
@@ -1341,119 +1373,161 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
-        []
+        [ ("[]~", All False [])
+        , ("[1,2,3]~", All False ["1", "2", "3"])
+        , ("5~", All False ["0", "1", "2", "3", "4"])
+        ]
     , Builtin
         "emptyList"
         'Ø'
         emptyList
         "Push an empty list."
-        []
+        [("Ø", All False ["[]"])]
     , Builtin
         "singleton"
         'U'
         singleton'
         "Create a list with a single element."
-        []
+        [ ("1U", All False ["[1]"])
+        , ("[1]U", All False ["[[1]]"])
+        ]
     , Builtin
         "unsingleton"
         'z'
         unsingleton
         "Get the only element of a list with a single element.\n\
         \Fails when the list is empty or has more than one element."
-        []
+        [ ("[1]z", All False ["1"])
+        , ("[[1]]z", All False ["[1]"])
+        , ("[]z", All False [])
+        , ("[1,2]z", All False [])
+        ]
     , Builtin
         "pair"
         'Ð'
         pair
         "Create a list with two elements."
-        []
+        [ ("1 2Ð", All False ["[1,2]"])
+        , ("[1] 2Ð", All False ["[[1],2]"])
+        ]
     , Builtin
         "unpair"
         'đ'
         unpair
         "Get the two elements of a list with two elements.\n\
         \Fails when the length of the list is not 2."
-        []
+        [ ("[1,2]đ+", All False ["3"])
+        , ("[]đ", All False [])
+        , ("[1]đ", All False [])
+        , ("[1,2,3]đ", All False [])
+        ]
     , Builtin
         "removeFail"
         '‼'
         removeFail
         "Remove failed items from a list."
-        []
+        [ ("[1,2,3]‼", All False ["[1,2,3]"])
+        , ("[1,0,3]P‼", All False ["[1,3]"])
+        ]
     , Builtin
         "length"
         '#'
         length'
         "Get the length of a list."
-        []
+        [ ("[1,2,3]#", All False ["3"])
+        , ("[]#", All False ["0"])
+        ]
     , Builtin
         "lengthIs"
         'L'
         lengthIs
         "Check if the length of a list is equal to a given integer.\n\
         \If it is, push the list itself, otherwise fail."
-        []
+        [ ("[1,2,3] 3L", All False ["[1,2,3]"])
+        , ("[1,2,3] 4L", All False [])
+        ]
     , Builtin
         "nth"
         '@'
         nth
         "Get the nth element of a list.\n\
+        \The index is 0-based.\n\
         \This function is automatically vectorized on the second argument."
-        []
+        [ ("[1,2,3] 1@", All False ["2"])
+        , ("[1,2,3] [1,2]@", All False ["[2,3]"])
+        ]
     , Builtin
         "head"
         'h'
         head'
         "Get the first element of a list."
-        []
+        [ ("[1,2,3]h", All False ["1"])
+        , ("[]h", All False [])
+        ]
     , Builtin
         "tail"
         't'
         tail'
         "Remove the first element of a list."
-        []
+        [ ("[1,2,3]t", All False ["[2,3]"])
+        , ("[]t", All False [])
+        ]
     , Builtin
         "cons"
         'c'
         cons
         "Prepend an element to a list."
-        []
+        [ ("[2,3] 1c", All False ["[1,2,3]"])
+        , ("[] 1c", All False ["[1]"])
+        ]
     , Builtin
         "uncons"
         'C'
         uncons
         "Get the first element and the rest of a list."
-        []
+        [ ("[1,2,3]CÐ", All False ["[[2,3],1]"])
+        , ("[]C", All False [])
+        ]
     , Builtin
         "last"
         'l'
         last'
         "Get the last element of a list."
-        []
+        [ ("[1,2,3]l", All False ["3"])
+        , ("[]l", All False [])
+        ]
     , Builtin
         "init"
         'i'
         init'
         "Remove the last element of a list."
-        []
+        [ ("[1,2,3]i", All False ["[1,2]"])
+        , ("[]i", All False [])
+        ]
     , Builtin
         "snoc"
         'ɔ'
         snoc
         "Append an element to a list."
-        []
+        [ ("[1,2] 3ɔ", All False ["[1,2,3]"])
+        , ("[] 1ɔ", All False ["[1]"])
+        ]
     , Builtin
         "unsnoc"
         'Ɔ'
         unsnoc
         "Get the last element and the rest of a list."
-        []
+        [ ("[1,2,3]ƆÐ", All False ["[[1,2],3]"])
+        , ("[]Ɔ", All False [])
+        ]
     , Builtin
         "cons0"
         'ç'
         cons0
         "Prepend a zero to a list."
-        []
+        [ ("[1,2,3]ç", All False ["[0,1,2,3]"])
+        , ("[]ç", All False ["[0]"])
+        ]
     , Builtin
         "reverse"
         '↔'
@@ -1461,7 +1535,9 @@ builtins =
         "Reverse a list.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1."
-        []
+        [ ("[1,2,3]↔", All False ["[3,2,1]"])
+        , ("3↔", All False ["[2,1,0]"])
+        ]
     , Builtin
         "prefix"
         'p'
@@ -1470,7 +1546,9 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
-        []
+        [ ("[1,2,3]p", All False ["[]", "[1]", "[1,2]", "[1,2,3]"])
+        , ("3p", All False ["[]", "[0]", "[0,1]", "[0,1,2]"])
+        ]
     , Builtin
         "suffix"
         's'
@@ -1479,14 +1557,20 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
-        []
+        [ ("[1,2,3]s", All False ["[1,2,3]", "[2,3]", "[3]", "[]"])
+        , ("3s", All False ["[0,1,2]", "[1,2]", "[2]", "[]"])
+        ]
     , Builtin
         "take"
         'T'
         take'
         "Get the first n elements of a list.\n\
+        \Fail when the list is shorter than n.\n\
         \This function is automatically vectorized on the second argument."
-        []
+        [ ("[1,2,3] 2T", All False ["[1,2]"])
+        , ("[1,2,3] 4T", All False [])
+        , ("[1,2,3] [2,3]T", All False ["[[1,2],[1,2,3]]"])
+        ]
     , Builtin
         "subset"
         'S'
@@ -1495,7 +1579,9 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
-        []
+        [ ("[1,2] S", All False ["[]", "[1]", "[2]", "[1,2]"])
+        , ("2S", All False ["[]", "[0]", "[1]", "[0,1]"])
+        ]
     , Builtin
         "subsequence"
         'q'
@@ -1504,7 +1590,9 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
-        []
+        [ ("[1,2,3]q", All False ["[]", "[1]", "[1,2]", "[1,2,3]", "[2]", "[2,3]", "[3]"])
+        , ("3q", All False ["[]", "[0]", "[0,1]", "[0,1,2]", "[1]", "[1,2]", "[2]"])
+        ]
     , Builtin
         "join"
         ','
@@ -1680,6 +1768,7 @@ builtins =
         'Ĩ'
         index
         "Get the index of any occurrence of an element in a list.\n\
+        \The index is 0-based.\n\
         \Fail if the element does not occur in the list.\n\
         \This function is non-deterministic."
         []
