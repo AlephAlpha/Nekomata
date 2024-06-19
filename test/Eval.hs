@@ -1962,6 +1962,19 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("1001", all_ ["[1000,1001]"])
             , ("4037 ", all_ ["[1000,2000,3000,4000,4010,4020,4030,4031,4032,4033,4034,4035,4036,4037]"])
             ]
+    describe "q239994: 1 bit, 2 bits, 3 bits, …" $ do
+        specEval
+            "ṖÞx→↕="
+            [ ("1", Count 1)
+            , ("2", Count 1)
+            , ("3", Count 0)
+            , ("4", Count 2)
+            , ("5", Count 1)
+            , ("10", Count 2)
+            , ("14", Count 6)
+            , ("19", Count 7)
+            , ("20", Count 10)
+            ]
     describe "q240187: Repeating slices of an array incrementally" $ do
         specEval
             "Jᵖ{ix→ᶻL"
@@ -3637,3 +3650,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[0,8,1,0,8,7,5,9]", Check False)
             , ("[0,0,1,0,0,0,1,0]", Check False)
             ]
+    describe "q273620: 9-16-25 2D Matrix" $ do
+        specEval
+            "ᵃ#*R↕v#Š:ᵐ∑ᵈv=¿:∑ᵈ§=¿"
+            [("[12,18,15] [9,18,18]", first_ "[[1,4,7],[3,6,9],[5,8,2]]")]

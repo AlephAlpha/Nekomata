@@ -1755,6 +1755,13 @@ Concatenate two lists.
 
 If one of the arguments is a number or a char, it is converted to a singleton list before concatenation.
 
+__Examples__:
+
+- `[1,2] [3,4],` → `[1,2,3,4]`
+- `[1,2] 3,` → `[1,2,3]`
+- `1 [2,3],` → `[1,2,3]`
+- `1 2,` → `[1,2]`
+
 ### `split` (`;`, `1 -> 2`)
 
 Split a list into two parts.
@@ -1763,11 +1770,23 @@ If the argument is a number, it is converted to a range from 0 to that number mi
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `[1,2,3];Ð` → `[[],[1,2,3]] [[1],[2,3]] [[1,2],[3]] [[1,2,3],[]]`
+- `3;Ð` → `[[],[0,1,2]] [[0],[1,2]] [[0,1],[2]] [[0,1,2],[]]`
+
 ### `replicate` (`ř`, `2 -> 1`)
 
 Create a list with n copies of an element.
 
 This function is automatically vectorized on the second argument.
+
+__Examples__:
+
+- `2 3ř` → `[2,2,2]`
+- `'a 3ř` → `aaa`
+- `[1,2] 3ř` → `[[1,2],[1,2],[1,2]]`
+- `2 [3,4]ř` → `[[2,2,2],[2,2,2,2]]`
 
 ### `minimum` (`ṁ`, `1 -> 1`)
 
@@ -1777,7 +1796,14 @@ If there are multiple minimums, return the first one.
 
 Fail when the list is empty.
 
-The order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or chars.
+This function uses an ordering that is defined on all values. Numbers are smaller than chars, which are smaller than lists. Lists are compared in the lexicographic order.
+
+__Examples__:
+
+- `[1,2,3]ṁ` → `1`
+- `[[1,2],3]ṁ` → `3`
+- `[[1,2],[3]]ṁ` → `[1,2]`
+- `[1,'a',[1,2]]ṁ` → `1`
 
 ### `maximum` (`Ṁ`, `1 -> 1`)
 
@@ -1787,7 +1813,14 @@ If there are multiple maximums, return the first one.
 
 Fail when the list is empty.
 
-The order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or chars.
+This function uses an ordering that is defined on all values. Numbers are smaller than chars, which are smaller than lists. Lists are compared in the lexicographic order.
+
+__Examples__:
+
+- `[1,2,3]Ṁ` → `3`
+- `[[1,2],3]Ṁ` → `[1,2]`
+- `[[1,2],[3]]Ṁ` → `[3]`
+- `[1,'a',[1,2]]Ṁ` → `[1,2]`
 
 ### `minMax` (`ɱ`, `1 -> 2`)
 
@@ -1797,13 +1830,27 @@ If there are multiple minimums or maximums, return the first one.
 
 Fail when the list is empty.
 
-The order used in this function is different from the one used in min and max. It can compare two arbitrary values, not just numbers or chars.
+This function uses an ordering that is defined on all values. Numbers are smaller than chars, which are smaller than lists. Lists are compared in the lexicographic order.
+
+__Examples__:
+
+- `[1,2,3]ɱÐ` → `[1,3]`
+- `[[1,2],3]ɱÐ` → `[3,[1,2]]`
+- `[[1,2],[3]]ɱÐ` → `[[1,2],[3]]`
+- `[1,'a',[1,2]]ɱÐ` → `[1,[1,2]]`
 
 ### `concat` (`j`, `1 -> 1`)
 
 Concatenate a list of lists or a list.
 
 If one item in the list is a number or a char, it is converted to a singleton list before concatenation.
+
+__Examples__:
+
+- `[[1,2],[3,4]]j` → `[1,2,3,4]`
+- `[1,2,3]j` → `[1,2,3]`
+- `[1,[2,3],4]j` → `[1,2,3,4]`
+- `["abc","def"]j` → `abcdef`
 
 ### `unconcat` (`J`, `1 -> 1`)
 
@@ -1813,13 +1860,30 @@ If the argument is a number, it is converted to a range from 0 to that number mi
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `[1,2,3]J` → `[[1],[2],[3]] [[1],[2,3]] [[1,2],[3]] [[1,2,3]]`
+- `3J` → `[[0],[1],[2]] [[0],[1,2]] [[0,1],[2]] [[0,1,2]]`
+
 ### `nub` (`u`, `1 -> 1`)
 
 Remove duplicate elements from a list.
 
+__Examples__:
+
+- `[1,2,2,3,1]u` → `[1,2,3]`
+- `[3,1,3,2,1]u` → `[3,1,2]`
+
 ### `sort` (`o`, `1 -> 1`)
 
 Sort a list.
+
+This function uses an ordering that is defined on all values. Numbers are smaller than chars, which are smaller than lists. Lists are compared in the lexicographic order.
+
+__Examples__:
+
+- `[3,1,2]o` → `[1,2,3]`
+- `['a',[3,4],'b',[2],1,[5]]o` → `[1,'a','b',[2],[3,4],[5]]`
 
 ### `permutation` (`↕`, `1 -> 1`)
 
@@ -1828,6 +1892,12 @@ Get a permutation of a list.
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
 This function is non-deterministic.
+
+__Examples__:
+
+- `[1,2,3]↕` → `[1,2,3] [1,3,2] [2,1,3] [2,3,1] [3,1,2] [3,2,1]`
+- `[1,1,2]↕` → `[1,1,2] [1,2,1] [1,1,2] [1,2,1] [2,1,1] [2,1,1]`
+- `3↕` → `[0,1,2] [0,2,1] [1,0,2] [1,2,0] [2,0,1] [2,1,0]`
 
 ### `extract` (`ĕ`, `1 -> 2`)
 
@@ -1839,6 +1909,11 @@ Returns the element and the rest of the list.
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `[1,2,3]ĕÐ` → `[[2,3],1] [[1,3],2] [[1,2],3]`
+- `3ĕÐ` → `[[1,2],0] [[0,2],1] [[0,1],2]`
+
 ### `allEqual` (`≡`, `1 -> 1`)
 
 Check if all elements in a list are equal.
@@ -1847,6 +1922,13 @@ If it is, push the equal element, otherwise fail.
 
 If the list is empty, this function fails.
 
+__Examples__:
+
+- `[1,1,1]≡` → `1`
+- `[1,2,1]≡` → Fail
+- `[1]≡` → `1`
+- `[]≡` → Fail
+
 ### `isUnique` (`ů`, `1 -> 1`)
 
 Check if all elements in a list are unique.
@@ -1854,6 +1936,13 @@ Check if all elements in a list are unique.
 If it is, push the list itself, otherwise fail.
 
 The empty list is considered unique.
+
+__Examples__:
+
+- `[1,2,3]ů` → `[1,2,3]`
+- `[1,2,1]ů` → Fail
+- `[1]ů` → `[1]`
+- `[]ů` → `[]`
 
 ### `free` (`f`, `2 -> 1`)
 
