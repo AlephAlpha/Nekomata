@@ -1776,14 +1776,23 @@ builtins =
         \This means that the list is not equal to the element, \
         \and recursively, every item of the list if free of that element.\n\
         \If it is, push the list itself, otherwise fail."
-        []
+        [ ("[1,2,3] 2f", all_ [])
+        , ("[1,3,1] 2f", all_ ["[1,3,1]"])
+        , ("[1,[2,3]] 2f", all_ [])
+        , ("2 2f", all_ [])
+        , ("3 2f", all_ ["3"])
+        , ("[1,2,3] [2,3]f", all_ ["[1,2,3]"])
+        , ("[1,[2,3]] [2,3]f", all_ [])
+        ]
     , Builtin
         "enumerate"
         'x'
         enumerate
         "Push a list of integers from 0 to the length of the argument minus 1 \
         \without popping the original argument."
-        []
+        [ ("[1,2,3]xÐ", all_ ["[[1,2,3],[0,1,2]]"])
+        , ("[4,3,2,1]xÐ", all_ ["[[4,3,2,1],[0,1,2,3]]"])
+        ]
     , Builtin
         "rotate"
         'Ř'
@@ -1792,14 +1801,20 @@ builtins =
         \If the first argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is automatically vectorized on the second argument."
-        []
+        [ ("[1,2,3] 1Ř", all_ ["[2,3,1]"])
+        , ("[1,2,3] 1_Ř", all_ ["[3,1,2]"])
+        , ("[1,2,3] [4,5]Ř", all_ ["[[2,3,1],[3,1,2]]"])
+        , ("3 1Ř", all_ ["[1,2,0]"])
+        ]
     , Builtin
         "transpose"
         'Ť'
         transpose
         "Transpose a list of lists.\n\
         \Fail if the sublists are not all of the same length."
-        []
+        [ ("[[1,2],[3,4],[5,6]]Ť", all_ ["[[1,3,5],[2,4,6]]"])
+        , ("[[1,2],[3,4,5]]Ť", all_ [])
+        ]
     , Builtin
         "setPartition"
         'O'
@@ -1809,14 +1824,19 @@ builtins =
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic."
-        []
+        [ ("[1,2,3]O", all_ ["[[1,2,3]]", "[[2,3],[1]]", "[[1,3],[2]]", "[[3],[1,2]]", "[[3],[2],[1]]"])
+        , ("3O", all_ ["[[0,1,2]]", "[[1,2],[0]]", "[[0,2],[1]]", "[[2],[0,1]]", "[[2],[1],[0]]"])
+        ]
     , Builtin
         "setMinus"
         '∕'
         setMinus
         "For each element in the second list, \
         \remove the first occurrence of that element in the first list."
-        []
+        [ ("[1,2,3,2,1] [2,1]∕", all_ ["[3,2,1]"])
+        , ("[1,2,3,2,1] [2,1,1]∕", all_ ["[3,2]"])
+        , ("[1,2,3,2,1] [2,4]∕", all_ ["[1,3,2,1]"])
+        ]
     , Builtin
         "index"
         'Ĩ'
@@ -1825,20 +1845,27 @@ builtins =
         \The index is 0-based.\n\
         \Fail if the element does not occur in the list.\n\
         \This function is non-deterministic."
-        []
+        [ ("[1,2,3,2,1] 2Ĩ", all_ ["1", "3"])
+        , ("[1,2,3,2,1] 4Ĩ", all_ [])
+        ]
     , Builtin
         "count"
         'Ĉ'
         count
         "Count the number of occurrences of an element in a list."
-        []
+        [ ("[1,2,3,2,1] 2Ĉ", all_ ["2"])
+        , ("[1,2,3,2,1] 4Ĉ", all_ ["0"])
+        ]
     , Builtin
         "tally"
         'Ţ'
         tally
         "Count the number of occurrences of each element in a list.\n\
         \Return a list of elements and a list of counts in the same order."
-        []
+        [ ("[1,2,3,2,1]ŢÐ", all_ ["[[1,2,3],[2,2,1]]"])
+        , ("[3,1,3,2,1]ŢÐ", all_ ["[[3,1,2],[2,2,1]]"])
+        , ("[]ŢÐ", all_ ["[[],[]]"])
+        ]
     , Builtin
         "intersect"
         '∩'

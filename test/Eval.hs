@@ -1279,6 +1279,14 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("11", all_ ["[2,5,8]"])
             , ("12", all_ ["[3,6,9]"])
             ]
+    describe "q153221: Generate combinations that add up to a target value" $ do
+        specEval
+            "xSᵖ{@∑="
+            [ ("[1,2,1,5] 8", all_ ["[0,1,3]", "[1,2,3]"])
+            , ("[48/10,95/10,27/10,11/12,10] 148/10", all_ ["[0,4]"])
+            , ("[7,8,9,-10,20,27] 17", all_ ["[1,2]", "[0,3,4]", "[3,5]"])
+            , ("[1,2,3] 7", all_ [])
+            ]
     describe "q153783: The first n numbers without consecutive equal binary digits" $ do
         specEval
             "RË3÷"
@@ -2334,6 +2342,17 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("999999", all_ ["27"])
             , ("2147483647", all_ ["29"])
             , ("999999999", all_ ["36"])
+            ]
+    describe "q255822: Replace 0s In a String With Their Consecutive Counts" $ do
+        specEval
+            "ĉᵐ{ᵉĜ#Mĝ}j"
+            [ ("\"1234500362000440\"", all_ ["1234523623441"])
+            , ("\"123450036200044\"", all_ ["123452362344"])
+            , ("\"000000000000\"", all_ ["12"])
+            , ("\"0123456789\"", all_ ["1123456789"])
+            , ("\"1234567890\"", all_ ["1234567891"])
+            , ("\"123456789\"", all_ ["123456789"])
+            , ("\"010203004050\"", all_ ["11121324151"])
             ]
     describe "q256017: CGAC2022 Day 25: When The Planets Align" $ do
         specEval

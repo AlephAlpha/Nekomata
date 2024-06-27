@@ -1952,9 +1952,24 @@ This means that the list is not equal to the element, and recursively, every ite
 
 If it is, push the list itself, otherwise fail.
 
+__Examples__:
+
+- `[1,2,3] 2f` → Fail
+- `[1,3,1] 2f` → `[1,3,1]`
+- `[1,[2,3]] 2f` → Fail
+- `2 2f` → Fail
+- `3 2f` → `3`
+- `[1,2,3] [2,3]f` → `[1,2,3]`
+- `[1,[2,3]] [2,3]f` → Fail
+
 ### `enumerate` (`x`, `1 -> 2`)
 
 Push a list of integers from 0 to the length of the argument minus 1 without popping the original argument.
+
+__Examples__:
+
+- `[1,2,3]xÐ` → `[[1,2,3],[0,1,2]]`
+- `[4,3,2,1]xÐ` → `[[4,3,2,1],[0,1,2,3]]`
 
 ### `rotate` (`Ř`, `2 -> 1`)
 
@@ -1964,11 +1979,23 @@ If the first argument is a number, it is converted to a range from 0 to that num
 
 This function is automatically vectorized on the second argument.
 
+__Examples__:
+
+- `[1,2,3] 1Ř` → `[2,3,1]`
+- `[1,2,3] 1_Ř` → `[3,1,2]`
+- `[1,2,3] [4,5]Ř` → `[[2,3,1],[3,1,2]]`
+- `3 1Ř` → `[1,2,0]`
+
 ### `transpose` (`Ť`, `1 -> 1`)
 
 Transpose a list of lists.
 
 Fail if the sublists are not all of the same length.
+
+__Examples__:
+
+- `[[1,2],[3,4],[5,6]]Ť` → `[[1,3,5],[2,4,6]]`
+- `[[1,2],[3,4,5]]Ť` → Fail
 
 ### `setPartition` (`O`, `1 -> 1`)
 
@@ -1978,9 +2005,20 @@ If the argument is a number, it is converted to a range from 0 to that number mi
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `[1,2,3]O` → `[[1,2,3]] [[2,3],[1]] [[1,3],[2]] [[3],[1,2]] [[3],[2],[1]]`
+- `3O` → `[[0,1,2]] [[1,2],[0]] [[0,2],[1]] [[2],[0,1]] [[2],[1],[0]]`
+
 ### `setMinus` (`∕`, `2 -> 1`)
 
 For each element in the second list, remove the first occurrence of that element in the first list.
+
+__Examples__:
+
+- `[1,2,3,2,1] [2,1]∕` → `[3,2,1]`
+- `[1,2,3,2,1] [2,1,1]∕` → `[3,2]`
+- `[1,2,3,2,1] [2,4]∕` → `[1,3,2,1]`
 
 ### `index` (`Ĩ`, `2 -> 1`)
 
@@ -1992,15 +2030,31 @@ Fail if the element does not occur in the list.
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `[1,2,3,2,1] 2Ĩ` → `1 3`
+- `[1,2,3,2,1] 4Ĩ` → Fail
+
 ### `count` (`Ĉ`, `2 -> 1`)
 
 Count the number of occurrences of an element in a list.
+
+__Examples__:
+
+- `[1,2,3,2,1] 2Ĉ` → `2`
+- `[1,2,3,2,1] 4Ĉ` → `0`
 
 ### `tally` (`Ţ`, `1 -> 2`)
 
 Count the number of occurrences of each element in a list.
 
 Return a list of elements and a list of counts in the same order.
+
+__Examples__:
+
+- `[1,2,3,2,1]ŢÐ` → `[[1,2,3],[2,2,1]]`
+- `[3,1,3,2,1]ŢÐ` → `[[3,1,2],[2,2,1]]`
+- `[]ŢÐ` → `[[],[]]`
 
 ### `intersect` (`∩`, `2 -> 1`)
 
