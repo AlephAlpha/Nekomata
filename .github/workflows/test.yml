@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ghc: ['9.0.2', '9.4.8', '9.6.5', '9.8.2']
+        ghc: ['9.0.2', '9.4.8', '9.6.6', '9.8.2']
     steps:
       - uses: actions/checkout@v4
       - uses: haskell-actions/setup@v2

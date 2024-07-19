@@ -87,9 +87,9 @@ __Examples__:
 
 ### `andThen` (`¿`, `2 -> 1`)
 
-Take two values, 
+Take two values, and return the first one if the second one doesn't fail. 
 
-and return the first one if the second one doesn't fail.
+This is somewhat similar to the `seq` function in Haskell, which forces the first argument to be evaluated before the second.
 
 __Examples__:
 
@@ -299,7 +299,9 @@ This function is automatically vectorized.
 __Examples__:
 
 - `2Ƶ` → `2`
+- `3\2Ƶ` → `3/2`
 - `1Ƶ` → Fail
+- `1\2Ƶ` → Fail
 - `0Ƶ` → Fail
 - `1_Ƶ` → Fail
 - `2_Ƶ` → `-2`
@@ -319,7 +321,9 @@ This function is automatically vectorized.
 __Examples__:
 
 - `2ƶ` → Fail
+- `3\2ƶ` → Fail
 - `1ƶ` → `1`
+- `1\2ƶ` → `1/2`
 - `0ƶ` → `0`
 - `1_ƶ` → `-1`
 - `2_ƶ` → Fail

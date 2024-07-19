@@ -166,8 +166,10 @@ builtins =
         "andThen"
         '¿'
         andThen
-        "Take two values, \n\
-        \and return the first one if the second one doesn't fail."
+        "Take two values, and return the first one if the second one doesn't \
+        \fail. \n\
+        \This is somewhat similar to the `seq` function in Haskell, \
+        \which forces the first argument to be evaluated before the second."
         [ ("1 2¿", all_ ["1"])
         , ("1 !¿", all_ [])
         ]
@@ -340,7 +342,9 @@ builtins =
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
         [ ("2Ƶ", all_ ["2"])
+        , ("3\\2Ƶ", all_ ["3/2"])
         , ("1Ƶ", all_ [])
+        , ("1\\2Ƶ", all_ [])
         , ("0Ƶ", all_ [])
         , ("1_Ƶ", all_ [])
         , ("2_Ƶ", all_ ["-2"])
@@ -356,7 +360,9 @@ builtins =
         \it is converted to a number according to Nekomata's code page.\n\
         \This function is automatically vectorized."
         [ ("2ƶ", all_ [])
+        , ("3\\2ƶ", all_ [])
         , ("1ƶ", all_ ["1"])
+        , ("1\\2ƶ", all_ ["1/2"])
         , ("0ƶ", all_ ["0"])
         , ("1_ƶ", all_ ["-1"])
         , ("2_ƶ", all_ [])
