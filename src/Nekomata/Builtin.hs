@@ -1838,10 +1838,13 @@ builtins =
         '∕'
         setMinus
         "For each element in the second list, \
-        \remove the first occurrence of that element in the first list."
+        \remove the first occurrence of that element in the first list.\n\
+        \If the second argument is a number or a char, \
+        \it is converted to a singleton list."
         [ ("[1,2,3,2,1] [2,1]∕", all_ ["[3,2,1]"])
-        , ("[1,2,3,2,1] [2,1,1]∕", all_ ["[3,2]"])
+        , ("[1,2,3,2,1] [2,1,1,1]∕", all_ ["[3,2]"])
         , ("[1,2,3,2,1] [2,4]∕", all_ ["[1,3,2,1]"])
+        , ("[1,2,3,2,1] 2∕", all_ ["[1,3,2,1]"])
         ]
     , Builtin
         "index"
@@ -1876,27 +1879,43 @@ builtins =
         "intersect"
         '∩'
         intersect
-        "Get the intersection of two lists."
-        []
+        "Get the multiset intersection of two lists.\n\
+        \If one of the arguments is a number or a char, \
+        \it is converted to a singleton list."
+        [ ("[1,2,3,2,1] [2,1]∩", all_ ["[2,1]"])
+        , ("[1,2,3,2,1] [2,1,1,1]∩", all_ ["[2,1,1]"])
+        , ("[1,2,3,2,1] [2,4]∩", all_ ["[2]"])
+        , ("[1,1,2,3] [1,2,3,3]∩", all_ ["[1,2,3]"])
+        , ("[1,2,3,2,1] 2∩", all_ ["[2]"])
+        ]
     , Builtin
         "union"
         'Ŭ'
         union
-        "Get the union of two lists."
-        []
+        "Get the multiset union of two lists."
+        [ ("[1,2,3,2,1] [2,1]Ŭ", all_ ["[1,2,3,2,1]"])
+        , ("[1,2,3,2,1] [2,1,1,1]Ŭ", all_ ["[1,2,3,2,1,1]"])
+        , ("[1,2,3,2,1] [2,4]Ŭ", all_ ["[1,2,3,2,1,4]"])
+        , ("[1,1,2,3] [1,2,3,3]Ŭ", all_ ["[1,1,2,3,3]"])
+        , ("[1,2,3,2,1] 4Ŭ", all_ ["[1,2,3,2,1,4]"])
+        ]
     , Builtin
         "chunks"
         'ĉ'
         chunks
         "Split a list into a list of chunks of equal elements."
-        []
+        [ ("[1,1,2,2,2,3,3,3,3]ĉ", all_ ["[[1,1],[2,2,2],[3,3,3,3]]"])
+        , ("\"aaabbbccaa\"ĉ", all_ ["[\"aaa\",\"bbb\",\"cc\",\"aa\"]"])
+        ]
     , Builtin
         "rle"
         'Y'
         rle
         "Run-length encode a list.\n\
         \Returns a list of elements and a list of lengths."
-        []
+        [ ("[1,1,2,2,2,3,3,3,3]YÐ", all_ ["[[1,2,3],[2,3,4]]"])
+        , ("\"aaabbbccaa\"YÐ", all_ ["[\"abca\",[3,3,2,2]]"])
+        ]
     , Builtin
         "unrle"
         'y'
@@ -1905,7 +1924,9 @@ builtins =
         \The first argument is a list of elements, \
         \the second argument is a list of lengths.\n\
         \Fails when the two lists are of different lengths."
-        []
+        [ ("[1,2,3] [2,3,4]y", all_ ["[1,1,2,2,2,3,3,3,3]"])
+        , ("\"abca\" [3,3,2,2]y", all_ ["aaabbbccaa"])
+        ]
     , Builtin
         "slices"
         'Š'
@@ -1916,7 +1937,11 @@ builtins =
         \If the first argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \Fails when the given length is not positive."
-        []
+        [ ("[1,2,3,4,5,6] 2Š", all_ ["[[1,2],[3,4],[5,6]]"])
+        , ("[1,2,3,4,5,6] 3Š", all_ ["[[1,2,3],[4,5,6]]"])
+        , ("[1,2,3,4,5,6] 4Š", all_ ["[[1,2,3,4],[5,6]]"])
+        , ("[1,2,3,4,5,6] 8Š", all_ ["[[1,2,3,4,5,6]]"])
+        ]
     , Builtin
         "uninterleave"
         'ĭ'
@@ -1925,7 +1950,10 @@ builtins =
         \at even positions and a list of elements at odd positions.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1."
-        []
+        [ ("[1,2,3,4,5,6]ĭÐ", all_ ["[[1,3,5],[2,4,6]]"])
+        , ("[1,2,3,4,5]ĭÐ", all_ ["[[1,3,5],[2,4]]"])
+        , ("5ĭÐ", all_ ["[[0,2,4],[1,3]]"])
+        ]
     , Builtin
         "interleave"
         'Ĭ'
@@ -1933,7 +1961,10 @@ builtins =
         "Interleave two lists.\n\
         \The length of the first list must be either equal to or one more than \
         \the length of the second list. Otherwise, this function fails."
-        []
+        [ ("[1,3,5] [2,4,6]Ĭ", all_ ["[1,2,3,4,5,6]"])
+        , ("[1,3,5] [2,4]Ĭ", all_ ["[1,2,3,4,5]"])
+        , ("[2,4] [1,3,5]Ĭ", all_ [])
+        ]
     , Builtin
         "minimumBy"
         'ṃ'
@@ -1943,7 +1974,9 @@ builtins =
         \return any of them non-deterministically.\n\
         \Fails when the two lists are of different lengths.\n\
         \This function is non-deterministic."
-        []
+        [ ("[1,2,3,4,5] [2,4,5,1,3]ṃ", all_ ["4"])
+        , ("[1,2,3,4,5] [1,2,1,2,1]ṃ", all_ ["1", "3", "5"])
+        ]
     , Builtin
         "maximumBy"
         'Ṃ'
@@ -1953,7 +1986,9 @@ builtins =
         \return any of them non-deterministically.\n\
         \Fails when the two lists are of different lengths.\n\
         \This function is non-deterministic."
-        []
+        [ ("[1,2,3,4,5] [2,4,5,1,3]Ṃ", all_ ["3"])
+        , ("[1,2,3,4,5] [1,2,1,2,1]Ṃ", all_ ["2", "4"])
+        ]
     , Builtin
         "shortest"
         'ş'

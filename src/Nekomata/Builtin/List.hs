@@ -542,14 +542,16 @@ setMinus :: Function
 setMinus = binary setMinus'
   where
     setMinus' _ x y = liftList2 setMinus_ (orSingleton x) (orSingleton y)
-    setMinus_ :: (TryEq a) => ListTry a -> ListTry a -> TryList a
-    setMinus_ xs Nil = Val xs
-    setMinus_ xs (Cons y ys) = liftJoinM2 setMinus_ (delete y xs) ys
-    delete :: (TryEq a) => a -> ListTry a -> TryList a
-    delete _ Nil = Val Nil
-    delete x (Cons y ys) =
-        tryEq x y
-            >>= \b -> if b then ys else Val $ Cons y (ys >>= delete x)
+
+setMinus_ :: (TryEq a) => ListTry a -> ListTry a -> TryList a
+setMinus_ xs Nil = Val xs
+setMinus_ xs (Cons y ys) = liftJoinM2 setMinus_ (delete y xs) ys
+
+delete :: (TryEq a) => a -> ListTry a -> TryList a
+delete _ Nil = Val Nil
+delete x (Cons y ys) =
+    tryEq x y
+        >>= \b -> if b then ys else Val $ Cons y (ys >>= delete x)
 
 index :: Function
 index = binary index'
@@ -599,24 +601,17 @@ intersect = binary intersect'
   where
     intersect' _ x y = liftList2 intersect_ (orSingleton x) (orSingleton y)
     intersect_ :: (TryEq a) => ListTry a -> ListTry a -> TryList a
-    intersect_ Nil _ = Val Nil
-    intersect_ (Cons x xs) ys =
-        tryElem x ys >>= \b ->
-            if b
-                then Val $ Cons x (xs >>= flip intersect_ ys)
-                else xs >>= flip intersect_ ys
+    intersect_ _ Nil = Val Nil
+    intersect_ xs (Cons y ys) =
+        let ys' = liftJoinM2 intersect_ (delete y xs) ys
+         in tryElem y xs >>= \b -> if b then Val $ Cons y ys' else ys'
 
 union :: Function
 union = binary union'
   where
     union' _ x y = liftList2 union_ (orSingleton x) (orSingleton y)
     union_ :: (TryEq a) => ListTry a -> ListTry a -> TryList a
-    union_ Nil xs = Val xs
-    union_ (Cons x xs) ys =
-        tryElem x ys >>= \b ->
-            if b
-                then xs >>= flip union_ ys
-                else Val $ Cons x (xs >>= flip union_ ys)
+    union_ xs ys = join_ (setMinus_ ys xs) xs
 
 spanEq :: (TryEq a) => a -> ListTry a -> Try (ListTry a, ListTry a)
 spanEq _ Nil = Val (Nil, Nil)

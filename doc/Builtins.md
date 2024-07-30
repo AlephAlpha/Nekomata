@@ -2018,11 +2018,14 @@ __Examples__:
 
 For each element in the second list, remove the first occurrence of that element in the first list.
 
+If the second argument is a number or a char, it is converted to a singleton list.
+
 __Examples__:
 
 - `[1,2,3,2,1] [2,1]∕` → `[3,2,1]`
-- `[1,2,3,2,1] [2,1,1]∕` → `[3,2]`
+- `[1,2,3,2,1] [2,1,1,1]∕` → `[3,2]`
 - `[1,2,3,2,1] [2,4]∕` → `[1,3,2,1]`
+- `[1,2,3,2,1] 2∕` → `[1,3,2,1]`
 
 ### `index` (`Ĩ`, `2 -> 1`)
 
@@ -2062,21 +2065,49 @@ __Examples__:
 
 ### `intersect` (`∩`, `2 -> 1`)
 
-Get the intersection of two lists.
+Get the multiset intersection of two lists.
+
+If one of the arguments is a number or a char, it is converted to a singleton list.
+
+__Examples__:
+
+- `[1,2,3,2,1] [2,1]∩` → `[2,1]`
+- `[1,2,3,2,1] [2,1,1,1]∩` → `[2,1,1]`
+- `[1,2,3,2,1] [2,4]∩` → `[2]`
+- `[1,1,2,3] [1,2,3,3]∩` → `[1,2,3]`
+- `[1,2,3,2,1] 2∩` → `[2]`
 
 ### `union` (`Ŭ`, `2 -> 1`)
 
-Get the union of two lists.
+Get the multiset union of two lists.
+
+__Examples__:
+
+- `[1,2,3,2,1] [2,1]Ŭ` → `[1,2,3,2,1]`
+- `[1,2,3,2,1] [2,1,1,1]Ŭ` → `[1,2,3,2,1,1]`
+- `[1,2,3,2,1] [2,4]Ŭ` → `[1,2,3,2,1,4]`
+- `[1,1,2,3] [1,2,3,3]Ŭ` → `[1,1,2,3,3]`
+- `[1,2,3,2,1] 4Ŭ` → `[1,2,3,2,1,4]`
 
 ### `chunks` (`ĉ`, `1 -> 1`)
 
 Split a list into a list of chunks of equal elements.
+
+__Examples__:
+
+- `[1,1,2,2,2,3,3,3,3]ĉ` → `[[1,1],[2,2,2],[3,3,3,3]]`
+- `"aaabbbccaa"ĉ` → `["aaa","bbb","cc","aa"]`
 
 ### `rle` (`Y`, `1 -> 2`)
 
 Run-length encode a list.
 
 Returns a list of elements and a list of lengths.
+
+__Examples__:
+
+- `[1,1,2,2,2,3,3,3,3]YÐ` → `[[1,2,3],[2,3,4]]`
+- `"aaabbbccaa"YÐ` → `["abca",[3,3,2,2]]`
 
 ### `unrle` (`y`, `2 -> 1`)
 
@@ -2085,6 +2116,11 @@ Run-length decode a list.
 The first argument is a list of elements, the second argument is a list of lengths.
 
 Fails when the two lists are of different lengths.
+
+__Examples__:
+
+- `[1,2,3] [2,3,4]y` → `[1,1,2,2,2,3,3,3,3]`
+- `"abca" [3,3,2,2]y` → `aaabbbccaa`
 
 ### `slices` (`Š`, `2 -> 1`)
 
@@ -2096,17 +2132,36 @@ If the first argument is a number, it is converted to a range from 0 to that num
 
 Fails when the given length is not positive.
 
+__Examples__:
+
+- `[1,2,3,4,5,6] 2Š` → `[[1,2],[3,4],[5,6]]`
+- `[1,2,3,4,5,6] 3Š` → `[[1,2,3],[4,5,6]]`
+- `[1,2,3,4,5,6] 4Š` → `[[1,2,3,4],[5,6]]`
+- `[1,2,3,4,5,6] 8Š` → `[[1,2,3,4,5,6]]`
+
 ### `uninterleave` (`ĭ`, `1 -> 2`)
 
 uninterleave a list into a list of elements at even positions and a list of elements at odd positions.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 
+__Examples__:
+
+- `[1,2,3,4,5,6]ĭÐ` → `[[1,3,5],[2,4,6]]`
+- `[1,2,3,4,5]ĭÐ` → `[[1,3,5],[2,4]]`
+- `5ĭÐ` → `[[0,2,4],[1,3]]`
+
 ### `interleave` (`Ĭ`, `2 -> 1`)
 
 Interleave two lists.
 
 The length of the first list must be either equal to or one more than the length of the second list. Otherwise, this function fails.
+
+__Examples__:
+
+- `[1,3,5] [2,4,6]Ĭ` → `[1,2,3,4,5,6]`
+- `[1,3,5] [2,4]Ĭ` → `[1,2,3,4,5]`
+- `[2,4] [1,3,5]Ĭ` → Fail
 
 ### `minimumBy` (`ṃ`, `2 -> 1`)
 
@@ -2118,6 +2173,11 @@ Fails when the two lists are of different lengths.
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `[1,2,3,4,5] [2,4,5,1,3]ṃ` → `4`
+- `[1,2,3,4,5] [1,2,1,2,1]ṃ` → `1 3 5`
+
 ### `maximumBy` (`Ṃ`, `2 -> 1`)
 
 Get the maximum value of a list according to a list of keys.
@@ -2127,6 +2187,11 @@ If there are multiple maximums, return any of them non-deterministically.
 Fails when the two lists are of different lengths.
 
 This function is non-deterministic.
+
+__Examples__:
+
+- `[1,2,3,4,5] [2,4,5,1,3]Ṃ` → `3`
+- `[1,2,3,4,5] [1,2,1,2,1]Ṃ` → `2 4`
 
 ### `shortest` (`ş`, `1 -> 1`)
 

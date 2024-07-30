@@ -12,6 +12,7 @@
 * Some modules in the library are no longer exposed.
 * The built-in function `\normalForm` is removed, because it is never used, and its semantics are not well-defined.
 * `\divisors` now returns a sorted list of divisors.
+* `\intersect` and `\union` are now multiset intersection and union.
 
 ## 0.6.1.0 -- 2024-06-07
 

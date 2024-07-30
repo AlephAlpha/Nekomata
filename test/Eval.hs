@@ -3673,3 +3673,70 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
         specEval
             "ᵃ#*R↕v#Š:ᵐ∑ᵈv=¿:∑ᵈ§=¿"
             [("[12,18,15] [9,18,18]", first_ "[[1,4,7],[3,6,9],[5,8,2]]")]
+    describe "q273875: Segments of a string, doubling in length" $ do
+        specEval
+            "JxËᶻL"
+            [ ("\"a\"", all_ ["[\"a\"]"])
+            , ("\"abc\"", all_ ["[\"a\",\"bc\"]"])
+            , ("\"abcdefg\"", all_ ["[\"a\",\"bc\",\"defg\"]"])
+            , ("\"abcdefghijklmno\"", all_ ["[\"a\",\"bc\",\"defg\",\"hijklmno\"]"])
+            ]
+    describe "q273990: Is this a Hadamard matrix?" $ do
+        specEval
+            "Sđ∙Z"
+            [ ("[[1]]", Check False)
+            , ("[[1,1],[1,-1]]", Check False)
+            , ("[[1,-1],[-1,1]]", Check True)
+            , ("[[1,1,1,1],[1,-1,1,-1],[1,1,-1,-1],[1,-1,-1,1]]", Check False)
+            , ("[[1,-1,1,-1],[-1,1,-1,1],[1,-1,1,-1],[-1,1,-1,1]]", Check True)
+            ]
+        specEval
+            "ᵒ∙jZ‼*"
+            [ ("[[1]]", Check True)
+            , ("[[1,1],[1,-1]]", Check True)
+            , ("[[1,-1],[-1,1]]", Check False)
+            , ("[[1,1,1,1],[1,-1,1,-1],[1,1,-1,-1],[1,-1,-1,1]]", Check True)
+            , ("[[1,-1,1,-1],[-1,1,-1,1],[1,-1,1,-1],[-1,1,-1,1]]", Check False)
+            ]
+    describe "q274161: Sorting with a deque" $ do
+        specEval
+            "pƆᵗ≤ᵗ≥"
+            [ ("[1]", Check False)
+            , ("[1,2,3,4]", Check False)
+            , ("[4,3,2,1]", Check False)
+            , ("[10,10,10,10]", Check False)
+            , ("[3,4,2,5,1,6]", Check False)
+            , ("[4,3,5,2,6,1]", Check False)
+            , ("[5,4,4,5,3,5,3,6,2,6]", Check False)
+            , ("[1,3,2]", Check True)
+            , ("[3,1,2]", Check True)
+            , ("[4,3,2,3,2,1]", Check True)
+            , ("[1,2,3,2,3,4]", Check True)
+            , ("[4,5,4,3,4,5]", Check True)
+            ]
+    describe "q274358: Sorting with a deque" $ do
+        specEval
+            "o$2ᵑ{Jĭᵃjᵈ↔,}="
+            [ ("[1]", Check True)
+            , ("[1,2,3,4]", Check True)
+            , ("[2,4,3,1]", Check True)
+            , ("[4,3,2,1]", Check True)
+            , ("[10,10,10,10]", Check True)
+            , ("[3,4,2,5,1,6]", Check True)
+            , ("[4,3,5,2,6,1]", Check True)
+            , ("[5,4,4,5,3,5,3,6,2,6]", Check True)
+            , ("[1,3,2]", Check True)
+            , ("[3,4,5,1,2,3]", Check True)
+            , ("[5,3,4,1,2]", Check False)
+            , ("[7,5,6,3,4,1,2]", Check False)
+            , ("[7,8,9,3,4,5,1,2,3]", Check False)
+            ]
+    describe "q274448: Factoriadic Fraction Addition" $ do
+        specEval
+            "+:#ᵑ{CU$x3+þç++;ž¿"
+            [ ("[] []", first_ "[]")
+            , ("[] [1]", first_ "[1]")
+            , ("[0,2] [-1]", first_ "[-1,2]")
+            , ("[0,2] [0,2]", first_ "[1,1]")
+            , ("[0,1,2] [0,1,2]", first_ "[1]")
+            ]

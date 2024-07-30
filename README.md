@@ -1,6 +1,6 @@
 # Nekomata
 
-Trying to make an experimental [non-deterministic](https://en.wikipedia.org/wiki/Nondeterministic_programming) [concatenative](https://en.wikipedia.org/wiki/Concatenative_programming_language) [golfing](https://en.wikipedia.org/wiki/Code_golf) language.
+**Nekomata** is an experimental [non-deterministic](https://en.wikipedia.org/wiki/Nondeterministic_programming) [concatenative](https://en.wikipedia.org/wiki/Concatenative_programming_language) [golfing](https://en.wikipedia.org/wiki/Code_golf) language.
 
 The implementation of non-determinism is based on the paper [*KiCS2: A New Compiler from Curry to Haskell*](https://www.informatik.uni-kiel.de/~mh/papers/WFLP11_KiCS2.pdf).
 
@@ -8,7 +8,9 @@ The language is still in an early stage of development. The custom code page is 
 
 ## Name
 
-[***Nekomata***](https://en.wikipedia.org/wiki/Nekomata) (猫又) are a kind of cat monster in Japanese folklore that have forked tails. I think it's a good name for a con**cat**enative language that chooses between forking paths of computation.
+[***Nekomata***](https://en.wikipedia.org/wiki/Nekomata) (猫又) are a kind of cat monster in Japanese folklore that have two tails. Just consider a non-deterministic [cons list](https://en.wikipedia.org/wiki/Cons) where the head is deterministic but the tail has two possible values. Doesn't it look like a nekomata?
+
+This name is also inspired by [Cat](https://concatenative.org/wiki/view/Cat) and [Kitten](https://kittenlang.org/). Both are con**cat**enative languages.
 
 ## Documentation
 
