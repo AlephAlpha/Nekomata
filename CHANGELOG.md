@@ -2,17 +2,18 @@
 
 ## 0.7.0.0 -- Unreleased
 
-* Added examples to the documentation of some built-in functions.
+* Added examples to the documentation of built-in functions. Examples for particles will be added in the future.
 * Fixed some errors in the documentation.
 * Fixed a bug in `\binomial`. Now it returns `0` when the second argument is negative.
-* Fixed a bug in `\factor`.
+* Fixed a bug in `\factor`. In earlier versions, it may return incorrect results.
 
 ### Breaking changes
 
 * Some modules in the library are no longer exposed.
 * The built-in function `\normalForm` is removed, because it is never used, and its semantics are not well-defined.
-* `\divisors` now returns a sorted list of divisors.
+* The result of `\divisors` is now sorted.
 * `\intersect` and `\union` are now multiset intersection and union.
+* `\bifurcate` now works on numbers. If the input is a number, it is converted to the range from 0 to the number - 1.
 
 ## 0.6.1.0 -- 2024-06-07
 

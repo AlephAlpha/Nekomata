@@ -2201,6 +2201,11 @@ If there are multiple shortest ones, return any of them non-deterministically.
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `[[1,2,3],[4],[5,6]]ş` → `[4]`
+- `[[1,2],[3,4],[5],[6]]ş` → `[5] [6]`
+
 ### `longest` (`Ş`, `1 -> 1`)
 
 Get the longest one in a list of lists.
@@ -2209,15 +2214,34 @@ If there are multiple longest ones, return any of them non-deterministically.
 
 This function is non-deterministic.
 
+__Examples__:
+
+- `[[1,2,3],[4],[5,6]]Ş` → `[1,2,3]`
+- `[[1,2],[3,4],[5],[6]]Ş` → `[1,2] [3,4]`
+
 ### `tuple` (`ŧ`, `2 -> 1`)
 
 Create a list with length n, whose elements are taken from another list.
 
+If the first argument is a number, it is converted to a range from 0 to that number minus 1.
+
 This function is non-deterministic, and automatically vectorized on the second argument.
+
+__Examples__:
+
+- `[1,2] 2ŧ` → `[1,1] [1,2] [2,1] [2,2]`
+- `2 2ŧ` → `[0,0] [0,1] [1,0] [1,1]`
 
 ### `bifurcate` (`ƀ`, `1 -> 2`)
 
 Push the reverse of a list without popping the original list.
+
+If the argument is a number, it is converted to a range from 0 to that number minus 1.
+
+__Examples__:
+
+- `[1,2,3]ƀÐ` → `[[1,2,3],[3,2,1]]`
+- `3ƀÐ` → `[[0,1,2],[2,1,0]]`
 
 ### `flatten` (`V`, `1 -> 1`)
 
@@ -2225,11 +2249,25 @@ Flatten a nested list.
 
 If the argument is a number or a char, it is converted to a singleton list.
 
+__Examples__:
+
+- `[[1,2],[3,4]]V` → `[1,2,3,4]`
+- `[1,2,3]V` → `[1,2,3]`
+- `[1,[2,[3,4]]]V` → `[1,2,3,4]`
+- `1V` → `[1]`
+
 ### `pad` (`Ḟ`, `1 -> 1`)
 
 Pad a nested list with zeros to make it rectangular.
 
 If the argument is a number or a char, it is unchanged.
+
+__Examples__:
+
+- `[[1,2],[3]]Ḟ` → `[[1,2],[3,0]]`
+- `[[[1,2,3],[4,5]],6]Ḟ` → `[[[1,2,3],[4,5,0]],[[6,0,0],[0,0,0]]]`
+- `[1,2]Ḟ` → `[1,2]`
+- `1Ḟ` → `1`
 
 ### `ordering` (`õ`, `1 -> 1`)
 
@@ -2237,11 +2275,23 @@ Get the ordering of a list.
 
 The n'th element of the result is the index of the n'th element in the sorted list.
 
+__Examples__:
+
+- `[3,1,2]õ` → `[1,2,0]`
+- `[1,2,3]õ` → `[0,1,2]`
+- `[1,1,2]õ` → `[0,1,2]`
+
 ### `elem` (`ē`, `2 -> 1`)
 
 Check if an element is in a list.
 
 If it is, push the element, otherwise fail.
+
+__Examples__:
+
+- `2 [1,2,3]ē` → `2`
+- `4 [1,2,3]ē` → Fail
+- `'a "abc"ē` → `'a'`
 
 ### `filterBy` (`ḟ`, `2 -> 1`)
 
@@ -2250,6 +2300,11 @@ Filter a list by whether the corresponding element in another list is not failed
 If the first list also contains failed items, those items are also removed.
 
 Fail when the two lists are of different lengths.
+
+__Examples__:
+
+- `[1,2,3,4] [1,0,1,0]Zḟ` → `[1,3]`
+- `[1,2,3,4] [1,0,1]Zḟ` → Fail
 
 ## Particles
 

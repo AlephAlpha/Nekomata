@@ -1997,7 +1997,9 @@ builtins =
         \If there are multiple shortest ones, \
         \return any of them non-deterministically.\n\
         \This function is non-deterministic."
-        []
+        [ ("[[1,2,3],[4],[5,6]]ş", all_ ["[4]"])
+        , ("[[1,2],[3,4],[5],[6]]ş", all_ ["[5]", "[6]"])
+        ]
     , Builtin
         "longest"
         'Ş'
@@ -2006,22 +2008,32 @@ builtins =
         \If there are multiple longest ones, \
         \return any of them non-deterministically.\n\
         \This function is non-deterministic."
-        []
+        [ ("[[1,2,3],[4],[5,6]]Ş", all_ ["[1,2,3]"])
+        , ("[[1,2],[3,4],[5],[6]]Ş", all_ ["[1,2]", "[3,4]"])
+        ]
     , Builtin
         "tuple"
         'ŧ'
         tuple
         "Create a list with length n, \
         \whose elements are taken from another list.\n\
+        \If the first argument is a number, \
+        \it is converted to a range from 0 to that number minus 1.\n\
         \This function is non-deterministic, \
         \and automatically vectorized on the second argument."
-        []
+        [ ("[1,2] 2ŧ", all_ ["[1,1]", "[1,2]", "[2,1]", "[2,2]"])
+        , ("2 2ŧ", all_ ["[0,0]", "[0,1]", "[1,0]", "[1,1]"])
+        ]
     , Builtin
         "bifurcate"
         'ƀ'
         bifurcate
-        "Push the reverse of a list without popping the original list."
-        []
+        "Push the reverse of a list without popping the original list.\n\
+        \If the argument is a number, \
+        \it is converted to a range from 0 to that number minus 1."
+        [ ("[1,2,3]ƀÐ", all_ ["[[1,2,3],[3,2,1]]"])
+        , ("3ƀÐ", all_ ["[[0,1,2],[2,1,0]]"])
+        ]
     , Builtin
         "flatten"
         'V'
@@ -2029,14 +2041,22 @@ builtins =
         "Flatten a nested list.\n\
         \If the argument is a number or a char, \
         \it is converted to a singleton list."
-        []
+        [ ("[[1,2],[3,4]]V", all_ ["[1,2,3,4]"])
+        , ("[1,2,3]V", all_ ["[1,2,3]"])
+        , ("[1,[2,[3,4]]]V", all_ ["[1,2,3,4]"])
+        , ("1V", all_ ["[1]"])
+        ]
     , Builtin
         "pad"
         'Ḟ'
         pad
         "Pad a nested list with zeros to make it rectangular.\n\
         \If the argument is a number or a char, it is unchanged."
-        []
+        [ ("[[1,2],[3]]Ḟ", all_ ["[[1,2],[3,0]]"])
+        , ("[[[1,2,3],[4,5]],6]Ḟ", all_ ["[[[1,2,3],[4,5,0]],[[6,0,0],[0,0,0]]]"])
+        , ("[1,2]Ḟ", all_ ["[1,2]"])
+        , ("1Ḟ", all_ ["1"])
+        ]
     , Builtin
         "ordering"
         'õ'
@@ -2044,14 +2064,20 @@ builtins =
         "Get the ordering of a list.\n\
         \The n'th element of the result is the index of the n'th element \
         \in the sorted list."
-        []
+        [ ("[3,1,2]õ", all_ ["[1,2,0]"])
+        , ("[1,2,3]õ", all_ ["[0,1,2]"])
+        , ("[1,1,2]õ", all_ ["[0,1,2]"])
+        ]
     , Builtin
         "elem"
         'ē'
         elem'
         "Check if an element is in a list.\n\
         \If it is, push the element, otherwise fail."
-        []
+        [ ("2 [1,2,3]ē", all_ ["2"])
+        , ("4 [1,2,3]ē", all_ [])
+        , ("'a \"abc\"ē", all_ ["'a'"])
+        ]
     , Builtin
         "filterBy"
         'ḟ'
@@ -2061,7 +2087,9 @@ builtins =
         \If the first list also contains failed items, \
         \those items are also removed.\n\
         \Fail when the two lists are of different lengths."
-        []
+        [ ("[1,2,3,4] [1,0,1,0]Zḟ", all_ ["[1,3]"])
+        , ("[1,2,3,4] [1,0,1]Zḟ", all_ [])
+        ]
     ]
 
 -- | The map from names to builtin functions

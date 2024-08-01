@@ -768,7 +768,13 @@ tuple = binaryVecArg2 tuple'
         | otherwise = Fail
 
 bifurcate :: Function
-bifurcate = dup .* reverse'
+bifurcate = unary2 bifurcate'
+  where
+    bifurcate' _ (DNumT x) = liftNum12 (bifurcate_ . fromList . range0_) x
+    bifurcate' _ (DListT xs) = liftList12 bifurcate_ xs
+    bifurcate' _ _ = (Fail, Fail)
+    bifurcate_ :: ListTry a -> Try (TryList a, TryList a)
+    bifurcate_ xs = Val (Val xs, reverse_ Nil xs)
 
 flatten :: Function
 flatten = unary flatten'
