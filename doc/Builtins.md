@@ -2,6 +2,9 @@
 
 Nekomata is still in an early stage. The full names, short names, and meanings of built-in functions and particles are subject to change.
 
+- [Functions](#functions)
+- [Particles](#particles)
+
 ## Functions
 
 ### `choice` (`?`, `2 -> 1`)
@@ -2314,21 +2317,41 @@ Apply a function to the top two values of the stack.
 
 If the function takes no argument, simply apply it twice.
 
+__Examples__:
+
+- `1 2 ᵃ{1+} Ð` → `[2,3]`
+
 ### `noPop` (`ˣ`, `(m -> n) -> (m -> m + n)`)
 
 Apply a function without popping the stack.
+
+__Examples__:
+
+- `1 ˣ{1+} Ð` → `[1,2]`
 
 ### `dip` (`ᵈ`, `(m -> n) -> (m + 1 -> n + 1)`)
 
 Pop the top value of the stack, apply a function to the rest, and push the popped value back.
 
+__Examples__:
+
+- `1 2 ᵈ{1+} Ð` → `[2,2]`
+
 ### `dupDip` (`ᵉ`, `(m -> n) -> (m -> n + 1)`)
 
 Apply a function to the stack, and then push the original top value back.
 
+__Examples__:
+
+- `1 ᵈ{1+} Ð` → `[2,1]`
+
 ### `dupDip2` (`ᵋ`, `(m -> n) -> (m -> n + 2)`)
 
 Apply a function to the stack, and then push the original top two values back.
+
+__Examples__:
+
+- `1 2 ᵋ{+} ÐÐ` → `[3,[1,2]]`
 
 ### `map` (`ᵐ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
 

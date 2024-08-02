@@ -19,6 +19,7 @@ import Nekomata.Data
 import Nekomata.Function hiding (arity)
 import qualified Nekomata.Function as Function
 import Nekomata.NonDet
+import Nekomata.Result
 
 {- | A particle is a higher-order function that modifies a function
 
@@ -39,6 +40,8 @@ data BuiltinParticle = BuiltinParticle
     -- ^ The arity of the particle
     , help :: String
     -- ^ The help message for the particle
+    , examples :: [(String, Result)]
+    -- ^ Some examples for the particle
     }
 
 instance Show BuiltinParticle where
@@ -54,6 +57,19 @@ info b =
         ++ arity b
         ++ "):\n"
         ++ help b
+        ++ if null (examples b)
+            then ""
+            else
+                "\nExamples:\n"
+                    ++ unlines
+                        [ "  "
+                            ++ example
+                            ++ " -> "
+                            ++ if result == all_ []
+                                then "Fail"
+                                else show result
+                        | (example, result) <- examples b
+                        ]
 
 -- | Get the info string for a builtin particle in Markdown format
 infoMarkdown :: BuiltinParticle -> String
@@ -66,6 +82,20 @@ infoMarkdown b =
         ++ arity b
         ++ "`)\n\n"
         ++ concatMap (++ "\n\n") (lines (help b))
+        ++ if null (examples b)
+            then ""
+            else
+                "__Examples__:\n\n"
+                    ++ unlines
+                        [ "- `"
+                            ++ example
+                            ++ "` → "
+                            ++ if result == all_ []
+                                then "Fail"
+                                else "`" ++ show result ++ "`"
+                        | (example, result) <- examples b
+                        ]
+                    ++ "\n"
 
 -- | Get the info string for a builtin particle by name
 infoByName :: String -> Maybe String
@@ -86,12 +116,14 @@ builtinParticles =
         \or (m -> n) -> (m + 1 -> 2 * n) where m > 0"
         "Apply a function to the top two values of the stack.\n\
         \If the function takes no argument, simply apply it twice."
+        [("1 2 ᵃ{1+} Ð", all_ ["[2,3]"])]
     , BuiltinParticle
         "noPop"
         'ˣ'
         noPop
         "(m -> n) -> (m -> m + n)"
         "Apply a function without popping the stack."
+        [("1 ˣ{1+} Ð", all_ ["[1,2]"])]
     , BuiltinParticle
         "dip"
         'ᵈ'
@@ -99,6 +131,7 @@ builtinParticles =
         "(m -> n) -> (m + 1 -> n + 1)"
         "Pop the top value of the stack, apply a function to the rest, \
         \and push the popped value back."
+        [("1 2 ᵈ{1+} Ð", all_ ["[2,2]"])]
     , BuiltinParticle
         "dupDip"
         'ᵉ'
@@ -106,6 +139,7 @@ builtinParticles =
         "(m -> n) -> (m -> n + 1)"
         "Apply a function to the stack, \
         \and then push the original top value back."
+        [("1 ᵈ{1+} Ð", all_ ["[2,1]"])]
     , BuiltinParticle
         "dupDip2"
         'ᵋ'
@@ -113,6 +147,7 @@ builtinParticles =
         "(m -> n) -> (m -> n + 2)"
         "Apply a function to the stack, \
         \and then push the original top two values back."
+        [("1 2 ᵋ{+} ÐÐ", all_ ["[3,[1,2]]"])]
     , BuiltinParticle
         "map"
         'ᵐ'
@@ -124,6 +159,7 @@ builtinParticles =
         \from 0 to the input minus 1.\n\
         \If the function takes no argument, return a list of n copies \
         \of the result of the function, where n is the length of the input."
+        []
     , BuiltinParticle
         "mapWith"
         'ᵚ'
@@ -134,6 +170,7 @@ builtinParticles =
         \If the function is unary, return a list of n copies of the \
         \result of applying the function to the second argument, where \
         \n is the length of the first argument."
+        []
     , BuiltinParticle
         "zipWith"
         'ᶻ'
@@ -143,6 +180,7 @@ builtinParticles =
         \Fail if the lists have different lengths.\n\
         \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
+        []
     , BuiltinParticle
         "zipWithTrunc"
         'ᶾ'
@@ -153,6 +191,7 @@ builtinParticles =
         \to the length of the shorter list.\n\
         \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
+        []
     , BuiltinParticle
         "outer"
         'ᵒ'
@@ -162,6 +201,7 @@ builtinParticles =
         \and return a list of lists.\n\
         \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
+        []
     , BuiltinParticle
         "predicate"
         'ᵖ'
@@ -170,6 +210,7 @@ builtinParticles =
         "Check if a function would succeed without actually applying it.\n\
         \If the function fails, replace the top value with Fail.\n\
         \Otherwise, do nothing."
+        []
     , BuiltinParticle
         "predicateNot"
         'ᵗ'
@@ -178,6 +219,7 @@ builtinParticles =
         "Check if a function would fail without actually applying it.\n\
         \If the function does not fail, replace the top value with Fail.\n\
         \Otherwise, do nothing."
+        []
     , BuiltinParticle
         "filter"
         'ᶠ'
@@ -187,12 +229,14 @@ builtinParticles =
         \without actually applying it, and remove the value if it fails.\n\
         \If the input is an number, convert it to a list of integers \
         \from 0 to the input minus 1 before filtering."
+        []
     , BuiltinParticle
         "orApply"
         'ᶜ'
         orApply
         "(n -> n) -> (n -> n)"
         "Apply a function zero or one time non-deterministically."
+        []
     , BuiltinParticle
         "iterate"
         'ᶦ'
@@ -202,6 +246,7 @@ builtinParticles =
         \until the top value of the stack is Fail.\n\
         \This is different from `while` in that it returns \
         \the intermediate results."
+        []
     , BuiltinParticle
         "nTimes"
         'ᵑ'
@@ -209,6 +254,7 @@ builtinParticles =
         "(n -> n) -> (n + 1 -> n)"
         "Take an integer from the top of the stack, \
         \and apply a function that many times."
+        []
     , BuiltinParticle
         "while"
         'ʷ'
@@ -218,6 +264,7 @@ builtinParticles =
         \until the top value of the stack is Fail.\n\
         \This is different from `iterate` in that it does not \
         \return the intermediate results."
+        []
     , BuiltinParticle
         "lengthWhile"
         'ˡ'
@@ -226,6 +273,7 @@ builtinParticles =
         "Apply a function zero or more times, \
         \until the top value of the stack is Fail, \
         \and return the number of times the function was applied."
+        []
     , BuiltinParticle
         "firstInt"
         'ᵏ'
@@ -233,6 +281,7 @@ builtinParticles =
         "(m -> n) -> (0 -> 1)"
         "Find the smallest non-negative integer for which a function \
         \does not fail, and return it."
+        []
     , BuiltinParticle
         "fold1"
         'ʳ'
@@ -243,6 +292,7 @@ builtinParticles =
         \and so on until the end of the list.\n\
         \If the input is an number, convert it to a list of integers \
         \from 0 to the input minus 1 before folding."
+        []
     ]
 
 -- | The map of from names to builtin particles

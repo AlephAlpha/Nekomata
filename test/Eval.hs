@@ -401,6 +401,12 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
         specEval
             "1ᶦ{ƊY$Ĭɗ"
             [("", truncate_ ["1", "11", "21", "1211", "111221", "312211", "13112221", "1113213211", "31131211131221", "13211311123113112211"])]
+    describe "q70779: Consolidate an Array" $ do
+        specEval
+            "¬õ@"
+            [ ("[1,0,2,0,-5,0,3,4,5,0,0,6]", all_ ["[1,2,-5,3,4,5,6,0,0,0,0,0]"])
+            , ("[0,5,8,8,3,5,1,6,8,4,0,3,7,5]", all_ ["[5,8,8,3,5,1,6,8,4,3,7,5,0,0]"])
+            ]
     describe "q71476: Determine the depth of an array" $ do
         specEval
             "ˡ∑"

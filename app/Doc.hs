@@ -22,6 +22,8 @@ docBuiltins =
         ++ "Nekomata is still in an early stage. The full names, short names, "
         ++ "and meanings of built-in functions and particles are subject "
         ++ "to change.\n\n"
+        ++ "- [Functions](#functions)\n"
+        ++ "- [Particles](#particles)\n\n"
         ++ "## Functions\n\n"
         ++ concat [infoMarkdown b | b <- builtins]
         ++ "## Particles\n\n"

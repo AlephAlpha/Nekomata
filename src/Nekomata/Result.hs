@@ -1,7 +1,11 @@
 module Nekomata.Result (
     Result (..),
+    all_,
+    first_,
+    nothing_,
     showResult,
     truncate',
+    truncate_,
 ) where
 
 import Data.Maybe (fromMaybe)
@@ -35,3 +39,19 @@ showResult (Check b) = [show b]
 truncate' :: Int -> [String] -> Result
 truncate' n xs =
     let (ys, zs) = splitAt n xs in All (not $ null zs) ys
+
+-- | All results, not truncated
+all_ :: [String] -> Result
+all_ = All False
+
+-- | First few results
+truncate_ :: [String] -> Result
+truncate_ = All True
+
+-- | The first result
+first_ :: String -> Result
+first_ = First . Just
+
+-- | No results
+nothing_ :: Result
+nothing_ = First Nothing

@@ -93,12 +93,6 @@ infoByName name' =
         '\\' : name'' -> Map.lookup name'' builtinMap
         _ -> Map.lookup name' builtinMap
 
-all_ :: [String] -> Result
-all_ = All False
-
-truncate_ :: [String] -> Result
-truncate_ = All True
-
 -- | The list of all builtin functions
 builtins :: [Builtin]
 builtins =
