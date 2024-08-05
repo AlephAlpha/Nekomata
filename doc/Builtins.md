@@ -2435,6 +2435,10 @@ This is different from `iterate` in that it does not return the intermediate res
 
 Apply a function zero or more times, until the top value of the stack is Fail, and return the number of times the function was applied.
 
+### `fixedPoint` (`ʸ`, `(n -> n) -> (n -> n)`)
+
+Apply a function zero or more times, until the top value of the stack no longer changes.
+
 ### `firstInt` (`ᵏ`, `(m -> n) -> (0 -> 1)`)
 
 Find the smallest non-negative integer for which a function does not fail, and return it.

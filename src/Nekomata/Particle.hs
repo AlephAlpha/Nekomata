@@ -1,3 +1,5 @@
+{-# LANGUAGE LambdaCase #-}
+
 module Nekomata.Particle (
     Particle (..),
     BuiltinParticle (..),
@@ -273,6 +275,14 @@ builtinParticles =
         "Apply a function zero or more times, \
         \until the top value of the stack is Fail, \
         \and return the number of times the function was applied."
+        []
+    , BuiltinParticle
+        "fixedPoint"
+        'ʸ'
+        fixedPoint
+        "(n -> n) -> (n -> n)"
+        "Apply a function zero or more times, \
+        \until the top value of the stack no longer changes."
         []
     , BuiltinParticle
         "firstInt"
@@ -617,6 +627,26 @@ lengthWhile = Particle lengthWhile'
                     then t $> s' >>= lengthWhile'' (rightId i) f <&> (+ 1)
                     else Val 0
             )
+
+fixedPoint :: Particle
+fixedPoint = Particle fixedPoint'
+  where
+    fixedPoint' (Function (Arity m n) f) | m == n =
+        Just
+            . Function (Arity m n)
+            $ \i s ->
+                prepend
+                    (takeStack n . tryStack $ fixedPoint'' i f s)
+                    (dropStack m s)
+    fixedPoint' _ = Nothing
+    fixedPoint'' :: Id -> (Id -> Stack -> Stack) -> Stack -> Try Stack
+    fixedPoint'' i f s =
+        let t = top s
+            s' = f (leftId i) s
+            t' = normalForm (top s')
+         in tryEq t t' >>= \case
+                True -> Val s
+                False -> t' $> s' >>= fixedPoint'' (rightId i) f
 
 firstInt :: Particle
 firstInt = Particle firstInt'

@@ -2122,6 +2122,13 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[],[]]", all_ ["[]"])
             , ("[[1,4,6],[1,[2,67,[5,7]]]]", all_ ["[1,4,6,1,2,67,5,7]"])
             ]
+        specEval
+            "ʸj"
+            [ ("[[3],[3,[[6]]]]", all_ ["[3,3,6]"])
+            , ("[]", all_ ["[]"])
+            , ("[[],[]]", all_ ["[]"])
+            , ("[[1,4,6],[1,[2,67,[5,7]]]]", all_ ["[1,4,6,1,2,67,5,7]"])
+            ]
     describe "q248445: Print the power set of the power set ... of an empty set" $ do
         specEval
             "Øᶦ{Sa"
@@ -2217,7 +2224,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q251772: Tut-tut-tut-tut-tut" $ do
         specEval
-            "ʷ{;\"tut-tut\"=ip,}ᵗN"
+            "ʷ{;\"tut-tut\"=ip,}Ø="
             [ ("\"tut-tut\"", Check True)
             , ("\"tut-tutut-tut\"", Check True)
             , ("\"tut-tut-tut-tut-tut\"", Check True)
@@ -2672,7 +2679,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("5 4", Count 0)
             , ("5 5", Count 120)
             ]
-    describe "q259576: all_ of the Boards" $ do
+    describe "q259576: All of the Boards" $ do
         specEval
             "į3ƂÐ3~ᵑᵐç3~ᵑçaᵐᶜ{0*}∑ƶ"
             [("", Count 215)]
@@ -3061,7 +3068,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q263566: Calculating Transitive Closure" $ do
         specEval
-            "~ᵉ{$#ᵑ{ˣ@j,u}}∕~"
+            "~ᵉʸ{ˣ@j,u}∕~"
             [ ("[[],[],[]]", Count 0)
             , ("[[1],[0]]", Count 2)
             , ("[[1],[0],[]]", Count 2)
@@ -3071,7 +3078,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[1],[2],[3],[4],[5],[0]]", Count 30)
             ]
         specEval
-            "xᵒĈ:§#ᵑ{ˣᵐ∙+}±≈j∑"
+            "xᵒĈ:ʸ{ˣᵐ∙+±}≈j∑"
             [ ("[[],[],[]]", all_ ["0"])
             , ("[[1],[0]]", all_ ["2"])
             , ("[[1],[0],[]]", all_ ["2"])
@@ -3543,7 +3550,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q271363: Is it a tetrate of two?" $ do
         specEval
-            "0ʷ{ᵖ>Ë}="
+            "0ʷ{v<Ë}="
             [ ("1", Check True)
             , ("2", Check True)
             , ("4", Check True)
@@ -3720,7 +3727,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[1,2,3,2,3,4]", Check True)
             , ("[4,5,4,3,4,5]", Check True)
             ]
-    describe "q274358: Sorting with a deque" $ do
+    describe "q274358: Double dequer sort" $ do
         specEval
             "o$2ᵑ{Jĭᵃjᵈ↔,}="
             [ ("[1]", Check True)
@@ -3739,7 +3746,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q274448: Factoriadic Fraction Addition" $ do
         specEval
-            "+:#ᵑ{CU$x3+þç++;ž¿"
+            "+ʸ{CU$x3+þç++;ž¿Ø?"
             [ ("[] []", first_ "[]")
             , ("[] [1]", first_ "[1]")
             , ("[0,2] [-1]", first_ "[-1,2]")
