@@ -17,6 +17,7 @@ module Nekomata.Particle (
 import Data.Functor (($>), (<&>))
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
+import Nekomata.Builtin.List (concat', unconcat)
 import Nekomata.Data
 import Nekomata.Function hiding (arity)
 import qualified Nekomata.Function as Function
@@ -203,6 +204,24 @@ builtinParticles =
         \and return a list of lists.\n\
         \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
+        []
+    , BuiltinParticle
+        "concatMap"
+        'ʲ'
+        concatMap'
+        "(0 -> 1) -> (1 -> 1) \
+        \or (m -> 1) -> (m -> 1) where m > 0"
+        "Map a function over a list and concatenate the results.\n\
+        \See the documentation for `concat` and `map`."
+        []
+    , BuiltinParticle
+        "unconcatMap"
+        'ᶣ'
+        unconcatMap'
+        "(0 -> 1) -> (1 -> 1) \
+        \or (m -> 1) -> (m -> 1) where m > 0"
+        "Unconcatenate a list, and then map a function over the results.\n\
+        \See the documentation for `unconcat` and `map`."
         []
     , BuiltinParticle
         "predicate"
@@ -503,6 +522,12 @@ outer = Particle outer'
                             (toTryList y')
                  in liftJoinM2 f'' x y :+ dropStack (m - 2) s
     outer' _ = Nothing
+
+concatMap' :: Particle
+concatMap' = Particle $ fmap (.* concat') . runParticle map'
+
+unconcatMap' :: Particle
+unconcatMap' = Particle $ fmap (unconcat .*) . runParticle map'
 
 predicate' :: Particle
 predicate' = Particle predicate''

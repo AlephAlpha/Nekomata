@@ -2389,6 +2389,18 @@ Apply a function to every possible pair of values in two lists and return a list
 
 If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
 
+### `concatMap` (`ʲ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
+
+Map a function over a list and concatenate the results.
+
+See the documentation for `concat` and `map`.
+
+### `unconcatMap` (`ᶣ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
+
+Unconcatenate a list, and then map a function over the results.
+
+See the documentation for `unconcat` and `map`.
+
 ### `predicate` (`ᵖ`, `(m -> n) -> (1 -> 1)`)
 
 Check if a function would succeed without actually applying it.

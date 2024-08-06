@@ -6,7 +6,7 @@
 * Fixed some errors in the documentation.
 * Fixed a bug in `\binomial`. Now it returns `0` when the second argument is negative.
 * Fixed a bug in `\factor`. In earlier versions, it may return incorrect results.
-* New particle: `\fixedPoint`.
+* New particles: `\concatMap`, `\fixedPoint`, `\unconcatMap`.
 
 ### Breaking changes
 

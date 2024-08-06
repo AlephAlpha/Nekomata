@@ -79,7 +79,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("9", Count 55)
             ]
         specEval
-            "Jᵐ#3<"
+            "ᶣ#3<"
             [ ("0", Count 1)
             , ("1", Count 1)
             , ("2", Count 2)
@@ -1118,7 +1118,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q139804: Undo a Range of Numbers" $ do
         specEval
-            "ᵏ{ᵐĝj="
+            "ᵏ{ʲĝ="
             [ ("\"0123\"", all_ ["4"])
             , ("\"0\"", all_ ["1"])
             , ("\"012345678910111213141516171819202122232425262728293031323334353637383940\"", all_ ["41"])
@@ -1352,7 +1352,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q167573: Consecutive 1-Bits are Incremented" $ do
         specEval
-            "ĉᵐ∫j"
+            "ĉʲ∫"
             [ ("[0,1,1,1,0,1,1,0,0,0,1,1,1,1,1,1]", all_ ["[0,1,2,3,0,1,2,0,0,0,1,2,3,4,5,6]"])
             , ("[0,1,1,0,1,0,1,1,1,1,1,0,1,0,1,1,0,1,1,1,1,1,1,0,1,0,1,1,1,1,1,1,1,1]", all_ ["[0,1,2,0,1,0,1,2,3,4,5,0,1,0,1,2,0,1,2,3,4,5,6,0,1,0,1,2,3,4,5,6,7,8]"])
             , ("[1,1,1,1,1,1,1,1,1,1,1,1,0,1]", all_ ["[1,2,3,4,5,6,7,8,9,10,11,12,0,1]"])
@@ -2285,7 +2285,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q252303: Cut along the lines" $ do
         specEval
-            "ĉJᵐj"
+            "ĉᶣj"
             [ ("[1,0]", all_ ["[[1],[0]]", "[[1,0]]"])
             , ("[1,1,1,1]", all_ ["[[1,1,1,1]]"])
             , ("[1,1,0,0,1]", all_ ["[[1,1],[0,0],[1]]", "[[1,1],[0,0,1]]", "[[1,1,0,0],[1]]", "[[1,1,0,0,1]]"])
@@ -2358,7 +2358,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q255822: Replace 0s In a String With Their Consecutive Counts" $ do
         specEval
-            "ĉᵐ{ᵉĜ#Mĝ}j"
+            "ĉʲ{ᵉĜ#Mĝ"
             [ ("\"1234500362000440\"", all_ ["1234523623441"])
             , ("\"123450036200044\"", all_ ["123452362344"])
             , ("\"000000000000\"", all_ ["12"])
@@ -2591,7 +2591,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q259083: Is it traversable?" $ do
         specEval
-            "R↔$∆çJᵐ{CᵈAc}-ň"
+            "R↔$∆çᶣ{CᵈAc}-ň"
             [ ("0 [1,1,1,1,1]", Check True)
             , ("0 [50,45,20,19,18,10,1,1,1]", Check True)
             , ("5 [1,6,11,16,21,26,31]", Check True)
@@ -3306,7 +3306,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q266049: How many umbrellas to cover the beach?" $ do
         specEval
-            "Jᵐ{x:ᵒ≈>~}aş#"
+            "ᶣ{x:ᵒ≈>~}aş#"
             [ ("[9,2,1,3,2,4,2,1] 1", first_ "1")
             , ("[1,1,1,1,1,1,1,1] 1", first_ "8")
             , ("[2,1,4,1,4,1,1,3,1] 1", first_ "2")
@@ -3413,7 +3413,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q267491: Iteratively sort a list" $ do
         specEval
-            "oOᵐůj"
+            "oOʲů"
             [ ("[1,5,2,2,8,3,5,2,9]", first_ "[1,2,3,5,8,9,2,5,2]")
             , ("[8,5]", first_ "[5,8]")
             , ("[2,2,2]", first_ "[2,2,2]")
@@ -3651,7 +3651,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[6,1],[1,6]]", Check False)
             ]
         specEval
-            "↕JᵐŤŤđ≡¿ᵐ≡"
+            "↕ᶣŤŤđ≡¿ᵐ≡"
             [ ("[[1,1]]", Check True)
             , ("[[1,1],[1,2]]", Check True)
             , ("[[1,1],[1,1],[2,1]]", Check True)
@@ -3752,4 +3752,22 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[0,2] [-1]", first_ "[-1,2]")
             , ("[0,2] [0,2]", first_ "[1,1]")
             , ("[0,1,2] [0,1,2]", first_ "[1]")
+            ]
+    describe "q274690: Cubic Concatenation" $ do
+        specEval
+            "*∙Ɗᶣɗ="
+            [ ("[1,5,3]", Check True)
+            , ("[2,2,13]", Check True)
+            , ("[4,0,7]", Check True)
+            , ("[10,0,0]", Check True)
+            , ("[10,0,1]", Check True)
+            , ("[22,18,59]", Check True)
+            , ("[98,28,27]", Check True)
+            , ("[166,500,333]", Check True)
+            , ("[828,538,472]", Check True)
+            , ("[1,2,3]", Check False)
+            , ("[4,5,6]", Check False)
+            , ("[6,0,0]", Check False)
+            , ("[166,500,334]", Check False)
+            , ("[200,0,200]", Check False)
             ]
