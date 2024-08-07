@@ -79,7 +79,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("9", Count 55)
             ]
         specEval
-            "ᶣ#3<"
+            "ᴶ#3<"
             [ ("0", Count 1)
             , ("1", Count 1)
             , ("2", Count 2)
@@ -1225,7 +1225,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q146059: Is my triangle right?" $ do
         specEval
-            "*ĕ$∑="
+            "ʰ_∙ž"
             [ ("[5,3,4]", Check True)
             , ("[3,5,4]", Check True)
             , ("[12,37,35]", Check True)
@@ -1944,12 +1944,12 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q237377: Ways to add 1 to lists of lists" $ do
         specEval
-            "ᵈ;ᵈCcc,"
-            [ ("9 []", all_ [])
-            , ("9 [[]]", all_ ["[[9]]"])
-            , ("10 [[1,2,3]]", all_ ["[[10,1,2,3]]"])
-            , ("7 [[1,2],[3,4],[5],[]]", all_ ["[[7,1,2],[3,4],[5],[]]", "[[1,2],[7,3,4],[5],[]]", "[[1,2],[3,4],[7,5],[]]", "[[1,2],[3,4],[5],[7]]"])
-            , ("2 [[1,2],[2,2],[2]]", all_ ["[[2,1,2],[2,2],[2]]", "[[1,2],[2,2,2],[2]]", "[[1,2],[2,2],[2,2]]"])
+            "ʰ{$c"
+            [ ("[] 9", all_ [])
+            , ("[[]] 9", all_ ["[[9]]"])
+            , ("[[1,2,3]] 10", all_ ["[[10,1,2,3]]"])
+            , ("[[1,2],[3,4],[5],[]] 7", all_ ["[[7,1,2],[3,4],[5],[]]", "[[1,2],[7,3,4],[5],[]]", "[[1,2],[3,4],[7,5],[]]", "[[1,2],[3,4],[5],[7]]"])
+            , ("[[1,2],[2,2],[2]] 2", all_ ["[[2,1,2],[2,2],[2]]", "[[1,2],[2,2,2],[2]]", "[[1,2],[2,2],[2,2]]"])
             ]
     describe "q238607: Converge to a number" $ do
         specEval
@@ -2285,7 +2285,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q252303: Cut along the lines" $ do
         specEval
-            "ĉᶣj"
+            "ĉᴶj"
             [ ("[1,0]", all_ ["[[1],[0]]", "[[1,0]]"])
             , ("[1,1,1,1]", all_ ["[[1,1,1,1]]"])
             , ("[1,1,0,0,1]", all_ ["[[1,1],[0,0],[1]]", "[[1,1],[0,0,1]]", "[[1,1,0,0],[1]]", "[[1,1,0,0,1]]"])
@@ -2591,7 +2591,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q259083: Is it traversable?" $ do
         specEval
-            "R↔$∆çᶣ{CᵈAc}-ň"
+            "R↔$∆çᴶ{CᵈAc}-ň"
             [ ("0 [1,1,1,1,1]", Check True)
             , ("0 [50,45,20,19,18,10,1,1,1]", Check True)
             , ("5 [1,6,11,16,21,26,31]", Check True)
@@ -3306,7 +3306,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q266049: How many umbrellas to cover the beach?" $ do
         specEval
-            "ᶣ{x:ᵒ≈>~}aş#"
+            "ᴶ{x:ᵒ≈>~}aş#"
             [ ("[9,2,1,3,2,4,2,1] 1", first_ "1")
             , ("[1,1,1,1,1,1,1,1] 1", first_ "8")
             , ("[2,1,4,1,4,1,1,3,1] 1", first_ "2")
@@ -3651,7 +3651,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[6,1],[1,6]]", Check False)
             ]
         specEval
-            "↕ᶣŤŤđ≡¿ᵐ≡"
+            "↕ᴶŤŤđ≡¿ᵐ≡"
             [ ("[[1,1]]", Check True)
             , ("[[1,1],[1,2]]", Check True)
             , ("[[1,1],[1,1],[2,1]]", Check True)
@@ -3755,7 +3755,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q274690: Cubic Concatenation" $ do
         specEval
-            "*∙Ɗᶣɗ="
+            "*∙Ɗᴶɗ="
             [ ("[1,5,3]", Check True)
             , ("[2,2,13]", Check True)
             , ("[4,0,7]", Check True)

@@ -2361,11 +2361,19 @@ If the input is an number, apply the function to each integer from 0 to the inpu
 
 If the function takes no argument, return a list of n copies of the result of the function, where n is the length of the input.
 
+__Examples__:
+
+- `[1,2,3] ᵐ{1+}` → `[2,3,4]`
+
 ### `mapWith` (`ᵚ`, `(1 -> 1) -> (2 -> 1) or (m -> 1) -> (m -> 1) where m > 1`)
 
 Map a binary function over its first argument.
 
 If the function is unary, return a list of n copies of the result of applying the function to the second argument, where n is the length of the first argument.
+
+__Examples__:
+
+- `[1,2,3] 4 ᵚ{+}` → `[5,6,7]`
 
 ### `zipWith` (`ᶻ`, `(m -> 1) -> (m -> 1) where m > 1`)
 
@@ -2375,6 +2383,10 @@ Fail if the lists have different lengths.
 
 If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
 
+__Examples__:
+
+- `[1,2,3] [4,5,6] ᶻ{+}` → `[5,7,9]`
+
 ### `zipWithTrunc` (`ᶾ`, `(m -> 1) -> (m -> 1) where m > 1`)
 
 Zip two lists and apply a function to each pair of values.
@@ -2383,11 +2395,19 @@ If the lists have different lengths, truncate the longer list to the length of t
 
 If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
 
+__Examples__:
+
+- `[1,2,3] [4,5,6,7] ᶾ{+}` → `[5,7,9]`
+
 ### `outer` (`ᵒ`, `(m -> 1) -> (m -> 1) where m > 1`)
 
 Apply a function to every possible pair of values in two lists and return a list of lists.
 
 If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
+
+__Examples__:
+
+- `[1,2,3] [4,5] ᵒ{+}` → `[[5,6],[6,7],[7,8]]`
 
 ### `concatMap` (`ʲ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
 
@@ -2395,11 +2415,19 @@ Map a function over a list and concatenate the results.
 
 See the documentation for `concat` and `map`.
 
-### `unconcatMap` (`ᶣ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
+__Examples__:
+
+- `[[1,2],[3,4]] ʲ{1+}` → `[2,3,4,5]`
+
+### `unconcatMap` (`ᴶ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
 
 Unconcatenate a list, and then map a function over the results.
 
 See the documentation for `unconcat` and `map`.
+
+__Examples__:
+
+- `[1,2,3] ᴶ{1+}` → `[[2],[3],[4]] [[2],[3,4]] [[2,3],[4]] [[2,3,4]]`
 
 ### `predicate` (`ᵖ`, `(m -> n) -> (1 -> 1)`)
 
@@ -2409,6 +2437,11 @@ If the function fails, replace the top value with Fail.
 
 Otherwise, do nothing.
 
+__Examples__:
+
+- `1 ᵖ{2<}` → `1`
+- `1 ᵖ{2>}` → Fail
+
 ### `predicateNot` (`ᵗ`, `(m -> n) -> (1 -> 1)`)
 
 Check if a function would fail without actually applying it.
@@ -2417,15 +2450,28 @@ If the function does not fail, replace the top value with Fail.
 
 Otherwise, do nothing.
 
+__Examples__:
+
+- `1 ᵗ{2<}` → Fail
+- `1 ᵗ{2>}` → `1`
+
 ### `filter` (`ᶠ`, `(m -> n) -> (1 -> 1)`)
 
 For each value in a list, check if a function would succeed without actually applying it, and remove the value if it fails.
 
 If the input is an number, convert it to a list of integers from 0 to the input minus 1 before filtering.
 
+__Examples__:
+
+- `[1,2,3] ᶠ{2<}` → `[1]`
+
 ### `orApply` (`ᶜ`, `(n -> n) -> (n -> n)`)
 
 Apply a function zero or one time non-deterministically.
+
+__Examples__:
+
+- `1 ᶜ{1+}` → `1 2`
 
 ### `iterate` (`ᶦ`, `(n -> n) -> (n -> n)`)
 
@@ -2433,9 +2479,17 @@ Apply a function zero or more times non-deterministically, until the top value o
 
 This is different from `while` in that it returns the intermediate results.
 
+__Examples__:
+
+- `1 ᶦ{1+}` → `1 2 3 4 5 ...`
+
 ### `nTimes` (`ᵑ`, `(n -> n) -> (n + 1 -> n)`)
 
 Take an integer from the top of the stack, and apply a function that many times.
+
+__Examples__:
+
+- `1 3 ᵑ{1+}` → `4`
 
 ### `while` (`ʷ`, `(n -> n) -> (n -> n)`)
 
@@ -2443,22 +2497,54 @@ Apply a function zero or more times, until the top value of the stack is Fail.
 
 This is different from `iterate` in that it does not return the intermediate results.
 
+__Examples__:
+
+- `1 ʷ{1+ 4<}` → `3`
+
 ### `lengthWhile` (`ˡ`, `(n -> n) -> (n -> 1)`)
 
 Apply a function zero or more times, until the top value of the stack is Fail, and return the number of times the function was applied.
+
+__Examples__:
+
+- `1 ˡ{1+ 4<}` → `2`
 
 ### `fixedPoint` (`ʸ`, `(n -> n) -> (n -> n)`)
 
 Apply a function zero or more times, until the top value of the stack no longer changes.
 
+__Examples__:
+
+- `1 ʸ{1+ 4m}` → `4`
+
 ### `firstInt` (`ᵏ`, `(m -> n) -> (0 -> 1)`)
 
 Find the smallest non-negative integer for which a function does not fail, and return it.
+
+__Examples__:
+
+- `ᵏ{4>}` → `5`
 
 ### `fold1` (`ʳ`, `(m -> 1) -> (m - 1 -> 1) where m > 1`)
 
 Apply a function to the first two values of a list, then apply it to the result and the third value, and so on until the end of the list.
 
 If the input is an number, convert it to a list of integers from 0 to the input minus 1 before folding.
+
+__Examples__:
+
+- `[1,2,3] ʳ{+}` → `6`
+
+### `onAny` (`ʰ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
+
+Apply a function to one value in a list. The value is chosen non-deterministically.
+
+Fail if the list is empty.
+
+If the input is an number, it is converted to a list of integers from 0 to the input minus 1 before applying the function.
+
+__Examples__:
+
+- `[1,2,3] ʰ{1+}` → `[2,2,3] [1,3,3] [1,2,4]`
 
 

@@ -162,7 +162,7 @@ builtinParticles =
         \from 0 to the input minus 1.\n\
         \If the function takes no argument, return a list of n copies \
         \of the result of the function, where n is the length of the input."
-        []
+        [("[1,2,3] ᵐ{1+}", all_ ["[2,3,4]"])]
     , BuiltinParticle
         "mapWith"
         'ᵚ'
@@ -173,7 +173,7 @@ builtinParticles =
         \If the function is unary, return a list of n copies of the \
         \result of applying the function to the second argument, where \
         \n is the length of the first argument."
-        []
+        [("[1,2,3] 4 ᵚ{+}", all_ ["[5,6,7]"])]
     , BuiltinParticle
         "zipWith"
         'ᶻ'
@@ -183,7 +183,7 @@ builtinParticles =
         \Fail if the lists have different lengths.\n\
         \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
-        []
+        [("[1,2,3] [4,5,6] ᶻ{+}", all_ ["[5,7,9]"])]
     , BuiltinParticle
         "zipWithTrunc"
         'ᶾ'
@@ -194,7 +194,7 @@ builtinParticles =
         \to the length of the shorter list.\n\
         \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
-        []
+        [("[1,2,3] [4,5,6,7] ᶾ{+}", all_ ["[5,7,9]"])]
     , BuiltinParticle
         "outer"
         'ᵒ'
@@ -204,7 +204,7 @@ builtinParticles =
         \and return a list of lists.\n\
         \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
-        []
+        [("[1,2,3] [4,5] ᵒ{+}", all_ ["[[5,6],[6,7],[7,8]]"])]
     , BuiltinParticle
         "concatMap"
         'ʲ'
@@ -213,16 +213,16 @@ builtinParticles =
         \or (m -> 1) -> (m -> 1) where m > 0"
         "Map a function over a list and concatenate the results.\n\
         \See the documentation for `concat` and `map`."
-        []
+        [("[[1,2],[3,4]] ʲ{1+}", all_ ["[2,3,4,5]"])]
     , BuiltinParticle
         "unconcatMap"
-        'ᶣ'
+        'ᴶ'
         unconcatMap'
         "(0 -> 1) -> (1 -> 1) \
         \or (m -> 1) -> (m -> 1) where m > 0"
         "Unconcatenate a list, and then map a function over the results.\n\
         \See the documentation for `unconcat` and `map`."
-        []
+        [("[1,2,3] ᴶ{1+}", all_ ["[[2],[3],[4]]", "[[2],[3,4]]", "[[2,3],[4]]", "[[2,3,4]]"])]
     , BuiltinParticle
         "predicate"
         'ᵖ'
@@ -231,7 +231,9 @@ builtinParticles =
         "Check if a function would succeed without actually applying it.\n\
         \If the function fails, replace the top value with Fail.\n\
         \Otherwise, do nothing."
-        []
+        [ ("1 ᵖ{2<}", all_ ["1"])
+        , ("1 ᵖ{2>}", all_ [])
+        ]
     , BuiltinParticle
         "predicateNot"
         'ᵗ'
@@ -240,7 +242,9 @@ builtinParticles =
         "Check if a function would fail without actually applying it.\n\
         \If the function does not fail, replace the top value with Fail.\n\
         \Otherwise, do nothing."
-        []
+        [ ("1 ᵗ{2<}", all_ [])
+        , ("1 ᵗ{2>}", all_ ["1"])
+        ]
     , BuiltinParticle
         "filter"
         'ᶠ'
@@ -250,14 +254,14 @@ builtinParticles =
         \without actually applying it, and remove the value if it fails.\n\
         \If the input is an number, convert it to a list of integers \
         \from 0 to the input minus 1 before filtering."
-        []
+        [("[1,2,3] ᶠ{2<}", all_ ["[1]"])]
     , BuiltinParticle
         "orApply"
         'ᶜ'
         orApply
         "(n -> n) -> (n -> n)"
         "Apply a function zero or one time non-deterministically."
-        []
+        [("1 ᶜ{1+}", all_ ["1", "2"])]
     , BuiltinParticle
         "iterate"
         'ᶦ'
@@ -267,7 +271,7 @@ builtinParticles =
         \until the top value of the stack is Fail.\n\
         \This is different from `while` in that it returns \
         \the intermediate results."
-        []
+        [("1 ᶦ{1+}", truncate_ ["1", "2", "3", "4", "5"])]
     , BuiltinParticle
         "nTimes"
         'ᵑ'
@@ -275,7 +279,7 @@ builtinParticles =
         "(n -> n) -> (n + 1 -> n)"
         "Take an integer from the top of the stack, \
         \and apply a function that many times."
-        []
+        [("1 3 ᵑ{1+}", all_ ["4"])]
     , BuiltinParticle
         "while"
         'ʷ'
@@ -285,7 +289,7 @@ builtinParticles =
         \until the top value of the stack is Fail.\n\
         \This is different from `iterate` in that it does not \
         \return the intermediate results."
-        []
+        [("1 ʷ{1+ 4<}", all_ ["3"])]
     , BuiltinParticle
         "lengthWhile"
         'ˡ'
@@ -294,7 +298,7 @@ builtinParticles =
         "Apply a function zero or more times, \
         \until the top value of the stack is Fail, \
         \and return the number of times the function was applied."
-        []
+        [("1 ˡ{1+ 4<}", all_ ["2"])]
     , BuiltinParticle
         "fixedPoint"
         'ʸ'
@@ -302,7 +306,7 @@ builtinParticles =
         "(n -> n) -> (n -> n)"
         "Apply a function zero or more times, \
         \until the top value of the stack no longer changes."
-        []
+        [("1 ʸ{1+ 4m}", all_ ["4"])]
     , BuiltinParticle
         "firstInt"
         'ᵏ'
@@ -310,7 +314,7 @@ builtinParticles =
         "(m -> n) -> (0 -> 1)"
         "Find the smallest non-negative integer for which a function \
         \does not fail, and return it."
-        []
+        [("ᵏ{4>}", all_ ["5"])]
     , BuiltinParticle
         "fold1"
         'ʳ'
@@ -321,7 +325,19 @@ builtinParticles =
         \and so on until the end of the list.\n\
         \If the input is an number, convert it to a list of integers \
         \from 0 to the input minus 1 before folding."
-        []
+        [("[1,2,3] ʳ{+}", all_ ["6"])]
+    , BuiltinParticle
+        "onAny"
+        'ʰ'
+        onAny
+        "(0 -> 1) -> (1 -> 1) \
+        \or (m -> 1) -> (m -> 1) where m > 0"
+        "Apply a function to one value in a list. \
+        \The value is chosen non-deterministically.\n\
+        \Fail if the list is empty.\n\
+        \If the input is an number, it is converted to a list of integers \
+        \from 0 to the input minus 1 before applying the function."
+        [("[1,2,3] ʰ{1+}", all_ ["[2,2,3]", "[1,3,3]", "[1,2,4]"])]
     ]
 
 -- | The map of from names to builtin particles
@@ -701,3 +717,28 @@ fold1 = Particle fold1'
                  in (x >>= liftList (tryFoldl1 f' i) . toTryList)
                         :+ dropStack (m - 2) s
     fold1' _ = Nothing
+
+onAny :: Particle
+onAny = Particle onAny'
+  where
+    onAny' (Function (Arity 0 1) f) =
+        Just
+            . Function (Arity 1 1)
+            $ \i (x :+ s) ->
+                let f' i' x' = top $ f i' (Val x' :+ s)
+                 in (x >>= liftList (onAny_ f' i) . toTryList) :+ s
+    onAny' (Function (Arity m 1) f) | m > 0 =
+        Just
+            . Function (Arity m 1)
+            $ \i (x :+ s) ->
+                let f' i' x' = top $ f i' (Val x' :+ s)
+                 in (x >>= liftList (onAny_ f' i) . toTryList)
+                        :+ dropStack (m - 1) s
+    onAny' _ = Nothing
+    onAny_ :: (Id -> a -> Try a) -> (Id -> ListTry (Try a) -> TryList (Try a))
+    onAny_ _ _ Nil = Fail
+    onAny_ f i (Cons x xs) =
+        Choice
+            (leftId i)
+            (Val $ Cons (x >>= f (leftId (rightId i))) xs)
+            (Val . Cons x $ xs >>= onAny_ f (rightId (rightId i)))

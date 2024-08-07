@@ -152,14 +152,6 @@ LiberationMono 字体所支持的字符列举于[此文件](analysis/LiberationM
 
 - [ ] `\polPow`：将一个列表视为多项式的系数，求多项式的 n 次幂。感觉不会太常用。
 
-### [Ways to add 1 to lists of lists](https://codegolf.stackexchange.com/q/237377/9288)
-
-```
-\onAny { \swap \cons }
-```
-
-- [ ] `\onAny`：助词，将一个函数应用到列表的任意一个元素上。比如说 `[1,2,3] \onAny \increment` 有三种可能的结果：`[2,2,3]`、`[1,3,3]`、`[1,2,4]`。
-
 ### [Remove falsy rows and columns](https://codegolf.stackexchange.com/q/269954/9288)
 
 ```
