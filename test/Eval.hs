@@ -246,6 +246,14 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[3,0,0,1,1,0,5,3]", all_ ["[0,1,3]"])
             , ("[-34,0,1,-34,4,8,4]", all_ ["[-34,4]"])
             ]
+        specEval
+            "ŢƵḟ"
+            [ ("[]", all_ ["[]"])
+            , ("[-1,0,1]", all_ ["[]"])
+            , ("[1,1]", all_ ["[1]"])
+            , ("[3,0,0,1,1,0,5,3]", all_ ["[3,0,1]"])
+            , ("[-34,0,1,-34,4,8,4]", all_ ["[-34,4]"])
+            ]
     describe "q61808: Lossy Sorting (Implement Dropsort)" $ do
         specEval
             "pƆᵖ≤"
@@ -674,6 +682,22 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("5234095123508321", Check False)
             , ("6240911314399072459493765661191058613491863144152352262897351988250431140546660035648795316740212454", Check False)
             ]
+        specEval
+            "Ɗx:µ-±∙ž"
+            [ ("1", Check True)
+            , ("6", Check True)
+            , ("11", Check True)
+            , ("141", Check True)
+            , ("1221", Check True)
+            , ("23281453796004414", Check True)
+            , ("523428121656666655655556655656502809745249552466339089702361716477983610754966885128041975406005088", Check True)
+            , ("10", Check False)
+            , ("12", Check False)
+            , ("110", Check False)
+            , ("15421", Check False)
+            , ("5234095123508321", Check False)
+            , ("6240911314399072459493765661191058613491863144152352262897351988250431140546660035648795316740212454", Check False)
+            ]
     describe "q94348: Prime counting function" $ do
         specEval
             "ƥ"
@@ -710,7 +734,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q95409: 2048-like array shift" $ do
         specEval
-            "ĉ~ĭ+↔aj"
+            "ĉʲ{ĭ+↔"
             [ ("[]", all_ ["[]"])
             , ("[2,2,4,4]", all_ ["[4,8]"])
             , ("[2,2,2,4,4,8]", all_ ["[2,4,8,8]"])
@@ -761,15 +785,15 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q101389: Increment an Array" $ do
         specEval
-            "Ṁ←ɔ:ṁĨĦ+"
-            [ ("[1]", first_ "[1,1]")
-            , ("[2]", first_ "[2,1]")
-            , ("[1,1]", first_ "[1,1,1]")
-            , ("[3,3,3,3,3]", first_ "[3,3,3,3,3,1]")
-            , ("[1,2]", first_ "[2,2]")
-            , ("[2,1]", first_ "[2,2]")
-            , ("[3,1,1]", first_ "[3,2,1]")
-            , ("[3,4,9,3]", first_ "[4,4,9,3]")
+            "Ṁ←ɔõhĦ+"
+            [ ("[1]", all_ ["[1,1]"])
+            , ("[2]", all_ ["[2,1]"])
+            , ("[1,1]", all_ ["[1,1,1]"])
+            , ("[3,3,3,3,3]", all_ ["[3,3,3,3,3,1]"])
+            , ("[1,2]", all_ ["[2,2]"])
+            , ("[2,1]", all_ ["[2,2]"])
+            , ("[3,1,1]", all_ ["[3,2,1]"])
+            , ("[3,4,9,3]", all_ ["[4,4,9,3]"])
             ]
     describe "q103624: Find the sum of all numbers below n that are a multiple of some set of numbers" $ do
         specEval
@@ -1091,7 +1115,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q136887: Fold a List in Half" $ do
         specEval
-            ";ᶜç↔ᶻ+"
+            ";↔Ĭĭ+"
             [ ("[1,2,3,4,5,6,7,8]", all_ ["[9,9,9,9]"])
             , ("[1,2,3,4,5,6,7]", all_ ["[8,8,8,4]"])
             ]
@@ -3770,4 +3794,22 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[6,0,0]", Check False)
             , ("[166,500,334]", Check False)
             , ("[200,0,200]", Check False)
+            ]
+    describe "q274829: Is there mutable aliasing in this list of variable references?" $ do
+        specEval
+            "ĕ∏Hᵗf"
+            [ ("[]", Check False)
+            , ("[[\"a\",1]]", Check False)
+            , ("[[\"c\",0],[\"d\",0]]", Check False)
+            , ("[[\"c\",0],[\"g\",1],[\"c\",0],[\"c\",0]]", Check False)
+            , ("[[\"f\",1],[\"e\",0],[\"e\",0],[\"d\",1]]", Check False)
+            , ("[[\"a\",0],[\"a\",0],[\"a\",0],[\"a\",0],[\"a\",0],[\"a\",0],[\"a\",0]]", Check False)
+            , ("[[\"b\",1],[\"b\",0]]", Check True)
+            , ("[[\"b\",1],[\"b\",1]]", Check True)
+            , ("[[\"a\",1],[\"d\",0],[\"d\",1]]", Check True)
+            , ("[[\"a\",0],[\"d\",1],[\"d\",0],[\"a\",0]]", Check True)
+            , ("[[\"f\",0],[\"e\",0],[\"e\",1],[\"d\",0]]", Check True)
+            , ("[[\"a\",0],[\"a\",0],[\"a\",0],[\"a\",1],[\"a\",0],[\"a\",0],[\"a\",0]]", Check True)
+            , ("[[\"g\",1],[\"g\",1],[\"g\",1],[\"g\",1],[\"g\",1],[\"g\",1],[\"g\",1]]", Check True)
+            , ("[[\"a\",0],[\"a\",1],[\"a\",0],[\"g\",1],[\"g\",0],[\"g\",1]]", Check True)
             ]

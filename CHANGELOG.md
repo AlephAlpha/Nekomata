@@ -2,7 +2,7 @@
 
 ## 0.7.0.0 -- Unreleased
 
-* Added examples to the documentation of built-in functions. Examples for particles will be added in the future.
+* Added examples to the documentation of built-in functions and particles.
 * Fixed some errors in the documentation.
 * Fixed a bug in `\binomial`. Now it returns `0` when the second argument is negative.
 * Fixed a bug in `\factor`. In earlier versions, it may return incorrect results.
