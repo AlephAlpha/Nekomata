@@ -1,6 +1,6 @@
 # Revision history for Nekomata
 
-## 0.7.0.0 -- Unreleased
+## 0.7.0.0 -- 2024-08-10
 
 * Added examples to the documentation of built-in functions and particles.
 * Fixed some errors in the documentation.
