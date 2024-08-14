@@ -3813,3 +3813,26 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[\"g\",1],[\"g\",1],[\"g\",1],[\"g\",1],[\"g\",1],[\"g\",1],[\"g\",1]]", Check True)
             , ("[[\"a\",0],[\"a\",1],[\"a\",0],[\"g\",1],[\"g\",0],[\"g\",1]]", Check True)
             ]
+    describe "q274924: Shift right by half a trit" $ do
+        specEval
+            "R~3DᵉlhÖ*ž"
+            [ ("0", Count 0)
+            , ("1", Count 0)
+            , ("2", Count 1)
+            , ("26", Count 17)
+            , ("27", Count 18)
+            , ("53", Count 26)
+            , ("54", Count 27)
+            , ("1337", Count 688)
+            ]
+        specEval
+            "3D3UXᶜi3bᵖ≥"
+            [ ("0", first_ "0")
+            , ("1", first_ "0")
+            , ("2", first_ "1")
+            , ("26", first_ "17")
+            , ("27", first_ "18")
+            , ("53", first_ "26")
+            , ("54", first_ "27")
+            , ("1337", first_ "688")
+            ]

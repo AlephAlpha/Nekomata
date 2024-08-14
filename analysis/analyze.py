@@ -14,7 +14,7 @@ def ngram_freq(corpus: list[str], n: int) -> dict[str, int]:
     freq = {}
     for line in corpus:
         for i in range(len(line) - n + 1):
-            ngram = line[i:i+n]
+            ngram = line[i : i + n]
             if ngram not in freq:
                 freq[ngram] = 0
             freq[ngram] += 1
@@ -23,7 +23,7 @@ def ngram_freq(corpus: list[str], n: int) -> dict[str, int]:
 
 
 def particles_analysis(corpus: list[str]) -> dict[str, list[int]]:
-    particles = "ᵃᶜᵈᵉᵋᶠᶦᵏˡᵐᵚᵑᵒᵖʳᵗʷˣᶻᶾ"
+    particles = "ᵃᶜᵈᵉᵋᶠʰᶦʲᴶᵏˡᵐᵚᵑᵒᵖʳᵗʷˣʸᶻᶾ"
     freq = {}
 
     for particle in particles:
@@ -53,6 +53,6 @@ for n in range(1, 6):
 
 particles = particles_analysis(corpus)
 with open(output_dir / "particles.txt", "w") as f:
-    f.write("particle : with \"{\" / total\n")
+    f.write('particle : with "{" / total\n')
     for particle, count in particles.items():
         f.write(f"{particle} : {count[0]} / {count[1]}\n")
