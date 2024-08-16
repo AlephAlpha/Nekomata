@@ -42,6 +42,7 @@ parseReplCommand input =
         ("\\Help" : _) -> ReplHelp
         ("\\Mode" : "all" : _) -> ReplMode AllValues
         ("\\Mode" : "first" : _) -> ReplMode FirstValue
+        ("\\Mode" : "last" : _) -> ReplMode LastValue
         ("\\Mode" : "count" : _) -> ReplMode CountValues
         ("\\Mode" : "exists" : _) -> ReplMode CheckExistence
         ("\\Mode" : _) -> ReplShowMode
@@ -60,6 +61,7 @@ replCommandStrings =
     , "\\Mode"
     , "\\Mode all"
     , "\\Mode first"
+    , "\\Mode last"
     , "\\Mode count"
     , "\\Mode exists"
     , "\\Limit"
@@ -80,8 +82,9 @@ helpString =
         , "  \\Help          Show this help"
         , "  \\Mode          Show current mode (default: all)"
         , "  \\Mode all      Show all results"
-        , "  \\Mode first    Show first result"
-        , "  \\Mode count    Show number of results"
+        , "  \\Mode first    Show the first result"
+        , "  \\Mode last     Show the last result"
+        , "  \\Mode count    Show the number of results"
         , "  \\Mode exists   Show whether there are any results"
         , "  \\Limit <n>     Set the max number of results to show (default: 16)"
         , "  \\Input <data>  Reset the stack with the given input"

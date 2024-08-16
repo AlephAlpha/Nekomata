@@ -16,10 +16,15 @@ allValues :: Function
 allValues = Function (Arity 1 1) $
     \_ (x :+ s) -> Cut (\ds -> (ds, toTryData . fromList $ values ds x)) :+ s
 
-oneValue :: Function
-oneValue = Function (Arity 1 1) $
+firstValue' :: Function
+firstValue' = Function (Arity 1 1) $
     \_ (x :+ s) ->
         Cut (\ds -> maybe (ds, Fail) (second toTryData) $ firstValue ds x) :+ s
+
+lastValue' :: Function
+lastValue' = Function (Arity 1 1) $
+    \_ (x :+ s) ->
+        Cut (\ds -> maybe (ds, Fail) (second toTryData) $ lastValue ds x) :+ s
 
 countValues' :: Function
 countValues' = Function (Arity 1 1) $
@@ -31,7 +36,7 @@ uniqueValue = Function (Arity 1 1) $
         Cut (\ds -> (ds, anyOf' i (nub $ values ds x) >>= toTryData)) :+ s
 
 if' :: Function
-if' = choice .* oneValue
+if' = choice .* firstValue'
 
 andThen :: Function
 andThen = Function (Arity 2 1) $ \_ (x :+ y :+ s) -> (normalForm x >> y) :+ s

@@ -5,7 +5,6 @@ module Nekomata.Eval (
     NekomataData,
     NekomataError,
     Mode (..),
-    Result (..),
     Runtime,
     allResults,
     checkResult,
@@ -15,6 +14,7 @@ module Nekomata.Eval (
     firstResult,
     getArity,
     initRuntime,
+    lastResult,
     readInput,
     runFunction,
     showResult,
@@ -86,6 +86,8 @@ data Mode
       AllValues
     | -- | Show the first result
       FirstValue
+    | -- | Show the last result
+      LastValue
     | -- | Count the number of results
       CountValues
     | -- | Check if there are any results
@@ -104,6 +106,11 @@ allResults = map showData . values initDecisions . fromNekomataData
 firstResult :: NekomataData -> Maybe String
 firstResult = fmap showData . values initDecisions . fromNekomataData
 
+-- | Get the last result of a Nekomata evaluation as a string
+lastResult :: NekomataData -> Maybe String
+lastResult =
+    fmap showData . getLastAlt . values initDecisions . fromNekomataData
+
 -- | Count the number of results of a Nekomata evaluation
 countResults :: NekomataData -> Integer
 countResults = countValues initDecisions . fromNekomataData
@@ -117,6 +124,7 @@ toResult :: Mode -> Maybe Int -> NekomataData -> Result
 toResult AllValues Nothing = All False . allResults
 toResult AllValues (Just n) = truncate' n . allResults
 toResult FirstValue _ = First . firstResult
+toResult LastValue _ = Last . lastResult
 toResult CountValues _ = Count . countResults
 toResult CheckExistence _ = Check . checkResult
 

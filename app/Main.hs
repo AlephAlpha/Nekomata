@@ -65,6 +65,12 @@ optMode =
             <> help "Show only the first value"
         )
         <|> flag'
+            LastValue
+            ( long "last"
+                <> short 't'
+                <> help "Show only the last value"
+            )
+        <|> flag'
             CountValues
             ( long "count"
                 <> short 'n'

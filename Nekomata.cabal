@@ -66,6 +66,7 @@ library
     Nekomata.CodePage
     Nekomata.Eval
     Nekomata.Particle
+    Nekomata.Result
 
   -- Modules included in this library but not exported.
   other-modules:
@@ -80,7 +81,6 @@ library
     Nekomata.Parser.Data
     Nekomata.Parser.Program
     Nekomata.Program
-    Nekomata.Result
 
   -- LANGUAGE extensions used by modules in this package.
   -- other-extensions:

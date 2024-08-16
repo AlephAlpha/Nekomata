@@ -2,6 +2,7 @@ module Nekomata.Result (
     Result (..),
     all_,
     first_,
+    last_,
     nothing_,
     showResult,
     truncate',
@@ -16,6 +17,8 @@ data Result
       All Bool [String]
     | -- | The first result
       First (Maybe String)
+    | -- | The last result
+      Last (Maybe String)
     | -- | The number of results
       Count Integer
     | -- | Whether there are any results
@@ -25,6 +28,7 @@ data Result
 instance Show Result where
     show (All truncated xs) = unwords xs ++ if truncated then " ..." else ""
     show (First x) = fromMaybe "" x
+    show (Last x) = fromMaybe "" x
     show (Count n) = show n
     show (Check b) = show b
 
@@ -32,6 +36,7 @@ instance Show Result where
 showResult :: Result -> [String]
 showResult (All truncated xs) = xs ++ ["..." | truncated]
 showResult (First x) = [fromMaybe "" x]
+showResult (Last x) = [fromMaybe "" x]
 showResult (Count n) = [show n]
 showResult (Check b) = [show b]
 
@@ -55,3 +60,7 @@ first_ = First . Just
 -- | No results
 nothing_ :: Result
 nothing_ = First Nothing
+
+-- | The last result
+last_ :: String -> Result
+last_ = Last . Just

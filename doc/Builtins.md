@@ -33,7 +33,7 @@ __Examples__:
 
 - `1 2?a` → `[1,2]`
 
-### `oneValue` (`¡`, `1 -> 1`)
+### `firstValue` (`¡`, `1 -> 1`)
 
 Get the first possible value from a non-deterministic object.
 
@@ -42,6 +42,16 @@ Fails if the object has no values.
 __Examples__:
 
 - `1 2?¡` → `1`
+
+### `lastValue` (`¤`, `1 -> 1`)
+
+Get the last possible value from a non-deterministic object.
+
+Fails if the object has no values.
+
+__Examples__:
+
+- `1 2?¤` → `2`
 
 ### `countValues` (`n`, `1 -> 1`)
 

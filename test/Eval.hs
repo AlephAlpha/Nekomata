@@ -6,12 +6,14 @@ import Control.Monad
 import Data.Either (isRight)
 import Nekomata.Builtin
 import Nekomata.Eval
+import Nekomata.Result (Result (..), all_, first_, last_, nothing_, truncate_)
 import Test.Hspec
 
 shouldMatch :: NekomataData -> Result -> Expectation
 shouldMatch x (All False xs) = allResults x `shouldBe` xs
 shouldMatch x (All True xs) = take (length xs) (allResults x) `shouldBe` xs
 shouldMatch x (First y) = firstResult x `shouldBe` y
+shouldMatch x (Last y) = lastResult x `shouldBe` y
 shouldMatch x (Count n) = countResults x `shouldBe` n
 shouldMatch x (Check b) = checkResult x `shouldBe` b
 
@@ -42,18 +44,6 @@ specEval code testCases = context code $ do
             let runtime = initRuntime input'
             let result = snd $ runFunction f runtime
             result `shouldMatch` output
-
-all_ :: [String] -> Result
-all_ = All False
-
-truncate_ :: [String] -> Result
-truncate_ = All True
-
-first_ :: String -> Result
-first_ = First . Just
-
-nothing_ :: Result
-nothing_ = First Nothing
 
 testEval :: Spec
 testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
@@ -272,10 +262,10 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q62752: Longest Common Prefix of 2 Strings" $ do
         specEval
-            "ᵃp=al"
-            [ ("\"global\" \"glossary\"", all_ ["glo"])
-            , ("\"department\" \"depart\"", all_ ["depart"])
-            , ("\"glove\" \"dove\"", all_ ["[]"])
+            "ᵃp="
+            [ ("\"global\" \"glossary\"", last_ "glo")
+            , ("\"department\" \"depart\"", last_ "depart")
+            , ("\"glove\" \"dove\"", last_ "[]")
             ]
     describe "q63999: Parenthifiable Binary Numbers" $ do
         specEval
@@ -572,13 +562,13 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[42,14,42,43,41,4080622,171480372]", all_ ["[42,14,42]"])
             ]
         specEval
-            "pᵖ½al"
-            [ ("[14,42,2324,97090,4080622,171480372]", all_ ["[14,42,2324,97090,4080622,171480372]"])
-            , ("[42,14,42,2324]", all_ ["[42,14,42,2324]"])
-            , ("[7,14,42]", all_ ["[]"])
-            , ("[]", all_ ["[]"])
-            , ("[171480372,13,14,42]", all_ ["[171480372]"])
-            , ("[42,14,42,43,41,4080622,171480372]", all_ ["[42,14,42]"])
+            "pᵖ½"
+            [ ("[14,42,2324,97090,4080622,171480372]", last_ "[14,42,2324,97090,4080622,171480372]")
+            , ("[42,14,42,2324]", last_ "[42,14,42,2324]")
+            , ("[7,14,42]", last_ "[]")
+            , ("[]", last_ "[]")
+            , ("[171480372,13,14,42]", last_ "[171480372]")
+            , ("[42,14,42,43,41,4080622,171480372]", last_ "[42,14,42]")
             ]
     describe "q84673: Is it a sum-free set?" $ do
         specEval
@@ -2451,6 +2441,13 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[4,3,6,2,3,8,5,2,8,7]", all_ ["4", "3", "8", "7"])
             , ("[1,1,2]", all_ ["1", "2"])
             , ("[1,2,7,2,7,2,3,7]", all_ ["1", "2", "3", "7"])
+            ]
+        specEval
+            "ᴶ{ᵉhl="
+            [ ("[1,2,3,4,2,5]", last_ "[1,2,5]")
+            , ("[4,3,6,2,3,8,5,2,8,7]", last_ "[4,3,8,7]")
+            , ("[1,1,2]", last_ "[1,2]")
+            , ("[1,2,7,2,7,2,3,7]", last_ "[1,2,3,7]")
             ]
     describe "q256978: Painting with Line Filler" $ do
         specEval

@@ -1,6 +1,6 @@
 # Tutorial
 
-Nekomata is still in an early stage of development. The syntax and semantics of the language may change in the future. This tutorial is also incomplete.
+Nekomata is still in an early stage of development. The syntax and semantics of the language may change in the future. This tutorial is also incomplete. I'm planning to rewrite it completely when the language is more stable.
 
 For installing and using the interpreter, please see [Getting Started](GettingStarted.md).
 
@@ -184,7 +184,7 @@ This looks similar to the previous code. It also pushes two elements onto the st
 
 ## Modes
 
-Nekomata is a non-deterministic programming language. A program can have multiple possible outputs. Nekomata supports four modes for outputting the results of a program:
+Nekomata is a non-deterministic programming language. A program can have multiple possible outputs. Nekomata supports five modes for outputting the results of a program:
 
 ### `all`
 
@@ -200,7 +200,17 @@ This mode outputs the first result of a program. If the program has no results, 
 
 When running a program from the command line, you can switch to this mode by passing the `-1` flag.
 
-In the REPL, you can switch to this mode by typing `\Mode first`.s
+In the REPL, you can switch to this mode by typing `\Mode first`.
+
+### `last`
+
+This mode outputs the last result of a program. If the program has no results, it outputs nothing.
+
+When running a program from the command line, you can switch to this mode by passing the `-t` flag.
+
+In the REPL, you can switch to this mode by typing `\Mode last`.
+
+This mode is added in version 0.8.0.0, so it may not be available in the online interpreter.
 
 ### `count`
 

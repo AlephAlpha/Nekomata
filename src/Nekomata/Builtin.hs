@@ -116,12 +116,19 @@ builtins =
         "Get a list of all possible values for a non-deterministic object."
         [("1 2?a", all_ ["[1,2]"])]
     , Builtin
-        "oneValue"
+        "firstValue"
         '¡'
-        oneValue
+        firstValue'
         "Get the first possible value from a non-deterministic object.\n\
         \Fails if the object has no values."
         [("1 2?¡", all_ ["1"])]
+    , Builtin
+        "lastValue"
+        '¤'
+        lastValue'
+        "Get the last possible value from a non-deterministic object.\n\
+        \Fails if the object has no values."
+        [("1 2?¤", all_ ["2"])]
     , Builtin
         "countValues"
         'n'

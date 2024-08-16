@@ -1,3 +1,4 @@
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 {-# LANGUAGE TypeFamilies #-}
 
 module Nekomata.NonDet where
@@ -47,7 +48,8 @@ instance Monad Try where
     Cut g >>= f = Cut (second (>>= f) . g)
 
 -- | A wrapper for deterministic tryValues
-newtype Det a = Det {unDet :: a} deriving (Eq, Ord, Show)
+newtype Det a = Det {unDet :: a}
+    deriving (Eq, Ord, Show)
 
 instance Functor Det where
     fmap f (Det x) = Det (f x)
@@ -109,6 +111,17 @@ tryValues ds (Choice i t1 t2) = case getChoice i ds of
 tryValues _ Fail = empty
 tryValues ds (Cut g) = let (ds', t) = g ds in tryValues ds' t
 
+{- | A @Maybe@ wrapper whose @Alternative@ instance chooses the rightmost @Just@
+value
+-}
+newtype LastAlt a = LastAlt {getLastAlt :: Maybe a}
+    deriving (Eq, Ord, Show, Functor, Applicative, Monad)
+
+instance Alternative LastAlt where
+    empty = LastAlt Nothing
+    LastAlt l <|> LastAlt Nothing = LastAlt l
+    LastAlt _ <|> r = r
+
 -- | Find all values of a @NonDet@
 values :: (NonDet a, Alternative m) => Decisions -> a -> m (Value a)
 values ds = fmap snd . tryValues ds . toTry
@@ -116,6 +129,10 @@ values ds = fmap snd . tryValues ds . toTry
 -- | Find the first value and the corresponding decisions of a @NonDet@
 firstValue :: (NonDet a) => Decisions -> a -> Maybe (Decisions, Value a)
 firstValue ds = tryValues ds . toTry
+
+-- | Find the last value and the corresponding decisions of a @NonDet@
+lastValue :: (NonDet a) => Decisions -> a -> Maybe (Decisions, Value a)
+lastValue ds = getLastAlt . tryValues ds . toTry
 
 -- | Count all values of a @Try@
 countTryValues :: Decisions -> Try a -> Integer

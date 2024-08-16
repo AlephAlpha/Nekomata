@@ -1,5 +1,15 @@
 # Revision history for Nekomata
 
+## 0.8.0.0 -- Unreleased
+
+* New builtin: `\lastValue`.
+* A new mode `last` is added. It outputs the last possible result. You can switch to this mode by the `-t` flag in the command line or the `\Mode last` command in the REPL.
+
+### Breaking changes
+
+* `\oneValue` is renamed to `\firstValue`.
+* The built-in function `\normalForm` was removed in version 0.7.0.0. Its short name `¤` is now reused for the new function `\lastValue`.
+
 ## 0.7.0.0 -- 2024-08-10
 
 * Added examples to the documentation of built-in functions and particles.
