@@ -115,7 +115,13 @@ data RunOnce = RunOnce
     }
 
 optRunOnce :: Parser RunOnce
-optRunOnce = RunOnce <$> optCode <*> optInput <*> optMode <*> optMultiple <*> optLimit
+optRunOnce =
+    RunOnce
+        <$> optCode
+        <*> optInput
+        <*> optMode
+        <*> optMultiple
+        <*> optLimit
 
 data Opts = Opts RunOnce | Repl | DocBuiltin | DocCodePage | Version
 

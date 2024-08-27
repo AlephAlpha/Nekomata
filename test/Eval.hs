@@ -1780,6 +1780,18 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[1,2,2,4,4,4,4]", all_ ["[1,2,2,4,4,4,4]"])
             , ("[1,2,2,1,4,8,1]", all_ ["[3,2,2,3,1,1,3]"])
             ]
+    describe "q224278: Count the trailing zeros" $ do
+        specEval
+            "ˡ{v¦"
+            [ ("512 2", all_ ["9"])
+            , ("248 2", all_ ["3"])
+            , ("364 265", all_ ["0"])
+            , ("764 2", all_ ["2"])
+            , ("336 284", all_ ["0"])
+            , ("517 422", all_ ["0"])
+            , ("554 37", all_ ["0"])
+            , ("972 3", all_ ["5"])
+            ]
     describe "q225203: Delannoy numbers" $ do
         specEval
             "Ṁ→ᵒÇ∏ƃ"

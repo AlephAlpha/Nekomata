@@ -124,8 +124,9 @@ parseData' =
 -- | Parse a Nekomata input
 parseInput :: Parser [Data]
 parseInput =
-    parseData
-        `endBy` (try (spaces >> char ',' >> spaces) <|> spaces)
-        <* spaces
-        <* eof
-            <?> "Nekomata input"
+    spaces
+        >> parseData
+            `endBy` (try (spaces >> char ',' >> spaces) <|> spaces)
+            <* spaces
+            <* eof
+                <?> "Nekomata input"
