@@ -3845,3 +3845,28 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("54", first_ "27")
             , ("1337", first_ "688")
             ]
+    describe "q275212: Stuck on Sokoban" $ do
+        specEval
+            "Ť?~q5Ƃ="
+            [ ("[[1,1,1,1,1],[1,1,1,1,1],[1,1,1,1,0],[1,1,1,1,0],[1,1,1,1,1]]", Check False)
+            , ("[[1,1,1],[0,1,1],[1,1,1]]", Check True)
+            , ("[[0,1,1],[1,1,1],[1,1,0]]", Check False)
+            , ("[[0,0,0,0],[0,1,0,1],[0,0,0,0]]", Check True)
+            , ("[[0,0,0,0],[0,1,0,0],[0,0,0,0]]", Check False)
+            , ("[[0,1]]", Check False)
+            , ("[[1,0,1,0]]", Check True)
+            , ("[[1,0,0,1]]", Check False)
+            ]
+    describe "q275291: How many ways can you make change?" $ do
+        specEval
+            "Ṗ@ᵐ~oũ"
+            [ ("1 [\"\",\"cs\",\"2\",\"\",\"\",\"BJ\"]", all_ ["c", "s"])
+            , ("2 [\"\",\"cs\",\"2\",\"\",\"\",\"BJ\"]", all_ ["cc", "cs", "ss", "2"])
+            , ("3 [\"\",\"cs\",\"2\",\"\",\"\",\"BJ\"]", all_ ["ccc", "ccs", "css", "sss", "2c", "2s"])
+            , ("4 [\"\",\"cs\",\"2\",\"\",\"\",\"BJ\"]", all_ ["cccc", "cccs", "ccss", "csss", "ssss", "2cc", "2cs", "2ss", "22"])
+            , ("5 [\"\",\"cs\",\"2\",\"\",\"\",\"BJ\"]", all_ ["ccccc", "cccs", "ccss", "csss", "ssss", "2ccc", "2ccs", "2css", "2sss", "22c", "22s", "B", "J"])
+            ]
+    describe "q275700: Reorder a string of length 2^n by permuting the n binary digits of every index" $ do
+        specEval
+            "↔SĦaõ@"
+            [("[1,2,0] [1,1,0,1,0,0,1,0]", all_ ["[1,0,0,1,1,1,0,0]"])]

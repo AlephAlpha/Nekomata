@@ -7,6 +7,7 @@ import Nekomata.CodePage
 import Nekomata.Particle hiding (name, short)
 import qualified Nekomata.Particle as Particle
 import Test.Hspec
+import Unicode.Char
 
 testNames :: Spec
 testNames = do
@@ -36,6 +37,10 @@ testNames = do
             let codePage' = filter (`notElem` " \\\"\n[]{}0123456789�") codePage
             all (`elem` codePage') shortNames `shouldBe` True
 
+        it "should have short names that are not Unicode modifier letters" $ do
+            let shortNames = map short builtins
+            all ((/= ModifierLetter) . generalCategory) shortNames `shouldBe` True
+
     describe "Particle" $ do
         it "should have unique names" $ do
             let names = map Particle.name builtinParticles
@@ -49,6 +54,10 @@ testNames = do
             let shortNames = map Particle.short builtinParticles
             let codePage' = filter (`notElem` " \\\"\n[]{}0123456789�") codePage
             all (`elem` codePage') shortNames `shouldBe` True
+
+        it "should have short names that are Unicode modifier letters" $ do
+            let shortNames = map Particle.short builtinParticles
+            all ((== ModifierLetter) . generalCategory) shortNames `shouldBe` True
 
         it "should have different names than builtin functions" $ do
             let names = map Particle.name builtinParticles

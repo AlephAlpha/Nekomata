@@ -16,25 +16,28 @@ import Data.Word (Word8)
 
 {- | Nekomata's custom code page:
 256 characters, each representing a single byte.
+Unassigned characters are represented by '�'.
 -}
 codePage :: String
 codePage =
-    "¡¢£¤¥¦§¬±×÷‼←→↔↕"
-        ++ "¿∆∏∑∕∙√½∩∫≈≠≡µ≤≥"
-        ++ " !\"#$%&'()*+,-./"
-        ++ "0123456789:;<=>?"
-        ++ "@ABCDEFGHIJKLMNO"
-        ++ "PQRSTUVWXYZ[\\]^_"
-        ++ "`abcdefghijklmno"
-        ++ "pqrstuvwxyz{|}~\n"
-        ++ "ᵃᶜᵈᵉᵋᶠʰᶦʲᴶᵏˡᵐᵚᵑᵒ"
-        ++ "ᵖʳᵗʷˣʸᶻᶾ��������"
-        ++ "ÄÅƂÇĈĎÐƊËḞĜĢĦĨĬĻ"
-        ++ "ŁṀṂŇÖØƆƤṖŘŜŠŞŢŤŬ"
-        ++ "ŽƵÞ�������������"
-        ++ "äåƃƀçĉđḍɗēĕƒḟĝïĭ"
-        ++ "įṁṃɱňŋṇõɔƥŗřşŧũů"
-        ++ "žƶþ�������������"
+    concat
+        [ "¡¢£¤¥¦§¬±×÷‼←→↔↕"
+        , "¿∆∏∑∕∙√½∩∫≈≠≡µ≤≥"
+        , " !\"#$%&'()*+,-./"
+        , "0123456789:;<=>?"
+        , "@ABCDEFGHIJKLMNO"
+        , "PQRSTUVWXYZ[\\]^_"
+        , "`abcdefghijklmno"
+        , "pqrstuvwxyz{|}~\n"
+        , "ᵃᶜᵈᵉᵋᶠʰᶦʲᴶᵏˡᵐᵚᵑᵒ"
+        , "ᵖʳᵗʷˣʸᶻᶾ��������"
+        , "ÄÅƂÇĈĎÐƊËḞĜĢĦĨĬĻ"
+        , "ŁṀṂŇÖØƆƤṖŘŜŠŞŢŤŬ"
+        , "ŽƵÞ�������������"
+        , "äåƃƀçĉđḍɗēĕƒḟĝïĭ"
+        , "įṁṃɱňŋṇõɔƥŗřşŧũů"
+        , "žƶþ�������������"
+        ]
 
 -- | Convert a character to a number.
 charToInt :: (Num a) => Char -> Maybe a

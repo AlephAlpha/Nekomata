@@ -88,7 +88,7 @@ library
   -- Other library packages from which modules are imported.
   build-depends:
     , arithmoi       ^>=0.13
-    , base           >=4.15 && <5
+    , base           >=4.15  && <5
     , containers     ^>=0.7
     , integer-roots  ^>=1.0
     , parsec         ^>=3.1
@@ -117,7 +117,7 @@ executable Nekomata
 
   -- Other library packages from which modules are imported.
   build-depends:
-    , base                  >=4.15 && <5
+    , base                  >=4.15  && <5
     , bytestring            ^>=0.12
     , containers            ^>=0.7
     , haskeline             ^>=0.8
@@ -154,6 +154,7 @@ test-suite Nekomata-test
 
   -- Test dependencies.
   build-depends:
-    , base      >=4.15 && <5
-    , hspec     ^>=2.11
+    , base          >=4.15  && <5
+    , hspec         ^>=2.11
     , Nekomata
+    , unicode-data  ^>=0.6

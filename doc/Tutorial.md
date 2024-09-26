@@ -4,6 +4,8 @@ Nekomata is still in an early stage of development. The syntax and semantics of 
 
 For installing and using the interpreter, please see [Getting Started](GettingStarted.md).
 
+For documentation of built-in functions and particles, please see [Builtins.md](Builtins.md).
+
 ## The Stack
 
 Nekomata is a concatenative language. "Concatenative" is just a fancy word for "stack-based". In a concatenative language, the program is a sequence of instructions that operate on a stack.
