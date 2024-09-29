@@ -2365,7 +2365,7 @@ __Examples__:
 
 ### `map` (`ᵐ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
 
-Apply a function to each value in a list.
+Apply a function to each element in a list.
 
 If the input is an number, apply the function to each integer from 0 to the input minus 1.
 
@@ -2387,7 +2387,7 @@ __Examples__:
 
 ### `zipWith` (`ᶻ`, `(m -> 1) -> (m -> 1) where m > 1`)
 
-Zip two lists and apply a function to each pair of values.
+Zip two lists and apply a function to each pair of elements.
 
 Fail if the lists have different lengths.
 
@@ -2399,7 +2399,7 @@ __Examples__:
 
 ### `zipWithTrunc` (`ᶾ`, `(m -> 1) -> (m -> 1) where m > 1`)
 
-Zip two lists and apply a function to each pair of values.
+Zip two lists and apply a function to each pair of elements.
 
 If the lists have different lengths, truncate the longer list to the length of the shorter list.
 
@@ -2411,7 +2411,7 @@ __Examples__:
 
 ### `outer` (`ᵒ`, `(m -> 1) -> (m -> 1) where m > 1`)
 
-Apply a function to every possible pair of values in two lists and return a list of lists.
+Apply a function to every possible pair of elements in two lists and return a list of lists.
 
 If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
 
@@ -2467,7 +2467,7 @@ __Examples__:
 
 ### `filter` (`ᶠ`, `(m -> n) -> (1 -> 1)`)
 
-For each value in a list, check if a function would succeed without actually applying it, and remove the value if it fails.
+For each element in a list, check if a function would succeed without actually applying it, and remove the element if it fails.
 
 If the input is an number, convert it to a list of integers from 0 to the input minus 1 before filtering.
 
@@ -2537,7 +2537,7 @@ __Examples__:
 
 ### `fold1` (`ʳ`, `(m -> 1) -> (m - 1 -> 1) where m > 1`)
 
-Apply a function to the first two values of a list, then apply it to the result and the third value, and so on until the end of the list.
+Apply a function to the first two elements of a list, then apply it to the result and the third element, and so on until the end of the list.
 
 If the input is an number, convert it to a list of integers from 0 to the input minus 1 before folding.
 
@@ -2547,7 +2547,7 @@ __Examples__:
 
 ### `onAny` (`ʰ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
 
-Apply a function to one value in a list. The value is chosen non-deterministically.
+Apply a function to one element in a list. The element is chosen non-deterministically.
 
 Fail if the list is empty.
 

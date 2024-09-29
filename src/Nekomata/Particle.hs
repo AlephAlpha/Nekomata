@@ -157,7 +157,7 @@ builtinParticles =
         map'
         "(0 -> 1) -> (1 -> 1) \
         \or (m -> 1) -> (m -> 1) where m > 0"
-        "Apply a function to each value in a list.\n\
+        "Apply a function to each element in a list.\n\
         \If the input is an number, apply the function to each integer \
         \from 0 to the input minus 1.\n\
         \If the function takes no argument, return a list of n copies \
@@ -179,7 +179,7 @@ builtinParticles =
         'ᶻ'
         zipWith'
         "(m -> 1) -> (m -> 1) where m > 1"
-        "Zip two lists and apply a function to each pair of values.\n\
+        "Zip two lists and apply a function to each pair of elements.\n\
         \Fail if the lists have different lengths.\n\
         \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
@@ -189,7 +189,7 @@ builtinParticles =
         'ᶾ'
         zipWithTrunc'
         "(m -> 1) -> (m -> 1) where m > 1"
-        "Zip two lists and apply a function to each pair of values.\n\
+        "Zip two lists and apply a function to each pair of elements.\n\
         \If the lists have different lengths, truncate the longer list \
         \to the length of the shorter list.\n\
         \If one of the input is an number, apply the function to each \
@@ -200,7 +200,7 @@ builtinParticles =
         'ᵒ'
         outer
         "(m -> 1) -> (m -> 1) where m > 1"
-        "Apply a function to every possible pair of values in two lists \
+        "Apply a function to every possible pair of elements in two lists \
         \and return a list of lists.\n\
         \If one of the input is an number, apply the function to each \
         \integer from 0 to the input minus 1."
@@ -250,8 +250,8 @@ builtinParticles =
         'ᶠ'
         filter'
         "(m -> n) -> (1 -> 1)"
-        "For each value in a list, check if a function would succeed \
-        \without actually applying it, and remove the value if it fails.\n\
+        "For each element in a list, check if a function would succeed \
+        \without actually applying it, and remove the element if it fails.\n\
         \If the input is an number, convert it to a list of integers \
         \from 0 to the input minus 1 before filtering."
         [("[1,2,3] ᶠ{2<}", all_ ["[1]"])]
@@ -320,8 +320,8 @@ builtinParticles =
         'ʳ'
         fold1
         "(m -> 1) -> (m - 1 -> 1) where m > 1"
-        "Apply a function to the first two values of a list, \
-        \then apply it to the result and the third value, \
+        "Apply a function to the first two elements of a list, \
+        \then apply it to the result and the third element, \
         \and so on until the end of the list.\n\
         \If the input is an number, convert it to a list of integers \
         \from 0 to the input minus 1 before folding."
@@ -332,8 +332,8 @@ builtinParticles =
         onAny
         "(0 -> 1) -> (1 -> 1) \
         \or (m -> 1) -> (m -> 1) where m > 0"
-        "Apply a function to one value in a list. \
-        \The value is chosen non-deterministically.\n\
+        "Apply a function to one element in a list. \
+        \The element is chosen non-deterministically.\n\
         \Fail if the list is empty.\n\
         \If the input is an number, it is converted to a list of integers \
         \from 0 to the input minus 1 before applying the function."

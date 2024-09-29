@@ -3864,9 +3864,25 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("2 [\"\",\"cs\",\"2\",\"\",\"\",\"BJ\"]", all_ ["cc", "cs", "ss", "2"])
             , ("3 [\"\",\"cs\",\"2\",\"\",\"\",\"BJ\"]", all_ ["ccc", "ccs", "css", "sss", "2c", "2s"])
             , ("4 [\"\",\"cs\",\"2\",\"\",\"\",\"BJ\"]", all_ ["cccc", "cccs", "ccss", "csss", "ssss", "2cc", "2cs", "2ss", "22"])
-            , ("5 [\"\",\"cs\",\"2\",\"\",\"\",\"BJ\"]", all_ ["ccccc", "cccs", "ccss", "csss", "ssss", "2ccc", "2ccs", "2css", "2sss", "22c", "22s", "B", "J"])
+            , ("5 [\"\",\"cs\",\"2\",\"\",\"\",\"BJ\"]", all_ ["ccccc", "ccccs", "cccss", "ccsss", "cssss", "sssss", "2ccc", "2ccs", "2css", "2sss", "22c", "22s", "B", "J"])
             ]
     describe "q275700: Reorder a string of length 2^n by permuting the n binary digits of every index" $ do
         specEval
             "↔SĦaõ@"
             [("[1,2,0] [1,1,0,1,0,0,1,0]", all_ ["[1,0,0,1,1,1,0,0]"])]
+    describe "q275853: Score the science points in 7 Wonders" $ do
+        specEval
+            "ᵑʰ→::∙$ṁ7*+Å"
+            [ ("0 [0,5,0]", all_ ["25"])
+            , ("1 [0,5,0]", all_ ["36"])
+            , ("0 [3,2,1]", all_ ["21"])
+            , ("0 [3,3,1]", all_ ["26"])
+            , ("1 [3,2,1]", all_ ["31"])
+            , ("0 [4,3,1]", all_ ["33"])
+            , ("1 [4,2,1]", all_ ["38"])
+            , ("0 [4,3,1]", all_ ["33"])
+            , ("0 [3,3,2]", all_ ["36"])
+            , ("0 [4,2,2]", all_ ["38"])
+            , ("0 [3,2,3]", all_ ["36"])
+            , ("2 [3,2,1]", all_ ["38"])
+            ]
