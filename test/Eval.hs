@@ -1137,6 +1137,14 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("\"0\"", all_ ["1"])
             , ("\"012345678910111213141516171819202122232425262728293031323334353637383940\"", all_ ["41"])
             ]
+    describe "q140667: Are the lists divisible?" $ do
+        specEval
+            "↕¦"
+            [ ("[3,4,6] [6,12,8]", Check True)
+            , ("[1,5,100] [10,5,7]", Check False)
+            , ("[1,1,1,1] [14,10053,6,9]", Check True)
+            , ("[7] [12]", Check False)
+            ]
     describe "q141949: Count edits accounting for grace period" $ do
         specEval
             "ˡ{C4+>‼"
@@ -3885,4 +3893,32 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("0 [4,2,2]", all_ ["38"])
             , ("0 [3,2,3]", all_ ["36"])
             , ("2 [3,2,1]", all_ ["38"])
+            ]
+    describe "q275973: Decide symmetry of fractions" $ do
+        specEval
+            "Ƃ;↔=#Ë="
+            [ ("0 1", Check True)
+            , ("3 2", Check True)
+            , ("9 4", Check True)
+            , ("15 4", Check True)
+            , ("51 8", Check True)
+            , ("1 1", Check False)
+            , ("2 1", Check False)
+            , ("1 2", Check False)
+            , ("5 2", Check False)
+            , ("1 4", Check False)
+            ]
+    describe "q276424: Counting constrained permutations" $ do
+        specEval
+            "↕x-±→Ħ-ž"
+            [ ("3 [1,1,1]", Count 3)
+            , ("2 [0,2,0]", Count 1)
+            , ("3 [2,0,1]", Count 1)
+            , ("4 [2,1,1]", Count 4)
+            ]
+    describe "q276795: Walks on a circle" $ do
+        specEval
+            "2ᵚ~ᵖ{:∫PÄx--v%Ţ≡¿$L"
+            [ ("6 2", Count 10)
+            , ("9 3", Count 22)
             ]
