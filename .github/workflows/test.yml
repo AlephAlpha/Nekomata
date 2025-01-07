@@ -14,4 +14,4 @@ jobs:
       - run: cabal build
       - run: cabal run Nekomata -- -c '"Hello, World!"'
       - run: cabal run Nekomata -- -c '+' -i '1 2'
-      - run: cabal run Nekomata-test
+      - run: cabal test --enable-test
