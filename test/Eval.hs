@@ -3922,3 +3922,17 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             [ ("6 2", Count 10)
             , ("9 3", Count 22)
             ]
+    describe "q276909: Walks in Nice (Nizza)" $ do
+        specEval
+            "ᵐįŋᵖ{∫ŤlƆž≥}→ᵐɗH"
+            [ ("3", Count 14)
+            , ("4", Count 42)
+            ]
+    describe "q277015: \"Graphing\" calculator" $ do
+        specEval
+            "R*+"
+            [ ("5 2 0", all_ ["[2,4,6,8,10]"])
+            , ("15 1 1", all_ ["[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]"])
+            , ("1 1/2 -1", all_ ["[-1/2]"])
+            , ("5 0 0", all_ ["[0,0,0,0,0]"])
+            ]
