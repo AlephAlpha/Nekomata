@@ -3936,3 +3936,81 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("1 1/2 -1", all_ ["[-1/2]"])
             , ("5 0 0", all_ ["[0,0,0,0,0]"])
             ]
+    describe "q277165: Find all unique quintuplets in an array that sum to a given target" $ do
+        specEval
+            "oS5Lũᵖ{∑="
+            [ ("[-5,-2,-2,1,3,4,6] 0", all_ ["[-5,-2,-2,3,6]"])
+            , ("[-5,-4,-2,0,1,2,6] 1", all_ ["[-4,-2,0,1,6]", "[-5,-2,0,2,6]"])
+            , ("[0,-1,2,3] 4", all_ [])
+            , ("[0,1,-9,6,7] 6", all_ [])
+            , ("[0,1,9,9,5] 45", all_ [])
+            , ("[1,4,6,9,-4] 16", all_ ["[-4,1,4,6,9]"])
+            , ("[1,0,9,6,5,0] 21", all_ ["[0,1,5,6,9]"])
+            , ("[1,0,9,6,5,4,7] 21", all_ ["[0,1,5,6,9]", "[0,1,4,7,9]"])
+            , ("[1,0,9,6,5,4,4,7] 21", all_ ["[1,4,4,5,7]", "[0,4,4,6,7]", "[0,1,5,6,9]", "[0,1,4,7,9]"])
+            , ("[1,1,2,2,3,3,4,4] 11", all_ ["[1,2,2,3,3]", "[1,1,2,3,4]"])
+            ]
+    describe "q277441: Distinct characters and distinct sizes" $ do
+        specEval
+            "Ţᵉu#c∑"
+            [ ("\"\"", all_ ["0"])
+            , ("\"a\"", all_ ["2"])
+            , ("\"aaa\"", all_ ["4"])
+            , ("\"ab\"", all_ ["3"])
+            , ("\"aaab\"", all_ ["6"])
+            , ("\"abab\"", all_ ["4"])
+            , ("\"abccbcb\"", all_ ["7"])
+            , ("\"emmmmmmmm\"", all_ ["11"])
+            , ("\"abcc\"", all_ ["6"])
+            , ("\"aabbcc\"", all_ ["5"])
+            , ("\"Ţᵉu#c∑\"", all_ ["7"])
+            ]
+    describe "q277628: Is the number sum of 3 squares?" $ do
+        specEval
+            "Ṗ√4~L"
+            [ ("0", Check True)
+            , ("6", Check True)
+            , ("7", Check False)
+            , ("8", Check True)
+            , ("9", Check True)
+            ]
+        specEval
+            "Zʷ{4¦}→8¦"
+            [ ("0", Check False)
+            , ("6", Check False)
+            , ("7", Check True)
+            , ("8", Check False)
+            , ("9", Check False)
+            , ("1145141919810", Check False)
+            , ("245657627368729", Check False)
+            , ("12345678987654321", Check False)
+            , ("185724285729475816451975", Check True)
+            ]
+    describe "q277735: Counting Rota-Baxter words" $ do
+        specEval
+            "ŧĉᵐzç0ɔYṀƵ¿ᵗ{qCᵈƆM→>N"
+            [ ("1", Count 1)
+            , ("2", Count 2)
+            , ("3", Count 5)
+            , ("4", Count 16)
+            , ("5", Count 55)
+            ]
+    describe "q277756: How many chains?" $ do
+        specEval
+            "řʷ{ĕᵈĕ+coũ"
+            [ ("1", Count 1)
+            , ("2", Count 1)
+            , ("3", Count 1)
+            , ("4", Count 2)
+            , ("5", Count 4)
+            ]
+    describe "q277814: Number of legal positions in 1D go" $ do
+        specEval
+            "3$ŧY∑,¬çY3<"
+            [ ("1", Count 1)
+            , ("2", Count 5)
+            , ("3", Count 15)
+            , ("4", Count 41)
+            , ("5", Count 113)
+            , ("6", Count 313)
+            ]
