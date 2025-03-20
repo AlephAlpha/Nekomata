@@ -1451,6 +1451,23 @@ __Examples__:
 - `[[1,2],[3,4],[5]]Ŝ` → `[3,7,5]`
 - `[[[1,2],[3,4]],[[5,6],[7,8]]]Ŝ` → `[[4,6],[12,14]]`
 
+### `unmul` (`ŝ`, `1 -> 2`)
+
+Factorize an integer into two factors.
+
+Fail when the input is not a positive integer.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
+This function is non-deterministic.
+
+__Examples__:
+
+- `12ŝÐ` → `[1,12] [2,6] [3,4] [4,3] [6,2] [12,1]`
+- `13ŝÐ` → `[1,13] [13,1]`
+- `0ŝ` → Fail
+- `12_ ŝÐ` → Fail
+
 ### `charToInt` (`e`, `1 -> 1`)
 
 Convert a char to an integer according to Nekomata's code page.

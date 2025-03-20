@@ -216,11 +216,11 @@ floor' = unaryNum $ const (floor :: Rational -> Integer)
 
 natural :: Function
 natural = nullary $
-    \i -> toTryData <$> anyOf i $ fromList [0 :: Integer ..]
+    \i -> toTryData $ anyOf' i [0 :: Integer ..]
 
 integer :: Function
 integer = nullary $
-    \i -> toTryData <$> anyOf i $ fromList integers
+    \i -> toTryData $ anyOf' i integers
   where
     integers = (0 :: Integer) : [y | x <- [1 ..], y <- [x, -x]]
 
@@ -357,8 +357,7 @@ prime :: Function
 prime = nullary $
     \i ->
         toTryData
-            <$> anyOf i
-                . fromList
+            <$> anyOf' i
             $ map unPrime [nextPrime (1 :: Integer) ..]
 
 primePi :: Function
@@ -402,7 +401,7 @@ divisors :: Function
 divisors = unaryInt $ const divisors_
   where
     divisors_ 0 = Fail
-    divisors_ x = toTryData . sort $ divisorsList x
+    divisors_ x = Val . sort $ divisorsList x
 
 intPartition :: Function
 intPartition = unaryInt $ intPartition_ 1
@@ -460,3 +459,11 @@ sumEach = unary sumEach'
   where
     sumEach' i (DListT xs) = liftList (tryMap sum'' i) xs
     sumEach' _ _ = Fail
+
+unmul :: Function
+unmul = unary2Int $ unmul_
+  where
+    unmul_ _ 0 = Fail
+    unmul_ i x
+        | x > 0 = anyOf' i [(d, x `div` d) | d <- sort $ divisorsList x]
+        | otherwise = Fail

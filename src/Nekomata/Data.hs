@@ -361,6 +361,13 @@ liftInt2 ::
     (Try (Det Rational) -> Try (Det Rational) -> TryData)
 liftInt2 f x y = toTryData $ liftM2 f (toTryInt' x) (toTryInt' y)
 
+-- | Lift a unary integer function that returns two values to @TryData@
+liftInt12 ::
+    (ToTryData a, ToTryData b) =>
+    (Integer -> Try (a, b)) ->
+    (Try (Det Rational) -> (TryData, TryData))
+liftInt12 f x = bimap toTryData toTryData . unzipF $ toTryInt' x >>= f
+
 -- | Lift a unary char function to @TryData@
 liftChar :: (ToTryData a) => (Word8 -> a) -> (Try (Det Word8) -> TryData)
 liftChar f = toTryData . fmap f . toTry

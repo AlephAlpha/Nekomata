@@ -1339,6 +1339,20 @@ builtins =
         , ("[[[1,2],[3,4]],[[5,6],[7,8]]]Ŝ", all_ ["[[4,6],[12,14]]"])
         ]
     , Builtin
+        "unmul"
+        'ŝ'
+        unmul
+        "Factorize an integer into two factors.\n\
+        \Fail when the input is not a positive integer.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
+        \This function is non-deterministic."
+        [ ("12ŝÐ", all_ ["[1,12]", "[2,6]", "[3,4]", "[4,3]", "[6,2]", "[12,1]"])
+        , ("13ŝÐ", all_ ["[1,13]", "[13,1]"])
+        , ("0ŝ", all_ [])
+        , ("12_ ŝÐ", all_ [])
+        ]
+    , Builtin
         "charToInt"
         'e'
         charToInt'

@@ -223,6 +223,15 @@ unaryInt f = unaryVec f'
   where
     f' i x = liftInt (f i) (toTryNum x)
 
+-- | Convert and vectorize a unary numeric integer that returns two values
+unary2Int ::
+    (ToTryData a, ToTryData b) =>
+    (Id -> Integer -> Try (a, b)) ->
+    Function
+unary2Int f = unary2Vec f'
+  where
+    f' i x = liftInt12 (f i) (toTryNum x)
+
 -- | Convert and vectorize a binary integer function with padding
 binaryIntPad :: (ToTryData a) => (Id -> Integer -> Integer -> a) -> Function
 binaryIntPad f = binaryVecPad f'

@@ -551,6 +551,22 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("44", all_ ["20"])
             , ("105", all_ ["48"])
             ]
+    describe "q83814: Simplify a square root" $ do
+        specEval
+            "ŝ√Ð"
+            [ ("1", first_ "[1,1]")
+            , ("2", first_ "[2,1]")
+            , ("3", first_ "[3,1]")
+            , ("4", first_ "[1,2]")
+            , ("5", first_ "[5,1]")
+            , ("6", first_ "[6,1]")
+            , ("7", first_ "[7,1]")
+            , ("8", first_ "[2,2]")
+            , ("9", first_ "[1,3]")
+            , ("10", first_ "[10,1]")
+            , ("12", first_ "[3,2]")
+            , ("16", first_ "[1,4]")
+            ]
     describe "q84519: Implement Takewhile" $ do
         specEval
             "Ö∫¬∑T"
@@ -1681,12 +1697,12 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q206853: Find the perfect square!" $ do
         specEval
-            "Ď√‼Ṁ"
-            [ ("4", all_ ["2"])
-            , ("9", all_ ["3"])
-            , ("12", all_ ["2"])
-            , ("13", all_ ["1"])
-            , ("108", all_ ["6"])
+            "ŝ√"
+            [ ("4", first_ "2")
+            , ("9", first_ "3")
+            , ("12", first_ "2")
+            , ("13", first_ "1")
+            , ("108", first_ "6")
             ]
     describe "q206967: Sum the array times n, except the last" $ do
         specEval
@@ -3547,13 +3563,13 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q269712: Modular Equivalence" $ do
         specEval
-            "ᵋ*+-Ď~2>"
+            "ᵋ*+-ŝ2>"
             [ ("3 4", all_ ["5"])
-            , ("5 8", all_ ["3", "9", "27"])
+            , ("5 8", all_ ["27", "9", "3"])
             , ("29 9", all_ ["223"])
-            , ("26 4", all_ ["37", "74"])
-            , ("13 11", all_ ["7", "17", "119"])
-            , ("6258 571", all_ ["463", "7703", "3566489"])
+            , ("26 4", all_ ["74", "37"])
+            , ("13 11", all_ ["119", "17", "7"])
+            , ("6258 571", all_ ["3566489", "7703", "463"])
             ]
     describe "q269857: Counting rankings" $ do
         specEval
@@ -4014,3 +4030,26 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("5", Count 113)
             , ("6", Count 313)
             ]
+    describe "q277847: split string into minimum number of palindromic substrings" $ do
+        specEval
+            "J:ᵐ↔=aş"
+            [ ("\"a\"", all_ ["[\"a\"]"])
+            , ("\"abcabc\"", all_ ["[\"a\",\"b\",\"c\",\"a\",\"b\",\"c\"]"])
+            , ("\"abccba\"", all_ ["[\"abccba\"]"])
+            , ("\"abcba\"", all_ ["[\"abcba\"]"])
+            , ("\"ababcba\"", all_ ["[\"a\",\"b\",\"abcba\"]", "[\"aba\",\"bcb\",\"a\"]"])
+            , ("\"abcbabcbaabc\"", all_ ["[\"abcba\",\"b\",\"cbaabc\"]"])
+            ]
+    describe "q278564: Counting Gessel walks" $ do
+        specEval
+            "Äᵐ{įŋ∫}∫Ɔžᵚ≥"
+            [ ("0", Count 0)
+            , ("1", Count 2)
+            , ("2", Count 11)
+            , ("3", Count 85)
+            , ("4", Count 782)
+            ]
+    describe "q278622: A121016: Numbers whose binary expansion is properly periodic. or A328594: Numbers whose binary expansion is aperiodic" $ do
+        specEval
+            "Ňᵗ{ƂJŁ≡"
+            [("", truncate_ ["0", "1", "2", "4", "5", "6", "8", "9", "11", "12", "13", "14", "16", "17"])]

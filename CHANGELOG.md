@@ -2,7 +2,7 @@
 
 ## 0.8.0.0 -- Unreleased
 
-* New builtin: `\lastValue`.
+* New builtin: `\lastValue`, `\unmul`.
 * A new mode `last` is added. It outputs the last possible result. You can switch to this mode by the `-t` flag in the command line or the `\Mode last` command in the REPL.
 * Now input can have leading and trailing spaces. The interpreter will trim them when parsing.
 * Now Nekomata can be built with GHC 9.10.1, thanks to an update of the `haskeline` package.
