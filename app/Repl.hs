@@ -1,6 +1,8 @@
 module Repl (runRepl) where
 
 import Control.Applicative ((<|>))
+import Control.Arrow (second)
+import Data.Char (isSpace)
 import Data.List (isPrefixOf)
 import Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
@@ -33,23 +35,28 @@ data ReplCommand
     | ReplArity String
     deriving (Eq, Show)
 
+splitFirstWord :: String -> (String, String)
+splitFirstWord = second (dropWhile isSpace) . break isSpace . dropWhile isSpace
+
 parseReplCommand :: String -> ReplCommand
 parseReplCommand input =
-    case words input of
-        ("\\Q" : _) -> ReplQuit
-        ("\\Quit" : _) -> ReplQuit
-        ("\\H" : _) -> ReplHelp
-        ("\\Help" : _) -> ReplHelp
-        ("\\Mode" : "all" : _) -> ReplMode AllValues
-        ("\\Mode" : "first" : _) -> ReplMode FirstValue
-        ("\\Mode" : "last" : _) -> ReplMode LastValue
-        ("\\Mode" : "count" : _) -> ReplMode CountValues
-        ("\\Mode" : "exists" : _) -> ReplMode CheckExistence
-        ("\\Mode" : _) -> ReplShowMode
-        ("\\Limit" : rest) -> ReplLimit (unwords rest)
-        ("\\Input" : rest) -> ReplInput (unwords rest)
-        ("\\Info" : rest) -> ReplInfo (unwords rest)
-        ("\\Arity" : rest) -> ReplArity (unwords rest)
+    case splitFirstWord input of
+        ("\\Q", _) -> ReplQuit
+        ("\\Quit", _) -> ReplQuit
+        ("\\H", _) -> ReplHelp
+        ("\\Help", _) -> ReplHelp
+        ("\\Mode", rest) ->
+            case splitFirstWord rest of
+                ("all", _) -> ReplMode AllValues
+                ("first", _) -> ReplMode FirstValue
+                ("last", _) -> ReplMode LastValue
+                ("count", _) -> ReplMode CountValues
+                ("exists", _) -> ReplMode CheckExistence
+                _ -> ReplShowMode
+        ("\\Limit", rest) -> ReplLimit rest
+        ("\\Input", rest) -> ReplInput rest
+        ("\\Info", rest) -> ReplInfo rest
+        ("\\Arity", rest) -> ReplArity rest
         _ -> ReplEval input
 
 replCommandStrings :: [String]
