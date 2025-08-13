@@ -89,6 +89,19 @@ __Examples__:
 
 - `1 2?Å` → `2`
 
+### `shortestValue` (`ṩ`, `1 -> 1`)
+
+Get the shortest possible value from a non-deterministic object whose values are lists.
+
+If there are multiple shortest ones, return any of them non-deterministically.
+
+Fails if the object has no values, or if any of its values is not a list.
+
+__Examples__:
+
+- `[1] [2,3]?ṩ` → `[1]`
+- `[1,2] [3,4]?ṩ` → `[1,2] [3,4]`
+
 ### `if` (`I`, `2 -> 1`)
 
 Choose the first value that doesn't fail between two values.
@@ -1706,6 +1719,18 @@ __Examples__:
 - `[1,2,3]ç` → `[0,1,2,3]`
 - `[]ç` → `[0]`
 
+### `unsnoc0` (`Ẑ`, `1 -> 2`)
+
+Get the last element and the rest of a list, and check if the last element is zero.
+
+If the last element is a char, it is converted to a number according to Nekomata's code page.
+
+__Examples__:
+
+- `[1,2,3]ẐÐ` → Fail
+- `[1,2,3,0]ẐÐ` → `[[1,2,3],0]`
+- `[]Ẑ` → Fail
+
 ### `reverse` (`↔`, `1 -> 1`)
 
 Reverse a list.
@@ -1935,7 +1960,7 @@ __Examples__:
 
 ### `extract` (`ĕ`, `1 -> 2`)
 
-Extract an element from a list.
+Draw an element out from a list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
 

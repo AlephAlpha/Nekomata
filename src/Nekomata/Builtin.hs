@@ -156,6 +156,19 @@ builtins =
         \Fails if the object has no values."
         [("1 2?Å", all_ ["2"])]
     , Builtin
+        "shortestValue"
+        'ṩ'
+        shortestValue
+        "Get the shortest possible value from a non-deterministic object \
+        \whose values are lists.\n\
+        \If there are multiple shortest ones, \
+        \return any of them non-deterministically.\n\
+        \Fails if the object has no values, \
+        \or if any of its values is not a list."
+        [ ("[1] [2,3]?ṩ", all_ ["[1]"])
+        , ("[1,2] [3,4]?ṩ", all_ ["[1,2]", "[3,4]"])
+        ]
+    , Builtin
         "if"
         'I'
         if'
@@ -1556,6 +1569,18 @@ builtins =
         , ("[]ç", all_ ["[0]"])
         ]
     , Builtin
+        "unsnoc0"
+        'Ẑ'
+        unsnoc0
+        "Get the last element and the rest of a list, \
+        \and check if the last element is zero.\n\
+        \If the last element is a char, \
+        \it is converted to a number according to Nekomata's code page."
+        [ ("[1,2,3]ẐÐ", all_ [])
+        , ("[1,2,3,0]ẐÐ", all_ ["[[1,2,3],0]"])
+        , ("[]Ẑ", all_ [])
+        ]
+    , Builtin
         "reverse"
         '↔'
         reverse'
@@ -1757,7 +1782,7 @@ builtins =
         "extract"
         'ĕ'
         extract
-        "Extract an element from a list.\n\
+        "Draw an element out from a list.\n\
         \If the argument is a number, \
         \it is converted to a range from 0 to that number minus 1.\n\
         \Returns the element and the rest of the list.\n\

@@ -269,7 +269,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q63999: Parenthifiable Binary Numbers" $ do
         specEval
-            "Ƃ£E∫Ɔž≥"
+            "Ƃ£E∫Ẑ≥"
             [ ("2", Check True)
             , ("10", Check True)
             , ("12", Check True)
@@ -313,7 +313,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("9", all_ ["4862"])
             ]
         specEval
-            "Äřŋ∫çƆž≥"
+            "Äřŋ∫çẐ≥"
             [ ("0", Count 1)
             , ("1", Count 1)
             , ("2", Count 2)
@@ -338,7 +338,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q66851: Motzkin Numbers" $ do
         specEval
-            "3$ŧ←∫Ɔž≥"
+            "3$ŧ←∫Ẑ≥"
             [ ("1", Count 1)
             , ("2", Count 2)
             , ("3", Count 4)
@@ -801,6 +801,14 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[3,1,1]", all_ ["[3,2,1]"])
             , ("[3,4,9,3]", all_ ["[4,4,9,3]"])
             ]
+    describe "q102219: Binary to decimal converter" $ do
+        specEval
+            "~Ɗƶ"
+            [ ("1", Count 1)
+            , ("10", Count 2)
+            , ("101", Count 5)
+            , ("1110", Count 14)
+            ]
     describe "q103624: Find the sum of all numbers below n that are a multiple of some set of numbers" $ do
         specEval
             "ᵒ%ᵐ∏¬x∙"
@@ -847,6 +855,13 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
     describe "q106149: Compute the Median" $ do
         specEval
             ",o;↔ᶻÐlµ"
+            [ ("[1,2,3,4,5,6,7,8,9]", all_ ["5"])
+            , ("[1,4,3,2]", all_ ["5/2"])
+            , ("[3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,-5,100000,13/10,7/5]", all_ ["3/2"])
+            , ("[3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,-5,100000,13/10,7/5]", all_ ["3/2"])
+            ]
+        specEval
+            "oʷ{tiN}µ"
             [ ("[1,2,3,4,5,6,7,8,9]", all_ ["5"])
             , ("[1,4,3,2]", all_ ["5/2"])
             , ("[3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,-5,100000,13/10,7/5]", all_ ["3/2"])
@@ -1506,6 +1521,10 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[0,19,2,0,10,10,16,9,19,9,15,0,10,18,0,17,18,18,0,9]", Count 5)
             , ("[1,19,17,17,0,2,14,10,10,12,5,14,16,7,15,15,18,11,17,7]", Count 5)
             ]
+    describe "q181958: Multiplicative persistence" $ do
+        specEval
+            "ᶦ{ZƊ∏"
+            [("277777788888899", all_ ["277777788888899", "4996238671872", "438939648", "4478976", "338688", "27648", "2688", "768", "336", "54", "20", "0"])]
     describe "q182305: Return the Closest Prime Number" $ do
         specEval
             "Ž-Q"
@@ -2461,7 +2480,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q256502: Guess the song title" $ do
         specEval
-            "ŢṂaş"
+            "ŢṂṩ"
             [("[\"Hello, world\",\"Hello, world\",\"I just got to say it, hello world\",\"Goodbye, world\",\"Goodbye, world\",\"Goodbye\"]", all_ ["Hello, world"])]
     describe "q256814: Knight to fork!" $ do
         specEval
@@ -2755,7 +2774,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q259707: Shortest distinguishable slice" $ do
         specEval
-            "ḞŤxqNᵖ{@Ťů}aşᵉhl→Ð"
+            "ḞŤxqNᵖ{@Ťů}ṩᵉhl→Ð"
             [ ("[\"happy\",\"angry\",\"hungry\"]", first_ "[1,2]")
             , ("[\"sheer\",\"shrew\",\"shine\",\"shire\",\"spike\",\"shy\"]", first_ "[2,4]")
             , ("[\"snap\",\"crackle\",\"pop\",\"smack\",\"sizzle\",\"whiff\",\"sheen\"]", first_ "[0,2]")
@@ -2976,7 +2995,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q262159: Minimum partition with non-empty intersections" $ do
         specEval
-            "Oᵖᵐ{Ťđṁ<}aş"
+            "Oᵖᵐ{Ťđṁ<}ṩ"
             [ ("[]", all_ ["[]"])
             , ("[[0,1]]", all_ ["[[[0,1]]]"])
             , ("[[0,1],[2,3]]", all_ ["[[[2,3]],[[0,1]]]"])
@@ -3113,7 +3132,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q263496: Can you perform swaps?" $ do
         specEval
-            "Ťᵐ↕∫Ɔž∑≤"
+            "Ťᵐ↕∫Ẑ∑≤"
             [ ("[[-1],[1]]", Check False)
             , ("[[-1,1],[-1,1]]", Check True)
             , ("[[-1,-1,-1,1,1,1],[-1,1,-1,1,-1,1]]", Check True)
@@ -3363,7 +3382,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q266049: How many umbrellas to cover the beach?" $ do
         specEval
-            "ᴶ{x:ᵒ≈>~}aş#"
+            "ᴶ{x:ᵒ≈>~}ṩ#"
             [ ("[9,2,1,3,2,4,2,1] 1", first_ "1")
             , ("[1,1,1,1,1,1,1,1] 1", first_ "8")
             , ("[2,1,4,1,4,1,1,3,1] 1", first_ "2")
@@ -3940,7 +3959,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q276909: Walks in Nice (Nizza)" $ do
         specEval
-            "ᵐįŋᵖ{∫ŤlƆž≥}→ᵐɗH"
+            "ᵐįŋᵖ{∫ŤlẐ≥}→ᵐɗH"
             [ ("3", Count 14)
             , ("4", Count 42)
             ]
@@ -4032,7 +4051,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q277847: split string into minimum number of palindromic substrings" $ do
         specEval
-            "J:ᵐ↔=aş"
+            "J:ᵐ↔=ṩ"
             [ ("\"a\"", all_ ["[\"a\"]"])
             , ("\"abcabc\"", all_ ["[\"a\",\"b\",\"c\",\"a\",\"b\",\"c\"]"])
             , ("\"abccba\"", all_ ["[\"abccba\"]"])
@@ -4042,7 +4061,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q278564: Counting Gessel walks" $ do
         specEval
-            "Äᵐ{įŋ∫}∫Ɔžᵚ≥"
+            "Äᵐ{įŋ∫}∫Ẑᵚ≥"
             [ ("0", Count 0)
             , ("1", Count 2)
             , ("2", Count 11)
@@ -4053,3 +4072,52 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
         specEval
             "Ňᵗ{ƂJŁ≡"
             [("", truncate_ ["0", "1", "2", "4", "5", "6", "8", "9", "11", "12", "13", "14", "16", "17"])]
+    describe "q279619: Albuququerquerquerquerque challlengenge" $ do
+        specEval
+            "p↔:CĨ→0I→T↔aj"
+            [ ("\"success\"", all_ ["succcesuccesss"])
+            , ("\"albuquerque\"", all_ ["albuququerquerquerquerque"])
+            , ("\"challenge\"", all_ ["challlengenge"])
+            ]
+    describe "q281871: Output your user ID" $ do
+        specEval
+            "\"Hᶜ\"∏"
+            [("", all_ ["9288"])]
+    describe "q282502: Slender sub-lists" $ do
+        specEval
+            "J$RᵒĈᵐṁƶṩ#"
+            [ ("[] 2", first_ "0")
+            , ("[1] 1", first_ "1")
+            , ("[1,1] 1", first_ "2")
+            , ("[1,1] 2", first_ "1")
+            , ("[1,2,3,1,2,3] 3", first_ "2")
+            , ("[1,1,1,1,1,2,2,2,2,2,3,3,3,3,3] 3", first_ "2")
+            , ("[1,2,1,2,1,2,1,2,1,2,3,2,3,2,3,2,3] 3", first_ "2")
+            ]
+    describe "q282838: Seven-dimensional cross product" $ do
+        specEval
+            "3~Ë:3*ÐᵚŘđ↔*đ-a∑"
+            [ ("[[1,2,3,4,5,6,7],[1,2,3,4,5,6,7]]", all_ ["[0,0,0,0,0,0,0]"])
+            , ("[[1,2,3,4,5,6,7],[7,6,5,4,3,2,1]]", all_ ["[-56,0,56,0,56,0,-56]"])
+            , ("[[1,2,3,4,3,2,1],[7,6,5,4,3,2,1]]", all_ ["[-18,18,18,-4,4,-22,-24]"])
+            , ("[[2,4,6,8,6,4,2],[7,6,5,4,3,2,1]]", all_ ["[-36,36,36,-8,8,-44,-48]"])
+            , ("[[3,1,4,1,5,9,2],[2,7,1,8,2,8,2]]", all_ ["[29,-17,-33,2,-19,39,-98]"])
+            ]
+    describe "q282899: What's left after repeatedly removing palindromes" $ do
+        specEval
+            "ʷ{;;$ƀ=tŁ¿,}ṩ"
+            [ ("\"hallolilah\"", first_ "[]")
+            , ("\"bazookabambino\"", first_ "bazookmbino")
+            , ("\"bamalamacocob\"", first_ "[]")
+            , ("\"nopalindromesinthisone\"", first_ "nopalindromesinthisone")
+            , ("\"canacandothecancan\"", first_ "andothecancan")
+            ]
+    describe "q282973: Longest streak of new animal every day" $ do
+        specEval
+            "qᵐ~ů#Å"
+            [ ("[[],[],[],[]]", all_ ["0"])
+            , ("[[\"kangaroo\",\"koala\"],[\"koala\",\"zebra\"],[\"koala\"],[\"kangaroo\"]]", all_ ["3"])
+            , ("[[\"fish\",\"donkey\",\"horse\",\"cow\"],[\"horse\"],[\"cow\",\"horse\",\"cat\",\"dog\",\"giraffe\"],[\"horse\",\"cow\",\"hamster\"],[\"horse\",\"cat\",\"hamster\",\"giraffe\"],[\"horse\",\"cow\"],[\"cow\"],[\"horse\",\"cat\"]]", all_ ["6"])
+            , ("[[\"wolf\"],[\"fish\",\"dog\"],[\"fish\",\"dog\"],[\"fish\",\"dog\"],[\"fish\",\"dog\",\"cat\"],[\"fish\",\"dog\"],[\"cat\",\"wolf\"]]", all_ ["4"])
+            , ("[[\"dog\",\"cat\",\"lion\"],[],[\"fish\"],[\"fish\"],[\"fish\"],[\"dog\"],[\"fish\"],[\"fish\"]]", all_ ["2"])
+            ]

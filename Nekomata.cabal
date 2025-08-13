@@ -122,7 +122,7 @@ executable Nekomata
     , containers            ^>=0.7
     , haskeline             ^>=0.8
     , Nekomata
-    , optparse-applicative  ^>=0.18
+    , optparse-applicative  ^>=0.19
 
   -- Directories containing source files.
   hs-source-dirs:   app

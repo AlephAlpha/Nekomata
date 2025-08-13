@@ -831,6 +831,9 @@ minValue = allValues .* minimum'
 maxValue :: Function
 maxValue = allValues .* maximum'
 
+shortestValue :: Function
+shortestValue = allValues .* shortest
+
 elem' :: Function
 elem' = binary elem''
   where

@@ -12,7 +12,7 @@ import Math.NumberTheory.Primes.Counting (primeCount)
 import Math.NumberTheory.Primes.Testing (isCertifiedPrime)
 import Math.NumberTheory.Roots (exactSquareRoot)
 import Nekomata.Builtin.Basic (dup, swap)
-import Nekomata.Builtin.List (flatten, length', reverse'')
+import Nekomata.Builtin.List (flatten, length', reverse'', unsnoc)
 import Nekomata.Data
 import Nekomata.Function
 import Nekomata.NonDet
@@ -467,3 +467,6 @@ unmul = unary2Int $ unmul_
     unmul_ i x
         | x > 0 = anyOf' i [(d, x `div` d) | d <- sort $ divisorsList x]
         | otherwise = Fail
+
+unsnoc0 :: Function
+unsnoc0 = unsnoc .* isZero
