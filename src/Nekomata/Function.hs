@@ -245,3 +245,9 @@ binaryIntFail :: (ToTryData a) => (Id -> Integer -> Integer -> a) -> Function
 binaryIntFail f = binaryVecFail f'
   where
     f' i x y = liftInt2 (f i) (toTryNum x) (toTryNum y)
+
+{- | Quote the top @n@ values of the stack as a function that pushes them back
+to the stack
+-}
+quote :: Int -> Stack -> (Stack, Function)
+quote n s = (dropStack n s, Function (Arity 0 n) $ \_ -> prepend (takeStack n s))

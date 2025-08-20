@@ -259,54 +259,90 @@ builtinParticles =
         "orApply"
         'ᶜ'
         orApply
-        "(n -> n) -> (n -> n)"
-        "Apply a function zero or one time non-deterministically."
-        [("1 ᶜ{1+}", all_ ["1", "2"])]
+        "(m -> n) -> (m -> n) where m >= n"
+        "Apply a function zero or one time non-deterministically.\n\
+        \If the function has m inputs and n outputs with m > n, \
+        \the top m - n values of the stack are \"quoted\" as a new function \
+        \that pushes these values to the stack, and this new function \
+        \is composed with the original function before applying it."
+        [ ("1 ᶜ{1+}", all_ ["1", "2"])
+        , ("1 1 ᶜ+", all_ ["1", "2"])
+        ]
     , BuiltinParticle
         "iterate"
         'ᶦ'
         iterate'
-        "(n -> n) -> (n -> n)"
+        "(m -> n) -> (m -> n) where m >= n"
         "Apply a function zero or more times non-deterministically, \
         \until the top value of the stack is Fail.\n\
         \This is different from `while` in that it returns \
-        \the intermediate results."
-        [("1 ᶦ{1+}", truncate_ ["1", "2", "3", "4", "5"])]
+        \the intermediate results.\n\
+        \If the function has m inputs and n outputs with m > n, \
+        \the top m - n values of the stack are \"quoted\" as a new function \
+        \that pushes these values to the stack, and this new function \
+        \is composed with the original function before applying it."
+        [ ("1 ᶦ{1+}", truncate_ ["1", "2", "3", "4", "5"])
+        , ("1 1 ᶦ+", truncate_ ["1", "2", "3", "4", "5"])
+        ]
     , BuiltinParticle
         "nTimes"
         'ᵑ'
         nTimes
-        "(n -> n) -> (n + 1 -> n)"
+        "(m -> n) -> (m + 1 -> n) where m >= n"
         "Take an integer from the top of the stack, \
-        \and apply a function that many times."
-        [("1 3 ᵑ{1+}", all_ ["4"])]
+        \and apply a function that many times.\n\
+        \If the function has m inputs and n outputs with m > n, \
+        \the top m - n values of the stack are \"quoted\" as a new function \
+        \that pushes these values to the stack, and this new function \
+        \is composed with the original function before applying it."
+        [ ("1 3 ᵑ{1+}", all_ ["4"])
+        , ("1 1 3 ᵑ+", all_ ["4"])
+        ]
     , BuiltinParticle
         "while"
         'ʷ'
         while
-        "(n -> n) -> (n -> n)"
+        "(m -> n) -> (m -> n) where m >= n"
         "Apply a function zero or more times, \
         \until the top value of the stack is Fail.\n\
         \This is different from `iterate` in that it does not \
-        \return the intermediate results."
-        [("1 ʷ{1+ 4<}", all_ ["3"])]
+        \return the intermediate results.\n\
+        \If the function has m inputs and n outputs with m > n, \
+        \the top m - n values of the stack are \"quoted\" as a new function \
+        \that pushes these values to the stack, and this new function \
+        \is composed with the original function before applying it."
+        [ ("1 ʷ{1+ 4<}", all_ ["3"])
+        , ("1 1 ʷ{+ 4<}", all_ ["3"])
+        ]
     , BuiltinParticle
         "lengthWhile"
         'ˡ'
         lengthWhile
-        "(n -> n) -> (n -> 1)"
+        "(m -> n) -> (m -> n) where m >= n"
         "Apply a function zero or more times, \
         \until the top value of the stack is Fail, \
-        \and return the number of times the function was applied."
-        [("1 ˡ{1+ 4<}", all_ ["2"])]
+        \and return the number of times the function was applied.\n\
+        \If the function has m inputs and n outputs with m > n, \
+        \the top m - n values of the stack are \"quoted\" as a new function \
+        \that pushes these values to the stack, and this new function \
+        \is composed with the original function before applying it."
+        [ ("1 ˡ{1+ 4<}", all_ ["2"])
+        , ("1 1 ˡ{+ 4<}", all_ ["2"])
+        ]
     , BuiltinParticle
         "fixedPoint"
         'ʸ'
         fixedPoint
-        "(n -> n) -> (n -> n)"
+        "(m -> n) -> (m -> n) where m >= n"
         "Apply a function zero or more times, \
-        \until the top value of the stack no longer changes."
-        [("1 ʸ{1+ 4m}", all_ ["4"])]
+        \until the top value of the stack no longer changes.\n\
+        \If the function has m inputs and n outputs with m > n, \
+        \the top m - n values of the stack are \"quoted\" as a new function \
+        \that pushes these values to the stack, and this new function \
+        \is composed with the original function before applying it."
+        [ ("1 ʸ{1+ 4m}", all_ ["4"])
+        , ("1 1 ʸ{+ 4m}", all_ ["4"])
+        ]
     , BuiltinParticle
         "firstInt"
         'ᵏ'
@@ -582,26 +618,30 @@ filter' = Particle filter''
 orApply :: Particle
 orApply = Particle orApply'
   where
-    orApply' (Function (Arity m n) f) | m == n =
+    orApply' f@(Function (Arity m n) _) | m >= n =
         Just
             . Function (Arity m n)
             $ \i s ->
-                prepend
-                    (takeStack n . tryStack $ orApply_ i f s)
-                    (dropStack m s)
+                let (s', g) = quote (m - n) s
+                    f' = apply (g .* f)
+                 in prepend
+                        (takeStack n . tryStack $ orApply_ i f' s')
+                        (dropStack m s)
     orApply' _ = Nothing
     orApply_ i f s = Choice (leftId i) (Val s) (Val (f (rightId i) s))
 
 iterate' :: Particle
 iterate' = Particle iterate''
   where
-    iterate'' (Function (Arity m n) f) | m == n =
+    iterate'' f@(Function (Arity m n) _) | m >= n =
         Just
             . Function (Arity m n)
             $ \i s ->
-                prepend
-                    (takeStack n . tryStack $ iterate_ i f s)
-                    (dropStack m s)
+                let (s', g) = quote (m - n) s
+                    f' = apply (g .* f)
+                 in prepend
+                        (takeStack n . tryStack $ iterate_ i f' s')
+                        (dropStack m s)
     iterate'' _ = Nothing
     iterate_ i f s =
         Choice
@@ -614,13 +654,15 @@ iterate' = Particle iterate''
 nTimes :: Particle
 nTimes = Particle nTimes'
   where
-    nTimes' (Function (Arity m n) f) | m == n =
+    nTimes' f@(Function (Arity m n) _) | m >= n =
         Just
             . Function (Arity (m + 1) n)
             $ \i (x :+ s) ->
-                prepend
-                    (takeStack n . tryStack $ x >>= nTimes'' i f s)
-                    (dropStack m s)
+                let (s', g) = quote (m - n) s
+                    f' = apply (g .* f)
+                 in prepend
+                        (takeStack n . tryStack $ x >>= nTimes'' i f' s')
+                        (dropStack m s)
     nTimes' _ = Nothing
     nTimes'' i f s (DNumT x) = toTryInt' x >>= nTimes_ i f s
     nTimes'' _ _ _ _ = Fail
@@ -631,13 +673,15 @@ nTimes = Particle nTimes'
 while :: Particle
 while = Particle while'
   where
-    while' (Function (Arity m n) f) | m == n =
+    while' f@(Function (Arity m n) _) | m >= n =
         Just
             . Function (Arity m n)
             $ \i s ->
-                prepend
-                    (takeStack n . tryStack $ while'' i f s)
-                    (dropStack m s)
+                let (s', g) = quote (m - n) s
+                    f' = apply (g .* f)
+                 in prepend
+                        (takeStack n . tryStack $ while'' i f' s')
+                        (dropStack m s)
     while' _ = Nothing
     while'' :: Id -> (Id -> Stack -> Stack) -> Stack -> Try Stack
     while'' i f s =
@@ -653,10 +697,13 @@ while = Particle while'
 lengthWhile :: Particle
 lengthWhile = Particle lengthWhile'
   where
-    lengthWhile' (Function (Arity m n) f) | m == n =
+    lengthWhile' f@(Function (Arity m n) _) | m >= n =
         Just
             . Function (Arity m 1)
-            $ \i s -> toTryData (lengthWhile'' i f s) :+ dropStack m s
+            $ \i s ->
+                let (s', g) = quote (m - n) s
+                    f' = apply (g .* f)
+                 in toTryData (lengthWhile'' i f' s') :+ dropStack m s
     lengthWhile' _ = Nothing
     lengthWhile'' :: Id -> (Id -> Stack -> Stack) -> Stack -> Try Integer
     lengthWhile'' i f s =
@@ -672,13 +719,15 @@ lengthWhile = Particle lengthWhile'
 fixedPoint :: Particle
 fixedPoint = Particle fixedPoint'
   where
-    fixedPoint' (Function (Arity m n) f) | m == n =
+    fixedPoint' f@(Function (Arity m n) _) | m >= n =
         Just
             . Function (Arity m n)
             $ \i s ->
-                prepend
-                    (takeStack n . tryStack $ fixedPoint'' i f s)
-                    (dropStack m s)
+                let (s', g) = quote (m - n) s
+                    f' = apply (g .* f)
+                 in prepend
+                        (takeStack n . tryStack $ fixedPoint'' i f' s')
+                        (dropStack m s)
     fixedPoint' _ = Nothing
     fixedPoint'' :: Id -> (Id -> Stack -> Stack) -> Stack -> Try Stack
     fixedPoint'' i f s =

@@ -2517,57 +2517,75 @@ __Examples__:
 
 - `[1,2,3] ᶠ{2<}` → `[1]`
 
-### `orApply` (`ᶜ`, `(n -> n) -> (n -> n)`)
+### `orApply` (`ᶜ`, `(m -> n) -> (m -> n) where m >= n`)
 
 Apply a function zero or one time non-deterministically.
+
+If the function has m inputs and n outputs with m > n, the top m - n values of the stack are "quoted" as a new function that pushes these values to the stack, and this new function is composed with the original function before applying it.
 
 __Examples__:
 
 - `1 ᶜ{1+}` → `1 2`
+- `1 1 ᶜ+` → `1 2`
 
-### `iterate` (`ᶦ`, `(n -> n) -> (n -> n)`)
+### `iterate` (`ᶦ`, `(m -> n) -> (m -> n) where m >= n`)
 
 Apply a function zero or more times non-deterministically, until the top value of the stack is Fail.
 
 This is different from `while` in that it returns the intermediate results.
 
+If the function has m inputs and n outputs with m > n, the top m - n values of the stack are "quoted" as a new function that pushes these values to the stack, and this new function is composed with the original function before applying it.
+
 __Examples__:
 
 - `1 ᶦ{1+}` → `1 2 3 4 5 ...`
+- `1 1 ᶦ+` → `1 2 3 4 5 ...`
 
-### `nTimes` (`ᵑ`, `(n -> n) -> (n + 1 -> n)`)
+### `nTimes` (`ᵑ`, `(m -> n) -> (m + 1 -> n) where m >= n`)
 
 Take an integer from the top of the stack, and apply a function that many times.
+
+If the function has m inputs and n outputs with m > n, the top m - n values of the stack are "quoted" as a new function that pushes these values to the stack, and this new function is composed with the original function before applying it.
 
 __Examples__:
 
 - `1 3 ᵑ{1+}` → `4`
+- `1 1 3 ᵑ+` → `4`
 
-### `while` (`ʷ`, `(n -> n) -> (n -> n)`)
+### `while` (`ʷ`, `(m -> n) -> (m -> n) where m >= n`)
 
 Apply a function zero or more times, until the top value of the stack is Fail.
 
 This is different from `iterate` in that it does not return the intermediate results.
 
+If the function has m inputs and n outputs with m > n, the top m - n values of the stack are "quoted" as a new function that pushes these values to the stack, and this new function is composed with the original function before applying it.
+
 __Examples__:
 
 - `1 ʷ{1+ 4<}` → `3`
+- `1 1 ʷ{+ 4<}` → `3`
 
-### `lengthWhile` (`ˡ`, `(n -> n) -> (n -> 1)`)
+### `lengthWhile` (`ˡ`, `(m -> n) -> (m -> n) where m >= n`)
 
 Apply a function zero or more times, until the top value of the stack is Fail, and return the number of times the function was applied.
+
+If the function has m inputs and n outputs with m > n, the top m - n values of the stack are "quoted" as a new function that pushes these values to the stack, and this new function is composed with the original function before applying it.
 
 __Examples__:
 
 - `1 ˡ{1+ 4<}` → `2`
+- `1 1 ˡ{+ 4<}` → `2`
 
-### `fixedPoint` (`ʸ`, `(n -> n) -> (n -> n)`)
+### `fixedPoint` (`ʸ`, `(m -> n) -> (m -> n) where m >= n`)
 
 Apply a function zero or more times, until the top value of the stack no longer changes.
+
+If the function has m inputs and n outputs with m > n, the top m - n values of the stack are "quoted" as a new function that pushes these values to the stack, and this new function is composed with the original function before applying it.
 
 __Examples__:
 
 - `1 ʸ{1+ 4m}` → `4`
+- `1 1 ʸ{+ 4m}` → `4`
 
 ### `firstInt` (`ᵏ`, `(m -> n) -> (0 -> 1)`)
 

@@ -1825,15 +1825,15 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q224278: Count the trailing zeros" $ do
         specEval
-            "ˡ{v¦"
-            [ ("512 2", all_ ["9"])
-            , ("248 2", all_ ["3"])
-            , ("364 265", all_ ["0"])
-            , ("764 2", all_ ["2"])
-            , ("336 284", all_ ["0"])
-            , ("517 422", all_ ["0"])
-            , ("554 37", all_ ["0"])
-            , ("972 3", all_ ["5"])
+            "ˡ¦"
+            [ ("2 512", all_ ["9"])
+            , ("2 248", all_ ["3"])
+            , ("265 364", all_ ["0"])
+            , ("2 764", all_ ["2"])
+            , ("284 336", all_ ["0"])
+            , ("422 517", all_ ["0"])
+            , ("37 554", all_ ["0"])
+            , ("3 972", all_ ["5"])
             ]
     describe "q225203: Delannoy numbers" $ do
         specEval
@@ -2167,7 +2167,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q247398: Alternating sums of multidimensional arrays" $ do
         specEval
-            "ʷ{£d"
+            "£ʷd"
             [ ("[1]", all_ ["1"])
             , ("[-1]", all_ ["-1"])
             , ("[1,2]", all_ ["-1"])
@@ -2757,7 +2757,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q259576: All of the Boards" $ do
         specEval
-            "į3ƂÐ3~ᵑᵐç3~ᵑçaᵐᶜ{0*}∑ƶ"
+            "į3ƂÐ3~ᵑᵐç3~ᵑça0ᵚᶜ*∑ƶ"
             [("", Count 215)]
     describe "q259633: Make a Custom Bayer Matrix" $ do
         specEval
@@ -4010,7 +4010,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("9", Check True)
             ]
         specEval
-            "Zʷ{4¦}→8¦"
+            "Z4ʷ¦→8¦"
             [ ("0", Check False)
             , ("6", Check False)
             , ("7", Check True)
@@ -4120,4 +4120,18 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[\"fish\",\"donkey\",\"horse\",\"cow\"],[\"horse\"],[\"cow\",\"horse\",\"cat\",\"dog\",\"giraffe\"],[\"horse\",\"cow\",\"hamster\"],[\"horse\",\"cat\",\"hamster\",\"giraffe\"],[\"horse\",\"cow\"],[\"cow\"],[\"horse\",\"cat\"]]", all_ ["6"])
             , ("[[\"wolf\"],[\"fish\",\"dog\"],[\"fish\",\"dog\"],[\"fish\",\"dog\"],[\"fish\",\"dog\",\"cat\"],[\"fish\",\"dog\"],[\"cat\",\"wolf\"]]", all_ ["4"])
             , ("[[\"dog\",\"cat\",\"lion\"],[],[\"fish\"],[\"fish\"],[\"fish\"],[\"dog\"],[\"fish\"],[\"fish\"]]", all_ ["2"])
+            ]
+    describe "q283142: IMO 2025: Divisor sums that go forever" $ do
+        specEval
+            "Ä12ʷ¦¢Gƶ"
+            [ ("6", Check True)
+            , ("18", Check True)
+            , ("42", Check True)
+            , ("54", Check True)
+            , ("66", Check True)
+            , ("5", Check False)
+            , ("20", Check False)
+            , ("33", Check False)
+            , ("48", Check False)
+            , ("96", Check False)
             ]

@@ -2,7 +2,8 @@
 
 ## 0.8.0.0 -- Unreleased
 
-* New builtin: `\lastValue`, `\shortestValue`, `\unmul`, `\unsnoc0`.
+* New builtin functions: `\lastValue`, `\shortestValue`, `\unmul`, `\unsnoc0`.
+* `\orApply`, `\iterate`, `\nTimes`, `\while`, `\lengthWhile`, `\fixedPoint` now support functions with arity `m -> n` where `m >= n`. When `m > n`, the top `m - n` values on the stack are "quoted" as a new function that pushes these values to the stack, and this new function is composed with the original function before applying it.
 * A new mode `last` is added. It outputs the last possible result. You can switch to this mode by the `-t` flag in the command line or the `\Mode last` command in the REPL.
 * Now input can have leading and trailing spaces. The interpreter will trim them when parsing.
 * Now Nekomata can be built with GHC 9.10.1, thanks to an update of the `haskeline` package.
