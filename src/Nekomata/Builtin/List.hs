@@ -102,7 +102,7 @@ length_ Nil = Val 0
 length_ (Cons _ xs) = xs >>= length_ <&> (+ 1)
 
 lengthIs :: Function
-lengthIs = binary lengthIs'
+lengthIs = binaryVecBoth lengthIs'
   where
     lengthIs' _ (DListT xs) (DNumT y) =
         liftList (\x -> liftInt (`lengthIs_` x) y) xs

@@ -455,6 +455,16 @@ vec2Arg2 ::
 vec2Arg2 f i x (DListT ys) = liftList (tryMap2 (vec2Arg2 f) i x) ys
 vec2Arg2 f i x y = f i x y
 
+{- | Vectorize a binary function only if both arguments are lists
+and fail on mismatched lengths
+-}
+vec2Both ::
+    (Id -> DataTry -> DataTry -> TryData) ->
+    (Id -> DataTry -> DataTry -> TryData)
+vec2Both f i (DListT xs) (DListT ys) =
+    liftList2 (zipWithFail (vec2Both f) i) xs ys
+vec2Both f i x y = f i x y
+
 -- | Vectorize a unary function that returns two values
 vec12 ::
     (Id -> DataTry -> (TryData, TryData)) ->
@@ -524,13 +534,15 @@ class TryOrd a where
     tryGt :: a -> a -> Try Bool
     tryGt x y = (> EQ) <$> tryCmp x y
 
-    -- | Take the minimum of two values
-    -- If the two values are equal, return the first value
+    {- | Take the minimum of two values
+    If the two values are equal, return the first value
+    -}
     tryMin :: a -> a -> Try a
     tryMin x y = tryCmp x y <&> \o -> if o == GT then y else x
 
-    -- | Take the maximum of two values
-    -- If the two values are equal, return the first value
+    {- | Take the maximum of two values
+    If the two values are equal, return the first value
+    -}
     tryMax :: a -> a -> Try a
     tryMax x y = tryCmp x y <&> \o -> if o == LT then y else x
 

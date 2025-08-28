@@ -21,7 +21,7 @@ cabal install
 You can also run Nekomata without installing it by running:
 
 ```bash
-cabal run Nekomata
+cabal run
 ```
 
 ## Running Nekomata programs
@@ -50,7 +50,7 @@ Nekomata -h
 
 [*Attempt This Online!*](https://ato.pxeger.com/run?1=m70iLzU7PzexJHFZtJJuhlLsgqWlJWm6FguWFCclF8M4UBoA)
 
-If you didn't install Nekomata, you can replace `Nekomata` with `cabal run Nekomata --` in the above commands.
+If you didn't install Nekomata, you can replace `Nekomata` with `cabal run --` in the above commands.
 
 ## Using the REPL
 

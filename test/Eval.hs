@@ -867,6 +867,13 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,-5,100000,13/10,7/5]", all_ ["3/2"])
             , ("[3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,-5,100000,13/10,7/5]", all_ ["3/2"])
             ]
+        specEval
+            "o;;§*¿µ"
+            [ ("[1,2,3,4,5,6,7,8,9]", last_ "5")
+            , ("[1,4,3,2]", last_ "5/2")
+            , ("[3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,-5,100000,13/10,7/5]", last_ "3/2")
+            , ("[3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,3/2,-5,100000,13/10,7/5]", last_ "3/2")
+            ]
     describe "q106656: Bit run rundown" $ do
         specEval
             "ƂYṀ"
@@ -1958,7 +1965,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q233182: Split into sublists of specified sizes" $ do
         specEval
-            "J$ᶻL"
+            "J$L"
             [ ("[4,5,1,2,6,1,7,9,6] [2,4,3]", all_ ["[[4,5],[1,2,6,1],[7,9,6]]"])
             , ("[4,2,8,7,3,5,9,3,1,9,1,8,1,7,2,8,3,7,6] [1,3,1,14]", all_ ["[[4],[2,8,7],[3],[5,9,3,1,9,1,8,1,7,2,8,3,7,6]]"])
             , ("[8,7,4,6] [1,3]", all_ ["[[8],[7,4,6]]"])
@@ -2060,7 +2067,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q240187: Repeating slices of an array incrementally" $ do
         specEval
-            "Jᵖ{ix→ᶻL"
+            "Jᵖ{ix→L"
             [ ("[1,2,3,4,5,6,7,8,9,10]", first_ "[[1],[2,3],[4,5,6],[7,8,9,10]]")
             , ("[10,20,30,40]", first_ "[[10],[20,30],[40]]")
             , ("[100,200,300,400,500]", first_ "[[100],[200,300],[400,500]]")
@@ -3764,7 +3771,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             [("[12,18,15] [9,18,18]", first_ "[[1,4,7],[3,6,9],[5,8,2]]")]
     describe "q273875: Segments of a string, doubling in length" $ do
         specEval
-            "JxËᶻL"
+            "JxËL"
             [ ("\"a\"", all_ ["[\"a\"]"])
             , ("\"abc\"", all_ ["[\"a\",\"bc\"]"])
             , ("\"abcdefg\"", all_ ["[\"a\",\"bc\",\"defg\"]"])
@@ -4134,4 +4141,19 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("33", Check False)
             , ("48", Check False)
             , ("96", Check False)
+            ]
+    describe "q283193: Pennies to Dollars" $ do
+        specEval
+            "$ŧ∑ᵖ{ŧ∑'d/="
+            [ ("[1,2,5,10,20,50,100] 2", first_ "2")
+            , ("[1,2,5,10,20,50,100] 4", first_ "4")
+            ]
+        specEval
+            "ŧ∑ũ§Ħvřʳ×§'d*@Z¿"
+            [ ("2 [2,5,10]", all_ ["20"])
+            , ("3 [2,5,10]", all_ ["30"])
+            , ("2, [2,5,10,20]", truncate_ ["12", "22", "10", "15"])
+            , ("3, [2,5,10,20]", truncate_ ["24", "17", "27", "22"])
+            , (" 2 [1,2,5,10,20,50,100]", truncate_ ["2", "3", "6", "11"])
+            , (" 4 [1,2,5,10,20,50,100]", truncate_ ["4", "5", "8", "13"])
             ]

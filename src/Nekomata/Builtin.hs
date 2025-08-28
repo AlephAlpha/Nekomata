@@ -1482,9 +1482,12 @@ builtins =
         'L'
         lengthIs
         "Check if the length of a list is equal to a given integer.\n\
-        \If it is, push the list itself, otherwise fail."
+        \If it is, push the list itself, otherwise fail.\n\
+        \This function is automatically vectorized when both arguments are \
+        \lists."
         [ ("[1,2,3] 3L", all_ ["[1,2,3]"])
         , ("[1,2,3] 4L", all_ [])
+        , ("[[1],[2,3],[4,5,6]] [1,2,3]L", all_ ["[[1],[2,3],[4,5,6]]"])
         ]
     , Builtin
         "nth"

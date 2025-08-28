@@ -1620,10 +1620,13 @@ Check if the length of a list is equal to a given integer.
 
 If it is, push the list itself, otherwise fail.
 
+This function is automatically vectorized when both arguments are lists.
+
 __Examples__:
 
 - `[1,2,3] 3L` → `[1,2,3]`
 - `[1,2,3] 4L` → Fail
+- `[[1],[2,3],[4,5,6]] [1,2,3]L` → `[[1],[2,3],[4,5,6]]`
 
 ### `nth` (`@`, `2 -> 1`)
 

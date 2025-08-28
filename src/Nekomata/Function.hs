@@ -159,6 +159,12 @@ and vectorize the second argument
 binaryVecArg2 :: (Id -> DataTry -> DataTry -> TryData) -> Function
 binaryVecArg2 = binary . vec2Arg2
 
+{- | Convert a binary function to a Nekomata function
+and vectorize only if both arguments are lists
+-}
+binaryVecBoth :: (Id -> DataTry -> DataTry -> TryData) -> Function
+binaryVecBoth = binary . vec2Both
+
 {- | Convert and vectorize a binary function that returns two values
 with failure on mismatched lengths
 -}
