@@ -1,6 +1,6 @@
 # Revision history for Nekomata
 
-## 0.8.0.0 -- Unreleased
+## 0.8.0.0 -- 2024-09-01
 
 * New builtin functions: `\lastValue`, `\shortestValue`, `\unmul`, `\unsnoc0`.
 * `\orApply`, `\iterate`, `\nTimes`, `\while`, `\lengthWhile`, `\fixedPoint` now support functions with arity `m -> n` where `m >= n`. When `m > n`, the top `m - n` values on the stack are "quoted" as a new function that pushes these values to the stack, and this new function is composed with the original function before applying it.
