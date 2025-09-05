@@ -18,6 +18,7 @@ import Data.Functor (($>), (<&>))
 import Data.Map.Strict (Map)
 import qualified Data.Map.Strict as Map
 import Nekomata.Builtin.List (concat', unconcat)
+import Nekomata.Builtin.Math (natural)
 import Nekomata.Data
 import Nekomata.Function hiding (arity)
 import qualified Nekomata.Function as Function
@@ -351,6 +352,16 @@ builtinParticles =
         "Find the smallest non-negative integer for which a function \
         \does not fail, and return it."
         [("ᵏ{4>}", all_ ["5"])]
+    , BuiltinParticle
+        "anyInt"
+        'ᴷ'
+        anyInt
+        "(m -> n) -> (1 -> 1)"
+        "Find any non-negative integer for which a function does not fail, \
+        \and return it.\n\
+        \If there are multiple such integers, \
+        \one of them is chosen non-deterministically."
+        [("ᴷ{4>}", truncate_ ["4", "5", "6", "7", "8"])]
     , BuiltinParticle
         "fold1"
         'ʳ'
@@ -754,6 +765,9 @@ firstInt = Particle firstInt'
          in if hasValue ds t
                 then Val x
                 else firstInt'' ds (rightId i) f (x + 1)
+
+anyInt :: Particle
+anyInt = Particle $ fmap (natural .*) . runParticle predicate'
 
 fold1 :: Particle
 fold1 = Particle fold1'

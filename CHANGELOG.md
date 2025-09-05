@@ -1,5 +1,9 @@
 # Revision history for Nekomata
 
+## 0.8.1.0 -- Unreleased
+
+* New particle: `\anyInt`.
+
 ## 0.8.0.0 -- 2024-09-01
 
 * New builtin functions: `\lastValue`, `\shortestValue`, `\unmul`, `\unsnoc0`.

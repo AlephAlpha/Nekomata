@@ -23,7 +23,7 @@ def ngram_freq(corpus: list[str], n: int) -> dict[str, int]:
 
 
 def particles_analysis(corpus: list[str]) -> dict[str, list[int]]:
-    particles = "ᵃᶜᵈᵉᵋᶠʰᶦʲᴶᵏˡᵐᵚᵑᵒᵖʳᵗʷˣʸᶻᶾ"
+    particles = "ᵃᶜᵈᵉᵋᶠʰᶦʲᴶᴷᵏˡᵐᵚᵑᵒᵖʳᵗʷˣʸᶻᶾ"
     freq = {}
 
     for particle in particles:

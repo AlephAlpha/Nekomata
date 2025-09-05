@@ -2598,6 +2598,16 @@ __Examples__:
 
 - `ᵏ{4>}` → `5`
 
+### `anyInt` (`ᴷ`, `(m -> n) -> (1 -> 1)`)
+
+Find any non-negative integer for which a function does not fail, and return it.
+
+If there are multiple such integers, one of them is chosen non-deterministically.
+
+__Examples__:
+
+- `ᴷ{4>}` → `4 5 6 7 8 ...`
+
 ### `fold1` (`ʳ`, `(m -> 1) -> (m - 1 -> 1) where m > 1`)
 
 Apply a function to the first two elements of a list, then apply it to the result and the third element, and so on until the end of the list.

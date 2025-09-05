@@ -2027,6 +2027,10 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[1,2],[3,4],[5],[]] 7", all_ ["[[7,1,2],[3,4],[5],[]]", "[[1,2],[7,3,4],[5],[]]", "[[1,2],[3,4],[7,5],[]]", "[[1,2],[3,4],[5],[7]]"])
             , ("[[1,2],[2,2],[2]] 2", all_ ["[[2,1,2],[2,2],[2]]", "[[1,2],[2,2,2],[2]]", "[[1,2],[2,2],[2,2]]"])
             ]
+    describe "q237542: Harmonic divisor numbers" $ do
+        specEval
+            "ᴷ{Ďŗµŗ1¦"
+            [("", truncate_ ["1", "6", "28", "140", "270", "496", "672", "1638", "2970", "6200", "8128", "8190"])]
     describe "q238607: Converge to a number" $ do
         specEval
             "ƊsC↔~cɗ-"
@@ -2407,7 +2411,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q255344: CGAC2022 Day 9: Playing with bits" $ do
         specEval
-            "Ňᵖ{:ÄXÞ½="
+            "ᴷ{:ÄXÞ½="
             [ ("1", truncate_ ["1", "2", "3", "4", "6", "7", "8", "12", "14", "15"])
             , ("2", truncate_ ["5", "9", "10", "11", "13", "17", "18", "19", "20", "22"])
             , ("3", truncate_ ["21", "37", "41", "42", "43", "45", "53", "69", "73", "74"])
@@ -2575,13 +2579,13 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q257752: Print all pandigital numbers" $ do
         specEval
-            "Ňᵖ{*$Bu$L"
+            "ᴷ{*$Bu$L"
             [ ("2", truncate_ ["1", "2", "3", "4", "5", "6"])
             , ("3", truncate_ ["5", "7", "11", "14", "15", "16", "17", "19"])
             , ("4", truncate_ ["27", "30", "39", "45"])
             ]
         specEval
-            "Ňᵖ{$Bçu#="
+            "ᴷ{$Bçu#="
             [ ("2", truncate_ ["1", "2", "3", "4", "5", "6"])
             , ("3", truncate_ ["5", "7", "11", "14", "15", "16", "17", "19"])
             , ("4", truncate_ ["27", "30", "39", "45"])
@@ -3186,7 +3190,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q263678: The all-high powerful numbers" $ do
         specEval
-            "Ňᵖ{Rƒᵐ∏Ɔ<"
+            "ᴷ{Rƒᵐ∏Ɔ<"
             [("", truncate_ ["1", "4", "8", "16", "32", "64", "128", "144", "216", "288", "432", "864"])]
     describe "q263774: Round up to a smoother number" $ do
         specEval
@@ -4156,4 +4160,34 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("3 [2,5,10,20]", truncate_ ["24", "17", "27", "22"])
             , ("2 [1,2,5,10,20,50,100]", truncate_ ["2", "3", "6", "11"])
             , ("4 [1,2,5,10,20,50,100]", truncate_ ["4", "5", "8", "13"])
+            ]
+    describe "q283409: Cancel strings to make them short" $ do
+        specEval
+            "ʷ{ĕᵈ{ĕ;;$}=¿ÐᶠN,}ØcŞ#å"
+            [ ("[]", first_ "0")
+            , ("[\"a\"]", first_ "1")
+            , ("[\"a\",\"a\"]", first_ "0")
+            , ("[\"a\",\"a\",\"a\"]", first_ "1")
+            , ("[\"ab\",\"a\"]", first_ "1")
+            , ("[\"cat\",\"a\",\"at\"]", first_ "1")
+            , ("[\"cat\",\"t\",\"at\"]", first_ "1")
+            , ("[\"heart\",\"ear\",\"h\",\"t\"]", first_ "0")
+            , ("[\"heart\",\"ear\"]", first_ "1")
+            , ("[\"heart\",\"cart\",\"mart\",\"art\"]", first_ "4")
+            , ("[\"element\",\"e\"]", first_ "4")
+            , ("[\"element\",\"e\",\"e\"]", first_ "2")
+            , ("[\"fastest\",\"t\",\"fas\",\"est\"]", first_ "0")
+            , ("[\"lovely\",\"l\",\"love\"]", first_ "1")
+            , ("[\"fastest\",\"t\",\"fastes\"]", first_ "0")
+            , ("[\"baby\",\"b\",\"aby\"]", first_ "0")
+            ]
+    describe "q283412: Add Y to X to get a palindrome" $ do
+        specEval
+            "ᵏ{+Ɗƀ="
+            [ ("5", all_ ["0"])
+            , ("14", all_ ["8"])
+            , ("200", all_ ["2"])
+            , ("819", all_ ["9"])
+            , ("1100", all_ ["11"])
+            , ("1122", all_ ["99"])
             ]
