@@ -28,6 +28,19 @@ data Try a
     | Fail
     | Cut (Decisions -> (Decisions, Try a))
 
+instance (Show a) => Show (Try a) where
+    showsPrec d (Val x) = showParen (d > 10) $ showString "Val " . showsPrec 11 x
+    showsPrec d (Choice i t1 t2) =
+        showParen (d > 10) $
+            showString "Choice "
+                . showsPrec 11 i
+                . showString " "
+                . showsPrec 11 t1
+                . showString " "
+                . showsPrec 11 t2
+    showsPrec d Fail = showParen (d > 10) $ showString "Fail"
+    showsPrec d (Cut _) = showParen (d > 10) $ showString "Cut <function>"
+
 instance Functor Try where
     fmap f (Val x) = Val (f x)
     fmap f (Choice i t1 t2) = Choice i (fmap f t1) (fmap f t2)

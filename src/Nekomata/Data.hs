@@ -25,7 +25,7 @@ liftJoinM2 f x y = join $ liftM2 f x y
 unzipF :: (Functor f) => f (a, b) -> (f a, f b)
 unzipF xs = (fst <$> xs, snd <$> xs)
 
-data ListTry a = Nil | Cons a (TryList a)
+data ListTry a = Nil | Cons a (TryList a) deriving (Show)
 
 -- | A non-deterministic list
 type TryList a = Try (ListTry a)
@@ -234,6 +234,7 @@ data DataTry
     = DNumT (Try (Det Rational))
     | DCharT (Try (Det Word8))
     | DListT (TryList TryData)
+    deriving (Show)
 
 -- | Nekomata's data type (non-deterministic)
 type TryData = Try DataTry

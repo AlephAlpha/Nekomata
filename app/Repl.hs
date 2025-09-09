@@ -3,7 +3,7 @@ module Repl (runRepl) where
 import Control.Applicative ((<|>))
 import Control.Arrow (second)
 import Data.Char (isSpace)
-import Data.List (isPrefixOf)
+import Data.List (dropWhileEnd, isPrefixOf)
 import Data.Map.Strict (Map, (!))
 import qualified Data.Map.Strict as Map
 import Data.Version (showVersion)
@@ -36,7 +36,11 @@ data ReplCommand
     deriving (Eq, Show)
 
 splitFirstWord :: String -> (String, String)
-splitFirstWord = second (dropWhile isSpace) . break isSpace . dropWhile isSpace
+splitFirstWord =
+    second (dropWhile isSpace)
+        . break isSpace
+        . dropWhile isSpace
+        . dropWhileEnd isSpace
 
 parseReplCommand :: String -> ReplCommand
 parseReplCommand input =

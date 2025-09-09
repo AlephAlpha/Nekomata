@@ -3,6 +3,8 @@
 ## 0.8.1.0 -- Unreleased
 
 * New particle: `\anyInt`.
+* Fixed a bug in trimming spaces in the REPL.
+* Some internal data types now derive `Show` instances for debugging.
 
 ## 0.8.0.0 -- 2024-09-01
 

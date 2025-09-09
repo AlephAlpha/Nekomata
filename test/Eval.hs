@@ -254,6 +254,16 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[10,13,17,21]", all_ ["10", "13", "17", "21"])
             , ("[10,10,10,9,10]", all_ ["10", "10", "10", "10"])
             ]
+    describe "q62713: Biplex: an important useless operator" $ do
+        specEval
+            "Ƃ∑:ɱ$1Mᵃ-*¬ƃ"
+            [ ("[1]", all_ ["1"])
+            , ("[2]", all_ ["2"])
+            , ("[1,2,5]", all_ ["7"])
+            , ("[4294967295]", all_ ["4294967295"])
+            , ("[2454267026,2863311530,3681400539]", all_ ["3817748707"])
+            , ("[2341103945,2969112506,1849078949,1430639189]", all_ ["3"])
+            ]
     describe "q62732: Implement a Truth-Machine" $ do
         specEval
             "ᶦP"
@@ -826,6 +836,15 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("19 [7,5]", first_ "51")
             , ("50 [2,3,5]", first_ "857")
             ]
+    describe "q103377: Appending String Lengths" $ do
+        specEval
+            "Ňᵉĝᵈ,L"
+            [ ("\"aaa\"", first_ "aaa4")
+            , ("\"\"", first_ "1")
+            , ("\"aaaaaaaa\"", first_ "aaaaaaaa9")
+            , ("\"aaaaaaaaa\"", first_ "aaaaaaaaa11")
+            , ("\"a1\"", first_ "a13")
+            ]
     describe "q103756: Big numbers: Ultrafactorials" $ do
         specEval
             "→rF:E∑"
@@ -884,6 +903,23 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("1", all_ ["1"])
             , ("9965546", all_ ["7"])
             ]
+    describe "q107771: Split a grid into a grid" $ do
+        specEval
+            "ᴶ∑Ťᴶ∑←ž"
+            [ ("[[1]]", Check True)
+            , ("[[0,1],[1,0]]", Check True)
+            , ("[[1,1],[1,0]]", Check False)
+            , ("[[1,0,1],[0,1,0]]", Check True)
+            , ("[[1,0],[0,1],[0,1]]", Check True)
+            , ("[[1,0,0],[0,0,1],[0,1,1]]", Check True)
+            , ("[[1,1,1],[1,1,1],[1,1,1]]", Check True)
+            , ("[[1,0,1],[0,1,0],[1,0,0]]", Check True)
+            , ("[[1,0,0],[1,0,0],[0,1,1]]", Check False)
+            , ("[[0,0,0,0,1],[1,0,0,1,0],[0,0,0,1,0]]", Check False)
+            , ("[[0,0,1,0,1],[0,0,0,1,0],[0,0,0,0,0]]", Check True)
+            , ("[[1,1,0,0,0],[0,0,0,0,0],[1,0,1,0,0]]", Check True)
+            , ("[[1,1,0,1,1],[0,1,0,1,1],[1,0,0,0,0]]", Check True)
+            ]
     describe "q108675: Is this word Lexically Ordered?" $ do
         specEval
             "oᶜ↔="
@@ -898,7 +934,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q111678: N-dimensional N^N array filled with N" $ do
         specEval
-            "ᵑᵉř^"
+            "ᵑř"
             [ ("1", all_ ["[1]"])
             , ("2", all_ ["[[2,2],[2,2]]"])
             , ("3", all_ ["[[[3,3,3],[3,3,3],[3,3,3]],[[3,3,3],[3,3,3],[3,3,3]],[[3,3,3],[3,3,3],[3,3,3]]]"])
@@ -921,6 +957,17 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[0],[1,2],[3,4,5]]", Check False)
             , ("[[8],[8,[9]],[8,[9,[1,0]]]]", Check False)
             , ("[-1,0,0,0]", Check False)
+            ]
+    describe "q115516: Is this number an integer power of -2?" $ do
+        specEval
+            "Z2_ʷ¦1="
+            [ ("-2", Check True)
+            , ("-1", Check False)
+            , ("0", Check False)
+            , ("1", Check True)
+            , ("2", Check False)
+            , ("3", Check False)
+            , ("4", Check True)
             ]
     describe "q117774: Moving modest minimum" $ do
         specEval
@@ -1669,6 +1716,10 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("3 9", all_ ["9"])
             , ("5 12", all_ ["15"])
             ]
+    describe "q198717: Repeat every other character in string starting with second character" $ do
+        specEval
+            "xÖ→y"
+            [("\"abcde\"", all_ ["abbcdde"])]
     describe "q199290: Reversed Iota's" $ do
         specEval
             "RRᵐ↔"
@@ -2370,12 +2421,23 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[1,1,1,1]", all_ ["[[1,1,1,1]]"])
             , ("[1,1,0,0,1]", all_ ["[[1,1],[0,0],[1]]", "[[1,1],[0,0,1]]", "[[1,1,0,0],[1]]", "[[1,1,0,0,1]]"])
             ]
+    describe "q252442: Repeat Values In Array" $ do
+        specEval
+            "y"
+            [ ("[1,2,3] [1,2,3]", all_ ["[1,2,2,3,3,3]"])
+            , ("[5,1,1,0] [6,0,0,6]", all_ ["[6,6,6,6,6,0,0]"])
+            , ("[0,0] [100,100]", all_ ["[]"])
+            ]
     describe "q252927: Make a Court Transcriber" $ do
         specEval
             "ᶠ{JS=}ş"
             [ ("[\"dictionary\",\"transcriber\"] [\"dic\",\"ion\",\"ary\"]", all_ ["dictionary"])
             , ("[\"dictionary\",\"transcriber\"] [\"tra\",\"scr\",\"ber\"]", all_ ["transcriber"])
             ]
+    describe "q253309: Triangular polkadot numbers" $ do
+        specEval
+            "ŇÄrᵉ∑ᶠ½↔-~"
+            [("", truncate_ ["1", "4", "6", "11", "13", "15", "22", "24", "26", "28", "37", "39", "41", "43", "45"])]
     describe "q254224: Maximum average ord" $ do
         specEval
             "ᵐµṀ"
@@ -3964,7 +4026,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q276795: Walks on a circle" $ do
         specEval
-            "2ᵚ~ᵖ{:∫PÄx--v%Ţ≡¿$L"
+            "2$ŧᵖ{:∫PÄx--v%Ţ≡¿$L"
             [ ("6 2", Count 10)
             , ("9 3", Count 22)
             ]
