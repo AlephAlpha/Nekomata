@@ -1577,8 +1577,10 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q181958: Multiplicative persistence" $ do
         specEval
-            "ᶦ{ZƊ∏"
-            [("277777788888899", all_ ["277777788888899", "4996238671872", "438939648", "4478976", "338688", "27648", "2688", "768", "336", "54", "20", "0"])]
+            "ᶦ{ƊŁ∏"
+            [ ("277777788888899", all_ ["277777788888899", "4996238671872", "438939648", "4478976", "338688", "27648", "2688", "768", "336", "54", "20", "0"])
+            , ("327", all_ ["327", "42", "8"])
+            ]
     describe "q182305: Return the Closest Prime Number" $ do
         specEval
             "Ž-Q"
@@ -4152,6 +4154,22 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("\"albuquerque\"", all_ ["albuququerquerquerquerque"])
             , ("\"challenge\"", all_ ["challlengenge"])
             ]
+    describe "q279778: Is it a product of 4 unique primes (A046386)?" $ do
+        specEval
+            "ƒƶ4L"
+            [ ("0", Check False)
+            , ("1", Check False)
+            , ("2", Check False)
+            , ("36", Check False)
+            , ("60", Check False)
+            , ("120", Check False)
+            , ("210", Check True)
+            , ("255", Check False)
+            , ("420", Check False)
+            , ("1110", Check True)
+            , ("1590", Check True)
+            , ("1974", Check True)
+            ]
     describe "q281871: Output your user ID" $ do
         specEval
             "\"Hᶜ\"∏"
@@ -4208,6 +4226,19 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("48", Check False)
             , ("96", Check False)
             ]
+        specEval
+            "ʸ{Ďi↔3T∑"
+            [ ("6", Check True)
+            , ("18", Check True)
+            , ("42", Check True)
+            , ("54", Check True)
+            , ("66", Check True)
+            , ("5", Check False)
+            , ("20", Check False)
+            , ("33", Check False)
+            , ("48", Check False)
+            , ("96", Check False)
+            ]
     describe "q283193: Pennies to Dollars" $ do
         specEval
             "$ŧ∑ᵖ{ŧ∑'d/="
@@ -4252,4 +4283,12 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("819", all_ ["9"])
             , ("1100", all_ ["11"])
             , ("1122", all_ ["99"])
+            ]
+    describe "q283681: Add Y to X to get a palindrome" $ do
+        specEval
+            "u$ᵐĨ→"
+            [ ("[]", all_ ["[]"])
+            , ("[9]", all_ ["[1]"])
+            , ("[2,3,2,2,4,5,4,4,2]", all_ ["[1,2,1,1,3,4,3,3,1]"])
+            , ("[3,4,2,1,1,1,1,1,1,1]", all_ ["[1,2,3,4,4,4,4,4,4,4]"])
             ]
