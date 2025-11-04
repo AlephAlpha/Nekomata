@@ -298,6 +298,13 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("80", Check False)
             , ("86", Check False)
             ]
+    describe "q64315: Separate a list into even-indexed and odd-indexed parts" $ do
+        specEval
+            "ĭ,"
+            [ ("[0,1,2,3,4]", all_ ["[0,2,4,1,3]"])
+            , ("[110,22,3330,4444,55555,6]", all_ ["[110,3330,55555,22,4444,6]"])
+            , ("[]", all_ ["[]"])
+            ]
     describe "q65770: Cover up zeroes in a list" $ do
         specEval
             "pZ‼l"
@@ -763,6 +770,21 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
         specEval
             "q$Lɱ≈Å"
             [("[6,9,4,7,4,1] 3", all_ ["6"])]
+    describe "q98373: Binary Countdown Length" $ do
+        specEval
+            "äkXÞ"
+            [ ("0", all_ ["0"])
+            , ("1", all_ ["1"])
+            , ("42", all_ ["6"])
+            , ("97", all_ ["3"])
+            , ("170", all_ ["8"])
+            , ("255", all_ ["1"])
+            , ("682", all_ ["10"])
+            , ("8675309", all_ ["11"])
+            , ("4812390", all_ ["14"])
+            , ("178956970", all_ ["28"])
+            , ("2863311530", all_ ["32"])
+            ]
     describe "q98730: Count trailing truths" $ do
         specEval
             "sNP"
@@ -919,6 +941,16 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[0,0,1,0,1],[0,0,0,1,0],[0,0,0,0,0]]", Check True)
             , ("[[1,1,0,0,0],[0,0,0,0,0],[1,0,1,0,0]]", Check True)
             , ("[[1,1,0,1,1],[0,1,0,1,1],[1,0,0,0,0]]", Check True)
+            ]
+    describe "q108512: The program that will find the next prime number" $ do
+        specEval
+            "Ƥ$>"
+            [ ("1", first_ "2")
+            , ("2", first_ "3")
+            , ("3", first_ "5")
+            , ("14", first_ "17")
+            , ("23", first_ "29")
+            , ("100", first_ "101")
             ]
     describe "q108675: Is this word Lexically Ordered?" $ do
         specEval
@@ -1125,6 +1157,23 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("2", all_ ["[[1,0],[0,1]]"])
             , ("3", all_ ["[[1,0,1],[0,1,0],[1,0,1]]"])
             , ("4", all_ ["[[1,0,1,0],[0,1,0,1],[1,0,1,0],[0,1,0,1]]"])
+            ]
+    describe "q129596: Am I divisible by double the sum of my digits?" $ do
+        specEval
+            "Ɗ∑Ä¦"
+            [ ("80", Check True)
+            , ("100", Check True)
+            , ("60", Check True)
+            , ("18", Check True)
+            , ("12", Check True)
+            , ("4", Check False)
+            , ("8", Check False)
+            , ("16", Check False)
+            , ("21", Check False)
+            , ("78", Check False)
+            , ("110", Check False)
+            , ("111", Check False)
+            , ("390", Check False)
             ]
     describe "q129773: Is it a Lynch-Bell number?" $ do
         specEval
@@ -3399,6 +3448,13 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("9", all_ ["[3]"])
             , ("10", all_ ["[]"])
             ]
+    describe "q264987: Pseudo-Quantum Bogosort" $ do
+        specEval
+            "↕:o="
+            [ ("[1,4,2,9]", all_ ["[1,2,4,9]"])
+            , ("[3,1,1,9]", all_ ["[1,1,3,9]", "[1,1,3,9]"])
+            , ("[3,1,1,3]", all_ ["[1,1,3,3]", "[1,1,3,3]", "[1,1,3,3]", "[1,1,3,3]"])
+            ]
     describe "q265088: Longest Consecutive Sequence" $ do
         specEval
             "ˡ{N→v∩"
@@ -3409,6 +3465,10 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[5]", all_ ["1"])
             , ("[7,3,9,5,4,2,8]", all_ ["4"])
             ]
+    describe "q265310: Numbers with distinct decimal digits" $ do
+        specEval
+            "ŇƊůɗ"
+            [("", truncate_ ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12", "13"])]
     describe "q265382: Find the largest sum such that no two elements are touching" $ do
         specEval
             "Jĭ?∑hÅ"
@@ -3665,6 +3725,21 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("13 11", all_ ["119", "17", "7"])
             , ("6258 571", all_ ["3566489", "7703", "463"])
             ]
+    describe "q269825: What and where is the max?" $ do
+        specEval
+            "Ťᵃ#ᵒÐᶻᶻÐjṀ"
+            [ ("[[1,2],[3,4]]", all_ ["[4,[1,1]]"])
+            , ("[[-1]]", all_ ["[-1,[0,0]]"])
+            , ("[[6],[5],[4],[3],[2],[1]]", all_ ["[6,[0,0]]"])
+            , ("[[1,2,3,4],[0,2,5,3],[-5,-2,3,5]]", all_ ["[5,[2,3]]"])
+            ]
+        specEval
+            "ᵐ{xᶻ,Ṁ}xᶻ,Ṁ"
+            [ ("[[1,2],[3,4]]", all_ ["[4,1,1]"])
+            , ("[[-1]]", all_ ["[-1,0,0]"])
+            , ("[[6],[5],[4],[3],[2],[1]]", all_ ["[6,0,0]"])
+            , ("[[1,2,3,4],[0,2,5,3],[-5,-2,3,5]]", all_ ["[5,3,2]"])
+            ]
     describe "q269857: Counting rankings" $ do
         specEval
             "RJ:ᵐhmj↕ũh="
@@ -3904,6 +3979,10 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[0,2] [0,2]", first_ "[1,1]")
             , ("[0,1,2] [0,1,2]", first_ "[1]")
             ]
+    describe "q274485: Find the newest element" $ do
+        specEval
+            "ul"
+            [("\"A-BANAL-BANANA-LAB\"", all_ ["'L'"])]
     describe "q274690: Cubic Concatenation" $ do
         specEval
             "*∙Ɗᴶɗ="
@@ -4291,4 +4370,27 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[9]", all_ ["[1]"])
             , ("[2,3,2,2,4,5,4,4,2]", all_ ["[1,2,1,1,3,4,3,3,1]"])
             , ("[3,4,2,1,1,1,1,1,1,1]", all_ ["[1,2,3,4,4,4,4,4,4,4]"])
+            ]
+    describe "q283883: Numbers Interpreted in Smallest Valid Base" $ do
+        specEval
+            "ƊˣṀ→b"
+            [ ("1011010", all_ ["90"])
+            , ("10201", all_ ["100"])
+            , ("32021", all_ ["905"])
+            , ("11014", all_ ["759"])
+            , ("12345", all_ ["1865"])
+            , ("4326", all_ ["1539"])
+            , ("70707", all_ ["29127"])
+            , ("8314", all_ ["6088"])
+            , ("56789", all_ ["56789"])
+            ]
+    describe "q285324: Order a list by the difference of its elements" $ do
+        specEval
+            "↕:∆Zƶ¿"
+            [ ("[1,2]", first_ "[1,2]")
+            , ("[4,5,5,5,4]", first_ "[5,4,5,4,5]")
+            , ("[1,3,2,4,5]", first_ "[1,2,3,4,5]")
+            , ("[3,0,1,1,2,4]", first_ "[1,0,1,2,3,4]")
+            , ("[4,2,3,4,4,5,5]", first_ "[4,5,4,5,4,3,2]")
+            , ("[1,7,5,2,6,4,4,3,3]", first_ "[1,2,3,4,3,4,5,6,7]")
             ]

@@ -21,7 +21,7 @@ cabal install
 You can also run Nekomata without installing it by running:
 
 ```bash
-cabal run
+cabal run Nekomata
 ```
 
 ## Running Nekomata programs
@@ -32,13 +32,31 @@ You can run a Nekomata program by passing the code as a command-line argument:
 Nekomata -c '"Hello, World!"'
 ```
 
+Programs can also be read from a file. Nekomata supports reading codes either in UTF-8 or Nekomata's own encoding. You can pass the path to a UTF-8 file using the `-u` option, or a file with Nekomata's encoding using the `-f` option. For example, if you have a file called `hello.neko` containing the code to print "Hello, World!", you can run it like this:
+
+```bash
+Nekomata -u hello.neko
+```
+
 Some programs may require input from the user. Inputs are also passed as command-line arguments, and separated by spaces. For example, the following program adds one and two:
 
 ```bash
 Nekomata -c '+' -i '1 2'
 ```
 
-Programs can also be read from a file. Nekomata supports reading codes either in UTF-8 or Nekomata's own encoding. You can pass the path to a UTF-8 file using the `-u` option, or a file with Nekomata's encoding using the `-f` option.
+Inputs support a simple comment syntax. Anything after `->` in the input is ignored. For example, the above command can also be written as:
+
+```bash
+Nekomata -c '+' -i '1 2 -> 3'
+```
+
+Here `-> 3` is a comment and is ignored. Note that this comment syntax only works for inputs, not for code.
+
+You can also take input from stdin by passing the `-s` option. For example:
+
+```bash
+echo '1 2' | Nekomata -c '+' -s
+```
 
 You can take multiple inputs separated by newlines by passing the `-m` option. This is useful for testing code golf submissions.
 
@@ -50,7 +68,7 @@ Nekomata -h
 
 [*Attempt This Online!*](https://ato.pxeger.com/run?1=m70iLzU7PzexJHFZtJJuhlLsgqWlJWm6FguWFCclF8M4UBoA)
 
-If you didn't install Nekomata, you can replace `Nekomata` with `cabal run --` in the above commands.
+If you didn't install Nekomata, you can replace `Nekomata` with `cabal run Nekomata --` in the above commands.
 
 ## Using the REPL
 

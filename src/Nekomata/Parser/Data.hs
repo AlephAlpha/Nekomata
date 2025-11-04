@@ -121,12 +121,20 @@ parseData' =
         ]
         <?> "Nekomata data"
 
+-- | Parse a comment in a Nekomata input, starting with '->'
+parseComment :: Parser ()
+parseComment =
+    try (string "->")
+        >> skipMany anyChar
+            <* eof
+                <?> "comment"
+
 -- | Parse a Nekomata input
 parseInput :: Parser [Data]
 parseInput =
     spaces
-        >> parseData
+        >> try parseData
             `endBy` (try (spaces >> char ',' >> spaces) <|> spaces)
             <* spaces
-            <* eof
+            <* (parseComment <|> eof)
                 <?> "Nekomata input"
