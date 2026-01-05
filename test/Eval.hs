@@ -841,6 +841,16 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("101", Count 5)
             , ("1110", Count 14)
             ]
+    describe "q102685: Sum of Modulo Sums" $ do
+        specEval
+            "Ɗ;ᵃɗ+%a∑"
+            [ ("47852", all_ ["5842"])
+            , ("13", all_ ["1"])
+            , ("111", all_ ["6"])
+            , ("12345", all_ ["2097"])
+            , ("54321", all_ ["8331"])
+            , ("3729105472", all_ ["505598476"])
+            ]
     describe "q103624: Find the sum of all numbers below n that are a multiple of some set of numbers" $ do
         specEval
             "ᵒ%ᵐ∏¬x∙"
@@ -1135,6 +1145,15 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[47,10000]", Check False)
             , ("[37,38]", Check True)
             , ("[22,18]", Check True)
+            ]
+    describe "q125237: It's Hip to be Square" $ do
+        specEval
+            "√"
+            [ ("0", Check True)
+            , ("1", Check True)
+            , ("64", Check True)
+            , ("88", Check False)
+            , ("2147483647", Check False)
             ]
     describe "q125104: Cartesian product of two lists" $ do
         specEval
@@ -1544,6 +1563,20 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[\"0\",\"1\"],[\"1\",\"2\"]]", all_ ["[\"01\",\"12\"]"])
             , ("[[\"a\",\"b\"],[\"b\",\"c\"],[\"c\",\"a\"]]", all_ ["[\"ab\",\"bc\"]", "[\"ab\",\"ca\"]", "[\"bc\",\"ca\"]"])
             ]
+    describe "q174906: Seeking Substantial Subcollections" $ do
+        specEval
+            "OŜ$ĈÅ"
+            [ ("[1] 1", all_ ["1"])
+            , ("[2] 1", all_ ["0"])
+            , ("[1] 2", all_ ["0"])
+            , ("[1,1] 1", all_ ["2"])
+            , ("[1,1,1] 2", all_ ["1"])
+            , ("[1,1,2,2] 3", all_ ["2"])
+            , ("[1,1,3,3,5,5,7] 9", all_ ["2"])
+            , ("[1,1,3,3,5,7,7] 9", all_ ["1"])
+            , ("[1,1,2,3,4,6,6,6] 8", all_ ["2"])
+            , ("[1,1,2,2,3,3,3,5,6,8] 6", all_ ["4"])
+            ]
     describe "q175248: Count the contiguous submatrices" $ do
         specEval
             "qŤqŤ="
@@ -1919,6 +1952,20 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("5 [0,0] [1,1]", all_ ["[0,0,0,0,0]"])
             , ("20 [0,-1,0,1] [0,1,0,-1]", all_ ["[0,-1,0,1,-2,2,-1,-1,3,-4,3,0,-4,7,-7,3,4,-11,14,-10]"])
             ]
+    describe "q218772: Is it a vampire number?" $ do
+        specEval
+            "ŝᵃƊᵖy,ƆZɔ↕ɗ="
+            [ ("1260", Check True)
+            , ("1395", Check True)
+            , ("1435", Check True)
+            , ("1530", Check True)
+            , ("1827", Check True)
+            , ("105750", Check True)
+            , ("108135", Check True)
+            , ("110758", Check True)
+            , ("115672", Check True)
+            , ("153000", Check False)
+            ]
     describe "q224125: Replace all items with their counts" $ do
         specEval
             "ᵐĈ"
@@ -1984,6 +2031,13 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[2,2,2]", all_ ["[[2],[2],[2]]"])
             , ("[2,4,5]", all_ ["[[2,4,5]]"])
             ]
+    describe "q229414: Generate this number table" $ do
+        specEval
+            "ᵒM→"
+            [("5", all_ ["[[1,2,3,4,5],[2,2,3,4,5],[3,3,3,4,5],[4,4,4,4,5],[5,5,5,5,5]]"])]
+        specEval
+            "R:~M"
+            [("5", all_ ["[1,2,3,4,5]", "[2,2,3,4,5]", "[3,3,3,4,5]", "[4,4,4,4,5]", "[5,5,5,5,5]"])]
     describe "q229624: Generalised multi-dimensional chess knight's moves" $ do
         specEval
             "8ᵚ~ᵖ{≈←ň‼į="
@@ -2719,6 +2773,15 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[6,2,1,0,0,0]", Check False)
             , ("[5,3,1,0,0,1]", Check False)
             , ("[5,2,3,0,0,0]", Check False)
+            ]
+    describe "q258088: Whole Number Groups" $ do
+        specEval
+            "Oᵖ{ŜË"
+            [ ("[1/2,1/2,1/2,1/2]", last_ "[[1/2,1/2],[1/2,1/2]]")
+            , ("[1/2,1/3,1/6,6/7,8/7]", last_ "[[6/7,8/7],[1/2,1/3,1/6]]")
+            , ("[5/3,2/3,2/3,1/3,1/3,1/3]", last_ "[[5/3,1/3],[2/3,1/3],[2/3,1/3]]")
+            , ("[9/2,3/4,1/12,7/4,2/3,2/3,7/12]", last_ "[[3/4,2/3,7/12],[9/2,1/12,7/4,2/3]]")
+            , ("[1/10,1/5,1/2,7/10,1/2]", last_ "[[1/2,1/2],[1/10,1/5,7/10]]")
             ]
     describe "q258110: A Fine sequence with fine interpretations" $ do
         specEval
@@ -4226,6 +4289,14 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
         specEval
             "Ňᵗ{ƂJŁ≡"
             [("", truncate_ ["0", "1", "2", "4", "5", "6", "8", "9", "11", "12", "13", "14", "16", "17"])]
+    describe "q278770: Output the symmetric inverse semigroup" $ do
+        specEval
+            "ᵃS↕ÐŤ"
+            [ ("1", all_ ["[]", "[[0,0]]"])
+            , ("2", all_ ["[]", "[[0,0]]", "[[0,1]]", "[[1,0]]", "[[1,1]]", "[[0,0],[1,1]]", "[[0,1],[1,0]]"])
+            , ("3", Count 34)
+            , ("4", Count 209)
+            ]
     describe "q279619: Albuququerquerquerquerque challlengenge" $ do
         specEval
             "p↔:CĨ→0I→T↔aj"
@@ -4393,4 +4464,32 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[3,0,1,1,2,4]", first_ "[1,0,1,2,3,4]")
             , ("[4,2,3,4,4,5,5]", first_ "[4,5,4,5,4,3,2]")
             , ("[1,7,5,2,6,4,4,3,3]", first_ "[1,2,3,4,3,4,5,6,7]")
+            ]
+    describe "q285326: Polynomial Basis Conversion" $ do
+        specEval
+            "xbᶦ∆haxF/"
+            [ ("[1]", all_ ["[1]"])
+            , ("[1,1]", all_ ["[1,1]"])
+            , ("[1,0,0]", all_ ["[0,1,1]"])
+            , ("[1,2,1]", all_ ["[1,3,1]"])
+            , ("[1,1,1,1]", all_ ["[1,3,4,1]"])
+            , ("[1,2,3,4]", all_ ["[4,6,5,1]"])
+            , ("[1,-1,1,-1,1]", all_ ["[1,0,5,5,1]"])
+            , ("[1,0,-2,0,1]", all_ ["[1,-1,5,6,1]"])
+            , ("[5,4,3,2,1]", all_ ["[1,14,50,34,5]"])
+            ]
+        specEval
+            "x$y~O$L"
+            [ ("[1] 0", Count 1)
+            , ("[1,1] 0", Count 1)
+            , ("[1,1] 1", Count 1)
+            , ("[4,3,2,1] 0", Count 4)
+            , ("[4,3,2,1] 1", Count 6)
+            , ("[4,3,2,1] 2", Count 5)
+            , ("[4,3,2,1] 3", Count 1)
+            , ("[1,2,3,4,5] 0", Count 1)
+            , ("[1,2,3,4,5] 1", Count 14)
+            , ("[1,2,3,4,5] 2", Count 50)
+            , ("[1,2,3,4,5] 3", Count 34)
+            , ("[1,2,3,4,5] 4", Count 5)
             ]

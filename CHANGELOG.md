@@ -1,7 +1,8 @@
 # Revision history for Nekomata
 
-## 0.8.1.0 -- Unreleased
+## 0.9.0.0 -- Unreleased
 
+* Updated some dependencies. Now GHC 9.6.7 or newer is required to build Nekomata. But GHC 9.14.1 is not supported yet due to a dependency issue.
 * New particle: `\anyInt`.
 * Fixed a bug in trimming spaces in the REPL.
 * Some internal data types now derive `Show` instances for debugging.
