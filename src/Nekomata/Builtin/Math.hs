@@ -406,14 +406,13 @@ divisors = unaryInt $ const divisors_
 intPartition :: Function
 intPartition = unaryInt $ intPartition_ 1
   where
-    intPartition_ :: Integer -> Id -> Integer -> Try [Integer]
-    intPartition_ _ _ 0 = Val []
+    intPartition_ :: Integer -> Id -> Integer -> TryList Integer
+    intPartition_ _ _ 0 = Val Nil
     intPartition_ x i y
         | x > y = Fail
         | otherwise = do
             x' <- anyOf' (leftId i) [x .. y]
-            p <- intPartition_ x' (rightId i) (y - x')
-            return $ x' : p
+            return $ Cons x' (intPartition_ x' (rightId i) (y - x'))
 
 sqrt' :: Function
 sqrt' = unaryNum $ const sqrt_

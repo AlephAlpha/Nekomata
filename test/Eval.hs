@@ -121,6 +121,18 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
         specEval
             "ĭᵐĜy"
             [("\":144,1'1\"", all_ [":4444,'"])]
+    describe "q18592: Find the largest contiguous prime in a string" $ do
+        specEval
+            "qĜQÅ"
+            [ ("\"3571\"", all_ ["3571"])
+            , ("\"123\"", all_ ["23"])
+            , ("\"1236503\"", all_ ["236503"])
+            , ("\"46462\"", all_ ["2"])
+            , ("\"4684\"", all_ [""])
+            , ("\"460\"", all_ [""])
+            , ("\"4601\"", all_ ["601"])
+            , ("\"12 monkeys is a pretty good movie, but not as good as se7en\"", all_ ["7"])
+            ]
     describe "q38325: Minimum excluded number" $ do
         specEval
             "ᵏf"
@@ -139,6 +151,13 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
         specEval
             "ŢṂ"
             [("[4,3,1,0,6,1,6,4,4,0,3,1,7,7,3,4,1,1,2,8]", all_ ["1"])]
+    describe "q42536: Create an array with repeated numbers" $ do
+        specEval
+            "Rsa↔V"
+            [("5", all_ ["[5,4,5,3,4,5,2,3,4,5,1,2,3,4,5]"])]
+        specEval
+            "s↔→~"
+            [("5", all_ ["5", "4", "3", "2", "1", "5", "4", "3", "2", "5", "4", "3", "5", "4", "5"])]
     describe "q46836: Total number of topological sorts" $ do
         specEval
             "↕ᵚ{S="
@@ -999,6 +1018,14 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[0],[1,2],[3,4,5]]", Check False)
             , ("[[8],[8,[9]],[8,[9,[1,0]]]]", Check False)
             , ("[-1,0,0,0]", Check False)
+            ]
+    describe "q113448: Is this even or odd?" $ do
+        specEval
+            "½"
+            [ ("1", Check False)
+            , ("2", Check True)
+            , ("16384", Check True)
+            , ("99999999", Check False)
             ]
     describe "q115516: Is this number an integer power of -2?" $ do
         specEval
@@ -2300,6 +2327,20 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[2,4,1,3]", Count 3)
             , ("[4,2,3,1]", Count 5)
             , ("[4,3,2,1]", Count 6)
+            ]
+    describe "q246767: Infinite Candle Sequence" $ do
+        specEval
+            "ÄƂ1äd"
+            [ ("0", all_ ["0"])
+            , ("1", all_ ["1/2"])
+            , ("2", all_ ["1/4"])
+            , ("3", all_ ["3/4"])
+            , ("4", all_ ["1/8"])
+            , ("5", all_ ["5/8"])
+            , ("6", all_ ["3/8"])
+            , ("7", all_ ["7/8"])
+            , ("8", all_ ["1/16"])
+            , ("9", all_ ["9/16"])
             ]
     describe "q247104: Euler characteristic of a binary matrix" $ do
         specEval

@@ -5,6 +5,7 @@
 * Updated some dependencies. Now GHC 9.6.7 or newer is required to build Nekomata. But GHC 9.14.1 is not supported yet due to a dependency issue.
 * New particle: `\anyInt`.
 * Fixed a bug in trimming spaces in the REPL.
+* Fixed a bug in `\intPartition`. It is now lazier and more efficient.
 * Some internal data types now derive `Show` instances for debugging.
 * Now input supports comments starting with `->`. Anything after `->` in the input is ignored. Note that this comment syntax only works for inputs, not for code.
 
