@@ -128,8 +128,8 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("\"123\"", all_ ["23"])
             , ("\"1236503\"", all_ ["236503"])
             , ("\"46462\"", all_ ["2"])
-            , ("\"4684\"", all_ [""])
-            , ("\"460\"", all_ [""])
+            , ("\"4684\"", all_ [])
+            , ("\"460\"", all_ [])
             , ("\"4601\"", all_ ["601"])
             , ("\"12 monkeys is a pretty good movie, but not as good as se7en\"", all_ ["7"])
             ]
@@ -442,6 +442,17 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[0,5,8,8,3,5,1,6,8,4,0,3,7,5]", all_ ["[5,8,8,3,5,1,6,8,4,3,7,5,0,0]"])
             ]
     describe "q71476: Determine the depth of an array" $ do
+        specEval
+            "w"
+            [ ("[1]", all_ ["1"])
+            , ("[1,2,3]", all_ ["1"])
+            , ("[[1,2,3]]", all_ ["2"])
+            , ("[3,[3,[3],3],3]", all_ ["3"])
+            , ("[[[[1],2],[3,[4]]]]", all_ ["4"])
+            , ("[1,[[3]],[5,6],[[[[8]]]],1]", all_ ["5"])
+            , ("[1,[[2,3,[[4],5],6,[7,8]],9,[10,[[[11]]]],12,13],14]", all_ ["6"])
+            , ("[[[[[[[3]]]]]]]", all_ ["7"])
+            ]
         specEval
             "ˡ∑"
             [ ("[1]", all_ ["1"])

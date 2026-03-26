@@ -2090,6 +2090,16 @@ builtins =
         , ("1V", all_ ["[1]"])
         ]
     , Builtin
+        "depth"
+        'w'
+        depth
+        "Get the maximum nesting depth of a ragged list.\n\
+        \If the argument is not a list, return 0."
+        [ ("[1,[2,3],[[4],5]]w", all_ ["3"])
+        , ("[]w", all_ ["1"])
+        , ("1w", all_ ["0"])
+        ]
+    , Builtin
         "pad"
         'Ḟ'
         pad

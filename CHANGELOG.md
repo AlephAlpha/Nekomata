@@ -3,6 +3,7 @@
 ## 0.9.0.0 -- Unreleased
 
 * Updated some dependencies. Now GHC 9.6.7 or newer is required to build Nekomata. But GHC 9.14.1 is not supported yet due to a dependency issue.
+* New builtin function: `\depth`.
 * New particle: `\anyInt`.
 * Fixed a bug in trimming spaces in the REPL.
 * Fixed a bug in `\intPartition`. It is now lazier and more efficient.

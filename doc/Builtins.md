@@ -2314,6 +2314,18 @@ __Examples__:
 - `[1,[2,[3,4]]]V` → `[1,2,3,4]`
 - `1V` → `[1]`
 
+### `depth` (`w`, `1 -> 1`)
+
+Get the maximum nesting depth of a ragged list.
+
+If the argument is not a list, return 0.
+
+__Examples__:
+
+- `[1,[2,3],[[4],5]]w` → `3`
+- `[]w` → `1`
+- `1w` → `0`
+
 ### `pad` (`Ḟ`, `1 -> 1`)
 
 Pad a nested list with zeros to make it rectangular.

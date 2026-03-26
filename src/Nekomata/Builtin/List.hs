@@ -782,6 +782,21 @@ flatten = unary flatten'
     flatten' i (DListT xs) = DListT . concat_ . tryMap flatten' i <$> xs
     flatten' _ x = Val $ singleton_ x
 
+depth :: Function
+depth = unary depth'
+  where
+    depth' _ (DListT xs) = toTryData $ xs >>= depthList
+    depth' _ _ = toTryData (0 :: Integer)
+    depthList :: ListTry TryData -> Try Integer
+    depthList Nil = Val 1
+    depthList (Cons x xs) = do
+      x' <- x >>= depthData
+      xs' <- xs >>= depthList
+      Val $ max (x' + 1) xs'
+    depthData :: DataTry -> Try Integer
+    depthData (DListT ys) = ys >>= depthList
+    depthData _ = Val 0
+
 pad :: Function
 pad = unary pad'
   where
