@@ -2,7 +2,7 @@
 
 ## Installation
 
-Nekomata is written in [Haskell](https://www.haskell.org/). You need [Cabal](https://www.haskell.org/cabal/) (version 3.0 or newer) and [GHC](https://www.haskell.org/ghc/) (version 9.0.2 or later) to build it.
+Nekomata is written in [Haskell](https://www.haskell.org/). You need [Cabal](https://www.haskell.org/cabal/) (version 3.0 or newer) and [GHC](https://www.haskell.org/ghc/) (version 9.6.7 or later) to build it.
 
 The easiest way to install these tools is through [GHCup](https://www.haskell.org/ghcup/). The packages provided by your Linux distribution's package manager may be too old to build Nekomata.
 

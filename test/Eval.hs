@@ -3662,7 +3662,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[3,3,2]", all_ ["[3,3,2]"])
             ]
         specEval
-            "rjŢ"
+            "rĦ"
             [ ("[5,2,1]", all_ ["[3,2,1,1,1]"])
             , ("[4,3,1]", all_ ["[3,2,2,1]"])
             , ("[4,2,2]", all_ ["[3,3,1,1]"])

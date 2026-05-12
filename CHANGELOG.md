@@ -2,13 +2,13 @@
 
 ## 0.9.0.0 -- Unreleased
 
-* Updated some dependencies. Now GHC 9.6.7 or newer is required to build Nekomata. But GHC 9.14.1 is not supported yet due to a dependency issue.
+* Updated some dependencies. Now GHC 9.6.7 or newer is required to build Nekomata.
 * New builtin function: `\depth`.
 * New particle: `\anyInt`.
 * Fixed a bug in trimming spaces in the REPL.
 * Fixed a bug in `\intPartition`. It is now lazier and more efficient.
 * Some internal data types now derive `Show` instances for debugging.
-* Now input supports comments starting with `->`. Anything after `->` in the input is ignored. Note that this comment syntax only works for inputs, not for code.
+* Now input supports comments starting with `->`. Anything after `->` in the input is ignored. When taking multiple inputs with the `-m` flag, anything after `->` in each line is ignored. Note that this comment syntax only works in inputs, not in codes. You can use it to add comments to your test cases.
 
 ## 0.8.0.0 -- 2025-09-01
 
