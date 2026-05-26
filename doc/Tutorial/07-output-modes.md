@@ -6,13 +6,13 @@ Since Nekomata is non-deterministic, a program can have multiple possible result
 
 ## Mode Comparison
 
-| Mode | CLI Flag | REPL Command | Description |
-|------|----------|--------------|-------------|
-| `all` | (default) | `\Mode all` | Print all results |
-| `first` | `-1` | `\Mode first` | Print first result only |
-| `last` | `-t` | `\Mode last` | Print last result only |
-| `count` | `-n` | `\Mode count` | Print number of results |
-| `exists` | `-e` | `\Mode exists` | Print `True`/`False` (any result?) |
+| Mode     | CLI Flag  | REPL Command   | Description                        |
+| -------- | --------- | -------------- | ---------------------------------- |
+| `all`    | (default) | `\Mode all`    | Print all results                  |
+| `first`  | `-1`      | `\Mode first`  | Print first result only            |
+| `last`   | `-t`      | `\Mode last`   | Print last result only             |
+| `count`  | `-n`      | `\Mode count`  | Print number of results            |
+| `exists` | `-e`      | `\Mode exists` | Print `True`/`False` (any result?) |
 
 ## Mode Details
 
@@ -102,12 +102,12 @@ In the REPL: `\Mode exists`.
 
 ## Summary
 
-| Mode | Use Case |
-|------|----------|
-| `all` | Exploring all solutions, searching |
-| `first` | Getting any solution quickly |
-| `last` | Getting the last solution |
-| `count` | Combinatorial counting |
+| Mode     | Use Case                           |
+| -------- | ---------------------------------- |
+| `all`    | Exploring all solutions, searching |
+| `first`  | Getting any solution quickly       |
+| `last`   | Getting the last solution          |
+| `count`  | Combinatorial counting             |
 | `exists` | Decision problems (yes/no answers) |
 
 Choose the mode that best fits your code golf challenge!

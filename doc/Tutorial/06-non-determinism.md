@@ -104,13 +104,13 @@ This is how Nekomata handles conditions — it uses **failure as filtering**.
 
 Many builtins work as predicates that succeed or fail:
 
-| Function | Succeeds if... |
-|----------|---------------|
-| `=` | Values are equal |
-| `<` | First is less than second |
-| `P` | Value is positive |
-| `Q` | Value is prime |
-| `N` | List is non-empty |
+| Function | Succeeds if...            |
+| -------- | ------------------------- |
+| `=`      | Values are equal          |
+| `<`      | First is less than second |
+| `P`      | Value is positive         |
+| `Q`      | Value is prime            |
+| `N`      | List is non-empty         |
 
 This pattern lets you write things like:
 
@@ -126,16 +126,16 @@ This pattern lets you write things like:
 
 Many list operations are non-deterministic:
 
-| Function | Description |
-|----------|-------------|
-| `~` | Choose any element from a list |
-| `S` | Choose any subset |
-| `↕` | Choose any permutation |
-| `s` | Choose any suffix |
-| `p` | Choose any prefix |
-| `q` | Choose any contiguous subsequence |
-| `;` | Split list at any position |
-| `ŧ` | Choose n-tuples from a list |
+| Function | Description                       |
+| -------- | --------------------------------- |
+| `~`      | Choose any element from a list    |
+| `S`      | Choose any subset                 |
+| `↕`      | Choose any permutation            |
+| `s`      | Choose any suffix                 |
+| `p`      | Choose any prefix                 |
+| `q`      | Choose any contiguous subsequence |
+| `;`      | Split list at any position        |
+| `ŧ`      | Choose n-tuples from a list       |
 
 ### Example: Anagrams
 

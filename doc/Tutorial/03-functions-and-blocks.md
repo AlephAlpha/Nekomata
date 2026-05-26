@@ -24,73 +24,73 @@ Each function has an **in arity** (how many values it pops) and an **out arity**
 
 ### Arithmetic
 
-| Short | Name | Arity | Description |
-|-------|------|-------|-------------|
-| `+` | `\add` | `2 -> 1` | Add |
-| `-` | `\sub` | `2 -> 1` | Subtract |
-| `*` | `\mul` | `2 -> 1` | Multiply |
-| `/` | `\div` | `2 -> 1` | Divide (fails on zero) |
-| `%` | `\mod` | `2 -> 1` | Modulo |
-| `_` | `\neg` | `1 -> 1` | Negate |
-| `→` | `\increment` | `1 -> 1` | Add 1 |
-| `←` | `\decrement` | `1 -> 1` | Subtract 1 |
-| `A` | `\abs` | `1 -> 1` | Absolute value |
-| `½` | `\half` | `1 -> 1` | Halve (fails on odd) |
-| `E` | `\pow` | `2 -> 1` | Exponentiation |
-| `√` | `\sqrt` | `1 -> 1` | Square root (perfect squares only) |
+| Short | Name         | Arity    | Description                        |
+| ----- | ------------ | -------- | ---------------------------------- |
+| `+`   | `\add`       | `2 -> 1` | Add                                |
+| `-`   | `\sub`       | `2 -> 1` | Subtract                           |
+| `*`   | `\mul`       | `2 -> 1` | Multiply                           |
+| `/`   | `\div`       | `2 -> 1` | Divide (fails on zero)             |
+| `%`   | `\mod`       | `2 -> 1` | Modulo                             |
+| `_`   | `\neg`       | `1 -> 1` | Negate                             |
+| `→`   | `\increment` | `1 -> 1` | Add 1                              |
+| `←`   | `\decrement` | `1 -> 1` | Subtract 1                         |
+| `A`   | `\abs`       | `1 -> 1` | Absolute value                     |
+| `½`   | `\half`      | `1 -> 1` | Halve (fails on odd)               |
+| `E`   | `\pow`       | `2 -> 1` | Exponentiation                     |
+| `√`   | `\sqrt`      | `1 -> 1` | Square root (perfect squares only) |
 
 ### Predicates (Fail on False)
 
 Predicates return the value unchanged if the condition is true, and **fail** (produce no result) otherwise. This is how Nekomata handles conditions — there is no boolean type.
 
-| Short | Name | Arity | Description |
-|-------|------|-------|-------------|
-| `=` | `\eq` | `2 -> 1` | Equal |
-| `≠` | `\ne` | `2 -> 1` | Not equal |
-| `<` | `\less` | `2 -> 1` | Less than (numeric) |
-| `>` | `\greater` | `2 -> 1` | Greater than (numeric) |
-| `P` | `\isPositive` | `1 -> 1` | Positive |
-| `Z` | `\isNonzero` | `1 -> 1` | Non-zero |
-| `Q` | `\isPrime` | `1 -> 1` | Prime |
-| `N` | `\isNonempty` | `1 -> 1` | List is non-empty |
+| Short | Name          | Arity    | Description            |
+| ----- | ------------- | -------- | ---------------------- |
+| `=`   | `\eq`         | `2 -> 1` | Equal                  |
+| `≠`   | `\ne`         | `2 -> 1` | Not equal              |
+| `<`   | `\less`       | `2 -> 1` | Less than (numeric)    |
+| `>`   | `\greater`    | `2 -> 1` | Greater than (numeric) |
+| `P`   | `\isPositive` | `1 -> 1` | Positive               |
+| `Z`   | `\isNonzero`  | `1 -> 1` | Non-zero               |
+| `Q`   | `\isPrime`    | `1 -> 1` | Prime                  |
+| `N`   | `\isNonempty` | `1 -> 1` | List is non-empty      |
 
 ### List Operations
 
-| Short | Name | Arity | Description |
-|-------|------|-------|-------------|
-| `#` | `\length` | `1 -> 1` | Length of list |
-| `@` | `\nth` | `2 -> 1` | Index into list (0-based) |
-| `h` | `\head` | `1 -> 1` | First element |
-| `t` | `\tail` | `1 -> 1` | Remove first |
-| `l` | `\last` | `1 -> 1` | Last element |
-| `i` | `\init` | `1 -> 1` | Remove last |
-| `,` | `\join` | `2 -> 1` | Concatenate two lists |
-| `c` | `\cons` | `2 -> 1` | Prepend element |
-| `ɔ` | `\snoc` | `2 -> 1` | Append element |
-| `~` | `\anyOf` | `1 -> 1` | Choose element (non-deterministic) |
-| `S` | `\subset` | `1 -> 1` | Choose subset (non-deterministic) |
-| `↕` | `\permutation` | `1 -> 1` | Permute list (non-deterministic) |
+| Short | Name           | Arity    | Description                        |
+| ----- | -------------- | -------- | ---------------------------------- |
+| `#`   | `\length`      | `1 -> 1` | Length of list                     |
+| `@`   | `\nth`         | `2 -> 1` | Index into list (0-based)          |
+| `h`   | `\head`        | `1 -> 1` | First element                      |
+| `t`   | `\tail`        | `1 -> 1` | Remove first                       |
+| `l`   | `\last`        | `1 -> 1` | Last element                       |
+| `i`   | `\init`        | `1 -> 1` | Remove last                        |
+| `,`   | `\join`        | `2 -> 1` | Concatenate two lists              |
+| `c`   | `\cons`        | `2 -> 1` | Prepend element                    |
+| `ɔ`   | `\snoc`        | `2 -> 1` | Append element                     |
+| `~`   | `\anyOf`       | `1 -> 1` | Choose element (non-deterministic) |
+| `S`   | `\subset`      | `1 -> 1` | Choose subset (non-deterministic)  |
+| `↕`   | `\permutation` | `1 -> 1` | Permute list (non-deterministic)   |
 
 ### Constants
 
-| Short | Name | Arity | Description |
-|-------|------|-------|-------------|
-| `£` | `\neg1` | `0 -> 1` | Push `-1` |
-| `¢` | `\ten` | `0 -> 1` | Push `10` |
-| `¥` | `\octet` | `0 -> 1` | Push `256` |
-| `Ø` | `\emptyList` | `0 -> 1` | Push `[]` |
+| Short | Name         | Arity    | Description |
+| ----- | ------------ | -------- | ----------- |
+| `£`   | `\neg1`      | `0 -> 1` | Push `-1`   |
+| `¢`   | `\ten`       | `0 -> 1` | Push `10`   |
+| `¥`   | `\octet`     | `0 -> 1` | Push `256`  |
+| `Ø`   | `\emptyList` | `0 -> 1` | Push `[]`   |
 
 ### Number Theory
 
-| Short | Name | Arity | Description |
-|-------|------|-------|-------------|
-| `F` | `\factorial` | `1 -> 1` | Factorial |
-| `Ç` | `\binomial` | `2 -> 1` | Binomial coefficient |
-| `G` | `\gcd` | `2 -> 1` | GCD |
-| `g` | `\lcm` | `2 -> 1` | LCM |
-| `Ď` | `\divisors` | `1 -> 1` | All positive divisors |
-| `ƒ` | `\factor` | `1 -> 2` | Prime factorization |
-| `Ƥ` | `\prime` | `0 -> 1` | Non-deterministic prime generator |
+| Short | Name         | Arity    | Description                       |
+| ----- | ------------ | -------- | --------------------------------- |
+| `F`   | `\factorial` | `1 -> 1` | Factorial                         |
+| `Ç`   | `\binomial`  | `2 -> 1` | Binomial coefficient              |
+| `G`   | `\gcd`       | `2 -> 1` | GCD                               |
+| `g`   | `\lcm`       | `2 -> 1` | LCM                               |
+| `Ď`   | `\divisors`  | `1 -> 1` | All positive divisors             |
+| `ƒ`   | `\factor`    | `1 -> 2` | Prime factorization               |
+| `Ƥ`   | `\prime`     | `0 -> 1` | Non-deterministic prime generator |
 
 ## Full Reference
 
@@ -104,7 +104,7 @@ A **block** is a sequence of instructions enclosed in curly braces:
 {1 2+}
 ```
 
-This block, when evaluated, pushes `3` onto the stack. Blocks themselves are values — they can be passed to higher-order functions (particles).
+This block, when evaluated, pushes `3` onto the stack. Blocks themselves are functions — they can be passed to higher-order functions (particles).
 
 Like functions, blocks have an arity determined by their contents. The block `{1 2+}` has arity `0 -> 1` (it consumes nothing and produces one value).
 

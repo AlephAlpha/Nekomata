@@ -17,13 +17,13 @@ No formatter/linter beyond `-Wall` in `.cabal`.
 
 ## Project structure
 
-| Path | Role |
-|---|---|
+| Path            | Role                                                                                        |
+| --------------- | ------------------------------------------------------------------------------------------- |
 | `src/Nekomata/` | Library: Eval, Function, Data, NonDet, Parser, Program, Builtin, Particle, CodePage, Result |
-| `app/` | Executable (Main.hs, Repl.hs, Doc.hs) |
-| `test/` | Hspec tests (Main.hs + Eval.hs) |
-| `doc/` | Generated docs + tutorials |
-| `analysis/` | Python frequency analysis of golf solutions |
+| `app/`          | Executable (Main.hs, Repl.hs, Doc.hs)                                                       |
+| `test/`         | Hspec tests (Main.hs + Eval.hs)                                                             |
+| `doc/`          | Generated docs + tutorials                                                                  |
+| `analysis/`     | Python frequency analysis of golf solutions                                                 |
 
 ## Testing
 
@@ -43,17 +43,17 @@ Use `shouldMatch` helpers from `Nekomata.Result`: `all_`, `first_`, `last_`, `no
 
 ## CLI flags
 
-| Flag | Meaning |
-|---|---|
-| `-c CODE` | Run code string |
-| `-f FILE` / `-u FILE` | Run file (custom encoding / UTF-8) |
-| `-i INPUT` | Input (space-separated values) |
-| `-s` | Read input from stdin |
-| `-m` | Multiple inputs (newline-separated lines) |
-| `-1` / `-t` / `-n` / `-e` | Mode: first / last / count / exists |
-| `-l N` | Limit results |
-| `-r` | REPL (default with no args) |
-| `--doc` / `--codepage` | Generate docs |
+| Flag                      | Meaning                                   |
+| ------------------------- | ----------------------------------------- |
+| `-c CODE`                 | Run code string                           |
+| `-f FILE` / `-u FILE`     | Run file (custom encoding / UTF-8)        |
+| `-i INPUT`                | Input (space-separated values)            |
+| `-s`                      | Read input from stdin                     |
+| `-m`                      | Multiple inputs (newline-separated lines) |
+| `-1` / `-t` / `-n` / `-e` | Mode: first / last / count / exists       |
+| `-l N`                    | Limit results                             |
+| `-r`                      | REPL (default with no args)               |
+| `--doc` / `--codepage`    | Generate docs                             |
 
 ## Input quirks
 

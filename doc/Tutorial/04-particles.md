@@ -228,30 +228,30 @@ This maps (`ᵐ`) the filter-nonzero (`ᶠZ`) function over each sublist.
 
 ## Summary Table
 
-| Particle | Name | Use Case |
-|----------|------|----------|
-| `ᵐ` | map | Element-wise transformation |
-| `ᶻ` | zipWith | Combine two lists element-wise |
-| `ᶾ` | zipWithTrunc | Zip truncating longer list |
-| `ᵒ` | outer | Cartesian product |
-| `ʲ` | concatMap | Map then flatten |
-| `ᶠ` | filter | Keep matching elements |
-| `ᵖ` | predicate | Test without consuming |
-| `ᵗ` | predicateNot | Test failure |
-| `ᶜ` | orApply | Optionally apply |
-| `ᶦ` | iterate | All intermediate results |
-| `ʷ` | while | Loop until failure |
-| `ˡ` | lengthWhile | Count steps |
-| `ʸ` | fixedPoint | Iterate until stable |
-| `ᵃ` | onBoth | Apply to two values |
-| `ˣ` | noPop | Apply without popping |
-| `ᵈ` | dip | Apply under top |
-| `ᵉ` | dupDip | Apply then restore top |
-| `ᵋ` | dupDip2 | Apply then restore top two |
-| `ʰ` | onAny | Apply to one element |
-| `ʳ` | fold1 | Left fold |
-| `ᵏ` | firstInt | Find first matching int |
-| `ᴷ` | anyInt | Find any matching int |
-| `ᵚ` | mapWith | Map binary over first arg |
+| Particle | Name         | Use Case                       |
+| -------- | ------------ | ------------------------------ |
+| `ᵐ`      | map          | Element-wise transformation    |
+| `ᶻ`      | zipWith      | Combine two lists element-wise |
+| `ᶾ`      | zipWithTrunc | Zip truncating longer list     |
+| `ᵒ`      | outer        | Cartesian product              |
+| `ʲ`      | concatMap    | Map then flatten               |
+| `ᶠ`      | filter       | Keep matching elements         |
+| `ᵖ`      | predicate    | Test without consuming         |
+| `ᵗ`      | predicateNot | Test failure                   |
+| `ᶜ`      | orApply      | Optionally apply               |
+| `ᶦ`      | iterate      | All intermediate results       |
+| `ʷ`      | while        | Loop until failure             |
+| `ˡ`      | lengthWhile  | Count steps                    |
+| `ʸ`      | fixedPoint   | Iterate until stable           |
+| `ᵃ`      | onBoth       | Apply to two values            |
+| `ˣ`      | noPop        | Apply without popping          |
+| `ᵈ`      | dip          | Apply under top                |
+| `ᵉ`      | dupDip       | Apply then restore top         |
+| `ᵋ`      | dupDip2      | Apply then restore top two     |
+| `ʰ`      | onAny        | Apply to one element           |
+| `ʳ`      | fold1        | Left fold                      |
+| `ᵏ`      | firstInt     | Find first matching int        |
+| `ᴷ`      | anyInt       | Find any matching int          |
+| `ᵚ`      | mapWith      | Map binary over first arg      |
 
 For full details and examples of each particle, see **[Builtins.md](../Builtins.md)**.

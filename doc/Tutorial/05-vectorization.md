@@ -54,7 +54,7 @@ The canonical Nekomata solution for generating an identity matrix uses vectoriza
 
 With input `3`:
 - `ᵒ-` computes the outer product of `[0,1,2]` with subtraction: `[[0,-1,-2],[1,0,-1],[2,1,0]]`
-- `¬` (logical not) maps `0 -> 1` and non-zero -> `0`, giving `[[1,0,0],[0,1,0],[0,0,1]]`
+- `¬` (logical not) maps `0` to `1` and non-zero to `0`, giving `[[1,0,0],[0,1,0],[0,0,1]]`
 
 ## Vectorization vs. Explicit Map
 

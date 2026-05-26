@@ -43,12 +43,12 @@ Nekomata has three fundamental data types: **numbers**, **chars**, and **lists**
 
 Numbers are **arbitrary-precision rational numbers**. They can be integers, fractions, or negative.
 
-| Expression | Value | Notes |
-|------------|-------|-------|
-| `42` | `42` | Integer literal |
-| `-42` | Cannot write directly | Use `42_` (negation) |
-| `1/2` | Cannot write directly | Use `1\2` (fraction syntax) |
-| `-3/4` | Cannot write directly | Use `3\4_` or `3_4/` |
+| Value  | Expression            | Notes                            |
+| ------ | --------------------- | -------------------------------- |
+| `42`   | `42`                  | Integer literal                  |
+| `-42`  | Cannot write directly | Use `42_` (negation)             |
+| `1/2`  | `1\2`                 | Use `\` for division in literals |
+| `-3/4` | Cannot write directly | Use `3\4_` or `3_4/`             |
 
 Digits run together form a single number. Separate numbers with spaces:
 
@@ -102,13 +102,13 @@ An empty list and an empty string are the same value, written as `[]` or `""`.
 
 These built-in functions manipulate the stack directly:
 
-| Short | Name | Arity | Description |
-|-------|------|-------|-------------|
-| `^` | `\drop` | `1 -> 0` | Remove top of stack |
-| `:` | `\dup` | `1 -> 2` | Duplicate top |
-| `$` | `\swap` | `2 -> 2` | Swap top two: `a b -> b a` |
-| `§` | `\rot3` | `3 -> 3` | Rotate three: `a b c -> c a b` |
-| `v` | `\over` | `2 -> 3` | Copy second to top: `a b -> b a b` |
+| Short | Name    | Arity    | Description                        |
+| ----- | ------- | -------- | ---------------------------------- |
+| `^`   | `\drop` | `1 -> 0` | Remove top of stack                |
+| `:`   | `\dup`  | `1 -> 2` | Duplicate top                      |
+| `$`   | `\swap` | `2 -> 2` | Swap top two: `a b -> b a`         |
+| `§`   | `\rot3` | `3 -> 3` | Rotate three: `a b c -> c a b`     |
+| `v`   | `\over` | `2 -> 3` | Copy second to top: `a b -> b a b` |
 
 ### Examples
 

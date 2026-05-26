@@ -63,8 +63,8 @@ With input `n`:
 Result: the `n×n` identity matrix.
 
 ```
+>>> /Input 3
 >>> ᵒ-¬
-3
 [[1,0,0],[0,1,0],[0,0,1]]
 ```
 
@@ -84,8 +84,8 @@ With input `n`:
 - The count of successful applications is the 2-adic valuation
 
 ```
+>>> \Input 48
 >>> ˡ½
-48
 4
 ```
 
@@ -159,8 +159,8 @@ With a list as input:
 The result is the smallest natural number not in the input list.
 
 ```
+>>> \Input [0,1,2,4]
 >>> ᵏf
-[0,1,2,4]
 3
 ```
 
@@ -184,10 +184,10 @@ Counts how many steps to reach 1 in the Collatz conjecture.
 6. `I` (`\if`) chooses the first succeeding branch: even → halve, odd → `3n+1`
 
 ```
+>>> \Input 10
 >>> ˡ{Ƶᵉ½3*→I
-10
 6
-``` 
+```
 
 (10 takes 6 steps to reach 1: 10→5→16→8→4→2→1)
 
