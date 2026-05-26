@@ -797,6 +797,32 @@ depth = unary depth'
     depthData (DListT ys) = ys >>= depthList
     depthData _ = Val 0
 
+deepIndex :: Function
+deepIndex = binary deepIndex'
+  where
+    deepIndex' i x y = toTryData $ deepIndexTry i x y
+    deepIndexTry :: Id -> DataTry -> DataTry -> Try [Integer]
+    deepIndexTry i x y =
+        tryEq x y >>= \b ->
+            if b
+                then Choice i (Val []) (deepIndexSearch (rightId i) x y)
+                else deepIndexSearch i x y
+    deepIndexSearch :: Id -> DataTry -> DataTry -> Try [Integer]
+    deepIndexSearch i (DListT xs) y = xs >>= deepIndexList i 0 (Val y)
+    deepIndexSearch _ _ _ = Fail
+    deepIndexList :: Id -> Integer -> TryData -> ListTry TryData -> Try [Integer]
+    deepIndexList _ _ _ Nil = Fail
+    deepIndexList i n y (Cons x xs) =
+        let later =
+                Choice
+                    (rightId i)
+                    (x >>= deepIndexData (leftId (rightId i)) n y)
+                    (xs >>= deepIndexList (rightId (rightId i)) (n + 1) y)
+         in tryEq x y >>= \b -> if b then Choice i (Val [n]) later else later
+    deepIndexData :: Id -> Integer -> TryData -> DataTry -> Try [Integer]
+    deepIndexData i n y (DListT ys) = (n :) <$> (ys >>= deepIndexList i 0 y)
+    deepIndexData _ _ _ _ = Fail
+
 pad :: Function
 pad = unary pad'
   where

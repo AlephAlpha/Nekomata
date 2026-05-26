@@ -2326,6 +2326,26 @@ __Examples__:
 - `[]w` → `1`
 - `1w` → `0`
 
+### `deepIndex` (`W`, `2 -> 1`)
+
+Get the index path of any occurrence of an element in a ragged list.
+
+Each index in the path is 0-based.
+
+If the whole first argument is equal to the searched element, this function may also return the empty list [].
+
+Fail if the element does not occur in the ragged list.
+
+This function is non-deterministic.
+
+__Examples__:
+
+- `1 1W` → `[]`
+- `[1] [1]W` → `[]`
+- `[1,[1,2],[[1],2]] 1W` → `[0] [1,0] [2,0,0]`
+- `[[1],[2,[1]]] [1]W` → `[0] [1,1]`
+- `[1,[2,3],[[4],5]] 6W` → Fail
+
 ### `pad` (`Ḟ`, `1 -> 1`)
 
 Pad a nested list with zeros to make it rectangular.

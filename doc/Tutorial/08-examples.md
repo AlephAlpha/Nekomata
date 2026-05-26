@@ -63,7 +63,7 @@ With input `n`:
 Result: the `n×n` identity matrix.
 
 ```
->>> /Input 3
+>>> \Input 3
 >>> ᵒ-¬
 [[1,0,0],[0,1,0],[0,0,1]]
 ```

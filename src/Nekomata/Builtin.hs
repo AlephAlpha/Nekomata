@@ -2100,6 +2100,22 @@ builtins =
         , ("1w", all_ ["0"])
         ]
     , Builtin
+        "deepIndex"
+        'W'
+        deepIndex
+        "Get the index path of any occurrence of an element in a ragged list. \n\
+        \Each index in the path is 0-based.\n\
+        \If the whole first argument is equal to the searched element, \
+        \it may also return the empty list [].\n\
+        \Fail if the element does not occur in the ragged list.\n\
+        \This function is non-deterministic."
+        [ ("1 1W", all_ ["[]"])
+        , ("[1] [1]W", all_ ["[]"])
+        , ("[1,[1,2],[[1],2]] 1W", all_ ["[0]", "[1,0]", "[2,0,0]"])
+        , ("[[1],[2,[1]]] [1]W", all_ ["[0]", "[1,1]"])
+        , ("[1,[2,3],[[4],5]] 6W", all_ [])
+        ]
+    , Builtin
         "pad"
         'Ḟ'
         pad
