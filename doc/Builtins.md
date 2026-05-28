@@ -1231,6 +1231,25 @@ __Examples__:
 
 - `Ƥ` → `2 3 5 7 11 13 17 19 23 ...`
 
+### `nthPrime` (`Ṕ`, `1 -> 1`)
+
+Compute the nth positive prime number.
+
+The index is 1-based, following the usual number-theoretic convention, so the 1st prime is 2.
+
+Fails when the input is not a positive integer.
+
+If the argument is a char, it is converted to a number according to Nekomata's code page.
+
+This function is automatically vectorized.
+
+__Examples__:
+
+- `1Ṕ` → `2`
+- `5Ṕ` → `11`
+- `[1,5,6]Ṕ` → `[2,11,13]`
+- `0Ṕ` → Fail
+
 ### `primePi` (`ƥ`, `1 -> 1`)
 
 Compute the number of positive primes less than or equal to a number.
@@ -2328,11 +2347,11 @@ __Examples__:
 
 ### `deepIndex` (`W`, `2 -> 1`)
 
-Get the index path of any occurrence of an element in a ragged list.
+Get the index path of any occurrence of an element in a ragged list. 
 
 Each index in the path is 0-based.
 
-If the whole first argument is equal to the searched element, this function may also return the empty list [].
+If the whole first argument is equal to the searched element, it may also return the empty list [].
 
 Fail if the element does not occur in the ragged list.
 

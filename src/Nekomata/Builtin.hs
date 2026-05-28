@@ -1146,6 +1146,22 @@ builtins =
         \This function is non-deterministic."
         [("Ƥ", truncate_ ["2", "3", "5", "7", "11", "13", "17", "19", "23"])]
     , Builtin
+        "nthPrime"
+        'Ṕ'
+        nthPrime'
+        "Compute the nth positive prime number.\n\
+        \The index is 1-based, following the usual number-theoretic convention, \
+        \so the 1st prime is 2.\n\
+        \Fails when the input is not a positive integer.\n\
+        \If the argument is a char, \
+        \it is converted to a number according to Nekomata's code page.\n\
+        \This function is automatically vectorized."
+        [ ("1Ṕ", all_ ["2"])
+        , ("5Ṕ", all_ ["11"])
+        , ("[1,5,6]Ṕ", all_ ["[2,11,13]"])
+        , ("0Ṕ", all_ [])
+        ]
+    , Builtin
         "primePi"
         'ƥ'
         primePi

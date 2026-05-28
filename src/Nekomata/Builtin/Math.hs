@@ -8,7 +8,7 @@ import Data.List (sort)
 import Data.Ratio (denominator, numerator, (%))
 import Math.NumberTheory.ArithmeticFunctions (divisorsList)
 import Math.NumberTheory.Primes (Prime (unPrime), factorise, nextPrime)
-import Math.NumberTheory.Primes.Counting (primeCount)
+import Math.NumberTheory.Primes.Counting (nthPrime, primeCount)
 import Math.NumberTheory.Primes.Testing (isCertifiedPrime)
 import Math.NumberTheory.Roots (exactSquareRoot)
 import Nekomata.Builtin.Basic (dup, swap)
@@ -359,6 +359,15 @@ prime = nullary $
         toTryData
             <$> anyOf' i
             $ map unPrime [nextPrime (1 :: Integer) ..]
+
+nthPrime' :: Function
+nthPrime' = unaryInt $ const nthPrime_
+  where
+    nthPrime_ x
+        | x <= 0 = Fail
+        | x > toInteger (maxBound :: Int) = Fail
+        | otherwise =
+            Val . unPrime . nthPrime $ fromIntegral x
 
 primePi :: Function
 primePi = unaryNum $ const primePi_

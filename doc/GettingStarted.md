@@ -98,6 +98,12 @@ Use `-i` to provide stack input as a space-separated string:
 Nekomata -c '+' -i '1 2'
 ```
 
+Input can also be separated by commas:
+
+```bash
+Nekomata -c '+' -i '1,2'
+```
+
 Input supports comments starting with `->`:
 
 ```bash

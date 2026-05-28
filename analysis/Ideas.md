@@ -5,7 +5,7 @@
 此处总结一下 Code Page 中已有但还没有用上的字符：
 
 ```
-.W`
+.`
 ```
 
 如果 CodePage 中的 256 个字符都用完了，可以考虑用像 05AB1E 那样，用 `.` 开头的字符来表示双字节的内置函数。现在的 CodePage 还没有用完，先不考虑这个问题，但 `.` 也先不要用掉。
@@ -97,10 +97,11 @@ LiberationMono 字体所支持的字符列举于[此文件](LiberationMonoGlyphs
 \dup \enumerate \increment \nthPrime \dip \map \self \pow \product \swap \powOf2 \if
 ```
 
-- [ ] `\nthPrime`：求第 n 个质数。
 - [ ] `\self`：用于递归，表示当前函数。
 
 支持递归需要对现有的解释器进行大量的修改。一个问题是它会让 arity 变得不确定。可以考虑为不同 arity 的函数分别定义 `\self`，比如说 `\self1`、`\self2`、`\self3` 等等。
+
+不过，如果像后面 [关于 ragged-list](#关于-ragged-list) 中说的那样加入了 `\cata` 的话，至少在这道题中就不需要专门引入递归了。
 
 ### [Find Unique Anagrams](https://codegolf.stackexchange.com/q/261128/9288)
 
@@ -131,14 +132,6 @@ LiberationMono 字体所支持的字符列举于[此文件](LiberationMonoGlyphs
 ```
 
 - [ ] `\valuation`：一个数的 p 进赋值。
-
-### [Number of bits needed to represent the product of the first primes](https://codegolf.stackexchange.com/q/263531/9288)
-
-```
-\range1 \nthPrime \product \binary \length
-```
-
-- [ ] `\nthPrime`：求第 n 个质数。
 
 ### [Hypercube elements](https://codegolf.stackexchange.com/q/70558/9288)
 
@@ -178,9 +171,11 @@ LiberationMono 字体所支持的字符列举于[此文件](LiberationMonoGlyphs
 这里先想一下一些可能有用的内置函数和助词，不一定都需要实现：
 
 - [x] `\depth`：输入一个 ragged-list，输出它的最大嵌套层数。比如说输入 `[1, [2, 3], [[4], 5]]`，输出 `3`。
-- [ ] `\deepIndex`：输入一个 ragged-list 和一个元素，non-deterministically 输出该元素在 ragged-list 中的一个位置。位置可以用一个列表来表示，列表中的每个元素都是一个索引，表示在当前层选择哪个元素。比如说输入 `[1, [1, 2], [[1], 2]]` 和 `1`，输出 `[0]`、`[1,0]`、`[2,0,0]`。
+- [x] `\deepIndex`：输入一个 ragged-list 和一个元素，non-deterministically 输出该元素在 ragged-list 中的一个位置。位置可以用一个列表来表示，列表中的每个元素都是一个索引，表示在当前层选择哪个元素。比如说输入 `[1, [1, 2], [[1], 2]]` 和 `1`，输出 `[0]`、`[1,0]`、`[2,0,0]`。
 - [ ] `\cata`：助词，输入一个函数和一个 ragged-list。对 ragged-list 中的每个元素进行递归地 catamorphism 操作。也就是说，如果元素是一个列表，就先对该列表进行 `\cata`，然后把结果作为参数传给函数；如果元素不是列表，就直接把它作为参数传给函数。也许可以起一个直观一点的名字，比如说 `\deepFold`。
 - [ ] `\ana`：助词，输入一个函数和一个值，输出一个 ragged-list。对输入的值进行递归地 anamorphism 操作。也就是说，先把输入的值作为参数传给函数，得到一个列表；然后对该列表中的每个元素进行 `\ana`，把结果作为该元素的值；如果函数的输出不是列表，就直接把它作为该元素的值。也许可以起一个直观一点的名字，比如说 `\deepUnfold`。
+
+在开始实现之前，要先仔细思考 `\cata` 和 `\ana` 具体的语义。
 
 ## 关于助词
 

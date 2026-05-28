@@ -1,4 +1,5 @@
 import pathlib
+import unicodedata
 
 
 def get_corpus(path: str) -> list[str]:
@@ -22,8 +23,13 @@ def ngram_freq(corpus: list[str], n: int) -> dict[str, int]:
     return freq
 
 
+def get_superscript_chars(corpus: list[str]) -> list[str]:
+    chars = sorted({char for line in corpus for char in line if unicodedata.category(char) == "Lm"})
+    return chars
+
+
 def particles_analysis(corpus: list[str]) -> dict[str, list[int]]:
-    particles = "ᵃᶜᵈᵉᵋᶠʰᶦʲᴶᴷᵏˡᵐᵚᵑᵒᵖʳᵗʷˣʸᶻᶾ"
+    particles = get_superscript_chars(corpus)
     freq = {}
 
     for particle in particles:

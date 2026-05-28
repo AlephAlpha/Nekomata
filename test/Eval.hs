@@ -147,6 +147,33 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[0,0,1,1,2,2,3]", all_ ["4"])
             , ("[1,0,7,6,3,11,15,1,9,2,3,1,5,2,3,4,6,8,1,18]", all_ ["10"])
             ]
+    describe "q42079: Shortest Minmod Function" $ do
+        specEval
+            "±≡:§*ṁ*0I"
+            [ ("[2]", all_ ["2"])
+            , ("[-3]", all_ ["-3"])
+            , ("[0]", all_ ["0"])
+            , ("[3,-5]", all_ ["0"])
+            , ("[2,4,1]", all_ ["1"])
+            , ("[0,1,2]", all_ ["0"])
+            , ("[-1,1,2]", all_ ["0"])
+            , ("[-4,-2,-3,-2]", all_ ["-2"])
+            , ("[-5,0,-1]", all_ ["0"])
+            , ("[1,0,-1]", all_ ["0"])
+            ]
+        specEval
+            "ç~ᵖ{ᵉ-*ň"
+            [ ("[2]", last_ "2")
+            , ("[-3]", last_ "-3")
+            , ("[0]", last_ "0")
+            , ("[3,-5]", last_ "0")
+            , ("[2,4,1]", last_ "1")
+            , ("[0,1,2]", last_ "0")
+            , ("[-1,1,2]", last_ "0")
+            , ("[-4,-2,-3,-2]", last_ "-2")
+            , ("[-5,0,-1]", last_ "0")
+            , ("[1,0,-1]", last_ "0")
+            ]
     describe "q42529: Mode (most common element) of a list" $ do
         specEval
             "ŢṂ"
@@ -217,6 +244,10 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[\"ABCBACCBA\",\"ABCBACCAB\"]", Check False)
             , ("[\"ABAB\",\"CD\"]", Check False)
             ]
+    describe "q51178: All about basic binary" $ do
+        specEval
+            "Rt~ᵖ{Dƶ"
+            [("82000", all_ ["2", "3", "4", "5", "81999", "82000"])]
     describe "q55422: \"Hello, World!\"" $ do
         specEval
             "\"Hello, World!\""
@@ -262,6 +293,12 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[1,1]", all_ ["[1]"])
             , ("[3,0,0,1,1,0,5,3]", all_ ["[3,0,1]"])
             , ("[-34,0,1,-34,4,8,4]", all_ ["[-34,4]"])
+            ]
+    describe "q61321: Iterated partial sums" $ do
+        specEval
+            "ᵑ∫"
+            [ ("1 [-3,4,7,-1,15]", all_ ["[-3,1,8,7,22]"])
+            , ("3 [-3,4,7,-1,15]", all_ ["[-3,-5,1,14,49]"])
             ]
     describe "q61808: Lossy Sorting (Implement Dropsort)" $ do
         specEval
@@ -685,7 +722,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q93261: StringgnirtSStringgnirtSStringgnirtS" $ do
         specEval
-            "xᵐᵑ↔j"
+            "xʲᵑ↔"
             [ ("\"a\"", all_ ["a"])
             , ("\"abcd\"", all_ ["abcddcbaabcddcba"])
             , ("\"OK!\"", all_ ["OK!!KOOK!"])
@@ -851,6 +888,25 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[2,3],[3,4]] [[3,5],[3,1]]", all_ ["[[15,13],[21,19]]"])
             , ("[[5,3],[1,3],[9,3],[1,-1000]] [[1,3],[2,4]]", all_ ["[[11,27],[7,15],[15,39],[-1999,-3997]]"])
             ]
+    describe "q100998: Is it a Linearized Tree? (Breadth-first Edition)" $ do
+        specEval
+            "←∫→Ẑ>"
+            [ ("[0]", Check True)
+            , ("[2,0,0]", Check True)
+            , ("[1,1,1,1,1,0]", Check True)
+            , ("[3,1,0,2,0,0,0]", Check True)
+            , ("[2,0,2,2,0,0,2,0,0]", Check True)
+            , ("[3,2,2,1,1,1,0,0,0,0,0]", Check True)
+            , ("[1,5,3,0,2,1,4,0,1,0,0,2,1,0,0,1,1,0,0,0,0,2,1,0,0,1,0]", Check True)
+            , ("[0,1]", Check False)
+            , ("[2,0]", Check False)
+            , ("[2,0,0,0]", Check False)
+            , ("[1,0,1]", Check False)
+            , ("[3,2,1,0]", Check False)
+            , ("[2,0,0,2,0,0]", Check False)
+            , ("[4,1,0,3,0,0,0,0]", Check False)
+            , ("[4,2,0,3,1,0,0,0,0,0]", Check False)
+            ]
     describe "q101389: Increment an Array" $ do
         specEval
             "Ṁ←ɔõhĦ+"
@@ -1003,6 +1059,27 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("\"ABCDC\"", Check False)
             , ("\"yes\"", Check False)
             , ("\"deed\"", Check False)
+            ]
+    describe "q109709: Necklace splitting problem" $ do
+        specEval
+            "J:ĭᵃVᵃo=¿ṩ"
+            [ ("[1,2,1,2,1,3,1,3,3,2,2,3]", all_ ["[[1],[2,1,2,1,3],[1,3,3,2,2],[3]]", "[[1,2],[1,2,1,3],[1,3,3,2],[2,3]]", "[[1,2,1],[2,1,3,1],[3,3,2],[2,3]]", "[[1,2,1,2],[1,3,1],[3,3],[2,2,3]]"])
+            , ("[1,1,1,1,2,2,3,3,3,3,3,3]", all_ ["[[1,1],[1,1,2],[2,3,3,3],[3,3,3]]"])
+            , ("[1,1,1,1,1,1,1,1,1,1,1,1]", all_ ["[[1,1,1,1,1,1],[1,1,1,1,1,1]]"])
+            , ("[1,1,1,1,2,3,4,2,3,4,2,2]", all_ ["[[1,1],[1,1,2,3,4,2],[3,4,2,2]]"])
+            ]
+    describe "q110788: Smallest multiplier that reveals a factor of a semiprime" $ do
+        specEval
+            "ᵏ{*Ƃqƃ¦Ƶ≠"
+            [ ("9", all_ ["3"])
+            , ("15", all_ ["1"])
+            , ("49", all_ ["5"])
+            , ("91", all_ ["1"])
+            , ("961", all_ ["17"])
+            , ("1829", all_ ["5"])
+            , ("9799", all_ ["11"])
+            , ("19951", all_ ["41"])
+            , ("120797", all_ ["27"])
             ]
     describe "q111678: N-dimensional N^N array filled with N" $ do
         specEval
@@ -1276,6 +1353,22 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("28", all_ ["21952"])
             , ("30", all_ ["810000"])
             ]
+    describe "q135193: Is it a Sphenic Number?" $ do
+        specEval
+            "ƒƶ3L"
+            [ ("30", Check True)
+            , ("121", Check False)
+            , ("231", Check True)
+            , ("154", Check True)
+            , ("4", Check False)
+            , ("402", Check True)
+            , ("79", Check False)
+            , ("0", Check False)
+            , ("60", Check False)
+            , ("64", Check False)
+            , ("8", Check False)
+            , ("210", Check False)
+            ]
     describe "q132379: Output the n-th Bell Number" $ do
         specEval
             "O"
@@ -1514,14 +1607,14 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q154363: Check if all non-zero elements in a matrix are connected" $ do
         specEval
-            "ᵗ{±1Ĩ$þÐaOđᵒ{≈∑Ƶ"
-            [ ("[0] 1", Check True)
-            , ("[0,0] 2", Check True)
-            , ("[1,1,1,0,0,0] 3", Check True)
-            , ("[1,0,0,1,1,1,0,0,1] 3", Check True)
-            , ("[0,1,1,0] 2", Check False)
-            , ("[1,1,1,0,0,0,0,2,0,0,0,5] 4", Check False)
-            , ("[0,0,5,2,1,2,0,0,5,3,2,1,5,7,3,2] 4", Check False)
+            "ᵗ{±1WaOđᵒ{≈∑Ƶ"
+            [ ("[[0]]", Check True)
+            , ("[[0,0]]", Check True)
+            , ("[[1,1,1],[0,0,0]]", Check True)
+            , ("[[1,0,0],[1,1,1],[0,0,1]]", Check True)
+            , ("[[0,1],[1,0]]", Check False)
+            , ("[[1,1,1,0],[0,0,0,2],[0,0,0,5]]", Check False)
+            , ("[[0,0,5,2],[1,2,0,0],[5,3,2,1],[5,7,3,2]]", Check False)
             ]
     describe "q154553: Column-wise summation of overlapping slices" $ do
         specEval
@@ -1644,6 +1737,17 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("3", all_ ["3", "1", "0"])
             , ("10", all_ ["10", "31", "15", "7", "3", "1", "0"])
             , ("14", all_ ["14", "43", "21", "10", "31", "15", "7", "3", "1", "0"])
+            ]
+    describe "q178500: Enumerate each series of identical numbers in-place" $ do
+        specEval
+            "pƆĈa"
+            [ ("[]", all_ ["[]"])
+            , ("[42]", all_ ["[0]"])
+            , ("[7,7,7]", all_ ["[0,1,2]"])
+            , ("[10,20,30]", all_ ["[0,0,0]"])
+            , ("[5,12,10,12,12,10]", all_ ["[0,0,0,1,2,1]"])
+            , ("[2,7,1,8,2,8,1,8,2,8]", all_ ["[0,0,0,0,1,1,1,2,2,3]"])
+            , ("[3,1,4,1,5,9,2,6,5,3,5,9]", all_ ["[0,0,0,1,0,0,0,0,1,1,2,1]"])
             ]
     describe "q179464: Covering a Skyline with brush strokes" $ do
         specEval
@@ -2003,6 +2107,13 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("110758", Check True)
             , ("115672", Check True)
             , ("153000", Check False)
+            ]
+    describe "q223590: Output a Latin Square" $ do
+        specEval
+            "rŘ"
+            [ ("1", all_ ["[[0]]"])
+            , ("2", all_ ["[[0,1],[1,0]]"])
+            , ("3", all_ ["[[0,1,2],[1,2,0],[2,0,1]]"])
             ]
     describe "q224125: Replace all items with their counts" $ do
         specEval
@@ -3381,6 +3492,19 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[1,1,1,1,1,1,1],[1,1,1,1,1,1,1]]", Check False)
             , ("[[-1,1,1,1,1,1,1],[-1,-1,-1,-1,-1,-1,1]]", Check False)
             ]
+    describe "q263531: Number of bits needed to represent the product of the first primes" $ do
+        specEval
+            "RṔ∏Ƃ#"
+            [ ("1", all_ ["2"])
+            , ("2", all_ ["3"])
+            , ("3", all_ ["5"])
+            , ("4", all_ ["8"])
+            , ("5", all_ ["12"])
+            , ("6", all_ ["15"])
+            , ("7", all_ ["19"])
+            , ("8", all_ ["24"])
+            , ("9", all_ ["28"])
+            ]
     describe "q263566: Calculating Transitive Closure" $ do
         specEval
             "~ᵉʸ{ˣ@j,u}∕~"
@@ -3842,11 +3966,11 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q269825: What and where is the max?" $ do
         specEval
-            "Ťᵃ#ᵒÐᶻᶻÐjṀ"
-            [ ("[[1,2],[3,4]]", all_ ["[4,[1,1]]"])
-            , ("[[-1]]", all_ ["[-1,[0,0]]"])
-            , ("[[6],[5],[4],[3],[2],[1]]", all_ ["[6,[0,0]]"])
-            , ("[[1,2,3,4],[0,2,5,3],[-5,-2,3,5]]", all_ ["[5,[2,3]]"])
+            "VṀᵉW$Ð"
+            [ ("[[1,2],[3,4]]", first_ "[4,[1,1]]")
+            , ("[[-1]]", first_ "[-1,[0,0]]")
+            , ("[[6],[5],[4],[3],[2],[1]]", first_ "[6,[0,0]]")
+            , ("[[1,2,3,4],[0,2,5,3],[-5,-2,3,5]]", first_ "[5,[1,2]]")
             ]
         specEval
             "ᵐ{xᶻ,Ṁ}xᶻ,Ṁ"
@@ -3965,7 +4089,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q272727: Weave two lists, cycling if necessary" $ do
         specEval
-            "ᵐ#:x+Ṁ$ᵒ%ᵐᶻ@ji"
+            "ᵐ#:x+Ṁ$ᵒ%ʲᶻ@i"
             [ ("[[1],[2]]", all_ ["[1,2,1]"])
             , ("[[1,1],[2]]", all_ ["[1,2,1]"])
             , ("[[1,2,3],[6]]", all_ ["[1,6,2,6,3]"])
@@ -4228,7 +4352,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q276909: Walks in Nice (Nizza)" $ do
         specEval
-            "ᵐįŋᵖ{∫ŤlẐ≥}→ᵐɗH"
+            "ᵐįŋ:∫ŤlẐ≥¿→ᵐɗH"
             [ ("3", Count 14)
             , ("4", Count 42)
             ]
@@ -4327,6 +4451,20 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("\"abcba\"", all_ ["[\"abcba\"]"])
             , ("\"ababcba\"", all_ ["[\"a\",\"b\",\"abcba\"]", "[\"aba\",\"bcb\",\"a\"]"])
             , ("\"abcbabcbaabc\"", all_ ["[\"abcba\",\"b\",\"cbaabc\"]"])
+            ]
+    describe "q278135: Is this number Ugly?" $ do
+        specEval
+            "Pƒ^6<"
+            [ ("-1", Check False)
+            , ("0", Check False)
+            , ("1", Check True)
+            , ("2", Check True)
+            , ("7", Check False)
+            , ("-4294967296", Check False)
+            , ("4294967296", Check True)
+            , ("42050", Check False)
+            , ("60060", Check False)
+            , ("60", Check True)
             ]
     describe "q278564: Counting Gessel walks" $ do
         specEval
@@ -4544,4 +4682,70 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[1,2,3,4,5] 2", Count 50)
             , ("[1,2,3,4,5] 3", Count 34)
             , ("[1,2,3,4,5] 4", Count 5)
+            ]
+    describe "q286790: Arithmetic Continued Fractions (Euler's e and beyond)" $ do
+        specEval
+            "r*+↔çʳ{+ŗ}→ŗÄ→"
+            [ ("1 4 6", all_ ["19/7"])
+            , ("2 4 6", all_ ["193/71"])
+            , ("3 4 6", all_ ["2721/1001"])
+            , ("5 4 6", all_ ["1084483/398959"])
+            , ("6 4 6", all_ ["28245729/10391023"])
+            , ("5 0 2", all_ ["239/99"])
+            , ("4 2 1", all_ ["284/133"])
+            ]
+    describe "q286876: Is there an even distance pair?" $ do
+        specEval
+            "ĭᵃů,"
+            [ ("[]", Check True)
+            , ("[0]", Check True)
+            , ("[1,2]", Check True)
+            , ("[1,1]", Check True)
+            , ("[10,1]", Check True)
+            , ("[2,-1,3]", Check True)
+            , ("[1,1,-2]", Check True)
+            , ("[1,2,3,4,5,6,7,8]", Check True)
+            , ("[1,2,3,1,2,3]", Check True)
+            , ("[1,10,1]", Check False)
+            , ("[2,2,2]", Check False)
+            , ("[1,2,3,4,0,-1,1,8]", Check False)
+            ]
+    describe "q286981: Write a program for generating all functions from two sets" $ do
+        specEval
+            "ᵚ{~Ð"
+            [ ("[1] [1,2,3]", all_ ["[[1,1],[2,1],[3,1]]"])
+            , ("\"cd\" \"ab\"", all_ ["[\"ac\",\"bc\"]", "[\"ac\",\"bd\"]", "[\"ad\",\"bc\"]", "[\"ad\",\"bd\"]"])
+            ]
+    describe "q287611: Slap sort counter" $ do
+        specEval
+            "ˡ{;Cvh>ɔ,"
+            [ ("[3,2,1]", first_ "3")
+            , ("[1,3,5,2,4]", first_ "5")
+            , ("[1,2,5,3,4]", first_ "1")
+            , ("[3,6,5,4,1,2]", first_ "10")
+            , ("[2,5,1,3,4]", first_ "8")
+            ]
+    describe "q287810: Determine if a string is Sturmian" $ do
+        specEval
+            "ᵃqᶻ-∑Ƶ"
+            [ ("\"0110\"", Check False)
+            , ("\"0011\"", Check True)
+            , ("\"100001000100001\"", Check False)
+            , ("\"1000001000010001\"", Check True)
+            , ("\"10010100100101001001010010\"", Check False)
+            , ("\"10010100100100101001010010\"", Check True)
+            ]
+    describe "q287884: Identifying returning paths" $ do
+        specEval
+            "16þƂ$6-*∫2rŋŘŤoũ"
+            [ ("\"xxYZ\"", Count 2)
+            , ("\"xyXY\"", Count 2)
+            , ("\"xyXXYxxyXXYx\"", Count 2)
+            , ("\"yXYxYXyyxYXYxy\"", Count 1)
+            , ("\"YXyxxYXyXYxxyX\"", Count 1)
+            , ("\"xyXXYxyxYXXyxY\"", Count 1)
+            , ("\"yXYxzXZyxYXzxZ\"", Count 1)
+            , ("\"XyxYxYXyyXYxYxyX\"", Count 1)
+            , ("\"xyXYzxyXYZyxYXzyxYXZ\"", Count 1)
+            , ("\"xyXzxYXZxzyZXYzxyXZxYXyxzYZXYzyZxxzXXYZyzxxZXX\"", Count 1)
             ]

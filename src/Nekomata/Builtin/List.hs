@@ -790,9 +790,9 @@ depth = unary depth'
     depthList :: ListTry TryData -> Try Integer
     depthList Nil = Val 1
     depthList (Cons x xs) = do
-      x' <- x >>= depthData
-      xs' <- xs >>= depthList
-      Val $ max (x' + 1) xs'
+        x' <- x >>= depthData
+        xs' <- xs >>= depthList
+        Val $ max (x' + 1) xs'
     depthData :: DataTry -> Try Integer
     depthData (DListT ys) = ys >>= depthList
     depthData _ = Val 0
