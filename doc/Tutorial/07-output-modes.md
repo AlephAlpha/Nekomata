@@ -87,16 +87,18 @@ In the REPL: `\Mode count`.
 Prints `True` if there is at least one result, `False` otherwise. This is how Nekomata solves **[decision-problem](https://codegolf.stackexchange.com/questions/tagged/decision-problem)** challenges (since there is no boolean type).
 
 ```
-$ Nekomata -c '1 2?1 2?=' -e
+$ Nekomata -c '1 2?0 1?=' -e
 True
 ```
 
+Because `1 2?` can be `1` or `2`, `0 1?` can be `0` or `1`, and `=` requires them to be equal. The only equal pair is `1` == `1`, which exists, so the result is `True`.
+
 ```
-$ Nekomata -c '1 2?0 1?=' -e
+$ Nekomata -c '1 2?3 4?=' -e
 False
 ```
 
-Because `1 2?` can be `1` or `2`, `0 1?` can be `0` or `1`, and `=` requires them to be equal. The only equal pair is `1` == `1`, which exists, so the result is `True`.
+Here there are no equal pairs, so the result is `False`.
 
 In the REPL: `\Mode exists`.
 

@@ -168,7 +168,7 @@ Apply a function without popping its arguments. The outputs are added on top of 
 Save the top value, apply a function to the rest, then restore the saved value.
 
 ```
-1 2 ᵈ{3+}          -> 4 1   (save 1, compute 2+3=4, restore 1)
+1 2 ᵈ{3+}          -> 4 2   (save 2, compute 1+3=4, restore 2)
 ```
 
 ### `ᵉ` — Dup Dip
@@ -205,7 +205,7 @@ Fold a binary function over a list.
 Find the smallest non-negative integer `n` such that the function succeeds when applied.
 
 ```
-[1,2,4]ᵏf          -> 3   (3 is the first non-negative integer not in the list)
+[0,1,2,4]ᵏf        -> 3   (3 is the first non-negative integer not in the list)
 ```
 
 ### `ᴷ` — Any Integer
@@ -254,4 +254,5 @@ This maps (`ᵐ`) the filter-nonzero (`ᶠZ`) function over each sublist.
 | `ᴷ`      | anyInt       | Find any matching int          |
 | `ᵚ`      | mapWith      | Map binary over first arg      |
 
-For full details and examples of each particle, see **[Builtins.md](../Builtins.md)**.
+This is just a sampling of the particles available in Nekomata. For a complete list with examples for each particle, see **[Builtins.md](../Builtins.md)**.
+
