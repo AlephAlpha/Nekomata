@@ -2467,6 +2467,8 @@ If the input is an number, apply the function to each integer from 0 to the inpu
 
 If the function takes no argument, return a list of n copies of the result of the function, where n is the length of the input.
 
+If the function takes more than one argument, the remaining arguments are reused unchanged in every recursive call.
+
 __Examples__:
 
 - `[1,2,3] ᵐ{1+}` → `[2,3,4]`
@@ -2476,6 +2478,8 @@ __Examples__:
 Map a binary function over its first argument.
 
 If the function is unary, return a list of n copies of the result of applying the function to the second argument, where n is the length of the first argument.
+
+If the function takes more than two arguments, the remaining arguments are reused unchanged in every recursive call.
 
 __Examples__:
 
@@ -2489,6 +2493,8 @@ Fail if the lists have different lengths.
 
 If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
 
+If the function takes more than two arguments, the remaining arguments are reused unchanged in every recursive call.
+
 __Examples__:
 
 - `[1,2,3] [4,5,6] ᶻ{+}` → `[5,7,9]`
@@ -2501,6 +2507,8 @@ If the lists have different lengths, truncate the longer list to the length of t
 
 If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
 
+If the function takes more than two arguments, the remaining arguments are reused unchanged in every recursive call.
+
 __Examples__:
 
 - `[1,2,3] [4,5,6,7] ᶾ{+}` → `[5,7,9]`
@@ -2510,6 +2518,8 @@ __Examples__:
 Apply a function to every possible pair of elements in two lists and return a list of lists.
 
 If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
+
+If the function takes more than two arguments, the remaining arguments are reused unchanged in every recursive call.
 
 __Examples__:
 
@@ -2680,5 +2690,31 @@ If the input is an number, it is converted to a list of integers from 0 to the i
 __Examples__:
 
 - `[1,2,3] ʰ{1+}` → `[2,2,3] [1,3,3] [1,2,4]`
+
+### `bottomUp` (`ᵇ`, `(m -> 1) -> (m -> 1) where m > 0`)
+
+Traverse the top value of the stack in a bottom-up manner.
+
+If the value is a list, first apply the function recursively to each element, and then apply the function to the resulting list.
+
+If the function takes more than one argument, the remaining arguments are reused unchanged in every recursive call.
+
+__Examples__:
+
+- `[1,[2,3],[[4],5]] ᵇ{1+}` → `[3,[5,6],[[8],8]]`
+
+### `topDown` (`ᵀ`, `(m -> 1) -> (m -> 1) where m > 0`)
+
+Traverse the top value of the stack in a top-down manner.
+
+First apply the function to the current value.
+
+If the result is a list, recursively apply the function to each element of that list.
+
+If the function takes more than one argument, the remaining arguments are reused unchanged in every recursive call.
+
+__Examples__:
+
+- `[1,[2,3],[[4],5]] ᵀ{1+}` → `[2,[4,5],[[7],7]]`
 
 

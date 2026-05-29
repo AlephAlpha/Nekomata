@@ -777,9 +777,9 @@ bifurcate = unary2 bifurcate'
     bifurcate_ xs = Val (Val xs, reverse_ Nil xs)
 
 flatten :: Function
-flatten = unary flatten'
+flatten = unary $ bottomUp flatten'
   where
-    flatten' i (DListT xs) = DListT . concat_ . tryMap flatten' i <$> xs
+    flatten' _ (DListT xs) = Val . DListT $ xs >>= concat_
     flatten' _ x = Val $ singleton_ x
 
 depth :: Function

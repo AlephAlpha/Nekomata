@@ -5,7 +5,7 @@
 * Now the tutorial is rewritten by an AI. It is now more comprehensive and easier to understand, but may contain inaccuracies. If you find any errors, please open an issue on the [Nekomata GitHub repository](https://github.com/AlephAlpha/Nekomata).
 * Updated some dependencies. Now GHC 9.6.7 or newer is required to build Nekomata.
 * New builtin functions: `\deepIndex`, `\depth`, `\nthPrime`.
-* New particle: `\anyInt`.
+* New particles: `\anyInt`, `\bottomUp`, `\topDown`.
 * Fixed a bug in trimming spaces in the REPL.
 * Fixed a bug in `\intPartition`. It is now lazier and more efficient.
 * Some internal data types now derive `Show` instances for debugging.

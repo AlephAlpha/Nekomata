@@ -251,7 +251,7 @@ instance NonDet DataTry where
 {- | Convert any @DataTry@ to a @TryList TryData@
 
 For integers, it generates a list of integers from 0 to input minus 1.
-For strings, it generates a list of strings with one character.
+For chars, it simply fails.
 -}
 toTryList :: DataTry -> TryList TryData
 toTryList (DListT xs) = xs
@@ -486,6 +486,25 @@ vec22Fail f i (DListT xs) y =
 vec22Fail f i x (DListT ys) =
     liftList12 (Val . tryUnzipWith (\i' y -> Val $ vec22Fail f i' x y) i) ys
 vec22Fail f i x y = f i x y
+
+{- | Traverse a @DataTry@ with a non-deterministic function
+in a bottom-up manner
+-}
+bottomUp :: (Id -> DataTry -> TryData) -> (Id -> DataTry -> TryData)
+bottomUp f i x = y >>= f (rightId i)
+  where
+    y = case x of
+        DListT xs -> liftList (tryMap (bottomUp f) (leftId i)) xs
+        _ -> Val x
+
+{- | Traverse a @DataTry@ with a non-deterministic function
+in a top-down manner
+-}
+topDown :: (Id -> DataTry -> TryData) -> (Id -> DataTry -> TryData)
+topDown f i x =
+    f (leftId i) x >>= \case
+        DListT xs -> liftList (tryMap (topDown f) (rightId i)) xs
+        _ -> Val x
 
 -- | A helper class for checking for equality
 class TryEq a where

@@ -87,22 +87,6 @@ LiberationMono 字体所支持的字符列举于[此文件](LiberationMonoGlyphs
 \logicalNot \ordering \nth
 ```
 
-### [Gödel encoding - Part I](https://codegolf.stackexchange.com/q/259960/9288)
-
-目前完全无法解答，除非支持递归。
-
-即使有递归，也还要增加一些新的函数：
-
-```
-\dup \enumerate \increment \nthPrime \dip \map \self \pow \product \swap \powOf2 \if
-```
-
-- [ ] `\self`：用于递归，表示当前函数。
-
-支持递归需要对现有的解释器进行大量的修改。一个问题是它会让 arity 变得不确定。可以考虑为不同 arity 的函数分别定义 `\self`，比如说 `\self1`、`\self2`、`\self3` 等等。
-
-不过，如果像后面 [关于 ragged-list](#关于-ragged-list) 中说的那样加入了 `\cata` 的话，至少在这道题中就不需要专门引入递归了。
-
 ### [Find Unique Anagrams](https://codegolf.stackexchange.com/q/261128/9288)
 
 ```
@@ -168,14 +152,30 @@ LiberationMono 字体所支持的字符列举于[此文件](LiberationMonoGlyphs
 
 目前 Nekomata 还很缺乏 ragged-list 相关的内置函数和助词，很多相关的题目都难以解答。其实目前 ragged-list 相关的内置函数只有 `\flatten` 一个，助词一个都没有。此外 `\histogram` 和 `\convolve` 也支持 ragged-list，但它们更多是数学函数，在一般的 ragged-list 题目中很难发挥作用。
 
-这里先想一下一些可能有用的内置函数和助词，不一定都需要实现：
+这里先想一下一些可能有用的内置函数，不一定都需要实现：
 
 - [x] `\depth`：输入一个 ragged-list，输出它的最大嵌套层数。比如说输入 `[1, [2, 3], [[4], 5]]`，输出 `3`。
 - [x] `\deepIndex`：输入一个 ragged-list 和一个元素，non-deterministically 输出该元素在 ragged-list 中的一个位置。位置可以用一个列表来表示，列表中的每个元素都是一个索引，表示在当前层选择哪个元素。比如说输入 `[1, [1, 2], [[1], 2]]` 和 `1`，输出 `[0]`、`[1,0]`、`[2,0,0]`。
-- [ ] `\cata`：助词，输入一个函数和一个 ragged-list。对 ragged-list 中的每个元素进行递归地 catamorphism 操作。也就是说，如果元素是一个列表，就先对该列表进行 `\cata`，然后把结果作为参数传给函数；如果元素不是列表，就直接把它作为参数传给函数。也许可以起一个直观一点的名字，比如说 `\deepFold`。
-- [ ] `\ana`：助词，输入一个函数和一个值，输出一个 ragged-list。对输入的值进行递归地 anamorphism 操作。也就是说，先把输入的值作为参数传给函数，得到一个列表；然后对该列表中的每个元素进行 `\ana`，把结果作为该元素的值；如果函数的输出不是列表，就直接把它作为该元素的值。也许可以起一个直观一点的名字，比如说 `\deepUnfold`。
 
-在开始实现之前，要先仔细思考 `\cata` 和 `\ana` 具体的语义。
+至于助词，主要就是 catamorphism 和 anamorphism 这两个 recursion schemes 吧。
+
+想了一下，这两个助词严格来说应该是 Patrick Thomson 在[介绍 recursion schemes 的那一系列博客](https://blog.sumtypeofway.com/posts/introduction-to-recursion-schemes.html)提到的 `bottomUp` 和 `topDown`。它们只能说是 catamorphism 和 anamorphism 的特例或者应用。Nekomata 又没有类型系统，无法定义真正的 catamorphism 和 anamorphism。所以助词的名字也干脆就叫 `\bottomUp` 和 `\topDown` 吧。
+
+- [x] `\bottomUp`，助词，定义如下：
+  - 如果输入的值不是列表，就直接把它作为参数传给函数，输出函数的结果。
+  - 如果输入的值是一个列表，就先对该列表中的每个元素进行 `\bottomUp`，把结果作为该元素的值，得到一个新的列表；然后把这个新的列表作为参数传给函数，输出函数的结果。
+- [x] `\topDown`，助词，定义如下：
+  - 先把输入的值作为参数传给函数，输出函数的结果。
+  - 如果函数的输出是一个列表，就对该列表中的每个元素进行 `\topDown`，把结果作为该元素的值，得到一个新的列表；如果函数的输出不是列表，就直接把它作为该元素的值。
+
+在很多实际的题目中，传给 `\bottomUp` 的函数经常需要对列表和非列表的输入进行不同的处理。为此可能需要增加一些辅助函数。比如说：
+
+- [ ] `\onList`：助词。如果输入的值是一个列表，就把它作为参数传给函数，输出函数的结果；如果输入的值不是列表，就直接输出该值。
+- [ ] `\onAtom`：助词。如果输入的值不是一个列表，就把它作为参数传给函数，输出函数的结果；如果输入的值是列表，就直接输出该值。
+- [ ] `\isList`：如果输入的值是一个列表，就原样输出该值，否则 Fail。
+- [ ] `\isAtom`：如果输入的值不是一个列表，就原样输出该值，否则 Fail。
+
+不一定都要。我们的 Code Page 中留给新助词的位置也不多了，需要仔细斟酌。
 
 ## 关于助词
 

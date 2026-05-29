@@ -3163,6 +3163,15 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("499403", all_ ["2"])
             , ("648391", all_ ["3"])
             ]
+    describe "q259960: Gödel encoding - Part I" $ do
+        specEval
+            "ᵇ{:x2+ṔE∏$ËI"
+            [ ("[0,0,0,0,0]", all_ ["15015"])
+            , ("[1,1,1]", all_ ["11025"])
+            , ("[[1],[1]]", all_ ["38443359375"])
+            , ("[0,[[0]],0]", all_ ["156462192535400390625"])
+            , ("[[[0],0],0]", all_ ["128925668357571406980580744739545891609191243761536322527975268535"])
+            ]
     describe "q259987: String Comparison" $ do
         specEval
             "↔ᵃjĻ"
@@ -3973,7 +3982,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[[1,2,3,4],[0,2,5,3],[-5,-2,3,5]]", first_ "[5,[1,2]]")
             ]
         specEval
-            "ᵐ{xᶻ,Ṁ}xᶻ,Ṁ"
+            "ᵇ{:xᶻ,Ṁ$I"
             [ ("[[1,2],[3,4]]", all_ ["[4,1,1]"])
             , ("[[-1]]", all_ ["[-1,0,0]"])
             , ("[[6],[5],[4],[3],[2],[1]]", all_ ["[6,0,0]"])
@@ -4012,6 +4021,13 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("3 \"CODEGLF\"", truncate_ ["COC", "COD", "COE", "COG", "COL", "COF", "CDC", "CDO", "CDE", "CDG"])
             , ("4 \"NFKD\"", truncate_ ["NFNF", "NFNK", "NFND", "NFKN", "NFKF", "NFKD", "NFDN", "NFDF", "NFDK", "NKNF"])
             , ("5 \"JOHN\"", truncate_ ["JOJOJ", "JOJOH", "JOJON", "JOJHJ", "JOJHO", "JOJHN", "JOJNJ", "JOJNO", "JOJNH", "JOHJO"])
+            ]
+    describe "q271303: Search the deepest depths of an array" $ do
+        specEval
+            "w-_ᶦ~::wĨ¿#Å"
+            [ ("[1,2,[3,4,[2,5]],0]", all_ ["4"])
+            , ("[1,[2,3],[[1]],[2,[2,3]]]", all_ ["2"])
+            , ("[1,1,1]", all_ [])
             ]
     describe "q271363: Is it a tetrate of two?" $ do
         specEval
@@ -4512,7 +4528,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q281871: Output your user ID" $ do
         specEval
-            "\"Hᶜ\"∏"
+            "\"Hᵇ\"∏"
             [("", all_ ["9288"])]
     describe "q282502: Slender sub-lists" $ do
         specEval
