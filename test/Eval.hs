@@ -833,6 +833,14 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("[1024,1024,512,512,256,256]", all_ ["[2048,1024,512]"])
             , ("[3,3,3,1,1,7,5,5,5,5]", all_ ["[3,6,2,7,10,10]"])
             ]
+    describe "q96863: A penny saved is a penny" $ do
+        specEval
+            "ṖᵐĨ"
+            [ ("12 [1,5,10]", Count 4)
+            , ("26 [1,5,10,25]", Count 13)
+            , ("19 [2,7,12]", Count 2)
+            , ("13 [2,8,25]", Count 0)
+            ]
     describe "q96923: Find the maximum deviation" $ do
         specEval
             "q$Lɱ≈Å"
