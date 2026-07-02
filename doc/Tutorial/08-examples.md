@@ -107,14 +107,14 @@ Step by step:
 2. `:` (`\dup`) duplicates, giving stack `1 1`
 3. `ᶦ{...}` (`\iterate`) applies the block 0 or more times non-deterministically, returning every intermediate result
 4. Inside the block:
-   - `$` (`\swap`) swaps: `1 1 -> 1 1` (no change initially, but matters later)
+   - `$` (`\swap`) swaps the top two values
    - `ᵉ` (`\dupDip`) applies `+` then pushes the original top back
 
-Let's trace:
-- **0 iterations**: stack is `1 1`, top is `1`
-- **1 iteration**: `1 1` → swap (`1 1`) → dup-dip add: `1+1=2`, push original top `1` → stack `2 1`, top is `2`
-- **2 iterations**: `2 1` → swap (`1 2`) → dup-dip add: `1+2=3`, push original top `2` → stack `3 2`, top is `3`
-- **3 iterations**: `3 2` → swap (`2 3`) → dup-dip add: `2+3=5`, push original top `3` → stack `5 3`, top is `5`
+The iterate function returns every intermediate stack state. Starting from `1 1`, each iteration advances to the next Fibonacci pair:
+- **0 iterations**: stack `1 1`, output `1`
+- **1 iteration**: `1 1` → swap (`1 1`) → dup-dip add: `1+1=2`, push original top `1` → stack `2 1`, output `1`
+- **2 iterations**: `2 1` → swap (`1 2`) → dup-dip add: `1+2=3`, push original top `2` → stack `3 2`, output `2`
+- **3 iterations**: `3 2` → swap (`2 3`) → dup-dip add: `2+3=5`, push original top `3` → stack `5 3`, output `3`
 
 The results are `1, 1, 2, 3, 5, 8, 13, ...` — the Fibonacci numbers!
 

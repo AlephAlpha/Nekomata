@@ -1823,6 +1823,20 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("532", first_ "523")
             , ("1", first_ "2")
             ]
+    describe "q186119: Is there are exactly one partition, given length of partition and maximum number?" $ do
+        specEval
+            "Ṗ$L≥az"
+            [ ("7 6 2", Check True)
+            , ("5 4 4", Check True)
+            , ("5 4 3", Check True)
+            , ("5 4 2", Check True)
+            , ("5 3 2", Check True)
+            , ("7 2 3", Check False)
+            , ("7 2 2", Check False)
+            , ("7 2 1", Check False)
+            , ("9 5 3", Check False)
+            , ("6 3 3", Check False)
+            ]
     describe "q186881: First occurrence in the Sixers sequence" $ do
         specEval
             "Ň6*ƊajĭÐɗ$Ĩ"
@@ -4772,4 +4786,10 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             , ("\"XyxYxYXyyXYxYxyX\"", Count 1)
             , ("\"xyXYzxyXYZyxYXzyxYXZ\"", Count 1)
             , ("\"xyXzxYXZxzyZXYzxyXZxYXyxzYZXYzyZxxzXXYZyzxxZXX\"", Count 1)
+            ]
+    describe "q288808: Golf all the logic gates with X inputs and Y outputs!" $ do
+        specEval
+            "ᵃËŧĝ\"$@\","
+            [ ("2 1", Count 16)
+            , ("1 2", Count 16)
             ]

@@ -64,7 +64,7 @@ Apply a function to every pair of elements from two lists (Cartesian product).
 Map a function that produces lists, then concatenate the results.
 
 ```
-["ab","cd"]ʲ{…}    -> flattened result
+["ab","cd"]ʲ{→}   -> "bcd"   (increment each char, then flatten)
 ```
 
 ## Filtering and Testing

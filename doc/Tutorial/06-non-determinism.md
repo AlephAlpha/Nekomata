@@ -147,7 +147,7 @@ With input `"abc" "bca"`:
 1. `↕` generates all permutations of `"abc"`
 2. `=` checks if it matches `"bca"`
 
-The result is `True` only if the permutation matches.
+In `exists` mode (`-e`), the result is `True` if the permutation matches and `False` otherwise. In `all` mode, it prints the matching permutation.
 
 ## Managing Non-Determinism
 
@@ -220,15 +220,15 @@ This is reminiscent of logic programming (Prolog) or constraint programming, but
 
 ### Example: Sophie Germain Primes
 
-Find Sophie Germain primes (primes `p` where `2p+1` is also prime):
+Find Sophie Germain primes (primes `q` where `2q+1` is also prime):
 
 ```
 Ƥ←½Q
 ```
 
-- `Ƥ` generates a prime non-deterministically
-- `←` decrements it
-- `½` halves it (fails if not even)
+- `Ƥ` generates a prime `p` non-deterministically
+- `←` decrements: `p-1`
+- `½` halves it: `(p-1)/2` (fails if `p-1` is odd)
 - `Q` checks the result is prime
 
-This is a 4-byte solution that finds all Sophie Germain primes.
+The code generates primes `p` where `(p-1)/2` is also prime (i.e., `p` is a **safe prime**), and outputs `(p-1)/2`. Since `(p-1)/2 = q` satisfies `2q+1 = p`, the output `q` is a Sophie Germain prime. This is a 4-byte solution that outputs all Sophie Germain primes.
