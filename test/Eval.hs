@@ -4527,7 +4527,7 @@ testEval = describe "Solutions to Code Golf Stack Exchange challenges" $ do
             ]
     describe "q279619: Albuququerquerquerquerque challlengenge" $ do
         specEval
-            "p↔:CĨ→0I→T↔aj"
+            "p↔:CĨ→0?¡→T↔aj"
             [ ("\"success\"", all_ ["succcesuccesss"])
             , ("\"albuquerque\"", all_ ["albuququerquerquerquerque"])
             , ("\"challenge\"", all_ ["challlengenge"])

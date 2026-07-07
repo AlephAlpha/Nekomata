@@ -36,7 +36,8 @@ uniqueValue = Function (Arity 1 1) $
         Cut (\ds -> (ds, anyOf' i (nub $ values ds x) >>= toTryData)) :+ s
 
 if' :: Function
-if' = choice .* firstValue'
+if' = Function (Arity 2 1) $ \_ (x :+ y :+ s) ->
+    Cut (\ds -> maybe (ds, x) (const (ds, y)) (firstValue ds y)) :+ s
 
 andThen :: Function
 andThen = Function (Arity 2 1) $ \_ (x :+ y :+ s) -> (normalForm x >> y) :+ s

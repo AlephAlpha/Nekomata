@@ -104,16 +104,19 @@ __Examples__:
 
 ### `if` (`I`, `2 -> 1`)
 
-Choose the first value that doesn't fail between two values.
+Take two inputs, and return the first one if it has any possible values, otherwise return the second one.
 
 __Examples__:
 
 - `1 2I` → `1`
 - `! 2I` → `2`
+- `1 2? 1I` → `1 2`
+- `! 3 4? I` → `3 4`
+- `! !I` → Fail
 
 ### `andThen` (`¿`, `2 -> 1`)
 
-Take two values, and return the first one if the second one doesn't fail. 
+Take two inputs, and return the first one if the second one doesn't fail. 
 
 This is somewhat similar to the `seq` function in Haskell, which forces the first argument to be evaluated before the second.
 

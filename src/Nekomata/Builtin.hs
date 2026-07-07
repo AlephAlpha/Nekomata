@@ -172,15 +172,19 @@ builtins =
         "if"
         'I'
         if'
-        "Choose the first value that doesn't fail between two values."
+        "Take two inputs, and return the first one if it has any possible values, \
+        \otherwise return the second one."
         [ ("1 2I", all_ ["1"])
         , ("! 2I", all_ ["2"])
+        , ("1 2? 1I", all_ ["1", "2"])
+        , ("! 3 4? I", all_ ["3", "4"])
+        , ("! !I", all_ [])
         ]
     , Builtin
         "andThen"
         '¿'
         andThen
-        "Take two values, and return the first one if the second one doesn't \
+        "Take two inputs, and return the first one if the second one doesn't \
         \fail. \n\
         \This is somewhat similar to the `seq` function in Haskell, \
         \which forces the first argument to be evaluated before the second."

@@ -1,5 +1,11 @@
 # Revision history for Nekomata
 
+## 0.10.0.0 -- Unreleased
+
+### Breaking changes
+
+* `\if` (`I`) now preserves non-determinism from its arguments. Previously it collapsed non-determinism to a single value.
+
 ## 0.9.0.0 -- 2026-06-01
 
 * Now the tutorial is rewritten by an AI. It is now more comprehensive and easier to understand, but may contain inaccuracies. If you find any errors, please open an issue on the [Nekomata GitHub repository](https://github.com/AlephAlpha/Nekomata).
