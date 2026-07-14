@@ -2,9 +2,11 @@
 
 ## 0.10.0.0 -- Unreleased
 
+* A version info is added to the documentation of built-in functions and particles. It shows the version in which the function or particle was introduced.
+
 ### Breaking changes
 
-* `\if` (`I`) now preserves non-determinism from its arguments. Previously it collapsed non-determinism to a single value.
+* `\if` (`I`) now preserves non-determinism from its arguments. Previously it only chose the first possible result, even if its arguments had multiple possible values.
 
 ## 0.9.0.0 -- 2026-06-01
 

@@ -2,7 +2,7 @@ import pathlib
 import unicodedata
 
 
-def get_corpus(path: str) -> list[str]:
+def get_corpus(path: pathlib.Path) -> list[str]:
     corpus = []
     with open(path, "r") as f:
         for line in f:
@@ -24,7 +24,9 @@ def ngram_freq(corpus: list[str], n: int) -> dict[str, int]:
 
 
 def get_superscript_chars(corpus: list[str]) -> list[str]:
-    chars = sorted({char for line in corpus for char in line if unicodedata.category(char) == "Lm"})
+    chars = sorted(
+        {char for line in corpus for char in line if unicodedata.category(char) == "Lm"}
+    )
     return chars
 
 

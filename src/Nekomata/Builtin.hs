@@ -24,6 +24,8 @@ data Builtin = Builtin
     -- ^ The name of the builtin function
     , short :: Char
     -- ^ The short name of the builtin function
+    , version :: String
+    -- ^ The version when the builtin function was introduced
     , func :: Function
     -- ^ The function itself
     , help :: String
@@ -45,6 +47,9 @@ info b =
         ++ show (arity (func b))
         ++ "):\n"
         ++ help b
+        ++ " (Introduced in v"
+        ++ version b
+        ++ ")"
         ++ if null (examples b)
             then ""
             else
@@ -69,6 +74,9 @@ infoMarkdown b =
         ++ "`, `"
         ++ show (arity (func b))
         ++ "`)\n\n"
+        ++ "_Introduced in v"
+        ++ version b
+        ++ "._\n\n"
         ++ concatMap (++ "\n\n") (lines (help b))
         ++ if null (examples b)
             then ""
@@ -99,6 +107,7 @@ builtins =
     [ Builtin
         "choice"
         '?'
+        "0.1.0.0"
         choice
         "Choose between two values.\n\
         \This function is non-deterministic."
@@ -106,18 +115,21 @@ builtins =
     , Builtin
         "fail"
         '!'
+        "0.1.0.0"
         fail'
         "Push a non-deterministic object with no values."
         [("!", all_ [])]
     , Builtin
         "allValues"
         'a'
+        "0.1.0.0"
         allValues
         "Get a list of all possible values for a non-deterministic object."
         [("1 2?a", all_ ["[1,2]"])]
     , Builtin
         "firstValue"
         '¡'
+        "0.1.0.0"
         firstValue'
         "Get the first possible value from a non-deterministic object.\n\
         \Fails if the object has no values."
@@ -125,6 +137,7 @@ builtins =
     , Builtin
         "lastValue"
         '¤'
+        "0.8.0.0"
         lastValue'
         "Get the last possible value from a non-deterministic object.\n\
         \Fails if the object has no values."
@@ -132,18 +145,21 @@ builtins =
     , Builtin
         "countValues"
         'n'
+        "0.1.0.0"
         countValues'
         "Count the number of values in a non-deterministic object."
         [("1 2?n", all_ ["2"])]
     , Builtin
         "uniqueValue"
         'ũ'
+        "0.3.1.0"
         uniqueValue
         "Remove duplicate values from a non-deterministic object."
         [("[1,1,2]~ũ", all_ ["1", "2"])]
     , Builtin
         "minValue"
         'å'
+        "0.6.0.0"
         minValue
         "Get the minimum possible value from a non-deterministic object.\n\
         \Fails if the object has no values."
@@ -151,6 +167,7 @@ builtins =
     , Builtin
         "maxValue"
         'Å'
+        "0.6.0.0"
         maxValue
         "Get the maximum possible value from a non-deterministic object.\n\
         \Fails if the object has no values."
@@ -158,6 +175,7 @@ builtins =
     , Builtin
         "shortestValue"
         'ṩ'
+        "0.8.0.0"
         shortestValue
         "Get the shortest possible value from a non-deterministic object \
         \whose values are lists.\n\
@@ -171,6 +189,7 @@ builtins =
     , Builtin
         "if"
         'I'
+        "0.1.0.0"
         if'
         "Take two inputs, and return the first one if it has any possible values, \
         \otherwise return the second one."
@@ -183,6 +202,7 @@ builtins =
     , Builtin
         "andThen"
         '¿'
+        "0.3.4.0"
         andThen
         "Take two inputs, and return the first one if the second one doesn't \
         \fail. \n\
@@ -194,30 +214,35 @@ builtins =
     , Builtin
         "drop"
         '^'
+        "0.1.0.0"
         drop'
         "Drop the top value of the stack: `a ... -> ...`."
         [("1 2^", all_ ["1"])]
     , Builtin
         "dup"
         ':'
+        "0.1.0.0"
         dup
         "Duplicate the top value of the stack: `a ... -> a a ...`."
         [("1:Ð", all_ ["[1,1]"])]
     , Builtin
         "swap"
         '$'
+        "0.1.0.0"
         swap
         "Swap the top two values of the stack: `a b ... -> b a ...`."
         [("1 2$Ð", all_ ["[2,1]"])]
     , Builtin
         "rot3"
         '§'
+        "0.3.3.0"
         rot3
         "Rotate the top three values of the stack: `a b c ... -> c a b ...`."
         [("1 2 3§ÐÐ", all_ ["[2,[3,1]]"])]
     , Builtin
         "over"
         'v'
+        "0.5.1.0"
         over
         "Duplicate the second value of the stack, \
         \and put it on top of the stack: `a b ... -> b a b ...`."
@@ -225,6 +250,7 @@ builtins =
     , Builtin
         "eq"
         '='
+        "0.1.0.0"
         eq
         "Check if two values are equal.\n\
         \If they are, push the first value, otherwise fail."
@@ -234,6 +260,7 @@ builtins =
     , Builtin
         "ne"
         '≠'
+        "0.1.0.0"
         ne
         "Check if two values are not equal.\n\
         \If they are not, push the first value, otherwise fail."
@@ -243,6 +270,7 @@ builtins =
     , Builtin
         "lt"
         'Ļ'
+        "0.5.0.0"
         lt
         "Check if the first value is less than the second.\n\
         \If it is, push the first value, otherwise fail.\n\
@@ -260,6 +288,7 @@ builtins =
     , Builtin
         "gt"
         'Ģ'
+        "0.5.0.0"
         gt
         "Check if the first value is greater than the second.\n\
         \If it is, push the first value, otherwise fail.\n\
@@ -277,6 +306,7 @@ builtins =
     , Builtin
         "isNonempty"
         'N'
+        "0.1.0.0"
         isNonempty
         "Check if a list is non-empty.\n\
         \If it is, push the list itself, otherwise fail."
@@ -287,6 +317,7 @@ builtins =
     , Builtin
         "isLong"
         'Ł'
+        "0.6.1.0"
         isLong
         "Check if the length of a list is greater than 1.\n\
         \If it is, push the list itself, otherwise fail."
@@ -297,6 +328,7 @@ builtins =
     , Builtin
         "isNonzero"
         'Z'
+        "0.1.0.0"
         isNonzero
         "Check if a number is non-zero.\n\
         \If it is, push the number itself, otherwise fail.\n\
@@ -311,6 +343,7 @@ builtins =
     , Builtin
         "isPositive"
         'P'
+        "0.1.0.0"
         isPositive
         "Check if a number is positive.\n\
         \If it is, push the number itself, otherwise fail.\n\
@@ -325,6 +358,7 @@ builtins =
     , Builtin
         "isNonnegative"
         'ň'
+        "0.4.0.0"
         isNonnegative
         "Check if a number is non-negative.\n\
         \If it is, push the number itself, otherwise fail.\n\
@@ -339,6 +373,7 @@ builtins =
     , Builtin
         "isZero"
         'ž'
+        "0.3.4.0"
         isZero
         "Check if a number is zero.\n\
         \If it is, push the number itself, otherwise fail.\n\
@@ -353,6 +388,7 @@ builtins =
     , Builtin
         "isBig"
         'Ƶ'
+        "0.5.1.0"
         isBig
         "Check if the absolute value of a number is greater than 1.\n\
         \If it is, push the number itself, otherwise fail.\n\
@@ -370,6 +406,7 @@ builtins =
     , Builtin
         "isSmall"
         'ƶ'
+        "0.5.1.0"
         isSmall
         "Check if the absolute value of a number is \n\
         \less than or equal to than 1.\n\
@@ -388,6 +425,7 @@ builtins =
     , Builtin
         "less"
         '<'
+        "0.1.0.0"
         less
         "Check if the first number is less than the second.\n\
         \If it is, push the first number, otherwise fail.\n\
@@ -404,6 +442,7 @@ builtins =
     , Builtin
         "lessEq"
         '≤'
+        "0.1.0.0"
         lessEq
         "Check if the first number is less than or equal to the second.\n\
         \If it is, push the first number, otherwise fail.\n\
@@ -420,6 +459,7 @@ builtins =
     , Builtin
         "greater"
         '>'
+        "0.1.0.0"
         greater
         "Check if the first number is greater than the second.\n\
         \If it is, push the first number, otherwise fail.\n\
@@ -436,6 +476,7 @@ builtins =
     , Builtin
         "greaterEq"
         '≥'
+        "0.1.0.0"
         greaterEq
         "Check if the first number is greater than or equal to the second.\n\
         \If it is, push the first number, otherwise fail.\n\
@@ -452,24 +493,28 @@ builtins =
     , Builtin
         "neg1"
         '£'
+        "0.1.0.0"
         neg1
         "The constant -1."
         [("£", all_ ["-1"])]
     , Builtin
         "ten"
         '¢'
+        "0.1.0.0"
         ten
         "The constant 10."
         [("¢", all_ ["10"])]
     , Builtin
         "octet"
         '¥'
+        "0.3.1.0"
         octet
         "The constant 256."
         [("¥", all_ ["256"])]
     , Builtin
         "neg"
         '_'
+        "0.1.0.0"
         neg
         "Negate a number.\n\
         \If the argument is a char, \
@@ -481,6 +526,7 @@ builtins =
     , Builtin
         "abs"
         'A'
+        "0.1.0.0"
         abs'
         "Absolute value of a number.\n\
         \If the argument is a char, \
@@ -493,6 +539,7 @@ builtins =
     , Builtin
         "increment"
         '→'
+        "0.1.0.0"
         increment
         "Increment a number.\n\
         \If the argument is a char, \
@@ -504,6 +551,7 @@ builtins =
     , Builtin
         "decrement"
         '←'
+        "0.1.0.0"
         decrement
         "Decrement a number.\n\
         \If the argument is a char, \
@@ -515,6 +563,7 @@ builtins =
     , Builtin
         "logicalNot"
         '¬'
+        "0.1.0.0"
         logicalNot
         "Takes a number and returns 1 if it is 0, and 0 otherwise.\n\
         \If the argument is a char, \
@@ -528,6 +577,7 @@ builtins =
     , Builtin
         "sign"
         '±'
+        "0.1.0.0"
         sign
         "Returns -1 if the argument is negative, 0 if it is zero, \
         \and 1 if it is positive.\n\
@@ -541,6 +591,7 @@ builtins =
     , Builtin
         "add"
         '+'
+        "0.1.0.0"
         add
         "Add two numbers.\n\
         \If one or both of the arguments are chars, \
@@ -555,6 +606,7 @@ builtins =
     , Builtin
         "sub"
         '-'
+        "0.1.0.0"
         sub
         "Subtract two numbers.\n\
         \If one or both of the arguments are chars, \
@@ -569,6 +621,7 @@ builtins =
     , Builtin
         "absDiff"
         '≈'
+        "0.4.0.0"
         absDiff
         "Absolute difference of two numbers.\n\
         \If one or both of the arguments are chars, \
@@ -582,6 +635,7 @@ builtins =
     , Builtin
         "mul"
         '*'
+        "0.1.0.0"
         mul
         "Multiply two numbers.\n\
         \If one or both of the arguments are chars, \
@@ -596,6 +650,7 @@ builtins =
     , Builtin
         "div"
         '/'
+        "0.1.0.0"
         div'
         "Division of two numbers.\n\
         \Fails when the divisor is zero.\n\
@@ -612,6 +667,7 @@ builtins =
     , Builtin
         "divInt"
         '÷'
+        "0.2.0.0"
         divInt
         "Integer division of two numbers. \
         \Result is rounded towards negative infinity.\n\
@@ -630,6 +686,7 @@ builtins =
     , Builtin
         "mod"
         '%'
+        "0.1.0.0"
         mod'
         "Modulo two numbers.\n\
         \Fails when the divisor is zero.\n\
@@ -648,6 +705,7 @@ builtins =
     , Builtin
         "divExact"
         '¦'
+        "0.1.0.0"
         divExact
         "Divide two numbers.\n\
         \Fails when the divisor is zero or \
@@ -665,6 +723,7 @@ builtins =
     , Builtin
         "divMod"
         'þ'
+        "0.5.1.0"
         divMod'
         "Divide two numbers and return both the quotient and the remainder.\n\
         \Fails when the divisor is zero.\n\
@@ -676,6 +735,7 @@ builtins =
     , Builtin
         "half"
         '½'
+        "0.3.4.0"
         half
         "Check if an integer is even, and divide it by 2.\n\
         \Fails when the integer is odd.\n\
@@ -689,6 +749,7 @@ builtins =
     , Builtin
         "pow"
         'E'
+        "0.1.1.0"
         pow
         "Raise a number to a power.\n\
         \The first argument is the exponent, \
@@ -708,6 +769,7 @@ builtins =
     , Builtin
         "recip"
         'ŗ'
+        "0.3.1.0"
         recip'
         "Reciprocal of a number.\n\
         \Fails when the number is zero.\n\
@@ -721,6 +783,7 @@ builtins =
     , Builtin
         "mul2"
         'Ä'
+        "0.4.0.0"
         mul2
         "Multiply a number by 2.\n\
         \If the argument is a char, \
@@ -732,6 +795,7 @@ builtins =
     , Builtin
         "div2"
         'ä'
+        "0.4.0.0"
         div2
         "Divide a number by 2.\n\
         \This is different from `half` in that \
@@ -745,6 +809,7 @@ builtins =
     , Builtin
         "mod2"
         'Ö'
+        "0.4.0.0"
         mod2
         "Modulo a number by 2.\n\
         \If the argument is a char, \
@@ -756,6 +821,7 @@ builtins =
     , Builtin
         "powOf2"
         'Ë'
+        "0.4.0.0"
         powOf2
         "Raise 2 to a power.\n\
         \Fails when the exponent is not an integer.\n\
@@ -768,6 +834,7 @@ builtins =
     , Builtin
         "denominator"
         'ḍ'
+        "0.3.2.0"
         denominator'
         "Get the denominator of a number.\n\
         \If the argument is a char, \
@@ -780,6 +847,7 @@ builtins =
     , Builtin
         "numerator"
         'ṇ'
+        "0.3.2.0"
         numerator'
         "Get the numerator of a number.\n\
         \If the argument is a char, \
@@ -792,6 +860,7 @@ builtins =
     , Builtin
         "min"
         'm'
+        "0.1.0.0"
         min'
         "Get the minimum of two numbers or two chars.\n\
         \This function is automatically vectorized with padding."
@@ -803,6 +872,7 @@ builtins =
     , Builtin
         "max"
         'M'
+        "0.1.0.0"
         max'
         "Get the maximum of two numbers or two chars.\n\
         \This function is automatically vectorized with padding."
@@ -814,6 +884,7 @@ builtins =
     , Builtin
         "ceil"
         'K'
+        "0.3.2.0"
         ceil
         "Round a number up to the nearest integer.\n\
         \If the argument is a char, \
@@ -826,6 +897,7 @@ builtins =
     , Builtin
         "floor"
         'k'
+        "0.3.2.0"
         floor'
         "Round a number down to the nearest integer.\n\
         \If the argument is a char, \
@@ -838,6 +910,7 @@ builtins =
     , Builtin
         "range0"
         'r'
+        "0.1.0.0"
         range0
         "Create a list of integers from 0 to ceil(n)-1.\n\
         \This function is automatically vectorized."
@@ -849,6 +922,7 @@ builtins =
     , Builtin
         "range1"
         'R'
+        "0.1.0.0"
         range1
         "Create a list of integers from 1 to floor(n).\n\
         \This function is automatically vectorized."
@@ -860,6 +934,7 @@ builtins =
     , Builtin
         "interval"
         'ï'
+        "0.4.1.0"
         interval
         "Create a list of integers from ceil(x) to floor(y).\n\
         \This function is automatically vectorized \
@@ -873,6 +948,7 @@ builtins =
     , Builtin
         "natural"
         'Ň'
+        "0.1.0.0"
         natural
         "Non-deterministically choose a natural number.\n\
         \This function is non-deterministic."
@@ -880,6 +956,7 @@ builtins =
     , Builtin
         "integer"
         'Ž'
+        "0.1.0.0"
         integer
         "Non-deterministically choose an integer.\n\
         \This function is non-deterministic."
@@ -887,6 +964,7 @@ builtins =
     , Builtin
         "sum"
         '∑'
+        "0.1.0.0"
         sum'
         "Take the sum of a list of numbers.\n\
         \The addition is automatically vectorized with padding zeros.\n\
@@ -900,6 +978,7 @@ builtins =
     , Builtin
         "product"
         '∏'
+        "0.1.0.0"
         product'
         "Take the product of a list of numbers.\n\
         \The multiplication is automatically vectorized \
@@ -914,6 +993,7 @@ builtins =
     , Builtin
         "dot"
         '∙'
+        "0.1.0.0"
         dot
         "Take the dot product of two lists of numbers.\n\
         \If some of the elements are chars, \
@@ -926,6 +1006,7 @@ builtins =
     , Builtin
         "convolve"
         '×'
+        "0.3.4.0"
         convolve
         "Take the convolution of two lists of numbers.\n\
         \This is equivalent to multiplying two polynomials.\n\
@@ -944,6 +1025,7 @@ builtins =
     , Builtin
         "mean"
         'µ'
+        "0.3.0.0"
         mean
         "Take the mean of a list of numbers.\n\
         \If some of the elements are chars, \
@@ -954,6 +1036,7 @@ builtins =
     , Builtin
         "fromBase"
         'b'
+        "0.1.0.0"
         fromBase
         "Convert a list of digits to a number.\n\
         \The first argument is the list of digits, \
@@ -970,6 +1053,7 @@ builtins =
     , Builtin
         "fromBaseRev"
         'd'
+        "0.1.0.0"
         fromBaseRev
         "Convert a list of digits in reverse order to a number.\n\
         \The first argument is the list of digits, \
@@ -986,6 +1070,7 @@ builtins =
     , Builtin
         "toBase"
         'D'
+        "0.2.0.0"
         toBase
         "Convert an integer to a list of digits.\n\
         \The first argument is the integer, \
@@ -1008,6 +1093,7 @@ builtins =
     , Builtin
         "toBaseRev"
         'B'
+        "0.2.0.0"
         toBaseRev
         "Convert an integer to a list of digits in reverse order.\n\
         \The first argument is the integer, \
@@ -1030,6 +1116,7 @@ builtins =
     , Builtin
         "binary"
         'Ƃ'
+        "0.3.4.0"
         binary'
         "Convert an integer to a list of binary digits in reverse order.\n\
         \If the integer is smaller than zero, \
@@ -1043,6 +1130,7 @@ builtins =
     , Builtin
         "fromBinary"
         'ƃ'
+        "0.5.0.0"
         fromBinary
         "Convert a list of binary digits in reverse order to an integer.\n\
         \If some of the elements are chars, \
@@ -1053,6 +1141,7 @@ builtins =
     , Builtin
         "digits"
         'Ɗ'
+        "0.4.0.0"
         digits
         "Convert an integer to a list of decimal digits.\n\
         \If the integer is smaller than zero, \
@@ -1066,6 +1155,7 @@ builtins =
     , Builtin
         "fromDigits"
         'ɗ'
+        "0.4.1.0"
         fromDigits
         "Convert a list of decimal digits to an integer.\n\
         \If some of the elements are chars, \
@@ -1076,6 +1166,7 @@ builtins =
     , Builtin
         "cumsum"
         '∫'
+        "0.1.0.0"
         cumsum
         "Take the cumulative sum of a list of numbers.\n\
         \The addition is automatically vectorized with padding zeros.\n\
@@ -1087,6 +1178,7 @@ builtins =
     , Builtin
         "delta"
         '∆'
+        "0.2.0.0"
         delta
         "Take the difference between adjacent elements of a list of numbers.\n\
         \The subtraction is automatically vectorized with padding zeros.\n\
@@ -1101,6 +1193,7 @@ builtins =
     , Builtin
         "binomial"
         'Ç'
+        "0.1.0.0"
         binomial
         "Compute the binomial coefficient.\n\
         \The second argument must be an integer.\n\
@@ -1118,6 +1211,7 @@ builtins =
     , Builtin
         "factorial"
         'F'
+        "0.3.0.0"
         factorial
         "Compute the factorial of an integer.\n\
         \If the argument is a char, \
@@ -1130,6 +1224,7 @@ builtins =
     , Builtin
         "isPrime"
         'Q'
+        "0.1.1.0"
         isPrime'
         "Check if an integer is prime.\n\
         \Negative numbers whose absolute values are prime are also considered \
@@ -1145,6 +1240,7 @@ builtins =
     , Builtin
         "prime"
         'Ƥ'
+        "0.1.1.0"
         prime
         "Non-deterministically choose a prime number.\n\
         \This function is non-deterministic."
@@ -1152,6 +1248,7 @@ builtins =
     , Builtin
         "nthPrime"
         'Ṕ'
+        "0.9.0.0"
         nthPrime'
         "Compute the nth positive prime number.\n\
         \The index is 1-based, following the usual number-theoretic convention, \
@@ -1168,6 +1265,7 @@ builtins =
     , Builtin
         "primePi"
         'ƥ'
+        "0.3.0.0"
         primePi
         "Compute the number of positive primes less than or equal to a \
         \number.\n\
@@ -1182,6 +1280,7 @@ builtins =
     , Builtin
         "factor"
         'ƒ'
+        "0.3.3.0"
         factor
         "Factorize a rational number, \
         \and return a list of prime factors and a list of exponents.\n\
@@ -1199,6 +1298,7 @@ builtins =
     , Builtin
         "gcd"
         'G'
+        "0.3.0.0"
         gcd'
         "Compute the greatest common divisor of two numbers.\n\
         \If one or both of the arguments are chars, \
@@ -1212,6 +1312,7 @@ builtins =
     , Builtin
         "lcm"
         'g'
+        "0.3.0.0"
         lcm'
         "Compute the least common multiple of two numbers.\n\
         \If one or both of the arguments are chars, \
@@ -1225,6 +1326,7 @@ builtins =
     , Builtin
         "divisors"
         'Ď'
+        "0.4.0.0"
         divisors
         "Compute the list of positive divisors of an integer.\n\
         \Fail when the input is zero.\n\
@@ -1239,6 +1341,7 @@ builtins =
     , Builtin
         "intPartition"
         'Ṗ'
+        "0.3.1.0"
         intPartition
         "Partition an integer into a list of positive integers, \
         \whose sum is the original integer.\n\
@@ -1253,6 +1356,7 @@ builtins =
     , Builtin
         "sqrt"
         '√'
+        "0.3.2.0"
         sqrt'
         "Compute the square root of a rational number.\n\
         \Fails when the argument is not a perfect square.\n\
@@ -1267,6 +1371,7 @@ builtins =
     , Builtin
         "unitVec2"
         'į'
+        "0.3.5.0"
         unitVec2
         "Choose one of [0, 1] and [1, 0] non-deterministically.\n\
         \This function is non-deterministic."
@@ -1274,6 +1379,7 @@ builtins =
     , Builtin
         "orNeg"
         'ŋ'
+        "0.3.5.0"
         orNeg
         "Optionally negate a number.\n\
         \If the argument is a char, \
@@ -1288,6 +1394,7 @@ builtins =
     , Builtin
         "bitAnd"
         '&'
+        "0.5.0.0"
         bitAnd
         "Bitwise AND of two integers.\n\
         \If one or both of the arguments are chars, \
@@ -1302,6 +1409,7 @@ builtins =
     , Builtin
         "bitOr"
         '|'
+        "0.5.0.0"
         bitOr
         "Bitwise OR of two integers.\n\
         \If one or both of the arguments are chars, \
@@ -1315,6 +1423,7 @@ builtins =
     , Builtin
         "bitXor"
         'X'
+        "0.5.0.0"
         bitXor
         "Bitwise XOR of two integers.\n\
         \If one or both of the arguments are chars, \
@@ -1328,6 +1437,7 @@ builtins =
     , Builtin
         "popCount"
         'Þ'
+        "0.5.1.0"
         popCount'
         "Count the number of 1s in the binary digits of an integer.\n\
         \If the number is smaller than zero, the result is also negated.\n\
@@ -1340,6 +1450,7 @@ builtins =
     , Builtin
         "histogram"
         'Ħ'
+        "0.5.1.0"
         histogram
         "Compute the histogram of a list of integers.\n\
         \The result is a list, \
@@ -1362,6 +1473,7 @@ builtins =
     , Builtin
         "sumEach"
         'Ŝ'
+        "0.6.1.0"
         sumEach
         "Take the sum of each list in a list of lists of numbers.\n\
         \The addition is automatically vectorized with padding zeros.\n\
@@ -1374,6 +1486,7 @@ builtins =
     , Builtin
         "unmul"
         'ŝ'
+        "0.8.0.0"
         unmul
         "Factorize an integer into two factors.\n\
         \Fail when the input is not a positive integer.\n\
@@ -1388,6 +1501,7 @@ builtins =
     , Builtin
         "charToInt"
         'e'
+        "0.3.0.0"
         charToInt'
         "Convert a char to an integer according to Nekomata's code page.\n\
         \If the input is already an integer, it is left unchanged.\n\
@@ -1398,6 +1512,7 @@ builtins =
     , Builtin
         "intToChar"
         'H'
+        "0.3.0.0"
         intToChar'
         "Convert an integer to a char according to Nekomata's code page.\n\
         \If the input is already a char, it is left unchanged.\n\
@@ -1409,6 +1524,7 @@ builtins =
     , Builtin
         "read"
         'Ĝ'
+        "0.4.1.0"
         read'
         "Parse a string (a list of chars) or a single char \
         \as a Nekomata value.\n\
@@ -1419,6 +1535,7 @@ builtins =
     , Builtin
         "show"
         'ĝ'
+        "0.4.1.0"
         show'
         "Convert a Nekomata value to a string (a list of chars)."
         [ ("1ĝU", all_ ["[\"1\"]"])
@@ -1428,6 +1545,7 @@ builtins =
     , Builtin
         "anyOf"
         '~'
+        "0.1.0.0"
         anyOf'
         "Choose an element from a list.\n\
         \If the argument is a number, \
@@ -1440,12 +1558,14 @@ builtins =
     , Builtin
         "emptyList"
         'Ø'
+        "0.1.0.0"
         emptyList
         "Push an empty list."
         [("Ø", all_ ["[]"])]
     , Builtin
         "singleton"
         'U'
+        "0.1.0.0"
         singleton'
         "Create a list with a single element."
         [ ("1U", all_ ["[1]"])
@@ -1454,6 +1574,7 @@ builtins =
     , Builtin
         "unsingleton"
         'z'
+        "0.3.0.0"
         unsingleton
         "Get the only element of a list with a single element.\n\
         \Fails when the list is empty or has more than one element."
@@ -1465,6 +1586,7 @@ builtins =
     , Builtin
         "pair"
         'Ð'
+        "0.1.0.0"
         pair
         "Create a list with two elements."
         [ ("1 2Ð", all_ ["[1,2]"])
@@ -1473,6 +1595,7 @@ builtins =
     , Builtin
         "unpair"
         'đ'
+        "0.3.0.0"
         unpair
         "Get the two elements of a list with two elements.\n\
         \Fails when the length of the list is not 2."
@@ -1484,6 +1607,7 @@ builtins =
     , Builtin
         "removeFail"
         '‼'
+        "0.1.0.0"
         removeFail
         "Remove failed items from a list."
         [ ("[1,2,3]‼", all_ ["[1,2,3]"])
@@ -1492,6 +1616,7 @@ builtins =
     , Builtin
         "length"
         '#'
+        "0.1.0.0"
         length'
         "Get the length of a list."
         [ ("[1,2,3]#", all_ ["3"])
@@ -1500,6 +1625,7 @@ builtins =
     , Builtin
         "lengthIs"
         'L'
+        "0.1.0.0"
         lengthIs
         "Check if the length of a list is equal to a given integer.\n\
         \If it is, push the list itself, otherwise fail.\n\
@@ -1512,6 +1638,7 @@ builtins =
     , Builtin
         "nth"
         '@'
+        "0.1.0.0"
         nth
         "Get the nth element of a list.\n\
         \The index is 0-based.\n\
@@ -1522,6 +1649,7 @@ builtins =
     , Builtin
         "head"
         'h'
+        "0.1.0.0"
         head'
         "Get the first element of a list."
         [ ("[1,2,3]h", all_ ["1"])
@@ -1530,6 +1658,7 @@ builtins =
     , Builtin
         "tail"
         't'
+        "0.1.0.0"
         tail'
         "Remove the first element of a list."
         [ ("[1,2,3]t", all_ ["[2,3]"])
@@ -1538,6 +1667,7 @@ builtins =
     , Builtin
         "cons"
         'c'
+        "0.1.0.0"
         cons
         "Prepend an element to a list."
         [ ("[2,3] 1c", all_ ["[1,2,3]"])
@@ -1546,6 +1676,7 @@ builtins =
     , Builtin
         "uncons"
         'C'
+        "0.1.0.0"
         uncons
         "Get the first element and the rest of a list."
         [ ("[1,2,3]CÐ", all_ ["[[2,3],1]"])
@@ -1554,6 +1685,7 @@ builtins =
     , Builtin
         "last"
         'l'
+        "0.1.0.0"
         last'
         "Get the last element of a list."
         [ ("[1,2,3]l", all_ ["3"])
@@ -1562,6 +1694,7 @@ builtins =
     , Builtin
         "init"
         'i'
+        "0.1.1.0"
         init'
         "Remove the last element of a list."
         [ ("[1,2,3]i", all_ ["[1,2]"])
@@ -1570,6 +1703,7 @@ builtins =
     , Builtin
         "snoc"
         'ɔ'
+        "0.1.1.0"
         snoc
         "Append an element to a list."
         [ ("[1,2] 3ɔ", all_ ["[1,2,3]"])
@@ -1578,6 +1712,7 @@ builtins =
     , Builtin
         "unsnoc"
         'Ɔ'
+        "0.1.1.0"
         unsnoc
         "Get the last element and the rest of a list."
         [ ("[1,2,3]ƆÐ", all_ ["[[1,2],3]"])
@@ -1586,6 +1721,7 @@ builtins =
     , Builtin
         "cons0"
         'ç'
+        "0.2.0.0"
         cons0
         "Prepend a zero to a list."
         [ ("[1,2,3]ç", all_ ["[0,1,2,3]"])
@@ -1594,6 +1730,7 @@ builtins =
     , Builtin
         "unsnoc0"
         'Ẑ'
+        "0.8.0.0"
         unsnoc0
         "Get the last element and the rest of a list, \
         \and check if the last element is zero.\n\
@@ -1606,6 +1743,7 @@ builtins =
     , Builtin
         "reverse"
         '↔'
+        "0.1.0.0"
         reverse'
         "Reverse a list.\n\
         \If the argument is a number, \
@@ -1616,6 +1754,7 @@ builtins =
     , Builtin
         "prefix"
         'p'
+        "0.1.0.0"
         prefix
         "Get a prefix of a list.\n\
         \If the argument is a number, \
@@ -1627,6 +1766,7 @@ builtins =
     , Builtin
         "suffix"
         's'
+        "0.1.0.0"
         suffix
         "Get a suffix of a list.\n\
         \If the argument is a number, \
@@ -1638,6 +1778,7 @@ builtins =
     , Builtin
         "take"
         'T'
+        "0.1.0.0"
         take'
         "Get the first n elements of a list.\n\
         \Fail when the list is shorter than n.\n\
@@ -1649,6 +1790,7 @@ builtins =
     , Builtin
         "subset"
         'S'
+        "0.1.0.0"
         subset
         "Get a finite subset of a list.\n\
         \If the argument is a number, \
@@ -1660,6 +1802,7 @@ builtins =
     , Builtin
         "subsequence"
         'q'
+        "0.1.0.0"
         subsequence
         "Get a finite contiguous subsequence of a list.\n\
         \If the argument is a number, \
@@ -1671,6 +1814,7 @@ builtins =
     , Builtin
         "join"
         ','
+        "0.1.0.0"
         join'
         "Concatenate two lists.\n\
         \If one of the arguments is a number or a char, \
@@ -1683,6 +1827,7 @@ builtins =
     , Builtin
         "split"
         ';'
+        "0.2.0.0"
         split
         "Split a list into two parts.\n\
         \If the argument is a number, \
@@ -1694,6 +1839,7 @@ builtins =
     , Builtin
         "replicate"
         'ř'
+        "0.3.1.0"
         replicate'
         "Create a list with n copies of an element.\n\
         \This function is automatically vectorized on the second argument."
@@ -1705,6 +1851,7 @@ builtins =
     , Builtin
         "minimum"
         'ṁ'
+        "0.1.0.0"
         minimum'
         "Get the minimum of a list.\n\
         \If there are multiple minimums, return the first one.\n\
@@ -1720,6 +1867,7 @@ builtins =
     , Builtin
         "maximum"
         'Ṁ'
+        "0.1.0.0"
         maximum'
         "Get the maximum of a list.\n\
         \If there are multiple maximums, return the first one.\n\
@@ -1735,6 +1883,7 @@ builtins =
     , Builtin
         "minMax"
         'ɱ'
+        "0.6.0.0"
         minMax
         "Get both the minimum and the maximum of a list.\n\
         \If there are multiple minimums or maximums, return the first one.\n\
@@ -1750,6 +1899,7 @@ builtins =
     , Builtin
         "concat"
         'j'
+        "0.1.0.0"
         concat'
         "Concatenate a list of lists or a list.\n\
         \If one item in the list is a number or a char, \
@@ -1762,6 +1912,7 @@ builtins =
     , Builtin
         "unconcat"
         'J'
+        "0.1.0.0"
         unconcat
         "Split a list into a list of lists.\n\
         \If the argument is a number, \
@@ -1773,6 +1924,7 @@ builtins =
     , Builtin
         "nub"
         'u'
+        "0.1.0.0"
         nub
         "Remove duplicate elements from a list."
         [ ("[1,2,2,3,1]u", all_ ["[1,2,3]"])
@@ -1781,6 +1933,7 @@ builtins =
     , Builtin
         "sort"
         'o'
+        "0.1.0.0"
         sort
         "Sort a list.\n\
         \This function uses an ordering that is defined on all values. \
@@ -1792,6 +1945,7 @@ builtins =
     , Builtin
         "permutation"
         '↕'
+        "0.1.0.0"
         permutation
         "Get a permutation of a list.\n\
         \If the argument is a number, \
@@ -1804,6 +1958,7 @@ builtins =
     , Builtin
         "extract"
         'ĕ'
+        "0.3.4.0"
         extract
         "Draw an element out from a list.\n\
         \If the argument is a number, \
@@ -1816,6 +1971,7 @@ builtins =
     , Builtin
         "allEqual"
         '≡'
+        "0.1.1.0"
         allEqual
         "Check if all elements in a list are equal.\n\
         \If it is, push the equal element, otherwise fail.\n\
@@ -1828,6 +1984,7 @@ builtins =
     , Builtin
         "isUnique"
         'ů'
+        "0.4.0.0"
         isUnique
         "Check if all elements in a list are unique.\n\
         \If it is, push the list itself, otherwise fail.\n\
@@ -1840,6 +1997,7 @@ builtins =
     , Builtin
         "free"
         'f'
+        "0.2.0.0"
         free
         "Check if a list is free of a given element.\n\
         \This means that the list is not equal to the element, \
@@ -1856,6 +2014,7 @@ builtins =
     , Builtin
         "enumerate"
         'x'
+        "0.2.0.0"
         enumerate
         "Push a list of integers from 0 to the length of the argument minus 1 \
         \without popping the original argument."
@@ -1865,6 +2024,7 @@ builtins =
     , Builtin
         "rotate"
         'Ř'
+        "0.3.0.0"
         rotate
         "Rotate a list by a given number of positions.\n\
         \If the first argument is a number, \
@@ -1878,6 +2038,7 @@ builtins =
     , Builtin
         "transpose"
         'Ť'
+        "0.3.0.0"
         transpose
         "Transpose a list of lists.\n\
         \Fail if the sublists are not all of the same length."
@@ -1887,6 +2048,7 @@ builtins =
     , Builtin
         "setPartition"
         'O'
+        "0.3.0.0"
         setPartition
         "Partition a list into a list of lists such that their concatenation \
         \is a permutation of the original list.\n\
@@ -1899,6 +2061,7 @@ builtins =
     , Builtin
         "setMinus"
         '∕'
+        "0.3.2.0"
         setMinus
         "For each element in the second list, \
         \remove the first occurrence of that element in the first list.\n\
@@ -1912,6 +2075,7 @@ builtins =
     , Builtin
         "index"
         'Ĩ'
+        "0.3.3.0"
         index
         "Get the index of any occurrence of an element in a list.\n\
         \The index is 0-based.\n\
@@ -1923,6 +2087,7 @@ builtins =
     , Builtin
         "count"
         'Ĉ'
+        "0.4.0.0"
         count
         "Count the number of occurrences of an element in a list."
         [ ("[1,2,3,2,1] 2Ĉ", all_ ["2"])
@@ -1931,6 +2096,7 @@ builtins =
     , Builtin
         "tally"
         'Ţ'
+        "0.3.3.0"
         tally
         "Count the number of occurrences of each element in a list.\n\
         \Return a list of elements and a list of counts in the same order."
@@ -1941,6 +2107,7 @@ builtins =
     , Builtin
         "intersect"
         '∩'
+        "0.3.3.0"
         intersect
         "Get the multiset intersection of two lists.\n\
         \If one of the arguments is a number or a char, \
@@ -1954,6 +2121,7 @@ builtins =
     , Builtin
         "union"
         'Ŭ'
+        "0.3.3.0"
         union
         "Get the multiset union of two lists."
         [ ("[1,2,3,2,1] [2,1]Ŭ", all_ ["[1,2,3,2,1]"])
@@ -1965,6 +2133,7 @@ builtins =
     , Builtin
         "chunks"
         'ĉ'
+        "0.3.4.0"
         chunks
         "Split a list into a list of chunks of equal elements."
         [ ("[1,1,2,2,2,3,3,3,3]ĉ", all_ ["[[1,1],[2,2,2],[3,3,3,3]]"])
@@ -1973,6 +2142,7 @@ builtins =
     , Builtin
         "rle"
         'Y'
+        "0.5.1.0"
         rle
         "Run-length encode a list.\n\
         \Returns a list of elements and a list of lengths."
@@ -1982,6 +2152,7 @@ builtins =
     , Builtin
         "unrle"
         'y'
+        "0.5.1.0"
         unrle
         "Run-length decode a list.\n\
         \The first argument is a list of elements, \
@@ -1993,6 +2164,7 @@ builtins =
     , Builtin
         "slices"
         'Š'
+        "0.6.0.0"
         slices
         "Split a list into a list of slices of a given length.\n\
         \If the length of the list is not a multiple of the slice length, \
@@ -2008,6 +2180,7 @@ builtins =
     , Builtin
         "uninterleave"
         'ĭ'
+        "0.3.5.0"
         uninterleave
         "uninterleave a list into a list of elements \
         \at even positions and a list of elements at odd positions.\n\
@@ -2020,6 +2193,7 @@ builtins =
     , Builtin
         "interleave"
         'Ĭ'
+        "0.4.0.0"
         interleave
         "Interleave two lists.\n\
         \The length of the first list must be either equal to or one more than \
@@ -2031,6 +2205,7 @@ builtins =
     , Builtin
         "minimumBy"
         'ṃ'
+        "0.3.5.0"
         minimumBy
         "Get the minimum value of a list according to a list of keys.\n\
         \If there are multiple minimums, \
@@ -2043,6 +2218,7 @@ builtins =
     , Builtin
         "maximumBy"
         'Ṃ'
+        "0.3.5.0"
         maximumBy
         "Get the maximum value of a list according to a list of keys.\n\
         \If there are multiple maximums, \
@@ -2055,6 +2231,7 @@ builtins =
     , Builtin
         "shortest"
         'ş'
+        "0.3.5.0"
         shortest
         "Get the shortest one in a list of lists.\n\
         \If there are multiple shortest ones, \
@@ -2066,6 +2243,7 @@ builtins =
     , Builtin
         "longest"
         'Ş'
+        "0.3.5.0"
         longest
         "Get the longest one in a list of lists.\n\
         \If there are multiple longest ones, \
@@ -2077,6 +2255,7 @@ builtins =
     , Builtin
         "tuple"
         'ŧ'
+        "0.4.1.0"
         tuple
         "Create a list with length n, \
         \whose elements are taken from another list.\n\
@@ -2090,6 +2269,7 @@ builtins =
     , Builtin
         "bifurcate"
         'ƀ'
+        "0.5.1.0"
         bifurcate
         "Push the reverse of a list without popping the original list.\n\
         \If the argument is a number, \
@@ -2100,6 +2280,7 @@ builtins =
     , Builtin
         "flatten"
         'V'
+        "0.5.1.0"
         flatten
         "Flatten a nested list.\n\
         \If the argument is a number or a char, \
@@ -2112,6 +2293,7 @@ builtins =
     , Builtin
         "depth"
         'w'
+        "0.9.0.0"
         depth
         "Get the maximum nesting depth of a ragged list.\n\
         \If the argument is not a list, return 0."
@@ -2122,6 +2304,7 @@ builtins =
     , Builtin
         "deepIndex"
         'W'
+        "0.9.0.0"
         deepIndex
         "Get the index path of any occurrence of an element in a ragged list. \n\
         \Each index in the path is 0-based.\n\
@@ -2138,6 +2321,7 @@ builtins =
     , Builtin
         "pad"
         'Ḟ'
+        "0.6.0.0"
         pad
         "Pad a nested list with zeros to make it rectangular.\n\
         \If the argument is a number or a char, it is unchanged."
@@ -2149,6 +2333,7 @@ builtins =
     , Builtin
         "ordering"
         'õ'
+        "0.6.0.0"
         ordering
         "Get the ordering of a list.\n\
         \The n'th element of the result is the index of the n'th element \
@@ -2160,6 +2345,7 @@ builtins =
     , Builtin
         "elem"
         'ē'
+        "0.6.0.0"
         elem'
         "Check if an element is in a list.\n\
         \If it is, push the element, otherwise fail."
@@ -2170,6 +2356,7 @@ builtins =
     , Builtin
         "filterBy"
         'ḟ'
+        "0.6.0.0"
         filterBy
         "Filter a list by whether the corresponding element in another list \
         \is not failed.\n\

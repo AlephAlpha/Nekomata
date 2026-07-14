@@ -9,6 +9,8 @@ Nekomata is still in an early stage. The full names, short names, and meanings o
 
 ### `choice` (`?`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Choose between two values.
 
 This function is non-deterministic.
@@ -19,6 +21,8 @@ __Examples__:
 
 ### `fail` (`!`, `0 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Push a non-deterministic object with no values.
 
 __Examples__:
@@ -27,6 +31,8 @@ __Examples__:
 
 ### `allValues` (`a`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Get a list of all possible values for a non-deterministic object.
 
 __Examples__:
@@ -34,6 +40,8 @@ __Examples__:
 - `1 2?a` → `[1,2]`
 
 ### `firstValue` (`¡`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Get the first possible value from a non-deterministic object.
 
@@ -45,6 +53,8 @@ __Examples__:
 
 ### `lastValue` (`¤`, `1 -> 1`)
 
+_Introduced in v0.8.0.0._
+
 Get the last possible value from a non-deterministic object.
 
 Fails if the object has no values.
@@ -55,6 +65,8 @@ __Examples__:
 
 ### `countValues` (`n`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Count the number of values in a non-deterministic object.
 
 __Examples__:
@@ -63,6 +75,8 @@ __Examples__:
 
 ### `uniqueValue` (`ũ`, `1 -> 1`)
 
+_Introduced in v0.3.1.0._
+
 Remove duplicate values from a non-deterministic object.
 
 __Examples__:
@@ -70,6 +84,8 @@ __Examples__:
 - `[1,1,2]~ũ` → `1 2`
 
 ### `minValue` (`å`, `1 -> 1`)
+
+_Introduced in v0.6.0.0._
 
 Get the minimum possible value from a non-deterministic object.
 
@@ -81,6 +97,8 @@ __Examples__:
 
 ### `maxValue` (`Å`, `1 -> 1`)
 
+_Introduced in v0.6.0.0._
+
 Get the maximum possible value from a non-deterministic object.
 
 Fails if the object has no values.
@@ -90,6 +108,8 @@ __Examples__:
 - `1 2?Å` → `2`
 
 ### `shortestValue` (`ṩ`, `1 -> 1`)
+
+_Introduced in v0.8.0.0._
 
 Get the shortest possible value from a non-deterministic object whose values are lists.
 
@@ -104,6 +124,8 @@ __Examples__:
 
 ### `if` (`I`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Take two inputs, and return the first one if it has any possible values, otherwise return the second one.
 
 __Examples__:
@@ -116,6 +138,8 @@ __Examples__:
 
 ### `andThen` (`¿`, `2 -> 1`)
 
+_Introduced in v0.3.4.0._
+
 Take two inputs, and return the first one if the second one doesn't fail. 
 
 This is somewhat similar to the `seq` function in Haskell, which forces the first argument to be evaluated before the second.
@@ -127,6 +151,8 @@ __Examples__:
 
 ### `drop` (`^`, `1 -> 0`)
 
+_Introduced in v0.1.0.0._
+
 Drop the top value of the stack: `a ... -> ...`.
 
 __Examples__:
@@ -134,6 +160,8 @@ __Examples__:
 - `1 2^` → `1`
 
 ### `dup` (`:`, `1 -> 2`)
+
+_Introduced in v0.1.0.0._
 
 Duplicate the top value of the stack: `a ... -> a a ...`.
 
@@ -143,6 +171,8 @@ __Examples__:
 
 ### `swap` (`$`, `2 -> 2`)
 
+_Introduced in v0.1.0.0._
+
 Swap the top two values of the stack: `a b ... -> b a ...`.
 
 __Examples__:
@@ -150,6 +180,8 @@ __Examples__:
 - `1 2$Ð` → `[2,1]`
 
 ### `rot3` (`§`, `3 -> 3`)
+
+_Introduced in v0.3.3.0._
 
 Rotate the top three values of the stack: `a b c ... -> c a b ...`.
 
@@ -159,6 +191,8 @@ __Examples__:
 
 ### `over` (`v`, `2 -> 3`)
 
+_Introduced in v0.5.1.0._
+
 Duplicate the second value of the stack, and put it on top of the stack: `a b ... -> b a b ...`.
 
 __Examples__:
@@ -166,6 +200,8 @@ __Examples__:
 - `1 2vÐÐ` → `[1,[2,1]]`
 
 ### `eq` (`=`, `2 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Check if two values are equal.
 
@@ -178,6 +214,8 @@ __Examples__:
 
 ### `ne` (`≠`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Check if two values are not equal.
 
 If they are not, push the first value, otherwise fail.
@@ -188,6 +226,8 @@ __Examples__:
 - `1 2≠` → `1`
 
 ### `lt` (`Ļ`, `2 -> 1`)
+
+_Introduced in v0.5.0.0._
 
 Check if the first value is less than the second.
 
@@ -207,6 +247,8 @@ __Examples__:
 
 ### `gt` (`Ģ`, `2 -> 1`)
 
+_Introduced in v0.5.0.0._
+
 Check if the first value is greater than the second.
 
 If it is, push the first value, otherwise fail.
@@ -225,6 +267,8 @@ __Examples__:
 
 ### `isNonempty` (`N`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Check if a list is non-empty.
 
 If it is, push the list itself, otherwise fail.
@@ -237,6 +281,8 @@ __Examples__:
 
 ### `isLong` (`Ł`, `1 -> 1`)
 
+_Introduced in v0.6.1.0._
+
 Check if the length of a list is greater than 1.
 
 If it is, push the list itself, otherwise fail.
@@ -248,6 +294,8 @@ __Examples__:
 - `[]Ł` → Fail
 
 ### `isNonzero` (`Z`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Check if a number is non-zero.
 
@@ -266,6 +314,8 @@ __Examples__:
 
 ### `isPositive` (`P`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Check if a number is positive.
 
 If it is, push the number itself, otherwise fail.
@@ -282,6 +332,8 @@ __Examples__:
 - `[1,[2,3]]P` → `[1,[2,3]]`
 
 ### `isNonnegative` (`ň`, `1 -> 1`)
+
+_Introduced in v0.4.0.0._
 
 Check if a number is non-negative.
 
@@ -300,6 +352,8 @@ __Examples__:
 
 ### `isZero` (`ž`, `1 -> 1`)
 
+_Introduced in v0.3.4.0._
+
 Check if a number is zero.
 
 If it is, push the number itself, otherwise fail.
@@ -316,6 +370,8 @@ __Examples__:
 - `[0,[0,0]]ž` → `[0,[0,0]]`
 
 ### `isBig` (`Ƶ`, `1 -> 1`)
+
+_Introduced in v0.5.1.0._
 
 Check if the absolute value of a number is greater than 1.
 
@@ -336,6 +392,8 @@ __Examples__:
 - `2_Ƶ` → `-2`
 
 ### `isSmall` (`ƶ`, `1 -> 1`)
+
+_Introduced in v0.5.1.0._
 
 Check if the absolute value of a number is 
 
@@ -359,6 +417,8 @@ __Examples__:
 
 ### `less` (`<`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Check if the first number is less than the second.
 
 If it is, push the first number, otherwise fail.
@@ -376,6 +436,8 @@ __Examples__:
 - `[1,2] [2,1]<` → Fail
 
 ### `lessEq` (`≤`, `2 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Check if the first number is less than or equal to the second.
 
@@ -395,6 +457,8 @@ __Examples__:
 
 ### `greater` (`>`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Check if the first number is greater than the second.
 
 If it is, push the first number, otherwise fail.
@@ -412,6 +476,8 @@ __Examples__:
 - `[2,1] [1,2]>` → Fail
 
 ### `greaterEq` (`≥`, `2 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Check if the first number is greater than or equal to the second.
 
@@ -431,6 +497,8 @@ __Examples__:
 
 ### `neg1` (`£`, `0 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 The constant -1.
 
 __Examples__:
@@ -438,6 +506,8 @@ __Examples__:
 - `£` → `-1`
 
 ### `ten` (`¢`, `0 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 The constant 10.
 
@@ -447,6 +517,8 @@ __Examples__:
 
 ### `octet` (`¥`, `0 -> 1`)
 
+_Introduced in v0.3.1.0._
+
 The constant 256.
 
 __Examples__:
@@ -454,6 +526,8 @@ __Examples__:
 - `¥` → `256`
 
 ### `neg` (`_`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Negate a number.
 
@@ -467,6 +541,8 @@ __Examples__:
 - `[1,[2,3]]_` → `[-1,[-2,-3]]`
 
 ### `abs` (`A`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Absolute value of a number.
 
@@ -482,6 +558,8 @@ __Examples__:
 
 ### `increment` (`→`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Increment a number.
 
 If the argument is a char, it is converted to a number according to Nekomata's code page.
@@ -495,6 +573,8 @@ __Examples__:
 
 ### `decrement` (`←`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Decrement a number.
 
 If the argument is a char, it is converted to a number according to Nekomata's code page.
@@ -507,6 +587,8 @@ __Examples__:
 - `[1,[2,3]]←` → `[0,[1,2]]`
 
 ### `logicalNot` (`¬`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Takes a number and returns 1 if it is 0, and 0 otherwise.
 
@@ -523,6 +605,8 @@ __Examples__:
 
 ### `sign` (`±`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Returns -1 if the argument is negative, 0 if it is zero, and 1 if it is positive.
 
 If the argument is a char, it is converted to a number according to Nekomata's code page.
@@ -536,6 +620,8 @@ __Examples__:
 - `[-2,[0,2]]±` → `[-1,[0,1]]`
 
 ### `add` (`+`, `2 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Add two numbers.
 
@@ -553,6 +639,8 @@ __Examples__:
 
 ### `sub` (`-`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Subtract two numbers.
 
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
@@ -569,6 +657,8 @@ __Examples__:
 
 ### `absDiff` (`≈`, `2 -> 1`)
 
+_Introduced in v0.4.0.0._
+
 Absolute difference of two numbers.
 
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
@@ -584,6 +674,8 @@ __Examples__:
 
 ### `mul` (`*`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Multiply two numbers.
 
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
@@ -598,6 +690,8 @@ __Examples__:
 - `[2] [3,4]*` → Fail
 
 ### `div` (`/`, `2 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Division of two numbers.
 
@@ -617,6 +711,8 @@ __Examples__:
 
 ### `divInt` (`÷`, `2 -> 1`)
 
+_Introduced in v0.2.0.0._
+
 Integer division of two numbers. Result is rounded towards negative infinity.
 
 Fails when the divisor is zero.
@@ -635,6 +731,8 @@ __Examples__:
 - `[3] [-2,3]÷` → Fail
 
 ### `mod` (`%`, `2 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Modulo two numbers.
 
@@ -656,6 +754,8 @@ __Examples__:
 
 ### `divExact` (`¦`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Divide two numbers.
 
 Fails when the divisor is zero or the result is not an integer.
@@ -674,6 +774,8 @@ __Examples__:
 
 ### `divMod` (`þ`, `2 -> 2`)
 
+_Introduced in v0.5.1.0._
+
 Divide two numbers and return both the quotient and the remainder.
 
 Fails when the divisor is zero.
@@ -687,6 +789,8 @@ __Examples__:
 - `5 3þÐ` → `[1,2]`
 
 ### `half` (`½`, `1 -> 1`)
+
+_Introduced in v0.3.4.0._
 
 Check if an integer is even, and divide it by 2.
 
@@ -703,6 +807,8 @@ __Examples__:
 - `[6,4]½` → `[3,2]`
 
 ### `pow` (`E`, `2 -> 1`)
+
+_Introduced in v0.1.1.0._
 
 Raise a number to a power.
 
@@ -725,6 +831,8 @@ __Examples__:
 
 ### `recip` (`ŗ`, `1 -> 1`)
 
+_Introduced in v0.3.1.0._
+
 Reciprocal of a number.
 
 Fails when the number is zero.
@@ -741,6 +849,8 @@ __Examples__:
 
 ### `mul2` (`Ä`, `1 -> 1`)
 
+_Introduced in v0.4.0.0._
+
 Multiply a number by 2.
 
 If the argument is a char, it is converted to a number according to Nekomata's code page.
@@ -753,6 +863,8 @@ __Examples__:
 - `[2,3]Ä` → `[4,6]`
 
 ### `div2` (`ä`, `1 -> 1`)
+
+_Introduced in v0.4.0.0._
 
 Divide a number by 2.
 
@@ -769,6 +881,8 @@ __Examples__:
 
 ### `mod2` (`Ö`, `1 -> 1`)
 
+_Introduced in v0.4.0.0._
+
 Modulo a number by 2.
 
 If the argument is a char, it is converted to a number according to Nekomata's code page.
@@ -781,6 +895,8 @@ __Examples__:
 - `[5,6]Ö` → `[1,0]`
 
 ### `powOf2` (`Ë`, `1 -> 1`)
+
+_Introduced in v0.4.0.0._
 
 Raise 2 to a power.
 
@@ -797,6 +913,8 @@ __Examples__:
 
 ### `denominator` (`ḍ`, `1 -> 1`)
 
+_Introduced in v0.3.2.0._
+
 Get the denominator of a number.
 
 If the argument is a char, it is converted to a number according to Nekomata's code page.
@@ -810,6 +928,8 @@ __Examples__:
 - `[2/3,3/5]ḍ` → `[3,5]`
 
 ### `numerator` (`ṇ`, `1 -> 1`)
+
+_Introduced in v0.3.2.0._
 
 Get the numerator of a number.
 
@@ -825,6 +945,8 @@ __Examples__:
 
 ### `min` (`m`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Get the minimum of two numbers or two chars.
 
 This function is automatically vectorized with padding.
@@ -838,6 +960,8 @@ __Examples__:
 
 ### `max` (`M`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Get the maximum of two numbers or two chars.
 
 This function is automatically vectorized with padding.
@@ -850,6 +974,8 @@ __Examples__:
 - `[2] [1,3]M` → `[2,3]`
 
 ### `ceil` (`K`, `1 -> 1`)
+
+_Introduced in v0.3.2.0._
 
 Round a number up to the nearest integer.
 
@@ -865,6 +991,8 @@ __Examples__:
 
 ### `floor` (`k`, `1 -> 1`)
 
+_Introduced in v0.3.2.0._
+
 Round a number down to the nearest integer.
 
 If the argument is a char, it is converted to a number according to Nekomata's code page.
@@ -879,6 +1007,8 @@ __Examples__:
 
 ### `range0` (`r`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Create a list of integers from 0 to ceil(n)-1.
 
 This function is automatically vectorized.
@@ -892,6 +1022,8 @@ __Examples__:
 
 ### `range1` (`R`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Create a list of integers from 1 to floor(n).
 
 This function is automatically vectorized.
@@ -904,6 +1036,8 @@ __Examples__:
 - `[3,4]R` → `[[1,2,3],[1,2,3,4]]`
 
 ### `interval` (`ï`, `2 -> 1`)
+
+_Introduced in v0.4.1.0._
 
 Create a list of integers from ceil(x) to floor(y).
 
@@ -919,6 +1053,8 @@ __Examples__:
 
 ### `natural` (`Ň`, `0 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Non-deterministically choose a natural number.
 
 This function is non-deterministic.
@@ -929,6 +1065,8 @@ __Examples__:
 
 ### `integer` (`Ž`, `0 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Non-deterministically choose an integer.
 
 This function is non-deterministic.
@@ -938,6 +1076,8 @@ __Examples__:
 - `Ž` → `0 1 -1 2 -2 3 ...`
 
 ### `sum` (`∑`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Take the sum of a list of numbers.
 
@@ -954,6 +1094,8 @@ __Examples__:
 
 ### `product` (`∏`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Take the product of a list of numbers.
 
 The multiplication is automatically vectorized and fails when the two lists are of different lengths.
@@ -969,6 +1111,8 @@ __Examples__:
 
 ### `dot` (`∙`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Take the dot product of two lists of numbers.
 
 If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
@@ -981,6 +1125,8 @@ __Examples__:
 - `[1,2,3] [[1,2],[3,4],[5,6]]∙` → `[22,28]`
 
 ### `convolve` (`×`, `2 -> 1`)
+
+_Introduced in v0.3.4.0._
 
 Take the convolution of two lists of numbers.
 
@@ -1001,6 +1147,8 @@ __Examples__:
 
 ### `mean` (`µ`, `1 -> 1`)
 
+_Introduced in v0.3.0.0._
+
 Take the mean of a list of numbers.
 
 If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
@@ -1011,6 +1159,8 @@ __Examples__:
 - `[[1,2],[3,5]]µ` → `[2,7/2]`
 
 ### `fromBase` (`b`, `2 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Convert a list of digits to a number.
 
@@ -1031,6 +1181,8 @@ __Examples__:
 
 ### `fromBaseRev` (`d`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Convert a list of digits in reverse order to a number.
 
 The first argument is the list of digits, the second argument is the base.
@@ -1049,6 +1201,8 @@ __Examples__:
 - `[1,2,3] [10,100]d` → `[321,30201]`
 
 ### `toBase` (`D`, `2 -> 1`)
+
+_Introduced in v0.2.0.0._
 
 Convert an integer to a list of digits.
 
@@ -1072,6 +1226,8 @@ __Examples__:
 
 ### `toBaseRev` (`B`, `2 -> 1`)
 
+_Introduced in v0.2.0.0._
+
 Convert an integer to a list of digits in reverse order.
 
 The first argument is the integer, the second argument is the base.
@@ -1094,6 +1250,8 @@ __Examples__:
 
 ### `binary` (`Ƃ`, `1 -> 1`)
 
+_Introduced in v0.3.4.0._
+
 Convert an integer to a list of binary digits in reverse order.
 
 If the integer is smaller than zero, it is negated before conversion.
@@ -1109,6 +1267,8 @@ __Examples__:
 
 ### `fromBinary` (`ƃ`, `1 -> 1`)
 
+_Introduced in v0.5.0.0._
+
 Convert a list of binary digits in reverse order to an integer.
 
 If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
@@ -1119,6 +1279,8 @@ __Examples__:
 - `[[1,0,1],[0,1,1]]ƃ` → `[1,2,3]`
 
 ### `digits` (`Ɗ`, `1 -> 1`)
+
+_Introduced in v0.4.0.0._
 
 Convert an integer to a list of decimal digits.
 
@@ -1135,6 +1297,8 @@ __Examples__:
 
 ### `fromDigits` (`ɗ`, `1 -> 1`)
 
+_Introduced in v0.4.1.0._
+
 Convert a list of decimal digits to an integer.
 
 If some of the elements are chars, they are converted to numbers according to Nekomata's code page.
@@ -1145,6 +1309,8 @@ __Examples__:
 - `[[1,2,3],[0,1,2]]ɗ` → `[10,21,32]`
 
 ### `cumsum` (`∫`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Take the cumulative sum of a list of numbers.
 
@@ -1158,6 +1324,8 @@ __Examples__:
 - `[[1,2],[3,4]]∫` → `[[1,2],[4,6]]`
 
 ### `delta` (`∆`, `1 -> 1`)
+
+_Introduced in v0.2.0.0._
 
 Take the difference between adjacent elements of a list of numbers.
 
@@ -1175,6 +1343,8 @@ __Examples__:
 - `[]∆` → Fail
 
 ### `binomial` (`Ç`, `2 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Compute the binomial coefficient.
 
@@ -1195,6 +1365,8 @@ __Examples__:
 
 ### `factorial` (`F`, `1 -> 1`)
 
+_Introduced in v0.3.0.0._
+
 Compute the factorial of an integer.
 
 If the argument is a char, it is converted to a number according to Nekomata's code page.
@@ -1208,6 +1380,8 @@ __Examples__:
 - `[5,6]F` → `[120,720]`
 
 ### `isPrime` (`Q`, `1 -> 1`)
+
+_Introduced in v0.1.1.0._
 
 Check if an integer is prime.
 
@@ -1226,6 +1400,8 @@ __Examples__:
 
 ### `prime` (`Ƥ`, `0 -> 1`)
 
+_Introduced in v0.1.1.0._
+
 Non-deterministically choose a prime number.
 
 This function is non-deterministic.
@@ -1235,6 +1411,8 @@ __Examples__:
 - `Ƥ` → `2 3 5 7 11 13 17 19 23 ...`
 
 ### `nthPrime` (`Ṕ`, `1 -> 1`)
+
+_Introduced in v0.9.0.0._
 
 Compute the nth positive prime number.
 
@@ -1255,6 +1433,8 @@ __Examples__:
 
 ### `primePi` (`ƥ`, `1 -> 1`)
 
+_Introduced in v0.3.0.0._
+
 Compute the number of positive primes less than or equal to a number.
 
 If the argument is a char, it is converted to a number according to Nekomata's code page.
@@ -1269,6 +1449,8 @@ __Examples__:
 - `[10,100,1000]ƥ` → `[4,25,168]`
 
 ### `factor` (`ƒ`, `1 -> 2`)
+
+_Introduced in v0.3.3.0._
 
 Factorize a rational number, and return a list of prime factors and a list of exponents.
 
@@ -1290,6 +1472,8 @@ __Examples__:
 
 ### `gcd` (`G`, `2 -> 1`)
 
+_Introduced in v0.3.0.0._
+
 Compute the greatest common divisor of two numbers.
 
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
@@ -1304,6 +1488,8 @@ __Examples__:
 
 ### `lcm` (`g`, `2 -> 1`)
 
+_Introduced in v0.3.0.0._
+
 Compute the least common multiple of two numbers.
 
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
@@ -1317,6 +1503,8 @@ __Examples__:
 - `[12,18] [24,36]g` → `[24,36]`
 
 ### `divisors` (`Ď`, `1 -> 1`)
+
+_Introduced in v0.4.0.0._
 
 Compute the list of positive divisors of an integer.
 
@@ -1335,6 +1523,8 @@ __Examples__:
 
 ### `intPartition` (`Ṗ`, `1 -> 1`)
 
+_Introduced in v0.3.1.0._
+
 Partition an integer into a list of positive integers, whose sum is the original integer.
 
 If the argument is a char, it is converted to a number according to Nekomata's code page.
@@ -1349,6 +1539,8 @@ __Examples__:
 - `[2,2]Ṗ` → `[[1,1],[1,1]] [[1,1],[2]] [[2],[1,1]] [[2],[2]]`
 
 ### `sqrt` (`√`, `1 -> 1`)
+
+_Introduced in v0.3.2.0._
 
 Compute the square root of a rational number.
 
@@ -1367,6 +1559,8 @@ __Examples__:
 
 ### `unitVec2` (`į`, `0 -> 1`)
 
+_Introduced in v0.3.5.0._
+
 Choose one of [0, 1] and [1, 0] non-deterministically.
 
 This function is non-deterministic.
@@ -1376,6 +1570,8 @@ __Examples__:
 - `į` → `[0,1] [1,0]`
 
 ### `orNeg` (`ŋ`, `1 -> 1`)
+
+_Introduced in v0.3.5.0._
 
 Optionally negate a number.
 
@@ -1393,6 +1589,8 @@ __Examples__:
 
 ### `bitAnd` (`&`, `2 -> 1`)
 
+_Introduced in v0.5.0.0._
+
 Bitwise AND of two integers.
 
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
@@ -1407,6 +1605,8 @@ __Examples__:
 - `[5] [3,4]&` → Fail
 
 ### `bitOr` (`|`, `2 -> 1`)
+
+_Introduced in v0.5.0.0._
 
 Bitwise OR of two integers.
 
@@ -1423,6 +1623,8 @@ __Examples__:
 
 ### `bitXor` (`X`, `2 -> 1`)
 
+_Introduced in v0.5.0.0._
+
 Bitwise XOR of two integers.
 
 If one or both of the arguments are chars, they are converted to numbers according to Nekomata's code page.
@@ -1438,6 +1640,8 @@ __Examples__:
 
 ### `popCount` (`Þ`, `1 -> 1`)
 
+_Introduced in v0.5.1.0._
+
 Count the number of 1s in the binary digits of an integer.
 
 If the number is smaller than zero, the result is also negated.
@@ -1452,6 +1656,8 @@ __Examples__:
 - `[-13,0,13]Þ` → `[-3,0,3]`
 
 ### `histogram` (`Ħ`, `1 -> 1`)
+
+_Introduced in v0.5.1.0._
 
 Compute the histogram of a list of integers.
 
@@ -1474,6 +1680,8 @@ __Examples__:
 
 ### `sumEach` (`Ŝ`, `1 -> 1`)
 
+_Introduced in v0.6.1.0._
+
 Take the sum of each list in a list of lists of numbers.
 
 The addition is automatically vectorized with padding zeros.
@@ -1487,6 +1695,8 @@ __Examples__:
 - `[[[1,2],[3,4]],[[5,6],[7,8]]]Ŝ` → `[[4,6],[12,14]]`
 
 ### `unmul` (`ŝ`, `1 -> 2`)
+
+_Introduced in v0.8.0.0._
 
 Factorize an integer into two factors.
 
@@ -1505,6 +1715,8 @@ __Examples__:
 
 ### `charToInt` (`e`, `1 -> 1`)
 
+_Introduced in v0.3.0.0._
+
 Convert a char to an integer according to Nekomata's code page.
 
 If the input is already an integer, it is left unchanged.
@@ -1517,6 +1729,8 @@ __Examples__:
 - `"Hello"e` → `[72,101,108,108,111]`
 
 ### `intToChar` (`H`, `1 -> 1`)
+
+_Introduced in v0.3.0.0._
 
 Convert an integer to a char according to Nekomata's code page.
 
@@ -1533,6 +1747,8 @@ __Examples__:
 
 ### `read` (`Ĝ`, `1 -> 1`)
 
+_Introduced in v0.4.1.0._
+
 Parse a string (a list of chars) or a single char as a Nekomata value.
 
 Fail when the string is not a valid Nekomata value.
@@ -1544,6 +1760,8 @@ __Examples__:
 
 ### `show` (`ĝ`, `1 -> 1`)
 
+_Introduced in v0.4.1.0._
+
 Convert a Nekomata value to a string (a list of chars).
 
 __Examples__:
@@ -1553,6 +1771,8 @@ __Examples__:
 - `"Hello"ĝU` → `["\"Hello\""]`
 
 ### `anyOf` (`~`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Choose an element from a list.
 
@@ -1568,6 +1788,8 @@ __Examples__:
 
 ### `emptyList` (`Ø`, `0 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Push an empty list.
 
 __Examples__:
@@ -1575,6 +1797,8 @@ __Examples__:
 - `Ø` → `[]`
 
 ### `singleton` (`U`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Create a list with a single element.
 
@@ -1584,6 +1808,8 @@ __Examples__:
 - `[1]U` → `[[1]]`
 
 ### `unsingleton` (`z`, `1 -> 1`)
+
+_Introduced in v0.3.0.0._
 
 Get the only element of a list with a single element.
 
@@ -1598,6 +1824,8 @@ __Examples__:
 
 ### `pair` (`Ð`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Create a list with two elements.
 
 __Examples__:
@@ -1606,6 +1834,8 @@ __Examples__:
 - `[1] 2Ð` → `[[1],2]`
 
 ### `unpair` (`đ`, `1 -> 2`)
+
+_Introduced in v0.3.0.0._
 
 Get the two elements of a list with two elements.
 
@@ -1620,6 +1850,8 @@ __Examples__:
 
 ### `removeFail` (`‼`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Remove failed items from a list.
 
 __Examples__:
@@ -1629,6 +1861,8 @@ __Examples__:
 
 ### `length` (`#`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Get the length of a list.
 
 __Examples__:
@@ -1637,6 +1871,8 @@ __Examples__:
 - `[]#` → `0`
 
 ### `lengthIs` (`L`, `2 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Check if the length of a list is equal to a given integer.
 
@@ -1652,6 +1888,8 @@ __Examples__:
 
 ### `nth` (`@`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Get the nth element of a list.
 
 The index is 0-based.
@@ -1665,6 +1903,8 @@ __Examples__:
 
 ### `head` (`h`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Get the first element of a list.
 
 __Examples__:
@@ -1673,6 +1913,8 @@ __Examples__:
 - `[]h` → Fail
 
 ### `tail` (`t`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Remove the first element of a list.
 
@@ -1683,6 +1925,8 @@ __Examples__:
 
 ### `cons` (`c`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Prepend an element to a list.
 
 __Examples__:
@@ -1691,6 +1935,8 @@ __Examples__:
 - `[] 1c` → `[1]`
 
 ### `uncons` (`C`, `1 -> 2`)
+
+_Introduced in v0.1.0.0._
 
 Get the first element and the rest of a list.
 
@@ -1701,6 +1947,8 @@ __Examples__:
 
 ### `last` (`l`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Get the last element of a list.
 
 __Examples__:
@@ -1709,6 +1957,8 @@ __Examples__:
 - `[]l` → Fail
 
 ### `init` (`i`, `1 -> 1`)
+
+_Introduced in v0.1.1.0._
 
 Remove the last element of a list.
 
@@ -1719,6 +1969,8 @@ __Examples__:
 
 ### `snoc` (`ɔ`, `2 -> 1`)
 
+_Introduced in v0.1.1.0._
+
 Append an element to a list.
 
 __Examples__:
@@ -1727,6 +1979,8 @@ __Examples__:
 - `[] 1ɔ` → `[1]`
 
 ### `unsnoc` (`Ɔ`, `1 -> 2`)
+
+_Introduced in v0.1.1.0._
 
 Get the last element and the rest of a list.
 
@@ -1737,6 +1991,8 @@ __Examples__:
 
 ### `cons0` (`ç`, `1 -> 1`)
 
+_Introduced in v0.2.0.0._
+
 Prepend a zero to a list.
 
 __Examples__:
@@ -1745,6 +2001,8 @@ __Examples__:
 - `[]ç` → `[0]`
 
 ### `unsnoc0` (`Ẑ`, `1 -> 2`)
+
+_Introduced in v0.8.0.0._
 
 Get the last element and the rest of a list, and check if the last element is zero.
 
@@ -1758,6 +2016,8 @@ __Examples__:
 
 ### `reverse` (`↔`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Reverse a list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
@@ -1768,6 +2028,8 @@ __Examples__:
 - `3↔` → `[2,1,0]`
 
 ### `prefix` (`p`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Get a prefix of a list.
 
@@ -1782,6 +2044,8 @@ __Examples__:
 
 ### `suffix` (`s`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Get a suffix of a list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
@@ -1794,6 +2058,8 @@ __Examples__:
 - `3s` → `[0,1,2] [1,2] [2] []`
 
 ### `take` (`T`, `2 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Get the first n elements of a list.
 
@@ -1809,6 +2075,8 @@ __Examples__:
 
 ### `subset` (`S`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Get a finite subset of a list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
@@ -1821,6 +2089,8 @@ __Examples__:
 - `2S` → `[] [0] [1] [0,1]`
 
 ### `subsequence` (`q`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Get a finite contiguous subsequence of a list.
 
@@ -1835,6 +2105,8 @@ __Examples__:
 
 ### `join` (`,`, `2 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Concatenate two lists.
 
 If one of the arguments is a number or a char, it is converted to a singleton list before concatenation.
@@ -1847,6 +2119,8 @@ __Examples__:
 - `1 2,` → `[1,2]`
 
 ### `split` (`;`, `1 -> 2`)
+
+_Introduced in v0.2.0.0._
 
 Split a list into two parts.
 
@@ -1861,6 +2135,8 @@ __Examples__:
 
 ### `replicate` (`ř`, `2 -> 1`)
 
+_Introduced in v0.3.1.0._
+
 Create a list with n copies of an element.
 
 This function is automatically vectorized on the second argument.
@@ -1873,6 +2149,8 @@ __Examples__:
 - `2 [3,4]ř` → `[[2,2,2],[2,2,2,2]]`
 
 ### `minimum` (`ṁ`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Get the minimum of a list.
 
@@ -1891,6 +2169,8 @@ __Examples__:
 
 ### `maximum` (`Ṁ`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Get the maximum of a list.
 
 If there are multiple maximums, return the first one.
@@ -1907,6 +2187,8 @@ __Examples__:
 - `[1,'a',[1,2]]Ṁ` → `[1,2]`
 
 ### `minMax` (`ɱ`, `1 -> 2`)
+
+_Introduced in v0.6.0.0._
 
 Get both the minimum and the maximum of a list.
 
@@ -1925,6 +2207,8 @@ __Examples__:
 
 ### `concat` (`j`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Concatenate a list of lists or a list.
 
 If one item in the list is a number or a char, it is converted to a singleton list before concatenation.
@@ -1937,6 +2221,8 @@ __Examples__:
 - `["abc","def"]j` → `abcdef`
 
 ### `unconcat` (`J`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Split a list into a list of lists.
 
@@ -1951,6 +2237,8 @@ __Examples__:
 
 ### `nub` (`u`, `1 -> 1`)
 
+_Introduced in v0.1.0.0._
+
 Remove duplicate elements from a list.
 
 __Examples__:
@@ -1959,6 +2247,8 @@ __Examples__:
 - `[3,1,3,2,1]u` → `[3,1,2]`
 
 ### `sort` (`o`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Sort a list.
 
@@ -1970,6 +2260,8 @@ __Examples__:
 - `['a',[3,4],'b',[2],1,[5]]o` → `[1,'a','b',[2],[3,4],[5]]`
 
 ### `permutation` (`↕`, `1 -> 1`)
+
+_Introduced in v0.1.0.0._
 
 Get a permutation of a list.
 
@@ -1984,6 +2276,8 @@ __Examples__:
 - `3↕` → `[0,1,2] [0,2,1] [1,0,2] [1,2,0] [2,0,1] [2,1,0]`
 
 ### `extract` (`ĕ`, `1 -> 2`)
+
+_Introduced in v0.3.4.0._
 
 Draw an element out from a list.
 
@@ -2000,6 +2294,8 @@ __Examples__:
 
 ### `allEqual` (`≡`, `1 -> 1`)
 
+_Introduced in v0.1.1.0._
+
 Check if all elements in a list are equal.
 
 If it is, push the equal element, otherwise fail.
@@ -2015,6 +2311,8 @@ __Examples__:
 
 ### `isUnique` (`ů`, `1 -> 1`)
 
+_Introduced in v0.4.0.0._
+
 Check if all elements in a list are unique.
 
 If it is, push the list itself, otherwise fail.
@@ -2029,6 +2327,8 @@ __Examples__:
 - `[]ů` → `[]`
 
 ### `free` (`f`, `2 -> 1`)
+
+_Introduced in v0.2.0.0._
 
 Check if a list is free of a given element.
 
@@ -2048,6 +2348,8 @@ __Examples__:
 
 ### `enumerate` (`x`, `1 -> 2`)
 
+_Introduced in v0.2.0.0._
+
 Push a list of integers from 0 to the length of the argument minus 1 without popping the original argument.
 
 __Examples__:
@@ -2056,6 +2358,8 @@ __Examples__:
 - `[4,3,2,1]xÐ` → `[[4,3,2,1],[0,1,2,3]]`
 
 ### `rotate` (`Ř`, `2 -> 1`)
+
+_Introduced in v0.3.0.0._
 
 Rotate a list by a given number of positions.
 
@@ -2072,6 +2376,8 @@ __Examples__:
 
 ### `transpose` (`Ť`, `1 -> 1`)
 
+_Introduced in v0.3.0.0._
+
 Transpose a list of lists.
 
 Fail if the sublists are not all of the same length.
@@ -2082,6 +2388,8 @@ __Examples__:
 - `[[1,2],[3,4,5]]Ť` → Fail
 
 ### `setPartition` (`O`, `1 -> 1`)
+
+_Introduced in v0.3.0.0._
 
 Partition a list into a list of lists such that their concatenation is a permutation of the original list.
 
@@ -2096,6 +2404,8 @@ __Examples__:
 
 ### `setMinus` (`∕`, `2 -> 1`)
 
+_Introduced in v0.3.2.0._
+
 For each element in the second list, remove the first occurrence of that element in the first list.
 
 If the second argument is a number or a char, it is converted to a singleton list.
@@ -2108,6 +2418,8 @@ __Examples__:
 - `[1,2,3,2,1] 2∕` → `[1,3,2,1]`
 
 ### `index` (`Ĩ`, `2 -> 1`)
+
+_Introduced in v0.3.3.0._
 
 Get the index of any occurrence of an element in a list.
 
@@ -2124,6 +2436,8 @@ __Examples__:
 
 ### `count` (`Ĉ`, `2 -> 1`)
 
+_Introduced in v0.4.0.0._
+
 Count the number of occurrences of an element in a list.
 
 __Examples__:
@@ -2132,6 +2446,8 @@ __Examples__:
 - `[1,2,3,2,1] 4Ĉ` → `0`
 
 ### `tally` (`Ţ`, `1 -> 2`)
+
+_Introduced in v0.3.3.0._
 
 Count the number of occurrences of each element in a list.
 
@@ -2144,6 +2460,8 @@ __Examples__:
 - `[]ŢÐ` → `[[],[]]`
 
 ### `intersect` (`∩`, `2 -> 1`)
+
+_Introduced in v0.3.3.0._
 
 Get the multiset intersection of two lists.
 
@@ -2159,6 +2477,8 @@ __Examples__:
 
 ### `union` (`Ŭ`, `2 -> 1`)
 
+_Introduced in v0.3.3.0._
+
 Get the multiset union of two lists.
 
 __Examples__:
@@ -2171,6 +2491,8 @@ __Examples__:
 
 ### `chunks` (`ĉ`, `1 -> 1`)
 
+_Introduced in v0.3.4.0._
+
 Split a list into a list of chunks of equal elements.
 
 __Examples__:
@@ -2179,6 +2501,8 @@ __Examples__:
 - `"aaabbbccaa"ĉ` → `["aaa","bbb","cc","aa"]`
 
 ### `rle` (`Y`, `1 -> 2`)
+
+_Introduced in v0.5.1.0._
 
 Run-length encode a list.
 
@@ -2190,6 +2514,8 @@ __Examples__:
 - `"aaabbbccaa"YÐ` → `["abca",[3,3,2,2]]`
 
 ### `unrle` (`y`, `2 -> 1`)
+
+_Introduced in v0.5.1.0._
 
 Run-length decode a list.
 
@@ -2203,6 +2529,8 @@ __Examples__:
 - `"abca" [3,3,2,2]y` → `aaabbbccaa`
 
 ### `slices` (`Š`, `2 -> 1`)
+
+_Introduced in v0.6.0.0._
 
 Split a list into a list of slices of a given length.
 
@@ -2221,6 +2549,8 @@ __Examples__:
 
 ### `uninterleave` (`ĭ`, `1 -> 2`)
 
+_Introduced in v0.3.5.0._
+
 uninterleave a list into a list of elements at even positions and a list of elements at odd positions.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
@@ -2233,6 +2563,8 @@ __Examples__:
 
 ### `interleave` (`Ĭ`, `2 -> 1`)
 
+_Introduced in v0.4.0.0._
+
 Interleave two lists.
 
 The length of the first list must be either equal to or one more than the length of the second list. Otherwise, this function fails.
@@ -2244,6 +2576,8 @@ __Examples__:
 - `[2,4] [1,3,5]Ĭ` → Fail
 
 ### `minimumBy` (`ṃ`, `2 -> 1`)
+
+_Introduced in v0.3.5.0._
 
 Get the minimum value of a list according to a list of keys.
 
@@ -2260,6 +2594,8 @@ __Examples__:
 
 ### `maximumBy` (`Ṃ`, `2 -> 1`)
 
+_Introduced in v0.3.5.0._
+
 Get the maximum value of a list according to a list of keys.
 
 If there are multiple maximums, return any of them non-deterministically.
@@ -2275,6 +2611,8 @@ __Examples__:
 
 ### `shortest` (`ş`, `1 -> 1`)
 
+_Introduced in v0.3.5.0._
+
 Get the shortest one in a list of lists.
 
 If there are multiple shortest ones, return any of them non-deterministically.
@@ -2287,6 +2625,8 @@ __Examples__:
 - `[[1,2],[3,4],[5],[6]]ş` → `[5] [6]`
 
 ### `longest` (`Ş`, `1 -> 1`)
+
+_Introduced in v0.3.5.0._
 
 Get the longest one in a list of lists.
 
@@ -2301,6 +2641,8 @@ __Examples__:
 
 ### `tuple` (`ŧ`, `2 -> 1`)
 
+_Introduced in v0.4.1.0._
+
 Create a list with length n, whose elements are taken from another list.
 
 If the first argument is a number, it is converted to a range from 0 to that number minus 1.
@@ -2314,6 +2656,8 @@ __Examples__:
 
 ### `bifurcate` (`ƀ`, `1 -> 2`)
 
+_Introduced in v0.5.1.0._
+
 Push the reverse of a list without popping the original list.
 
 If the argument is a number, it is converted to a range from 0 to that number minus 1.
@@ -2324,6 +2668,8 @@ __Examples__:
 - `3ƀÐ` → `[[0,1,2],[2,1,0]]`
 
 ### `flatten` (`V`, `1 -> 1`)
+
+_Introduced in v0.5.1.0._
 
 Flatten a nested list.
 
@@ -2338,6 +2684,8 @@ __Examples__:
 
 ### `depth` (`w`, `1 -> 1`)
 
+_Introduced in v0.9.0.0._
+
 Get the maximum nesting depth of a ragged list.
 
 If the argument is not a list, return 0.
@@ -2349,6 +2697,8 @@ __Examples__:
 - `1w` → `0`
 
 ### `deepIndex` (`W`, `2 -> 1`)
+
+_Introduced in v0.9.0.0._
 
 Get the index path of any occurrence of an element in a ragged list. 
 
@@ -2370,6 +2720,8 @@ __Examples__:
 
 ### `pad` (`Ḟ`, `1 -> 1`)
 
+_Introduced in v0.6.0.0._
+
 Pad a nested list with zeros to make it rectangular.
 
 If the argument is a number or a char, it is unchanged.
@@ -2383,6 +2735,8 @@ __Examples__:
 
 ### `ordering` (`õ`, `1 -> 1`)
 
+_Introduced in v0.6.0.0._
+
 Get the ordering of a list.
 
 The n'th element of the result is the index of the n'th element in the sorted list.
@@ -2395,6 +2749,8 @@ __Examples__:
 
 ### `elem` (`ē`, `2 -> 1`)
 
+_Introduced in v0.6.0.0._
+
 Check if an element is in a list.
 
 If it is, push the element, otherwise fail.
@@ -2406,6 +2762,8 @@ __Examples__:
 - `'a "abc"ē` → `'a'`
 
 ### `filterBy` (`ḟ`, `2 -> 1`)
+
+_Introduced in v0.6.0.0._
 
 Filter a list by whether the corresponding element in another list is not failed.
 
@@ -2422,6 +2780,8 @@ __Examples__:
 
 ### `onBoth` (`ᵃ`, `(0 -> n) -> (0 -> 2 * n) or (m -> n) -> (m + 1 -> 2 * n) where m > 0`)
 
+_Introduced in v0.1.0.0._
+
 Apply a function to the top two values of the stack.
 
 If the function takes no argument, simply apply it twice.
@@ -2432,6 +2792,8 @@ __Examples__:
 
 ### `noPop` (`ˣ`, `(m -> n) -> (m -> m + n)`)
 
+_Introduced in v0.1.0.0._
+
 Apply a function without popping the stack.
 
 __Examples__:
@@ -2439,6 +2801,8 @@ __Examples__:
 - `1 ˣ{1+} Ð` → `[1,2]`
 
 ### `dip` (`ᵈ`, `(m -> n) -> (m + 1 -> n + 1)`)
+
+_Introduced in v0.1.0.0._
 
 Pop the top value of the stack, apply a function to the rest, and push the popped value back.
 
@@ -2448,6 +2812,8 @@ __Examples__:
 
 ### `dupDip` (`ᵉ`, `(m -> n) -> (m -> n + 1)`)
 
+_Introduced in v0.1.0.0._
+
 Apply a function to the stack, and then push the original top value back.
 
 __Examples__:
@@ -2456,6 +2822,8 @@ __Examples__:
 
 ### `dupDip2` (`ᵋ`, `(m -> n) -> (m -> n + 2)`)
 
+_Introduced in v0.3.3.0._
+
 Apply a function to the stack, and then push the original top two values back.
 
 __Examples__:
@@ -2463,6 +2831,8 @@ __Examples__:
 - `1 2 ᵋ{+} ÐÐ` → `[3,[1,2]]`
 
 ### `map` (`ᵐ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
+
+_Introduced in v0.1.0.0._
 
 Apply a function to each element in a list.
 
@@ -2478,6 +2848,8 @@ __Examples__:
 
 ### `mapWith` (`ᵚ`, `(1 -> 1) -> (2 -> 1) or (m -> 1) -> (m -> 1) where m > 1`)
 
+_Introduced in v0.3.0.0._
+
 Map a binary function over its first argument.
 
 If the function is unary, return a list of n copies of the result of applying the function to the second argument, where n is the length of the first argument.
@@ -2489,6 +2861,8 @@ __Examples__:
 - `[1,2,3] 4 ᵚ{+}` → `[5,6,7]`
 
 ### `zipWith` (`ᶻ`, `(m -> 1) -> (m -> 1) where m > 1`)
+
+_Introduced in v0.1.0.0._
 
 Zip two lists and apply a function to each pair of elements.
 
@@ -2504,6 +2878,8 @@ __Examples__:
 
 ### `zipWithTrunc` (`ᶾ`, `(m -> 1) -> (m -> 1) where m > 1`)
 
+_Introduced in v0.5.1.0._
+
 Zip two lists and apply a function to each pair of elements.
 
 If the lists have different lengths, truncate the longer list to the length of the shorter list.
@@ -2518,6 +2894,8 @@ __Examples__:
 
 ### `outer` (`ᵒ`, `(m -> 1) -> (m -> 1) where m > 1`)
 
+_Introduced in v0.1.0.0._
+
 Apply a function to every possible pair of elements in two lists and return a list of lists.
 
 If one of the input is an number, apply the function to each integer from 0 to the input minus 1.
@@ -2530,6 +2908,8 @@ __Examples__:
 
 ### `concatMap` (`ʲ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
 
+_Introduced in v0.7.0.0._
+
 Map a function over a list and concatenate the results.
 
 See the documentation for `concat` and `map`.
@@ -2540,6 +2920,8 @@ __Examples__:
 
 ### `unconcatMap` (`ᴶ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
 
+_Introduced in v0.7.0.0._
+
 Unconcatenate a list, and then map a function over the results.
 
 See the documentation for `unconcat` and `map`.
@@ -2549,6 +2931,8 @@ __Examples__:
 - `[1,2,3] ᴶ{1+}` → `[[2],[3],[4]] [[2],[3,4]] [[2,3],[4]] [[2,3,4]]`
 
 ### `predicate` (`ᵖ`, `(m -> n) -> (1 -> 1)`)
+
+_Introduced in v0.1.0.0._
 
 Check if a function would succeed without actually applying it.
 
@@ -2563,6 +2947,8 @@ __Examples__:
 
 ### `predicateNot` (`ᵗ`, `(m -> n) -> (1 -> 1)`)
 
+_Introduced in v0.1.0.0._
+
 Check if a function would fail without actually applying it.
 
 If the function does not fail, replace the top value with Fail.
@@ -2576,6 +2962,8 @@ __Examples__:
 
 ### `filter` (`ᶠ`, `(m -> n) -> (1 -> 1)`)
 
+_Introduced in v0.3.4.0._
+
 For each element in a list, check if a function would succeed without actually applying it, and remove the element if it fails.
 
 If the input is an number, convert it to a list of integers from 0 to the input minus 1 before filtering.
@@ -2585,6 +2973,8 @@ __Examples__:
 - `[1,2,3] ᶠ{2<}` → `[1]`
 
 ### `orApply` (`ᶜ`, `(m -> n) -> (m -> n) where m >= n`)
+
+_Introduced in v0.1.0.0._
 
 Apply a function zero or one time non-deterministically.
 
@@ -2596,6 +2986,8 @@ __Examples__:
 - `1 1 ᶜ+` → `1 2`
 
 ### `iterate` (`ᶦ`, `(m -> n) -> (m -> n) where m >= n`)
+
+_Introduced in v0.1.0.0._
 
 Apply a function zero or more times non-deterministically, until the top value of the stack is Fail.
 
@@ -2610,6 +3002,8 @@ __Examples__:
 
 ### `nTimes` (`ᵑ`, `(m -> n) -> (m + 1 -> n) where m >= n`)
 
+_Introduced in v0.1.0.0._
+
 Take an integer from the top of the stack, and apply a function that many times.
 
 If the function has m inputs and n outputs with m > n, the top m - n values of the stack are "quoted" as a new function that pushes these values to the stack, and this new function is composed with the original function before applying it.
@@ -2620,6 +3014,8 @@ __Examples__:
 - `1 1 3 ᵑ+` → `4`
 
 ### `while` (`ʷ`, `(m -> n) -> (m -> n) where m >= n`)
+
+_Introduced in v0.1.0.0._
 
 Apply a function zero or more times, until the top value of the stack is Fail.
 
@@ -2634,6 +3030,8 @@ __Examples__:
 
 ### `lengthWhile` (`ˡ`, `(m -> n) -> (m -> n) where m >= n`)
 
+_Introduced in v0.3.5.0._
+
 Apply a function zero or more times, until the top value of the stack is Fail, and return the number of times the function was applied.
 
 If the function has m inputs and n outputs with m > n, the top m - n values of the stack are "quoted" as a new function that pushes these values to the stack, and this new function is composed with the original function before applying it.
@@ -2644,6 +3042,8 @@ __Examples__:
 - `1 1 ˡ{+ 4<}` → `2`
 
 ### `fixedPoint` (`ʸ`, `(m -> n) -> (m -> n) where m >= n`)
+
+_Introduced in v0.7.0.0._
 
 Apply a function zero or more times, until the top value of the stack no longer changes.
 
@@ -2656,6 +3056,8 @@ __Examples__:
 
 ### `firstInt` (`ᵏ`, `(m -> n) -> (0 -> 1)`)
 
+_Introduced in v0.4.0.0._
+
 Find the smallest non-negative integer for which a function does not fail, and return it.
 
 __Examples__:
@@ -2663,6 +3065,8 @@ __Examples__:
 - `ᵏ{4>}` → `5`
 
 ### `anyInt` (`ᴷ`, `(m -> n) -> (1 -> 1)`)
+
+_Introduced in v0.9.0.0._
 
 Find any non-negative integer for which a function does not fail, and return it.
 
@@ -2674,6 +3078,8 @@ __Examples__:
 
 ### `fold1` (`ʳ`, `(m -> 1) -> (m - 1 -> 1) where m > 1`)
 
+_Introduced in v0.4.1.0._
+
 Apply a function to the first two elements of a list, then apply it to the result and the third element, and so on until the end of the list.
 
 If the input is an number, convert it to a list of integers from 0 to the input minus 1 before folding.
@@ -2683,6 +3089,8 @@ __Examples__:
 - `[1,2,3] ʳ{+}` → `6`
 
 ### `onAny` (`ʰ`, `(0 -> 1) -> (1 -> 1) or (m -> 1) -> (m -> 1) where m > 0`)
+
+_Introduced in v0.7.0.0._
 
 Apply a function to one element in a list. The element is chosen non-deterministically.
 
@@ -2696,6 +3104,8 @@ __Examples__:
 
 ### `bottomUp` (`ᵇ`, `(m -> 1) -> (m -> 1) where m > 0`)
 
+_Introduced in v0.9.0.0._
+
 Traverse the top value of the stack in a bottom-up manner.
 
 If the value is a list, first apply the function recursively to each element, and then apply the function to the resulting list.
@@ -2707,6 +3117,8 @@ __Examples__:
 - `[1,[2,3],[[4],5]] ᵇ{1+}` → `[3,[5,6],[[8],8]]`
 
 ### `topDown` (`ᵀ`, `(m -> 1) -> (m -> 1) where m > 0`)
+
+_Introduced in v0.9.0.0._
 
 Traverse the top value of the stack in a top-down manner.
 

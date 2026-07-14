@@ -38,6 +38,8 @@ data BuiltinParticle = BuiltinParticle
     -- ^ The name of the particle
     , short :: Char
     -- ^ The short name of the particle
+    , version :: String
+    -- ^ The version when the particle was introduced
     , particle :: Particle
     -- ^ The particle itself
     , arity :: String
@@ -61,6 +63,9 @@ info b =
         ++ arity b
         ++ "):\n"
         ++ help b
+        ++ " (Introduced in v"
+        ++ version b
+        ++ ")"
         ++ if null (examples b)
             then ""
             else
@@ -85,6 +90,9 @@ infoMarkdown b =
         ++ "`, `"
         ++ arity b
         ++ "`)\n\n"
+        ++ "_Introduced in v"
+        ++ version b
+        ++ "._\n\n"
         ++ concatMap (++ "\n\n") (lines (help b))
         ++ if null (examples b)
             then ""
@@ -115,6 +123,7 @@ builtinParticles =
     [ BuiltinParticle
         "onBoth"
         'ᵃ'
+        "0.1.0.0"
         onBoth
         "(0 -> n) -> (0 -> 2 * n) \
         \or (m -> n) -> (m + 1 -> 2 * n) where m > 0"
@@ -124,6 +133,7 @@ builtinParticles =
     , BuiltinParticle
         "noPop"
         'ˣ'
+        "0.1.0.0"
         noPop
         "(m -> n) -> (m -> m + n)"
         "Apply a function without popping the stack."
@@ -131,6 +141,7 @@ builtinParticles =
     , BuiltinParticle
         "dip"
         'ᵈ'
+        "0.1.0.0"
         dip
         "(m -> n) -> (m + 1 -> n + 1)"
         "Pop the top value of the stack, apply a function to the rest, \
@@ -139,6 +150,7 @@ builtinParticles =
     , BuiltinParticle
         "dupDip"
         'ᵉ'
+        "0.1.0.0"
         dupDip
         "(m -> n) -> (m -> n + 1)"
         "Apply a function to the stack, \
@@ -147,6 +159,7 @@ builtinParticles =
     , BuiltinParticle
         "dupDip2"
         'ᵋ'
+        "0.3.3.0"
         dupDip2
         "(m -> n) -> (m -> n + 2)"
         "Apply a function to the stack, \
@@ -155,6 +168,7 @@ builtinParticles =
     , BuiltinParticle
         "map"
         'ᵐ'
+        "0.1.0.0"
         map'
         "(0 -> 1) -> (1 -> 1) \
         \or (m -> 1) -> (m -> 1) where m > 0"
@@ -169,6 +183,7 @@ builtinParticles =
     , BuiltinParticle
         "mapWith"
         'ᵚ'
+        "0.3.0.0"
         mapWith
         "(1 -> 1) -> (2 -> 1) \
         \or (m -> 1) -> (m -> 1) where m > 1"
@@ -182,6 +197,7 @@ builtinParticles =
     , BuiltinParticle
         "zipWith"
         'ᶻ'
+        "0.1.0.0"
         zipWith'
         "(m -> 1) -> (m -> 1) where m > 1"
         "Zip two lists and apply a function to each pair of elements.\n\
@@ -194,6 +210,7 @@ builtinParticles =
     , BuiltinParticle
         "zipWithTrunc"
         'ᶾ'
+        "0.5.1.0"
         zipWithTrunc'
         "(m -> 1) -> (m -> 1) where m > 1"
         "Zip two lists and apply a function to each pair of elements.\n\
@@ -207,6 +224,7 @@ builtinParticles =
     , BuiltinParticle
         "outer"
         'ᵒ'
+        "0.1.0.0"
         outer
         "(m -> 1) -> (m -> 1) where m > 1"
         "Apply a function to every possible pair of elements in two lists \
@@ -219,6 +237,7 @@ builtinParticles =
     , BuiltinParticle
         "concatMap"
         'ʲ'
+        "0.7.0.0"
         concatMap'
         "(0 -> 1) -> (1 -> 1) \
         \or (m -> 1) -> (m -> 1) where m > 0"
@@ -228,6 +247,7 @@ builtinParticles =
     , BuiltinParticle
         "unconcatMap"
         'ᴶ'
+        "0.7.0.0"
         unconcatMap'
         "(0 -> 1) -> (1 -> 1) \
         \or (m -> 1) -> (m -> 1) where m > 0"
@@ -237,6 +257,7 @@ builtinParticles =
     , BuiltinParticle
         "predicate"
         'ᵖ'
+        "0.1.0.0"
         predicate'
         "(m -> n) -> (1 -> 1)"
         "Check if a function would succeed without actually applying it.\n\
@@ -248,6 +269,7 @@ builtinParticles =
     , BuiltinParticle
         "predicateNot"
         'ᵗ'
+        "0.1.0.0"
         predicateNot'
         "(m -> n) -> (1 -> 1)"
         "Check if a function would fail without actually applying it.\n\
@@ -259,6 +281,7 @@ builtinParticles =
     , BuiltinParticle
         "filter"
         'ᶠ'
+        "0.3.4.0"
         filter'
         "(m -> n) -> (1 -> 1)"
         "For each element in a list, check if a function would succeed \
@@ -269,6 +292,7 @@ builtinParticles =
     , BuiltinParticle
         "orApply"
         'ᶜ'
+        "0.1.0.0"
         orApply
         "(m -> n) -> (m -> n) where m >= n"
         "Apply a function zero or one time non-deterministically.\n\
@@ -282,6 +306,7 @@ builtinParticles =
     , BuiltinParticle
         "iterate"
         'ᶦ'
+        "0.1.0.0"
         iterate'
         "(m -> n) -> (m -> n) where m >= n"
         "Apply a function zero or more times non-deterministically, \
@@ -298,6 +323,7 @@ builtinParticles =
     , BuiltinParticle
         "nTimes"
         'ᵑ'
+        "0.1.0.0"
         nTimes
         "(m -> n) -> (m + 1 -> n) where m >= n"
         "Take an integer from the top of the stack, \
@@ -312,6 +338,7 @@ builtinParticles =
     , BuiltinParticle
         "while"
         'ʷ'
+        "0.1.0.0"
         while
         "(m -> n) -> (m -> n) where m >= n"
         "Apply a function zero or more times, \
@@ -328,6 +355,7 @@ builtinParticles =
     , BuiltinParticle
         "lengthWhile"
         'ˡ'
+        "0.3.5.0"
         lengthWhile
         "(m -> n) -> (m -> n) where m >= n"
         "Apply a function zero or more times, \
@@ -343,6 +371,7 @@ builtinParticles =
     , BuiltinParticle
         "fixedPoint"
         'ʸ'
+        "0.7.0.0"
         fixedPoint
         "(m -> n) -> (m -> n) where m >= n"
         "Apply a function zero or more times, \
@@ -357,6 +386,7 @@ builtinParticles =
     , BuiltinParticle
         "firstInt"
         'ᵏ'
+        "0.4.0.0"
         firstInt
         "(m -> n) -> (0 -> 1)"
         "Find the smallest non-negative integer for which a function \
@@ -365,6 +395,7 @@ builtinParticles =
     , BuiltinParticle
         "anyInt"
         'ᴷ'
+        "0.9.0.0"
         anyInt
         "(m -> n) -> (1 -> 1)"
         "Find any non-negative integer for which a function does not fail, \
@@ -375,6 +406,7 @@ builtinParticles =
     , BuiltinParticle
         "fold1"
         'ʳ'
+        "0.4.1.0"
         fold1
         "(m -> 1) -> (m - 1 -> 1) where m > 1"
         "Apply a function to the first two elements of a list, \
@@ -386,6 +418,7 @@ builtinParticles =
     , BuiltinParticle
         "onAny"
         'ʰ'
+        "0.7.0.0"
         onAny
         "(0 -> 1) -> (1 -> 1) \
         \or (m -> 1) -> (m -> 1) where m > 0"
@@ -398,6 +431,7 @@ builtinParticles =
     , BuiltinParticle
         "bottomUp"
         'ᵇ'
+        "0.9.0.0"
         bottomUp'
         "(m -> 1) -> (m -> 1) where m > 0"
         "Traverse the top value of the stack in a bottom-up manner.\n\
@@ -409,6 +443,7 @@ builtinParticles =
     , BuiltinParticle
         "topDown"
         'ᵀ'
+        "0.9.0.0"
         topDown'
         "(m -> 1) -> (m -> 1) where m > 0"
         "Traverse the top value of the stack in a top-down manner.\n\
